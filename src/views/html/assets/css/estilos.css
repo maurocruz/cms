@@ -1,0 +1,266 @@
+/* 
+ * document css
+ * Styles for website admin
+*/
+
+@charset 'uft-8';
+
+/* ELEMENTS
+============================================================================= */
+html, body { height:100%; }
+body { font-size:14px; font-family:Arial, Helvetica, sans-serif; background:#d0e2f5; }
+* { margin: 0; padding: 0; }
+p { margin: 5px; }
+hr { margin: 15px 0; }
+h1 { font-size: 32px; margin: 10px; }
+h2 { font-size: 24px; margin: 10px; }
+h3 { font-size: 18px; margin: 0; margin-bottom: 5px; line-height: 1em; }
+h4 { font-size: 14px; margin: 0; margin-bottom: 10px; line-height: 1em; }
+h5 { font-size: 14px; margin: 0; margin-bottom: 5px; line-height: 1em; }
+div { display:block; }
+ul { padding-left: 40px; }
+dt { font-weight: bold; }
+dd { margin-left: 20px; }
+
+/* ELEMENT _ table
+============================================================================= */
+table{ display: table; width: 100%; border-collapse: collapse; color: #003366; background-color: #E0F9FF; }
+table caption{ text-align: left; font-weight: bold; font-size: 1.5em; }
+table tr{}
+table th{ background: #336699; color: white; font-weight: bold; padding: 2px; border: 1px #D0E2F5 solid; font-size: 0.85em; }
+table th a{ color: white; }
+table td{ border: 1px #336699 solid; padding: 2px 6px;  }
+tbody tr:nth-child(odd) { background-color: rgba(0,0,0,0.05); }
+tbody tr:nth-child(even) { background-color: #f2faff; }
+
+/* STRUCTURE
+======================================================================== */
+.wrapper{ min-width: 990px; }
+
+/* HEADER
+============================================================================= */
+.header{ background: white; overflow:hidden; }
+
+.container { padding-bottom: 30px; }
+.content { padding: 5px 10px; max-width: 1520px; margin: 0 auto; min-height: 400px; }
+.aside {  }
+
+/* FOOTER
+============================================================================= */
+.footer { background-color: #336699; overflow: hidden; padding: 15px 3px; color: #99ccFF; }
+
+/* SHARED
+======================================================================== */
+.caption_float_right { display: inline; }
+.caption_float_right img { vertical-align: bottom; margin-right: 3px; }
+.caption_float_right figcaption { display: inline; }
+.red { font-weight: bold; color: red; }
+a.white { color: white; }
+.button { margin: 5px; padding: 5px; border: 1px rgba(0,0,0,0.5) solid; border-radius: 8px; display: inline-block; background-color: rgba(255,255,255,0.5); text-decoration: none; color: #222; cursor: pointer; }
+
+/* form
+============================================================================= */
+.form{ max-width: 450px; margin: 0 auto; padding: 10px; border: 1px gray solid; }
+.form fieldset{ position: relative; overflow: hidden; }
+.form input{ border-radius: 2px; padding: 3px 1%; }
+.aviso { margin: 25px 20%; padding: 15px; background-color: yellow; color: black; font-weight: bold; text-align: center; border: 3px red dashed; border-radius: 5px; font-size: 160%;}
+.warning { margin: 5px; padding: 5px; background-color: #FE3; color: black; font-weight: bold; text-align: left; border: 1px red dashed; border-radius: 5px; font-size: 1em;}
+.admin-bar-top{ display: flex; justify-content: space-around;}
+
+/* COMPONENT _ searchForm
+============================================================================= */
+.searchForm { display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0px 0px 7px 0px #ccc; background-color: white; margin: 5px 0; padding: 4px; width: 320px; }
+.searchForm input[type=text] { border: 0; padding: 3px; vertical-align: middle; width: 293px; }
+.searchForm input[type=image] { height: 20px; }
+
+/* COMPONENT STRUCTURE _ menu
+======================================================================== */
+.menu { background: #3399CC;  padding-top: 5px; display: flex; }
+.menu h1 { margin: 5px; font-size:.9em;}
+.menu a { height: 22px; border-width: 1px 1px 0px 1px; border-color: white; border-style: solid; margin-left: 5px; padding: 5px 5px 0 5px; background: #336699; color: #99ccFF; text-decoration: none; font-weight: bold; font-size: .8em; }
+.menu a:hover { color: #336666; }
+.menu2 { background-color: #21C0F5; padding-left: 15px; }
+.menu3 { background-color: #6AD9F7; padding-left: 30px; }
+.menu4 { background-color: #C1E7F8; padding-left: 45px; }
+.menu5 { background-color: #d4ecf7; padding-left: 60px; }
+
+/* COMPONENT _ box
+============================================================================= */
+.box{ margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
+.box h1{ margin: 0; font-size: 1.4em; }
+/*.box form{ display: block; }*/
+.box form fieldset{ display: inline; margin-right: 0px; }
+.posts-box{ max-height: 110px; overflow: hidden; }
+.box-expanding { max-height: 1rem; overflow: hidden; }
+.box-expanding--text { font-weight: normal; font-size: 0.85rem; }
+.button-dropdown { color: inherit; text-decoration: none; cursor: pointer; }
+.button-dropdown::after { 
+    content: "";
+    margin-left: 5px;
+    display: inline-block; width: 1.5em; height: 1em; 
+    background-color: transparent; 
+    box-sizing: border-box;
+    border-left-width: 0.75em; border-left-color: transparent; border-left-style: solid;
+    border-right-width: 0.75em; border-right-color: transparent; border-right-style: solid;
+}
+.button-dropdown-contracted::after { 
+    vertical-align: text-bottom; 
+    border-top-width: 0.6em; border-top-color: #555; border-top-style: solid; 
+}
+.button-dropdown-expanded::after { 
+    vertical-align: text-top; 
+    border-bottom-width: 0.6em; border-bottom-color: #555; border-bottom-style: solid; 
+}
+/* PAGE _ clientes
+============================================================================= */
+.table-clientes{ font-size: 0.85em; }
+.table-clientes .text-center{ text-align: center; }
+
+/* COMPONENT _ tabela
+======================================================================= */
+#tabela{ margin: 30px; max-width: 990px; padding: 15px; border: 1px #336699 solid; display: block;
+	overflow:hidden; font-size:.9em; background: #e0f9ff; border-spacing: 0; }
+#tabela a{ text-decoration: none; color: #336699; }
+#tabela a:hover{ text-decoration:underline; }
+/**/
+.tabela-edit{ margin: 2px; }
+.tabela-edit h3{ font-size: 24px; }
+.tabela-edit a{ text-decoration: none; color: #336699; }
+.tabela-edit table{ border: 1px #336699 solid; border-collapse:collapse; background: #e0f9ff; width: 96%; }
+.tabela-edit tr, .tabela-edit th{ border-collapse:collapse; }
+.tabela-edit caption{ text-align: left; font-weight: bold; font-size: 18px; padding: 2px; }
+.tabela-edit th{ background: #336699; color: white; border: 1px white solid; border-bottom: 0; border-top: 0; padding: 3px; font-size: .9em; }
+.tabela-edit th a{ color: white; }
+.tabela-edit td{ padding: 1px; white-space: nowrap; border-right: 1px black solid; overflow: hidden;  }
+
+.tabela_lista{ margin: 15px 0 ; padding-left: 15px; }
+
+/* COMPONENT _ tabela resumo
+======================================================================= */
+.resumo{ background-color: #e0f9ff; border: 1px solid #336699; padding: 10px; }
+.resumo th{ background-color: #336699; border-radius: 10px 10px 0 0; color: white; font-weight: bold; height: 30px; }
+.resumo td{ padding: 10px; border: #336699 1px solid; }
+
+/* COMPONENT _ form-table
+======================================================================== */
+.form-table {  }
+.form-table-title{ font-size: 18px; }
+.form-table cite{ font-size: 32px; font-style: normal; font-weight: bold; }
+.form-table fieldset { display: inline-block; padding: 0; border: none; position: relative; }
+.form-table fieldset legend { background-color: #336699; color: white; padding: 3px 6px; width: 85%; font-weight: bold; border-top-right-radius: 10px; }
+.form-table input { padding: 2px; border: 1px solid gray; box-sizing: border-box; min-height: 30px; }
+.form-table select { padding: 2px; border: 1px solid gray; box-sizing: border-box; }
+
+.form-back-red input { background-color: rgba(255,30,0,0.5) !important; }
+.form-back-green input { background-color: rgba(70,255,0,0.3) !important; }
+.form-back-yellow input { background-color: rgba(255,255,0,0.4) !important; }
+.form-back-gray input { background-color: rgba(20,20,20,0.2); }
+.form-back-white input { background-color: rgba(255,255,255,1) !important; }
+
+.form-table input[type=submit] { padding: 0 6px; border: 2px outset buttonface; margin: 1px 3px; background-color: buttonface; }
+
+/* COMPONENT _ menu
+=======================================================================*/
+a.menu{ color: #99cccc; text-decoration:none; font-weight:bold; font-size:.9em; padding-left: 10px; padding-right: 10px; height: 25px; font-size: .8em; }
+a.menu:hover{ background: #2d577f; padding: 10px; height:25px; }
+a.subsubmenu{ color:white; text-decoration: none; font-weight: bold; padding-left: 5px; padding-right: 5px; height: 25px; font-size: .8em; }
+a.subsubmenu:hover{ background: #336666; height:25px; }
+a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; font-size: .8em; }
+/**/
+.menuAtivo{ color: #FFFFFF; text-decoration:none; font-weight: bold; padding: 10px; font-size: .8em; }
+.tituloColuna{ float: left; background: #336699; color: white; font-weight: bold; text-align:	center; border:1px white solid; border-bottom-width: 0px; border-top-width: 0px; padding:3px; font-size: .9em; }
+.coluna{ float:left; height: 15px; border: 1px #336699 solid; padding:3px; }
+.linhaTabela{ clear:both; overflow:hidden; }
+.menu-inline{ float:left; display:inline; margin-top: 15px; margin-left: 5px; margin-right: 5px; }
+.forminline input{ float:left; margin:0; padding:0; }
+
+/* COMPONENT _ formPadrao
+=========================================================================== */
+.formPadrao { }
+.formPadrao cite { font-size: 32px; font-style: normal; font-weight: bold; }
+.formPadrao fieldset { position: relative; display: inline; border: none; background: white; border: 1px #336699 solid; box-sizing: border-box; padding: 3px; margin: 0 0 3px 0; vertical-align: middle; }
+.formPadrao legend { display: table-caption; width: 100%; background-color: #336699; color: white; padding: 4px 5px; box-sizing: border-box; font-weight: bold; border-radius: 7px 7px 0 0; font-size: 12px; }
+.formPadrao legend a { color: #E0F9FF; }
+.formPadrao input { position: relative; border: 1px #336699 solid; min-height: 20px; padding: 3px; overflow: hidden; width: 100%; box-sizing: border-box; border: none; }
+.formPadrao input[type=radio] { width: auto; vertical-align: middle; }
+.formPadrao input[type=checkbox] { display: inline; width: inherit;}
+.formPadrao input[type=image] { display: inline; width: inherit; padding: 0; vertical-align: text-bottom; }
+.formPadrao input[type=submit] { border: 1px #333 solid; border-radius: 6px; }
+.formPadrao label { margin: 0 3px; }
+.formPadrao .labelradio * { white-space: nowrap; }
+.formPadrao textarea { border: 1px #336699 solid; overflow: auto; margin: 0; width: calc(100% - 3px); }
+.formPadrao select { border: 1px #336699 solid; height: 20px; padding: 0px; }
+.formPadrao figure { display: inline-block; line-height: normal; vertical-align: bottom; }
+.formPadrao .text-box-white { background-color: white; border: 1px #336699 solid; min-height: 20px; padding: 8px 10px; display: inline-block; }
+.submitButton { min-height: 0 !important; cursor: pointer; width: 100%; }
+
+/* COMPONENT _ form-inline
+============================================================================= */
+.form-inline { /*display: flex; flex-wrap: wrap; align-items: stretch;*/ }
+.form-inline label { display: inline; font-weight: normal; font-size: 1em; vertical-align: top; }
+.form-inline label:after { content: ": "; vertical-align: top; }
+.form-inline fieldset { display: inline; vertical-align: top; }
+.form-inline legend { white-space: nowrap; width: calc(100% - 7px); font-size: 0.9em; background-color: #336699; color: white; padding: 1px 3px; border-right: 1px solid white; }
+.form-inline fieldset > input { width: calc(100% - 8px); }
+.form-inline input { padding: 0 3px; min-height: 20px; border: 1px solid #ddd;  }
+.form-inline input[name=submit] { width: 35px; margin: 3px 0 !important; border: none; }
+.form-inline input[type=radio] { display: inline; }
+.form-inline textarea { width: calc(100% - 3px); }
+.form-inline select { background-color: white !important; font: 400 1em Arial; color: #333; border: 0; min-width: 157px; }
+.form-inline select option{ padding: 0 5px; background-color: white !important; }
+
+.linhaParcela{ clear: both; overflow:hidden; }
+.lista{ list-style: square; margin-left: 30px; }
+
+/* IMAGES FROM SERVERS
+============================================================================= */
+.imagesFromServer-wrapper{ overflow: hidden; display: flex; flex-wrap: wrap; justify-content: flex-start; }
+.imagesFromServer-figure{ overflow: hidden; text-align: center; min-height: 80px; margin: 5px 15px 30px; max-height: 200px; }
+
+/* IMAGES FROM DATABASE
+============================================================================= 
+.admin-images-grid{ display: grid; grid-gap: 15px; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); grid-auto-rows: 20px; }
+.admin-images-grid-figure{ position: relative; background-color: rgba(255,255,255,0.5); }
+.admin-image-grid-buttons{ position: absolute; right: 0; bottom: 0; width: 100%; background-color: rgba(255,255,255,0.1); text-align: right;  }
+.admin-image-grid-buttons *{ display: inline; margin-left: 5px; }
+.admin-image-grid-buttons p{ background-color: white; padding: 3px 5px; word-wrap: break-word; }*/
+
+/* COMPONENT _ sitemaptree
+============================================================================= */
+.admin-sitemaptree { margin: 30px 0; }
+.admin-sitemaptree ul{ display: none; }
+.admin-sitemaptree li{ line-height: 1.6;}
+.admin-sitemaptree li a{ color: inherit; text-decoration: none; }
+.admin-sitemaptree li a:hover{ color: blue; text-decoration: underline; }
+.admin-sitemaptree-line-url{ color: #333; font-style: italic; }
+.admin-sitemaptree-line-imgcollapse img{ vertical-align: middle; }
+
+/* COMPONENT _ navigation
+============================================================================= */
+.admin-navigation{ list-style: none; }
+.admin-navigation li{ display: inline; }
+
+/* COMPONENT _ searchDropdown
+============================================================================= */
+.searchDropdown { list-style: none; margin: 0; padding: 0 5px; z-index: 100; }
+.searchDropdown li{ border-bottom: 1px gray solid; padding: 3px 0; color: #ccc; cursor: pointer; }
+.searchDropdown li:hover{ font-size: 1.1em; color: #fff; }
+
+/* COMPONENT _ ul dropdown
+============================================================================= */
+ul.dropdown { list-style: none; margin: 0; position: absolute; left: 0; background-color: white; padding: 0 5px; z-index: 100; }
+ul.dropdown li { border-bottom: 1px gray solid; padding: 3px 0; color: lightslategrey; cursor: pointer; }
+ul.dropdown li:hover { font-size: 1.1em; color: darkslategray; }
+
+/* MEDIA QUERIES
+============================================================================= */
+@media print{
+    .admin-bar-top{ display: none; }
+    #admin-bar-footer{ display: none; }
+    .menu{ display: none; }
+    table{ color: black; }
+    table th{ color: black; border-color: black; background-color: lightgray; }
+    table td{ color: black; border-color: black; }
+    a { color: black; text-decoration: none; }
+    .noprint{ display: none !important; }
+}
