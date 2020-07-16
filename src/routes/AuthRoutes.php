@@ -6,46 +6,53 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteCollectorProxy as Route;
 
+use Plinct\Cms\View\Html\HtmlView;
+use Plinct\Api\Auth\SessionUser;
+
 return function (Route $route) 
 {
     $route->group('', function(Route $route) 
     {
-        // LOGIN
+        /**
+         *   GETLOGIN
+         */
         $route->get('/login', function (Request $request, Response $response, $args) 
         {
-            if (fwc\helpers\UsersHelper::getPermission() === '1') {
+            if (SessionUser::getStatus() === '1') {
                 return $response->withHeader("Location", "/admin")->withStatus(302);
+                
             } else {
-                $view = new \fwc\Cms\View\CmsHtmlView($this);
-                $response->getBody()->write($view->login($request, $response));
+                $content = (new HtmlView())->login();
+                
+                $response->getBody()->write($content);
                 return $response;
             }
         });    
 
+        /**
+         * POST LOGIN
+         */
         $route->post('/login',  function (Request $request, Response $response, $args)
-        {             
-            $request = (new \fwc\Cms\Auth\AuthController($this))->loginPost($request);
+        {
+            $data = (new Plinct\Api\Auth\AuthController())->login($request->getParsedBody());
             
-            $cmsView = new \fwc\Cms\View\CmsHtmlView($this);
-            
-            if ($request->getAttribute("userStatus") == "passwordNotMatch") {
-                $view = $cmsView->login($request, $response);
-                
-            } elseif ($request->getAttribute("userStatus") == "emailNotMatch") {                
-                $view = $cmsView->login($request, $response);
-                
-            } elseif ($request->getAttribute("userStatus") == "authorized" || $request->getAttribute("userStatus") == "logged") {  
+            if ($data['message'] == "Session login started") {
                 return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
-            }       
-            
-            $response->getBody()->write($view);
-            return $response;
+                
+            } else {
+                $content = (new HtmlView())->login($data['message']);
+                
+                $response->getBody()->write($content);
+                return $response;
+            }            
         });
 
         $route->get('/registrar', function (Request $request, Response $response, $args)
         {
-            $view = new \fwc\Cms\View\CmsHtmlView($this);
-            $response->getBody()->write($view->register());
+            $content = (new HtmlView())->register();
+            
+            $response->getBody()->write($content);
+            
             return $response;
         });
 
@@ -77,7 +84,8 @@ return function (Route $route)
     // LOGOUT
     $route->get('/logout',  function (Request $request, Response $response, $args)
     {
-        (new \fwc\Cms\Auth\AuthController($this))->logout();
-         return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
+        (new Plinct\Api\Auth\AuthController())->logout();
+        
+        return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
     });
 };

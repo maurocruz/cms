@@ -5,7 +5,7 @@ namespace Plinct\Cms\View\Html;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-use Plinct\Api\Auth\Session;
+use Plinct\Api\Auth\SessionUser;
 use Plinct\Cms\App;
 
 class HtmlView extends HtmlViewContent
@@ -13,9 +13,10 @@ class HtmlView extends HtmlViewContent
     public function __construct()
     {
         // gettext
-        setlocale(LC_ALL, $this->language.".utf8");
-        bindtextdomain("fwc", "../fwc/Cms/Locale");
+        setlocale(LC_ALL, App::getLanguage() . ".utf8");
+        bindtextdomain("fwc", __DIR__ . "/../locale");                
         textdomain("fwc");
+        
         // template
         parent::setTemplate();
         // site name
@@ -24,7 +25,7 @@ class HtmlView extends HtmlViewContent
         parent::setHeader();
         
         // status bar
-        if (Session::checkUserAdmin()) {
+        if (SessionUser::checkUserAdmin()) {
             // userbar
             parent::setUserBar();
             // navbar
@@ -35,7 +36,7 @@ class HtmlView extends HtmlViewContent
         parent::footer();
     }
     
-    public function build(Request $request, Response $response)
+    public function build(Request $request)
     {
         $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
         $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
@@ -47,12 +48,12 @@ class HtmlView extends HtmlViewContent
         }
         
         if($type) {            
-            $controlClassName = "\\Fwc\\Cms\\Controller\\".ucfirst($type)."Controller";
+            $controlClassName = "\\Plinct\\Cms\\Controller\\".ucfirst($type)."Controller";
             
             if (class_exists($controlClassName)) {
                 $controlData = (new $controlClassName($request))->{$action}($params);
                 
-                $viewClassName = "\\Fwc\\Cms\\View\\Html\\".ucfirst($type)."View";
+                $viewClassName = "\\Plinct\\Cms\\View\\Html\\Page\\".ucfirst($type)."View";
                                 
                 if (class_exists($viewClassName)) {
                     $viewData = (new $viewClassName())->{$action}($controlData);
@@ -85,21 +86,20 @@ class HtmlView extends HtmlViewContent
     }
     
     // LOGIN FORM
-    public function login(Request $request, Response $response) 
-    {
-        
-        switch ($request->getAttribute('userStatus')) {
-            case "passwordNotMatch":
+    public function login($message = null) 
+    {        
+        switch ($message) {
+            case "Password invalid":
                 parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Seu email confere, mas a senha não! Tente novamente ou entre em contato com o administrador" ]);
                 break;
             
-            case "emailNotMatch":
+            case "User not found":
                 parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Sinto muito, mas seu email não consta em nosso banco de dados! Tente de novo ou faça um novo <a href=\"/admin/registrar\">registro</a>" ]);
                 break;
            
             case "userNotAuthorized":
                 parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Você está devidamente registrado, mas não tem permissão para acessar este painel. Por favor, entre em contato com o administrador!" ]);
-                break;
+                break;                
         }
                 
         parent::addMain(file_get_contents(__DIR__ . '/pieces/signupForm.html'));
@@ -125,7 +125,7 @@ class HtmlView extends HtmlViewContent
                 break;
         }
         
-        parent::addMain(file_get_contents(__DIR__ . '/parts/registerForm.html'));
+        parent::addMain(file_get_contents(__DIR__ . '/pieces/registerForm.html'));
         return $this->ready();
     }
     

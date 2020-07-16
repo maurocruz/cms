@@ -9,15 +9,24 @@ class App
     private $slim;
     
     private static $TITLE;
+    
+    private static $LANGUAGE;
+    
+    private static $TypesEnabled;
 
     public function __construct(Slim $slim)
     {
         $this->slim = $slim;
     }
     
-    public function setTypesEnebled(array $types)
+    public function setTypesEnabled(array $types)
     {
-        
+        self::$TypesEnabled = $types;
+    }
+    
+    public static function getTypesEnabled()
+    {
+        return self::$TypesEnabled;
     }
     
     public function setTitle($title)
@@ -28,6 +37,16 @@ class App
     public static function getTitle()
     {
         return self::$TITLE;
+    }
+    
+    public function setLanguage($language)
+    {
+        self::$LANGUAGE = $language;
+    }
+    
+    public static function getLanguage()
+    {
+        return self::$LANGUAGE;
     }
 
     public function run() 

@@ -16,21 +16,16 @@ class ViewBuilder
         $this->view = new HtmlView();        
     }
     
-    public function build(Request $request, Response $response) 
+    public function build(Request $request) 
     {        
-        if($this->view) {
-            $view = $this->view->build($request, $response);
-            $response->getBody()->write($view);
-        }
-        
-        return $response;        
+        return (new HtmlView())->build($request);
     }
     
     public function login(Request $request, Response $response) 
     {
         if ($this->view) {
-            $view = $this->view->login($request, $response);
-            $response->getBody()->write($view);
+            return $this->view->login($request);
+            
         } else {
             $data = (new \fwc\Thing\SoftwareApplicationGet())->selectById(0);
             $response = $response->withHeader('Content-Type', 'application/json')->withStatus(201);

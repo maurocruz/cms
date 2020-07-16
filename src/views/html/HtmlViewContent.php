@@ -2,6 +2,9 @@
 
 namespace Plinct\Cms\View\Html;
 
+use Plinct\Cms\App;
+use Plinct\Api\Auth\SessionUser;
+
 class HtmlViewContent extends HtmlViewAbstract 
 {
     const VERSION = "2.3";
@@ -13,8 +16,8 @@ class HtmlViewContent extends HtmlViewAbstract
             "/admin/user" => _("Users")
         ];
                 
-        if (isset($this->settings['modules'])) {
-            foreach ($this->settings['modules'] as $key => $value) {
+        if (App::getTypesEnabled()) {
+            foreach (App::getTypesEnabled() as $key => $value) {
                 $data['list']['/admin/'.$value] = _(ucfirst($value));
             }
         }        
@@ -45,23 +48,23 @@ class HtmlViewContent extends HtmlViewAbstract
         ];
     }
     
-    protected function setUserBar() {        
-        $user = \fwc\helpers\UsersHelper::getUser();
-        $status = \fwc\helpers\UsersHelper::status();        
+    protected function setUserBar() 
+    {        
         parent::addHeader([
             "tag"=>"div",
             "attributes"=>["class"=>"admin admin-bar-top"],
             "content"=>[
-                [ "tag"=>"p", "content" => sprintf(_("Hello, %s. You logged with %s!"), $user['name'], $status) ],
+                [ "tag"=>"p", "content" => sprintf(_("Hello, %s. You logged with %s!"), SessionUser::getName(), SessionUser::getStatusWithString()) ],
                 [ "tag"=>"p", "content"=> _("Log out"), "href"=>"/admin/logout" ]
             ]            
         ],1);
     }
     
-    protected function setHeader() {
+    protected function setHeader() 
+    {
         parent::addHeader([ 
             "tag" => "p", 
-            "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">".\Plinct\Cms\App::getTitle()."</a> ". _("Control Panel")." v".self::VERSION, 
+            "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel")." v".self::VERSION, 
             "attributes" => [ "style" => "display: inline;" ] 
         ]);        
         if (!isset($_SESSION['userLogin'])) {        

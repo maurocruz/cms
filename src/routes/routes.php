@@ -80,15 +80,16 @@ return function (Route $route)
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response, $args) 
         {
-            $viewBuilder = new ViewBuilder($this);
-                
+            $viewBuilder = new ViewBuilder();
+                        
             if ($request->getAttribute('userAuth') === false) {
-                $response = $viewBuilder->login($request, $response);
-
+                $content = $viewBuilder->login($request, $response);
+                
             } else {
-                $response =  $viewBuilder->build($request, $response);
+                $content = $viewBuilder->build($request);
             }
 
+            $response->getBody()->write($content);
             return $response;
         });
 
