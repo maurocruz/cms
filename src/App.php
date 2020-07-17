@@ -8,6 +8,8 @@ class App
 {
     private $slim;
     
+    private static $HostAPI;
+    
     private static $TITLE;
     
     private static $LANGUAGE;
@@ -17,6 +19,13 @@ class App
     public function __construct(Slim $slim)
     {
         $this->slim = $slim;
+        
+        self::$HostAPI = "//" . $_SERVER['HTTP_HOST']. "/api";
+    }
+    
+    public static function getHostAPI() 
+    {
+        return self::$HostAPI;
     }
     
     public function setTypesEnabled(array $types)
