@@ -19,16 +19,14 @@ return function (Route $route)
      * ADMIN ROUTES
      */
     $route->group('/admin', function(Route $route)
-    {          
-        session_start();
-        
+    {                  
         /* AUTHENTICATION ROUTES */
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
 
         
         // COMPONENTS JSX
-        $route->get('/main.js.map', function(Request $request, Response $response, array $args)
+       /*$route->get('/main.js.map', function(Request $request, Response $response, array $args)
         {           
             $file = '/ReactComponents/main.js.map';
            
@@ -47,7 +45,7 @@ return function (Route $route)
             if (isset($args['params'])) { 
                // $file = '/ReactComponents/src/components/'.$args['params'];
             } else {
-                $file = '/ReactComponents/main.js';
+                $file = __DIR__.'/../views/html/assets/js/main.js';
             }
             $script = file_get_contents(__DIR__ . $file);
             
@@ -56,7 +54,7 @@ return function (Route $route)
             $newResponse->getBody()->write($script);
             
             return $newResponse;
-        });
+        });*/
         
         // ASSETS 
         $route->get('/assets/{type}/{filename}', function(Request $request, Response $response, array $args) 
@@ -119,7 +117,7 @@ return function (Route $route)
          * ADMIN POST THING
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) 
-        {    
+        {                
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();
@@ -127,7 +125,7 @@ return function (Route $route)
             unset($params['submit_x']);
             unset($params['submit_y']);
             
-            $className = "\\Fwc\\Api\\Type\\".ucfirst($type);
+            $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
                             
             if (class_exists($className)) {
                 
