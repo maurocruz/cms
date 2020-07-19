@@ -123,15 +123,13 @@ class ImageObjectView
     }
         
     protected function addImagesFromDatabase($idwebPage = null) 
-    {
-        //$apiUri = App::getHostAPI() . '/ImageObject?groupBy=keywords&orderBy=keywords';
-        
+    {        
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $this->tableOwner ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $this->idOwner ] ];
         $content[] = $idwebPage ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $idwebPage ] ] : null;
-        $content[] =[ "tag" => "div", "attributes" => [ "id" => "imagesFromdatabase", "class" => "imagesFromDatabase" ], "content" => [ 
-               // [ "tag" => "a", "content" => "Selecionar imagem no banco de dados", "attributes" => [ "data-apiURI" => $apiUri, "class" => "button" ] ]
-            ]];
+        
+        $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesfromdatabase", "class" => "imagesFromDatabase" ] ];
+        
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/insertHasPartFromDatabase", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
     }
     
@@ -140,9 +138,9 @@ class ImageObjectView
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $this->tableOwner ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $this->idOwner ] ];
         $content[] = $idwebPage ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $idwebPage ] ] : null;
-        $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesFromServer" ], "content" => [ 
-                [ "tag" => "a", "content" => "Selecionar imagem no servidor", "attributes" => [ "href" => "javascript: void(0);", "onclick" => "httpRequest('/ajax/ImageFromServerController/getImagesFromServer?namespace=fwc|Cms|Controller&tableOwner=$this->tableOwner&idOwner=$this->idOwner',this)", "class" => "button" ] ]
-            ] ];        
+        
+        $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesfromserver" ] ];        
+        
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/insertHasPartFromServer", "name" => "images-selectedFromServer", "id" => "images-selectedFromServer-".$this->idOwner, "class" => "formPadrao box", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
     
