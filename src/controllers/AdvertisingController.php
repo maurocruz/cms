@@ -52,14 +52,14 @@ class AdvertisingController
 
 
     public function edit($params): array 
-    {       
+    {
         // advertising
         $params["properties"] = "tags,history";        
         $adverisingData = (new Advertising())->get($params);        
         $response['advertising'] = $adverisingData[0];
+        $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'fwc_id');
         
         // payments
-        $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'fwc_id');
         $paramsPayment = [ "where" => "`idadvertising`=$idadvertising", "orderBy" => "vencimentoparc", "ordering" => "desc" ];
         $paymentData = (new Payment())->get($paramsPayment);        
         $response['payment'] = $paymentData;
@@ -70,9 +70,11 @@ class AdvertisingController
         $response['history'] = $historyData;
         
         // banner
-        $paramsBanner = [ "where" => "`idadvertising`=$idadvertising" ];
-        $bannerData = (new Banner())->get($paramsBanner);
-        $response['banner'] = $bannerData[0];        
+        if ($adverisingData[0]['tipo'] == '4') {
+            $paramsBanner = [ "where" => "`idadvertising`=$idadvertising" ];
+            $bannerData = (new Banner())->get($paramsBanner);
+            $response['banner'] = $bannerData[0] ?? null;
+        }
         
         return $response;
     }
