@@ -97,7 +97,7 @@ class AdvertisingView
         $advertising = $data['advertising'];        
         $customer = $advertising['customer'];        
         $payment = $data['payment'];
-        $banner = $data['banner'];
+        $banner = $data['banner'] ?? null;
         
         $this->navbar();
         
@@ -116,7 +116,7 @@ class AdvertisingView
         $this->content['main'][] = (new HistoryView())->view($data['history']);
                
         // banner
-        $this->content['main'][] =$advertising['tipo'] == '4' ? (new BannerView())->getBannerByIdcontrato($data['banner']) : null;
+        $this->content['main'][] = $banner ? (new BannerView())->getBannerByIdcontrato($banner) : null;
         
         return $this->content;
     }
