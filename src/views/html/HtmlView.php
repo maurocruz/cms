@@ -131,12 +131,12 @@ class HtmlView extends HtmlViewContent
     
     public function ready() 
     {
-       // parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>');
-       // parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>');
-        //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>');
-        //parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>');
-       // parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
-       // parent::addBody('<script src="/admin/assets/js/main"></script>');
+        //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>');
+        //parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>');
+        parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>');
+        parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>');
+        parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
+        parent::addBody('<script src="/admin/assets/js/bundle"></script>');
         
         return "<!DOCTYPE html>" . \Plinct\Web\Render::arrayToString($this->html);
     }
