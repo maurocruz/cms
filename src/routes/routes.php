@@ -23,38 +23,6 @@ return function (Route $route)
         /* AUTHENTICATION ROUTES */
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
-
-        
-        // COMPONENTS JSX
-       /*$route->get('/main.js.map', function(Request $request, Response $response, array $args)
-        {           
-            $file = '/ReactComponents/main.js.map';
-           
-            $script = file_get_contents(__DIR__ . $file);
-            
-            $newResponse = $response->withHeader("Content-type", "application/javascript");
-            
-            $newResponse->getBody()->write($script);
-            
-            return $newResponse;
-        });
-        
-        // COMPONENTS JSX
-        $route->get('/components[/{params: .*}]', function(Request $request, Response $response, array $args)
-        {
-            if (isset($args['params'])) { 
-               // $file = '/ReactComponents/src/components/'.$args['params'];
-            } else {
-                $file = __DIR__.'/../views/html/assets/js/main.js';
-            }
-            $script = file_get_contents(__DIR__ . $file);
-            
-            $newResponse = $response->withHeader("Content-type", "application/javascript");
-            
-            $newResponse->getBody()->write($script);
-            
-            return $newResponse;
-        });*/
         
         // ASSETS 
         $route->get('/assets/{type}/{filename}', function(Request $request, Response $response, array $args) 
@@ -114,7 +82,7 @@ return function (Route $route)
         }); 
 
         /*
-         * ADMIN POST THING
+         * ADMIN POST
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) 
         {                
@@ -124,6 +92,8 @@ return function (Route $route)
             unset($params['submit']);
             unset($params['submit_x']);
             unset($params['submit_y']);
+            unset($params['x']);
+            unset($params['y']);
             
             $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
                             
@@ -131,7 +101,7 @@ return function (Route $route)
                 
                 //  EDIT
                 if ($action == "edit" || $action == "put") {
-                    $idName = "id".$type;
+                    $idName = "id".lcfirst($type);
                     $idValue = $params[$idName];
                     unset($params[$idName]);
                     unset($params['output']);
@@ -156,6 +126,14 @@ return function (Route $route)
                     return $response->withHeader('Location', $return)->withStatus(301);
                     
                 } 
+                
+                // NEW RELATIONSHIP
+                elseif ($action == 'postRelationship') {
+                    
+                    (new $className($request))->postRelationship($params);
+                    
+                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+                }
                 
                 // DELETE
                 elseif ($action == "delete" || $action == "erase") {

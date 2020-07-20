@@ -17,7 +17,7 @@ class BannerView
         if ($idbanner) {            
             $content[] = self::form($data['idadvertising'], "edit", $data);
             // images
-            $content[] = (new ImageObjectView())->getForm("banners", $idbanner, $data['image']);
+            $content[] = (new ImageObjectView())->getForm("banner", $idbanner, $data['image']);
             
         } else {
             $content[] = self::form($data['idadvertising']);

@@ -119,18 +119,17 @@ class ImageObjectView
         $content[] = self::submitButtonSend([ "onclick" => "return submitFromAjax(this,'form-images-edit-$ID');" ]);
         $content[] = self::submitButtonDelete("/admin/imageObject/deleteHasPart");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "box formPadrao", "style" => "overflow: hidden;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/ImageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "box formPadrao", "style" => "overflow: hidden;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
         
-    protected function addImagesFromDatabase($idwebPage = null) 
+    protected function addImagesFromDatabase() 
     {        
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $this->tableOwner ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $this->idOwner ] ];
-        $content[] = $idwebPage ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $idwebPage ] ] : null;
         
         $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesfromdatabase", "class" => "imagesFromDatabase" ] ];
         
-        return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/insertHasPartFromDatabase", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/postRelationship", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
     }
     
     protected function addImagesFromServer($idwebPage = null) 
