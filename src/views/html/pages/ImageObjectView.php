@@ -117,7 +117,7 @@ class ImageObjectView
         }
         //
         $content[] = self::submitButtonSend([ "onclick" => "return submitFromAjax(this,'form-images-edit-$ID');" ]);
-        $content[] = self::submitButtonDelete("/admin/imageObject/deleteHasPart");
+        $content[] = self::submitButtonDelete("/admin/imageObject/deleteRelationship");
         // form
         return [ "tag" => "form", "attributes" => [ "class" => "box formPadrao", "style" => "overflow: hidden;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
@@ -163,6 +163,6 @@ class ImageObjectView
         ] ];
         $content[] = self::submitButtonSend();
         
-        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idOwner, "action" => '/admin/ImageObject/addWithPartOf', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
+        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idOwner, "action" => '/admin/imageObject/postAndPostRelationship', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
     }
 }
