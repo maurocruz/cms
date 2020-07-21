@@ -127,12 +127,25 @@ return function (Route $route)
                     
                 } 
                 
-                // NEW RELATIONSHIP
-                elseif ($action == 'postRelationship') {
+                // NEW RELATIONSHIP (only)
+                elseif ($action == 'postRelationship') {                                                          
                     
                     (new $className($request))->postRelationship($params);
                     
                     return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+                }
+                
+                // ADD NEW AND NEW RELATIONSHIP
+                elseif($action == "postAndPostRelationship") 
+                {                    
+                    $uploadedFiles = $_FILES['imageupload'];
+                                        
+                    if ($uploadedFiles['size'] !== 0) {
+                        
+                        (new $className($request))->postAndPostRelationship($uploadedFiles, $params); 
+                        
+                        return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+                    }
                 }
                 
                 // DELETE
@@ -148,7 +161,12 @@ return function (Route $route)
                     $return = $output == "referer" ? $_SERVER['HTTP_REFERER'] : dirname($_SERVER['REQUEST_URI']);     
                     
                     return $response->withHeader('Location', $return)->withStatus(301);
-                } 
+                    
+                } elseif ($action == 'deleteRelationship') {
+                    (new $className())->deleteRelationship($params);
+                    
+                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);                       
+                }
                 
             } else {            
                 return false;
