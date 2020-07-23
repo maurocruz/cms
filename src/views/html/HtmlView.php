@@ -136,7 +136,7 @@ class HtmlView extends HtmlViewContent
         parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>');
         parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>');
         parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
-        parent::addBody('<script src="/admin/assets/js/bundle"></script>');
+        parent::addBody('<script src="/App/static/js/plinctcms.js"></script>');
         
         return "<!DOCTYPE html>" . \Plinct\Web\Render::arrayToString($this->html);
     }
