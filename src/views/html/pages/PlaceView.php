@@ -43,7 +43,7 @@ class PlaceView
     public function edit(array $data): array
     {
         if ($data['@context'] !== null) {
-            $this->placeId = PropertyValue::extractValue($data['identifier'], "fwc_id");
+            $this->placeId = PropertyValue::extractValue($data['identifier'], "id");
             
             $this->placeName = $data['name'];
 
@@ -72,7 +72,7 @@ class PlaceView
     {
         if ($value) {
             $case = "edit";
-            $this->placeId = \fwc\Thing\PropertyValueGet::getValue($value['identifier'], 'fwc_id');
+            $this->placeId = \fwc\Thing\PropertyValueGet::getValue($value['identifier'], 'id');
             
         } else {
             $case = "postRelationship";

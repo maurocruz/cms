@@ -33,7 +33,7 @@ class contactPointView
             $content[] = _("new").": ";
             
         } else {     
-            $ID = PropertyValue::extractValue($value['identifier'],"fwc_id");
+            $ID = PropertyValue::extractValue($value['identifier'],"id");
             
             $position = PropertyValue::extractValue($value['identifier'],"position");
             

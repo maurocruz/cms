@@ -10,7 +10,7 @@ class BannerView
     
     public function getBannerByIdcontrato($data) 
     {
-        $idbanner = PropertyValue::extractValue($data['identifier'], "fwc_id");
+        $idbanner = PropertyValue::extractValue($data['identifier'], "id");
         
         $content[] = [ "tag" => "h4", "content" => "Banner" ];
         

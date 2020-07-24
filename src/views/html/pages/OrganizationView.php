@@ -24,7 +24,7 @@ class OrganizationView
         $content[] = self::input('idOwner', "hidden", $idOwner);
         $content[] = self::fieldsetWithInput(_("Organization"), "organization", $value['name'], [ "style" => "min-width: 320px;" ], "text", [ "data-type" => "organization", "data-property" => "name", "onkeyup" => "searchNameAndInputId(event);", "autocomplete" => "off" ]);
         if ($value) {
-            $content[] = self::input("organization", "hidden", \fwc\Thing\PropertyValueGet::getValue($value['identifier'], "fwc_id"));
+            $content[] = self::input("organization", "hidden", \fwc\Thing\PropertyValueGet::getValue($value['identifier'], "id"));
             $content[] = self::submitButtonDelete("/admin/organization/eraseWithPartOf");
         }
         return self::form('/admin/organization/addWithPartOf', $content);
@@ -38,7 +38,7 @@ class OrganizationView
             $this->content['main'][] = self::errorInfo($data['errorInfo'], "organization");
             
         } else {
-            $this->content['main'][] = self::listAll($data, "organization");
+            $this->content['main'][] = self::listAll($data, "organization", _("List of organizations"), [ "update_time" => "Update date" ]);
         }
         
         return $this->content;
@@ -57,7 +57,7 @@ class OrganizationView
     {
         $value = $data[0];
         
-        $this->organizationId = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "fwc_id");
+        $this->organizationId = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id");
         $this->organizationName = $value['name'];
         
         $this->navbar();
@@ -85,7 +85,7 @@ class OrganizationView
         $content[] = [ "tag" => "h3", "content" => $value['name'] ];
         
         if ($case == "edit") {
-            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'fwc_id');
+            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
             
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOrganization", "type" => "hidden", "value" => $ID ] ];            
         }

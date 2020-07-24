@@ -47,7 +47,7 @@ class ImageObjectView
     
     private function form($value, $isPartOf = null, $mode = "simple") 
     { 
-        $ID = PropertyValue::extractValue($value['identifier'], "fwc_id");
+        $ID = PropertyValue::extractValue($value['identifier'], "id");
         if (isset($value['potentialAction'])) {
             foreach ($value['potentialAction'] as $valueAction) {
                 $potentialAction[$valueAction['name']] = $valueAction['result'];

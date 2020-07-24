@@ -54,7 +54,7 @@ class AdvertisingView
             foreach ($data['itemListElement'] as $key => $value) {
                 $item = $value['item'];
                 
-                $id = \Plinct\Api\Type\PropertyValue::extractValue($item['identifier'], "fwc_id");
+                $id = \Plinct\Api\Type\PropertyValue::extractValue($item['identifier'], "id");
                 
                 $body[] = [ "tag" => "tr", "attributes" => [ "style" => $item['status'] == 1 ? "opacity: 1;" : "opacity: 0.5;" ], "content" => [
                     [ "tag" => "td", "content" => $key+1 ],
@@ -101,7 +101,7 @@ class AdvertisingView
         
         $this->navbar();
         
-        $idLocalBusiness = \Plinct\Api\Type\PropertyValue::extractValue($customer['identifier'], "fwc_id");
+        $idLocalBusiness = \Plinct\Api\Type\PropertyValue::extractValue($customer['identifier'], "id");
         
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Editing contract") ];
         $this->content['main'][] = [ "tag" => "p", "content" => _("View ad"), "href" => "/". str_replace(" ", "", $customer['name'])."/".$idLocalBusiness, "hrefAttributes" => [ "target" => "_blank" ] ];
@@ -127,8 +127,8 @@ class AdvertisingView
         $content[] = [ "tag" => "h3", "content" => $value['customer']['name'] ?? _("New advertising") ];
         
         if ($case == "edit") {        
-            $idcustomer = \Plinct\Api\Type\PropertyValue::extractValue($value['customer']['identifier'], "fwc_id");
-            $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "fwc_id");
+            $idcustomer = \Plinct\Api\Type\PropertyValue::extractValue($value['customer']['identifier'], "id");
+            $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id");
             
             $content[] = [ "tag" => "p", "content" => _("Edit Local Business"), "href" => "/admin/localBusiness/edit/".$idcustomer ];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => "advertising" ]];
@@ -140,7 +140,7 @@ class AdvertisingView
             $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => _("Choose a local business...") ];
             
             foreach ($value as $valueLB) {            
-                $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => \Plinct\Api\Type\PropertyValue::extractValue($valueLB['identifier'], "fwc_id") ], "content" => $valueLB['name'] ];
+                $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => \Plinct\Api\Type\PropertyValue::extractValue($valueLB['identifier'], "id") ], "content" => $valueLB['name'] ];
             } 
             
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [

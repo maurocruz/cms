@@ -17,7 +17,7 @@ class PostalAddressView
         $content[] = self::input('idOwner', "hidden", $idOwner);
         
         if ($case == "edit") {
-            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'fwc_id');
+            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
             $content[] = self::input("idpostalAddress", "hidden", $ID);
         }
         

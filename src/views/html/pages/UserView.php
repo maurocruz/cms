@@ -36,7 +36,7 @@ class UserView
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
             
-            $id = PropertyValue::extractValue($item['identifier'], "fwc_id");
+            $id = PropertyValue::extractValue($item['identifier'], "id");
             
             $body[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "content" => $id ],
@@ -65,7 +65,7 @@ class UserView
     
     static private function form($case = 'add', $value = null) 
     {
-        $id = PropertyValue::extractValue($value['identifier'], "fwc_id");
+        $id = PropertyValue::extractValue($value['identifier'], "id");
         
         $content[] = $case == "edit" ? self::input("iduser", "hidden", $id) : null;
         

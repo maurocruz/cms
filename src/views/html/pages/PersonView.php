@@ -43,7 +43,7 @@ class PersonView
     
     public function edit(array $data): array 
     {       
-        $this->personId = PropertyValue::extractValue($data['identifier'], "fwc_id");
+        $this->personId = PropertyValue::extractValue($data['identifier'], "id");
         $this->personName = $data['name'];
         
         $this->navbar();
@@ -148,7 +148,7 @@ class PersonView
     
     static private function formWithPartOf($value, $tableOwner, $idOwner) 
     {
-        $ID = PropertyValue::extractValue($value['identifier'], "fwc_id");
+        $ID = PropertyValue::extractValue($value['identifier'], "id");
         
         $content[] = [ "tag" => "h3", "content" => ucfirst(_("Person")) ]; 
         

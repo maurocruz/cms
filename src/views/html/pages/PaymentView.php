@@ -6,7 +6,7 @@ class PaymentView
 {      
     public function edit(array $data): array
     {
-        $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($data['advertising']['identifier'], "fwc_id");
+        $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($data['advertising']['identifier'], "id");
         
         $content[] = [ "tag" => "h4", "content" => "Payments" ];  
         
@@ -28,8 +28,8 @@ class PaymentView
     }
     
     private static function form($idadvertising, $case = 'new', $value = null, $n = null) 
-    {        
-        $idpayment = $value ? \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "fwc_id") : null;
+    {
+        $idpayment = $value ? \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id") : null;
         
         // hiddens
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idadvertising", "value" => $idadvertising, "type" => "hidden"] ];        
