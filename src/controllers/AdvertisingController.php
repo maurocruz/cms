@@ -25,7 +25,7 @@ class AdvertisingController
             
             foreach ($data as $value) {
                 //var_dump($value);
-                $item['item']['identifier'][] = [ "value" => $value['idadvertising'], "name" => "fwc_id" ]; 
+                $item['item']['identifier'][] = [ "value" => $value['idadvertising'], "name" => "id" ]; 
                 $item['item']['customer']['name'] = $value['name']; 
                 $item['item']['status'] = $value['status']; 
                 $item['item']['data'] = $value['data']; 
@@ -57,7 +57,7 @@ class AdvertisingController
         $params["properties"] = "tags,history";        
         $adverisingData = (new Advertising())->get($params);        
         $response['advertising'] = $adverisingData[0];
-        $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'fwc_id');
+        $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'id');
         
         // payments
         $paramsPayment = [ "where" => "`idadvertising`=$idadvertising", "orderBy" => "vencimentoparc", "ordering" => "desc" ];
