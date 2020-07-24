@@ -177,10 +177,6 @@ msgstr "Veja isto"
 msgid "There are no enabled modules!"
 msgstr "Não há módulos habilitados!"
 
-
-msgid "Organization"
-msgstr "Organização"
-
 msgid "LocalBusiness"
 msgstr "Negócios Locais"
 
@@ -195,8 +191,17 @@ msgstr "Local"
 
 ############################   ORGANIZATION   ##################################
 
+msgid "Organization"
+msgstr "Organização"
+
 msgid "organization"
 msgstr "organização"
+
+msgid "Organizations"
+msgstr "Organizações"
+
+msgid "organizations"
+msgstr "organizações"
 
 msgid "Add new organization"
 msgstr "Adicionar nova organização"
@@ -303,6 +308,9 @@ msgstr "Data fim"
 
 msgid "End time"
 msgstr "Hora fim"
+
+msgid "Update date"
+msgstr "Data de atualização"
 
 ################################   ARTICLES   ##################################
 
