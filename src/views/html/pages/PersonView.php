@@ -60,34 +60,36 @@ class PersonView
         return $this->content;
     }
     
-    public function getForm($tableOwner, $idOwner, $data) 
+    public function getForm($tableHasPart, $idHasPart, $data) 
     {        
         if ($data) {
             // show persons
             foreach ($data as $value) {
-                $content[] = self::formWithPartOf($value, $tableOwner, $idOwner);
+                $content[] = self::form('edit', $value, $tableHasPart, $idHasPart);
             }
         }        
         // insert new person
-        $content[] = self::form("addWithPartOf", null, $tableOwner, $idOwner);        
+        $content[] = self::form("new", null, $tableHasPart, $idHasPart);        
         return $content;
     }
     
-    private function form($case = 'new', $value = null, $tableOwner = null, $idOwner = null)
+    private static function form($case = 'new', $value = null, $tableHasPart = null, $idHasPart = null)
     {
+        $id = PropertyValue::extractValue($value['identifier'], 'id');
+        
         $content[] = [ "tag" => "h6", "content" => ucfirst(_($case)) ]; 
         
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"idperson", "type" => "hidden", "value" => $this->personId ] ] : null ;
+        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"id", "type" => "hidden", "value" => $id ] ] : null ;
         
-        if ($tableOwner) {
-            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableOwner", "type" => "hidden", "value"=>$tableOwner ] ] ;
-            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idOwner", "type" => "hidden", "value"=>$idOwner ] ] ;
+        if ($tableHasPart) {
+            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableHasPart", "type" => "hidden", "value"=>$tableHasPart ] ] ;
+            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idHasPart", "type" => "hidden", "value"=>$idHasPart ] ] ;
         }
         
         // given name
         $attributes = [ "name"=>"givenName", "type" => "text", "value" => $value['givenName'] ?? "" ];
         
-        $attr = $case !== "edit" ? array_merge($attributes, [ "data-idselect" => "gv".($ID ?? $case), "onKeyUp" => "selectItemFormBd(this,'person');", "autocomplete" => "off" ]) : $attributes;
+        $attr = $case !== "edit" ? array_merge($attributes, [ "data-idselect" => "gv".($id ?? $case), "onKeyUp" => "selectItemFormBd(this,'person');", "autocomplete" => "off" ]) : $attributes;
         
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 380px;" ], "content" => [ 
             [ "tag" =>"legend", "content" => _("Given name") ],
@@ -146,19 +148,19 @@ class PersonView
         return [ "tag" => "form", "attributes" => [ "class" => "form-inline box", "action" => "/admin/person/$case", "method" => "post"], "content" => $content ];
     }
     
-    static private function formWithPartOf($value, $tableOwner, $idOwner) 
+    private static function formWithPartOf($value, $tableHasPart, $idHasPart) 
     {
-        $ID = PropertyValue::extractValue($value['identifier'], "id");
+        $id = PropertyValue::extractValue($value['identifier'], "id");
         
         $content[] = [ "tag" => "h3", "content" => ucfirst(_("Person")) ]; 
         
-        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idperson", "type" => "hidden", "value" => $ID ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableOwner", "type" => "hidden", "value" => $tableOwner ] ] ;
-        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idOwner", "type" => "hidden", "value" => $idOwner ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"id", "type" => "hidden", "value" => $id ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ] ;
+        $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
         
         // given name
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 64%;" ], "content" => [ 
-            [ "tag" =>"legend", "content" => _("Name")." - "._("taxId")." [<a href=\"/admin/modules/person/edit/".$ID."\" class=\"white\">"._("Edit person")."</a>]" ],
+            [ "tag" =>"legend", "content" => _("Name")." - "._("taxId")." [<a href=\"/admin/modules/person/edit/".$id."\" class=\"white\">"._("Edit person")."</a>]" ],
             [ "tag" => "input", "attributes" => [ "name"=>"listPersonNames", "type" => "text", "value" => $value['name'], "onKeyUp" => "selectItemFormBd(this,'person');", "autocomplete" => "off", "readonly" ] ]
         ]];
         
@@ -170,8 +172,8 @@ class PersonView
         
         $content[] = self::submitButtonSend();
         
-        $content[] = self::submitButtonDelete("/admin/person/deleteWithPartOf");
+        $content[] = self::submitButtonDelete("/admin/person/erase");
         
-        return [ "tag" => "form", "attributes" => [ "class" => "form-inline box", "action" => "/admin/person/putRelationship", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "form-inline box", "action" => "/admin/person/edit", "method" => "post" ], "content" => $content ];
     }
 }
