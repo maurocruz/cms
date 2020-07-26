@@ -6,23 +6,25 @@ class PostalAddressView
 {    
     use \Plinct\Web\Widget\FormTrait;
     
-    public function getForm($tableOwner, $idOwner, $value) 
+    public function getForm($tableHasPart, $idHasPart, $value) 
     {
-        return self::form($tableOwner, $idOwner, $value ? 'edit' : 'new', $value);
+        return self::form($tableHasPart, $idHasPart, $value ? 'edit' : 'new', $value);
     }
     
-    static private function form($tableOwner, $idOwner, $case = 'new', $value = null) 
+    static private function form($tableHasPart, $idHasPart, $case = 'new', $value = null) 
     {
-        $content[] = self::input('tableOwner', "hidden", $tableOwner);
-        $content[] = self::input('idOwner', "hidden", $idOwner);
+        $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
+        $content[] = self::input('idHasPart', "hidden", $idHasPart);
+        $content[] = self::input('tableIsPartOf', "hidden", "postalAddress");
         
         if ($case == "edit") {
-            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
-            $content[] = self::input("idpostalAddress", "hidden", $ID);
+            $id = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
+            $content[] = self::input("id", "hidden", $id);
         }
         
         // streetAddress
-        $content[] = self::fieldsetWithInput(_("Street address"), "streetAddress", $value['streetAddress'], [ "style" => "width: calc(100% - 650px)"], "text", [ "data-type" => "PostalAddress", "data-property" => "streetAddress", "onKeyUp" => "searchAndFill(event);", "autocomplete" => "off" ]);
+        //$content[] = self::fieldsetWithInput(_("Street address"), "streetAddress", $value['streetAddress'], [ "style" => "width: calc(100% - 650px)"], "text", [ "data-type" => "PostalAddress", "data-property" => "streetAddress", "onKeyUp" => "searchAndFill(event);", "autocomplete" => "off" ]);
+        $content[] = self::fieldsetWithInput(_("Street address"), "streetAddress", $value['streetAddress'], [ "style" => "width: calc(100% - 650px)"]);
         
         // addressLocality
         $content[] = self::fieldsetWithInput(_("Address locality"), "addressLocality", $value['addressLocality'], [ "style" => "width: 200px;"]);

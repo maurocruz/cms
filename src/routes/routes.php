@@ -12,6 +12,7 @@ use Plinct\Api\Auth\AuthMiddleware;
 use Plinct\Cms\Middleware\InitialChecking;
 
 use Plinct\Cms\View\ViewBuilder;
+use Plinct\Cms\Server\Server;
 
 return function (Route $route) 
 {    
@@ -96,77 +97,25 @@ return function (Route $route)
             unset($params['y']);
             
             $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
-                            
+                                        
             if (class_exists($className)) {
                 
                 //  EDIT
-                if ($action == "edit" || $action == "put") {
-                    $idName = "id".lcfirst($type);
-                    $idValue = $params[$idName];
-                    unset($params[$idName]);
-                    unset($params['output']);
-
-                    (new $className())->put($idValue,$params);
-                    
-                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+                if ($action == "edit" || $action == "put") {                  
+                    $data = (new Server())->edit($className, $params);     
                 } 
                 
                 // NEW
-                elseif ($action == "new" || $action == "post" || $action == "add") {
-                    
-                    $output = $params['output'] ?? null;
-                    unset($params['output']);
-                    
-                    $data = (new $className($request))->post($params);
-                    
-                    $id = $data['id'];
-                    
-                    $return = $output == "referer" ? $_SERVER['HTTP_REFERER'] : dirname($_SERVER['HTTP_REFERER'])."/edit/$id";                    
-                    
-                    return $response->withHeader('Location', $return)->withStatus(301);
-                    
+                elseif ($action == "new" || $action == "post" || $action == "add") {                    
+                    $data = (new Server())->new($className, $params);                  
                 } 
                 
-                // NEW RELATIONSHIP (only)
-                elseif ($action == 'postRelationship') {                                                          
-                    
-                    (new $className($request))->postRelationship($params);
-                    
-                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
-                }
-                
-                // ADD NEW AND NEW RELATIONSHIP
-                elseif($action == "postAndPostRelationship") 
-                {                    
-                    $uploadedFiles = $_FILES['imageupload'];
-                                        
-                    if ($uploadedFiles['size'] !== 0) {
-                        
-                        (new $className($request))->postAndPostRelationship($uploadedFiles, $params); 
-                        
-                        return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
-                    }
-                }
-                
                 // DELETE
-                elseif ($action == "delete" || $action == "erase") {
-                    $idName = "id".$type;
-                    $idValue = $params[$idName];
+                elseif ($action == "delete" || $action == "erase") {                    
+                    $data = (new Server())->delete($className, $params);
+                } 
                                         
-                    $output = $params['output'] ?? null;
-                    unset($params['output']);
-                                        
-                    (new $className())->delete($params);
-                                        
-                    $return = $output == "referer" ? $_SERVER['HTTP_REFERER'] : dirname($_SERVER['REQUEST_URI']);     
-                    
-                    return $response->withHeader('Location', $return)->withStatus(301);
-                    
-                } elseif ($action == 'deleteRelationship') {
-                    (new $className())->deleteRelationship($params);
-                    
-                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);                       
-                }
+                //return $response->withHeader('Location', $data)->withStatus(301);  
                 
             } else {            
                 return false;

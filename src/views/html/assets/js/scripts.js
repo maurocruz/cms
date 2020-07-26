@@ -41,7 +41,24 @@ function setHistory(obj){
         
         return true;
     }
-};
+}
+
+// EXPANDIR BOX DE EDIÇÃO DE POSTAGEM
+function expandBox(object, objectId)
+{
+    var target = objectId ? document.getElementById(objectId) : target = object.parentNode;
+    
+    if (object.className === 'button-dropdown button-dropdown-contracted') {
+        target.style.maxHeight = 'none';
+        target.className = "box";
+        object.className = 'button-dropdown button-dropdown-expanded'
+        
+    } else {
+        target.style.maxHeight = '1rem';
+        target.className = "box box-expanding";
+        object.className = 'button-dropdown button-dropdown-contracted'
+    }
+}
 
 
 

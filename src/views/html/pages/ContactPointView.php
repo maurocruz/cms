@@ -8,41 +8,41 @@ class contactPointView
 {
     use \Plinct\Web\Widget\FormTrait;
         
-    public function getForm($tableOwner, $idOwner, $data)
+    public function getForm($tableHasPart, $idHasPart, $data)
     { 
         if ($data) {
             foreach ($data as $key => $value) {
-                $content[] = self::form($tableOwner, $idOwner, "edit", $value);
+                $content[] = self::form($tableHasPart, $idHasPart, "edit", $value);
                 $content[] = [ "tag" => "hr" ]; 
             }
         }        
         
-        $content[] = self::form($tableOwner, $idOwner);
+        $content[] = self::form($tableHasPart, $idHasPart);
         
         return $content;
     }
     
-    static private function form($tableOwner, $idOwner, $case = 'new', $value = null, $key = null)
-    {  
-        
+    static private function form($tableHasPart, $idHasPart, $case = 'new', $value = null, $key = null)
+    {          
         $whatsapp = isset($value['contactOption']) ? PropertyValue::extractValue($value['contactOption'],"whatsapp") : null;
         
         $obs = isset($value['contactOption']) ? PropertyValue::extractValue($value['contactOption'],"obs") : null;        
+        
+        $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
+        $content[] = self::input('idHasPart', "hidden", $idHasPart);
+        $content[] = self::input('tableIsPartOf', "hidden", "contactPoint");
         
         if ($case === "new") {
             $content[] = _("new").": ";
             
         } else {     
-            $ID = PropertyValue::extractValue($value['identifier'],"id");
+            $id = PropertyValue::extractValue($value['identifier'],"id");
             
             $position = PropertyValue::extractValue($value['identifier'],"position");
             
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idcontactPoint", "type" => "hidden", "value" => $ID ] ];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idcontactPoint", "type" => "hidden", "value" => $id ] ];
         }   
-        
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $tableOwner ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $idOwner ] ];
-        
+                
         // position
         $content[] = [ "tag" => "fieldset","attributes" => [ "style" => "width: 20px;" ], "content" => [
             [ "tag" => "legend", "content" => "Pos." ],            

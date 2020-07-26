@@ -15,7 +15,7 @@ class OrganizationController implements ControllerInterface
     
     public function edit(array $params): array 
     {   
-        $params = [ "id" => $params['id'], "properties" => "*,contactPoint,member,image" ];
+        $params = [ "id" => $params['id'], "properties" => "*,address,contactPoint,member,image" ];
         
         return (new \Plinct\Api\Type\Organization())->get($params);
     }

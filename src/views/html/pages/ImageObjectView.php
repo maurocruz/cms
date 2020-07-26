@@ -163,6 +163,6 @@ class ImageObjectView
         ] ];
         $content[] = self::submitButtonSend();
         
-        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idOwner, "action" => '/admin/imageObject/postAndPostRelationship', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
+        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idOwner, "action" => '/admin/imageObject/newAndPostRelationship', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
     }
 }

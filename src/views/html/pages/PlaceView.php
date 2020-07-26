@@ -108,10 +108,10 @@ class PlaceView
         $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'], [ "style" => "width: 500px;"]);
         
         // description
-        $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'], 100);
+        //$content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'], 100);
         
         // disambiguating description
-        $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'], 150);
+        //$content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'], 150);
         
         // submit
         $content[] = self::submitButtonSend();

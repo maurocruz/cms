@@ -64,16 +64,22 @@ class OrganizationView
         
         // organization
         $this->content['main'][] = self::formOrganization('edit', $value);
+        
         // address
         $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("organization", $this->organizationId, $value['address']) ]);
+        
         // contact point
         $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('organization', $this->organizationId, $value['contactPoint']) ]);
+        
         // member
         $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ (new PersonView())->getForm("organization", $this->organizationId, $value['member']) ]);
+        
         // location
         $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ (new PlaceView())->getForm("organization", $this->organizationId, $value['location']) ]);
+        
         // areaServed
         //$this->content['main'][] = self::divBoxExpanding(_("Area served"), "Place", [ (new PlaceView())->getForm("organization", $this->organizationId, $value['location']) ]);
+        //
         // image
         $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("organization", $this->organizationId. $value['image']) ]);
         
@@ -85,9 +91,9 @@ class OrganizationView
         $content[] = [ "tag" => "h3", "content" => $value['name'] ];
         
         if ($case == "edit") {
-            $ID = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
+            $id = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
             
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOrganization", "type" => "hidden", "value" => $ID ] ];            
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];            
         }
         
         // legal name
