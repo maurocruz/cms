@@ -68,17 +68,17 @@ class PlaceView
         return $this->content;
     }
     
-    public function getForm($tableOwner, $idOwner, $value = null) 
+    public function getForm($tableHasPart, $idHasPart, $value = null) 
     {
         if ($value) {
             $case = "edit";
-            $this->placeId = \fwc\Thing\PropertyValueGet::getValue($value['identifier'], 'id');
+            $this->placeId = PropertyValue::extractValue($value['identifier'], 'id');
             
         } else {
-            $case = "postRelationship";
+            $case = "new";
         }
         
-        $content[] = self::form($tableOwner, $idOwner, $case, $value);
+        $content[] = self::form($tableHasPart, $idHasPart, $case, $value);
         
         // address
         $content[] = $case == 'edit' ? self::divBoxExpanding(_("Postal address"), "place", [ (new PostalAddressView())->getForm("place", $this->placeId, $value['address']) ]) : null;
@@ -86,13 +86,13 @@ class PlaceView
         return $content;
     }
     
-    private function form($tableOwner, $idOwner, $case = "new", $value = null) 
+    private function form($tableHasPart, $idHasPart, $case = "new", $value = null) 
     {
-        $content[] = $tableOwner ? [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $tableOwner ]] : null;        
-        $content[] = $idOwner ? [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $idOwner ]] :  null; 
+        $content[] = $tableHasPart ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ]] : null;        
+        $content[] = $idHasPart ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ]] :  null; 
         
         if ($case == "edit" ) {
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idplace", "type" => "hidden", "value" => $this->placeId ] ];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $this->placeId ] ];
         }   
         
         // name        
@@ -117,7 +117,7 @@ class PlaceView
         $content[] = self::submitButtonSend();
         
         if ($case == "edit") {
-            $action = $tableOwner ? "/admin/place/deleteRelationship" : "/admin/place/erase";
+            $action = $tableHasPart ? "/admin/place/deleteRelationship" : "/admin/place/erase";
             $content[] = self::submitButtonDelete($action);
         }
         
