@@ -115,7 +115,7 @@ return function (Route $route)
                     $data = (new Server())->delete($className, $params);
                 } 
                                         
-                //return $response->withHeader('Location', $data)->withStatus(301);  
+                return $response->withHeader('Location', $data)->withStatus(301);  
                 
             } else {            
                 return false;
