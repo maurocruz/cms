@@ -4,6 +4,8 @@ namespace Plinct\Cms\Server;
 
 class Server
 {   
+    private static $tableHasPart;
+    
     public function edit($className, $params)
     {     
         (new $className())->put(self::unsetRelParams($params));
@@ -22,24 +24,24 @@ class Server
         
         (new $className())->delete(self::unsetRelParams($params));
         
-        return $this->return($params['tableIsPartOf'] ?? null);
+        return $this->return();
     }
     
     private static function unsetRelParams($params)
     {        
-        if (isset($params['tableIsPartOf'])) {
-            unset($params['tableHasPart']);
-            unset($params['idHasPart']);
-            unset($params['tableIsPartOf']);
-            unset($params['idIsPartOf']);
-        }
+        self::$tableHasPart = $params['tableHasPart'];
+        
+        unset($params['tableHasPart']);
+        unset($params['idHasPart']);
+        unset($params['tableIsPartOf']);
+        unset($params['idIsPartOf']);        
         
         return $params;
     }
     
-    private function return($tableIsPartOf = null) 
+    private function return() 
     {        
-        if ($tableIsPartOf) {
+        if (self::$tableHasPart) {
             return filter_input(INPUT_SERVER, 'HTTP_REFERER');
             
         } else {                
