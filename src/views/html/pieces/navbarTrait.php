@@ -27,13 +27,13 @@ trait navbarTrait
         } elseif ($type == "organization") { 
             $list = [
                 "/admin/localBusiness?providerId=$id&providerType=$type" => _("View all"), 
-                "/admin/localBusiness/add?providerId=$id&providerType=$type" => _("Add new") 
+                "/admin/localBusiness/new?providerId=$id&providerType=$type" => _("Add new") 
             ];
             $title = _("Locals business");
         } else { 
             $list = [
                 "/admin/localBusiness" => _("View all"), 
-                "/admin/localBusiness/add" => _("Add new") 
+                "/admin/localBusiness/new" => _("Add new") 
             ];
             $title = _("Locals business");
         }        
@@ -47,7 +47,7 @@ trait navbarTrait
         } else {
             $list = [ 
                 "/admin/place" => _("View all"), 
-                "/admin/place/add" => _("Add new place")            
+                "/admin/place/new" => _("Add new place")            
             ];
             $title = _("Places");
         }

@@ -65,7 +65,7 @@ class AdvertisingController
         $response['payment'] = $paymentData;
         
         // history
-        $paramsHistory = [ "tableOwner" => "advertising", "idOwner" => $idadvertising, "orderBy" => "datetime", "ordering" => "desc" ];
+        $paramsHistory = [ "tableHasPart" => "advertising", "idHasPart" => $idadvertising, "orderBy" => "datetime", "ordering" => "desc" ];
         $historyData = (new History())->get($paramsHistory);
         $response['history'] = $historyData;
         

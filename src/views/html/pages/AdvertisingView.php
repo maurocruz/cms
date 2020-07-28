@@ -3,6 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Tool\DateTime;
+use Plinct\Api\Type\PropertyValue;
 
 class AdvertisingView
 {
@@ -54,7 +55,7 @@ class AdvertisingView
             foreach ($data['itemListElement'] as $key => $value) {
                 $item = $value['item'];
                 
-                $id = \Plinct\Api\Type\PropertyValue::extractValue($item['identifier'], "id");
+                $id = PropertyValue::extractValue($item['identifier'], "id");
                 
                 $body[] = [ "tag" => "tr", "attributes" => [ "style" => $item['status'] == 1 ? "opacity: 1;" : "opacity: 0.5;" ], "content" => [
                     [ "tag" => "td", "content" => $key+1 ],
@@ -101,7 +102,7 @@ class AdvertisingView
         
         $this->navbar();
         
-        $idLocalBusiness = \Plinct\Api\Type\PropertyValue::extractValue($customer['identifier'], "id");
+        $idLocalBusiness = PropertyValue::extractValue($customer['identifier'], "id");
         
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Editing contract") ];
         $this->content['main'][] = [ "tag" => "p", "content" => _("View ad"), "href" => "/". str_replace(" ", "", $customer['name'])."/".$idLocalBusiness, "hrefAttributes" => [ "target" => "_blank" ] ];
@@ -127,13 +128,13 @@ class AdvertisingView
         $content[] = [ "tag" => "h3", "content" => $value['customer']['name'] ?? _("New advertising") ];
         
         if ($case == "edit") {        
-            $idcustomer = \Plinct\Api\Type\PropertyValue::extractValue($value['customer']['identifier'], "id");
-            $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id");
+            $idcustomer = PropertyValue::extractValue($value['customer']['identifier'], "id");
+            $idadvertising = PropertyValue::extractValue($value['identifier'], "id");
             
             $content[] = [ "tag" => "p", "content" => _("Edit Local Business"), "href" => "/admin/localBusiness/edit/".$idcustomer ];
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => "advertising" ]];
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $idadvertising ]];
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idadvertising", "type" => "hidden", "value" => $idadvertising ]];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => "advertising" ]];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ]];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $idadvertising ]];
             $tipos[] = [ "tag" => "option", "attributes" => [ "value" => $value['tipo'] ], "content" => self::contractTypeNumberToString($value['tipo']) ];
             
         } elseif ($case = "new") {

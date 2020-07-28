@@ -70,19 +70,8 @@ class PlaceView
     
     public function getForm($tableHasPart, $idHasPart, $value = null) 
     {
-        if ($value) {
-            $case = "edit";
-            $this->placeId = PropertyValue::extractValue($value['identifier'], 'id');
-            
-        } else {
-            $case = "new";
-        }
-        
-        $content[] = self::form($tableHasPart, $idHasPart, $case, $value);
-        
-        // address
-        $content[] = $case == 'edit' ? self::divBoxExpanding(_("Postal address"), "place", [ (new PostalAddressView())->getForm("place", $this->placeId, $value['address']) ]) : null;
-        
+        $content[] = $value ? self::form($tableHasPart, $idHasPart, 'edit', $value) :  self::form($tableHasPart, $idHasPart);
+             
         return $content;
     }
     
@@ -98,11 +87,12 @@ class PlaceView
         // name        
         $content[] = $case == "addWithPart" ? self::searchAndSubmit("name", "place", "name", $value['location'] ?? $value) : self::fieldsetWithInput(_("Place"), "name", $value['name'], [ "style" => "width: 320px;"]);        
         // Geo
-        $geo = $value['geo']['longitude'] ? $value['geo']['latitude'].", ".$value['geo']['longitude'] : null;
-        $content[] = self::fieldsetWithInput(_("Geo coordinates (WGS 84)"), "geo", $geo, [ "style" => "width: 225px;"]);
+        $content[] = self::fieldsetWithInput(_("Latitude"), "latitude", $value['latitude'], [ "style" => "width: 225px;"]);
+        
+        $content[] = self::fieldsetWithInput(_("Longitude"), "longitude", $value['longitude'], [ "style" => "width: 225px;"]);
         
         // elevation
-        $content[] = self::fieldsetWithInput(_("Elevation (meters)"), "elevation", $value['geo']['elevation'], [ "style" => "width: 200px;"]);
+        $content[] = self::fieldsetWithInput(_("Elevation (meters)"), "elevation", $value['elevation'], [ "style" => "width: 200px;"]);
         
         // additional type
         $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'], [ "style" => "width: 500px;"]);

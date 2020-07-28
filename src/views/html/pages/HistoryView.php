@@ -7,7 +7,7 @@ use Plinct\Tool\DateTime;
 class HistoryView
 {    
     public function view($data) 
-    {
+    {        
         if (isset($data['message']) && $data['message'] == "No data founded") {
             $body[] = [ "tag" => "tr", "content" => [ 
                 [ "tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => "Não há registros!" ] ] 

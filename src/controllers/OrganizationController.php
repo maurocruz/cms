@@ -2,6 +2,8 @@
 
 namespace Plinct\Cms\Controller;
 
+use Plinct\Api\Type\Organization;
+
 class OrganizationController implements ControllerInterface
 {
     public function index($params = null): array 
@@ -10,14 +12,14 @@ class OrganizationController implements ControllerInterface
         
         $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
         
-        return (new \Plinct\Api\Type\Organization())->get($paramsGet);
+        return (new Organization())->get($paramsGet);
     }
     
     public function edit(array $params): array 
     {   
         $params = [ "id" => $params['id'], "properties" => "*,address,contactPoint,member,image", "allDetails" => "true" ];
         
-        return (new \Plinct\Api\Type\Organization())->get($params);
+        return (new Organization())->get($params);
     }
     
     public function new() 

@@ -2,18 +2,22 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
+use Plinct\Api\Type\PropertyValue;
+
 class PaymentView
 {      
     public function edit(array $data): array
     {
-        $idadvertising = \Plinct\Api\Type\PropertyValue::extractValue($data['advertising']['identifier'], "id");
+        $idadvertising = PropertyValue::extractValue($data['advertising']['identifier'], "id");
         
         $content[] = [ "tag" => "h4", "content" => "Payments" ];  
         
         $data_exists = isset($data['payment']['message']) && $data['payment']['message'] == "No data founded" ? false : true;
         
         // new
-        $content[] = self::form($idadvertising, "new", null, $data_exists ? (count($data['payment'])+1) : 1);
+        $nparc = $data_exists === true ? (count($data['payment'])+1) : 1;
+        
+        $content[] = self::form($idadvertising, "new", null, $nparc );
         
         if ($data_exists) {
             foreach ($data['payment'] as $value) {
@@ -32,16 +36,15 @@ class PaymentView
         $idpayment = $value ? \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id") : null;
         
         // hiddens
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idadvertising", "value" => $idadvertising, "type" => "hidden"] ];        
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "advertising", "type" => "hidden"] ];        
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $idadvertising, "type" => "hidden"] ];        
         
         if ($case == "edit") {
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idpayment", "value" => $idpayment, "type" => "hidden"] ];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idpayment, "type" => "hidden"] ];
         }   
-        
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "output", "value" => "referer", "type" => "hidden"] ];
-            
+                    
         // parcela
-        $p = $case == "new" ? $n+1 : $value['parcela'];
+        $p = $case == "new" ? $n : $value['parcela'];
         $content[] = [ "tag" => "fieldset", "content" => [ 
             $case == "new" ? [ "tag" => "legend", "content" => "Parcela" ] : null,
             [ "tag" => "input", "attributes" => [ "name" => "parcela", "value" => $p, "type" => "text" ] ]

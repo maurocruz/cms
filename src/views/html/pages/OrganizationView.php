@@ -18,15 +18,18 @@ class OrganizationView
         }
     }
     
-    public function getForm($tableOwner, $idOwner, $value) 
+    public function getForm($tableHasPart, $idHasPart, $value) 
     {
-        $content[] = self::input('tableOwner', "hidden", $tableOwner);
-        $content[] = self::input('idOwner', "hidden", $idOwner);
+        $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
+        $content[] = self::input('idHasPart', "hidden", $idHasPart);
+        
         $content[] = self::fieldsetWithInput(_("Organization"), "organization", $value['name'], [ "style" => "min-width: 320px;" ], "text", [ "data-type" => "organization", "data-property" => "name", "onkeyup" => "searchNameAndInputId(event);", "autocomplete" => "off" ]);
+        
         if ($value) {
             $content[] = self::input("organization", "hidden", \fwc\Thing\PropertyValueGet::getValue($value['identifier'], "id"));
             $content[] = self::submitButtonDelete("/admin/organization/eraseWithPartOf");
         }
+        
         return self::form('/admin/organization/addWithPartOf', $content);
     }
     

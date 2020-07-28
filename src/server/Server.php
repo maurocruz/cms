@@ -8,7 +8,7 @@ class Server
     
     public function edit($className, $params)
     {     
-        (new $className())->put(self::unsetRelParams($params));
+        (new $className())->put($params);
         
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
@@ -17,11 +17,11 @@ class Server
     {        
         (new $className())->post($params);
                
-        return $this->return($params['tableIsPartOf'] ?? null);
+        return $this->return(self::unsetRelParams($params));
     }
     
-    public function delete($className, $params)    {   
-        
+    public function delete($className, $params)    
+    {        
         (new $className())->delete(self::unsetRelParams($params));
         
         return $this->return();

@@ -9,15 +9,15 @@ class contactPointView
     use \Plinct\Web\Widget\FormTrait;
         
     public function getForm($tableHasPart, $idHasPart, $data)
-    { 
+    {        
         if ($data) {
             foreach ($data as $key => $value) {
                 $content[] = self::form($tableHasPart, $idHasPart, "edit", $value);
                 $content[] = [ "tag" => "hr" ]; 
             }
         }        
-        
-        $content[] = self::form($tableHasPart, $idHasPart);
+        $pos = isset($key) ? ($key+2) : 1;
+        $content[] = self::form($tableHasPart, $idHasPart, "new", null, $pos );
         
         return $content;
     }
@@ -30,23 +30,19 @@ class contactPointView
         
         $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
         $content[] = self::input('idHasPart', "hidden", $idHasPart);
-        $content[] = self::input('tableIsPartOf', "hidden", "contactPoint");
         
         if ($case === "new") {
             $content[] = _("new").": ";
             
         } else {     
             $id = PropertyValue::extractValue($value['identifier'],"id");
-            
-            $position = PropertyValue::extractValue($value['identifier'],"position");
-            
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idcontactPoint", "type" => "hidden", "value" => $id ] ];
-        }   
-                
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
+        }
+        
         // position
         $content[] = [ "tag" => "fieldset","attributes" => [ "style" => "width: 20px;" ], "content" => [
             [ "tag" => "legend", "content" => "Pos." ],            
-            [ "tag" => "input", "attributes" => [ "name" => "position", "type" => "number", "min" => "1", "value" => $position ?? "1" ] ]
+            [ "tag" => "input", "attributes" => [ "name" => "position", "type" => "number", "min" => "1", "value" => $value['position'] ?? $key ] ]
         ]];
         
         // name
