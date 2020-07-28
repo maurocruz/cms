@@ -4,7 +4,7 @@ namespace Plinct\Cms\Controller;
 
 class UserController implements ControllerInterface
 {   
-    public function index(): array 
+    public function index($params = null): array 
     {   
         $params = [ "format" => "ItemList" ];
         
@@ -20,5 +20,10 @@ class UserController implements ControllerInterface
         $data = (new \Plinct\Api\Type\User())->get($params);
         
         return $data[0];        
+    }
+    
+    public function new() 
+    {
+        ;
     }
 }
