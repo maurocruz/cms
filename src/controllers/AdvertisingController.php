@@ -55,25 +55,31 @@ class AdvertisingController
     {
         // advertising
         $params["properties"] = "tags,history";        
-        $adverisingData = (new Advertising())->get($params);        
-        $response['advertising'] = $adverisingData[0];
-        $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'id');
+        $adverisingData = (new Advertising())->get($params);
         
-        // payments
-        $paramsPayment = [ "where" => "`idadvertising`=$idadvertising", "orderBy" => "vencimentoparc", "ordering" => "desc" ];
-        $paymentData = (new Payment())->get($paramsPayment);        
-        $response['payment'] = $paymentData;
-        
-        // history
-        $paramsHistory = [ "tableHasPart" => "advertising", "idHasPart" => $idadvertising, "orderBy" => "datetime", "ordering" => "desc" ];
-        $historyData = (new History())->get($paramsHistory);
-        $response['history'] = $historyData;
-        
-        // banner
-        if ($adverisingData[0]['tipo'] == '4') {
-            $paramsBanner = [ "where" => "`idadvertising`=$idadvertising" ];
-            $bannerData = (new Banner())->get($paramsBanner);
-            $response['banner'] = $bannerData[0] ?? null;
+        if (isset($adverisingData['message']) && $adverisingData['message'] == "No data founded") {
+            $response = $adverisingData;
+            
+        } else {
+            $response['advertising'] = $adverisingData[0];
+            $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'id');
+
+            // payments
+            $paramsPayment = [ "where" => "`idadvertising`=$idadvertising", "orderBy" => "vencimentoparc", "ordering" => "desc" ];
+            $paymentData = (new Payment())->get($paramsPayment);        
+            $response['payment'] = $paymentData;
+
+            // history
+            $paramsHistory = [ "tableHasPart" => "advertising", "idHasPart" => $idadvertising, "orderBy" => "datetime", "ordering" => "desc" ];
+            $historyData = (new History())->get($paramsHistory);
+            $response['history'] = $historyData;
+
+            // banner
+            if ($adverisingData[0]['tipo'] == '4') {
+                $paramsBanner = [ "where" => "`idadvertising`=$idadvertising" ];
+                $bannerData = (new Banner())->get($paramsBanner);
+                $response['banner'] = $bannerData[0] ?? null;
+            }
         }
         
         return $response;
