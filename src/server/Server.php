@@ -17,7 +17,7 @@ class Server
     {        
         $data = (new $className())->post($params);
         
-        if ($data['id']) {
+        if (isset($data['id'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
         }
         
@@ -26,9 +26,9 @@ class Server
     
     public function delete($className, $params)    
     {        
-        (new $className())->delete(self::unsetRelParams($params));
+        (new $className())->delete($params);
         
-        return $this->return();
+        return $this->return(self::unsetRelParams($params));
     }
     
     private static function unsetRelParams($params)
