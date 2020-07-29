@@ -71,43 +71,13 @@ class LocalBusinessView
         
         return $this->content;
     }
-    
-    /*public function getForm($value)
-    {
-        $this->localBusinessId = $this->localBusinessId ?? PropertyValue::extractValue($value['identifier'], "id");
-        $this->localBusinessName = $this->localBusinessName ?? $value['name'];
-        
-        // local business
-        $content[] = self::divBox("'".$this->localBusinessName."' "._("local business"), "LocalBusiness", [self::form('edit', $value, $this->localBusinessId)]);
-        
-        // place
-        $content[] = self::divBox("'".$this->localBusinessName."' "._("local business"), "Place", [ (new PlaceView())->getForm("localBusiness", $this->localBusinessId, $value['location']) ]);
-        
-        // Contact Point
-        $content[] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm("localBusiness", $this->localBusinessId, $value['contactPoint']) ]); 
-        
-        // organization
-        $content[] = self::divBoxExpanding(_("Organization"), "Organization", [ (new OrganizationView())->getForm('localBusiness', $this->localBusinessId, $value['organization']) ]);
-        
-        // person
-        $content[] = self::divBoxExpanding(_("Persons"), "Person", [ (new PersonView())->getForm("localBusiness", $this->localBusinessId, $value['member']) ]);
-        
-        // images
-        $content[] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $this->localBusinessId, $value['image']) ]);
-
-        return $content;
-    }*/
-
 
     private static function form($case = "new", $value = null, $ID = null) 
     { 
         $id = PropertyValue::extractValue($value['identifier'], "id");
                 
-        if ($case == "edit") {
-            $content[] = self::input("id", "hidden", $id);
-            
-        }
-        
+        $content[] = $case == "edit" ? self::input("id", "hidden", $id) : null;
+                    
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'], [ "style" => "width: 50%" ]);
         
@@ -124,10 +94,10 @@ class LocalBusinessView
         $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'], [ "style" => "width: calc(100% - 400px);" ]);
         
         // dateCreated
-        $content[] = self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]);
+        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]) : null;
         
         // dateModified
-        $content[] = self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]);
+        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]) : null;
         
         // url
         $content[] = self::fieldsetWithInput( "url", "url", $value['url'], [ "style" => "width: 50%" ]);
