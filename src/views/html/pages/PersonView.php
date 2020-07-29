@@ -29,12 +29,14 @@ class PersonView
         return $this->content;
     }
     
-    public function add($data = null): array
+    public function new($data = null): array
     {
-       $this->content['main'][] = [ "tag" => "h3", "content" => _("Add new person") ];
-       $this->content['main'][] = self::form();
+        $this->navbar();
+        
+        $this->content['main'][] = [ "tag" => "h3", "content" => _("Add new person") ];
+        $this->content['main'][] = self::form();
        
-       return $this->content;
+        return $this->content;
     }
     
     public function edit(array $data): array 
