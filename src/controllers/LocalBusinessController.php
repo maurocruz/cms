@@ -7,14 +7,12 @@ use Plinct\Api\Type\LocalBusiness;
 class LocalBusinessController implements ControllerInterface
 {
     public function index($params = null): array 
-    {   
-        $search = filter_input(INPUT_GET, "q");
+    {                   
+        $params2 = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ];                
         
-        $params = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ];                
+        $params3 = $params ? array_merge($params2, $params) : $params2;
         
-        $params2 = $search ? array_merge($params, [ "where" => "`name` LIKE '%$search%'" ]) : $params;
-        
-        return (new LocalBusiness())->get($params2);
+        return (new LocalBusiness())->get($params3);
     }
     
     public function edit(array $params): array 
