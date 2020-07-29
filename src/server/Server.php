@@ -15,8 +15,12 @@ class Server
 
     public function new($className, $params)
     {        
-        (new $className())->post($params);
-               
+        $data = (new $className())->post($params);
+        
+        if ($data['id']) {
+            return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+        }
+        
         return $this->return(self::unsetRelParams($params));
     }
     
