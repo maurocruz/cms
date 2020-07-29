@@ -56,9 +56,14 @@ class HtmlView extends HtmlViewContent
                 $viewClassName = "\\Plinct\\Cms\\View\\Html\\Page\\".ucfirst($type)."View";
                                 
                 if (class_exists($viewClassName)) {
-                    $viewData = (new $viewClassName())->{$action}($controlData);
                     
-                    
+                    if(isset($controlData['message']) && $controlData['message'] == "No data founded") {
+                        $viewData['main'][] = (new $viewClassName())->noContent();
+                        
+                    } else {
+                        $viewData = (new $viewClassName())->{$action}($controlData);
+                    }
+                                                            
                     // navbar
                     if (array_key_exists('navbar', $viewData)) {
                         foreach ($viewData['navbar'] as $value) {
