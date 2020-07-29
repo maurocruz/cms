@@ -7,20 +7,16 @@ use Plinct\Api\Type\PropertyValue;
 class PersonView
 {
     protected $content;
-    
-    protected $personId;
-    
-    protected $personName;
-    
+        
     use \Plinct\Cms\View\Html\Piece\navbarTrait;
     use \Plinct\Web\Widget\FormTrait;
 
-    public function navbar() 
+    public function navbar($id = null, $name = null) 
     {
         $this->content['navbar'][] = $this->personNavbar();
         
-        if($this->personId) {
-            $this->content['navbar'][] = $this->personNavbar($this->personId, $this->personName, null, 3);
+        if($id) {
+            $this->content['navbar'][] = $this->personNavbar($id, $name, null, 3);
         }
     }
     
@@ -28,7 +24,7 @@ class PersonView
     {
         $this->navbar();
         
-        $this->content['main'][] = self::listAll($data, "person", _("List of persons"));
+        $this->content['main'][] = self::listAll($data, "person", _("List of persons"), [ "dateModified" => "Date modified" ]);
         
         return $this->content;
     }
@@ -42,20 +38,21 @@ class PersonView
     }
     
     public function edit(array $data): array 
-    {       
-        $this->personId = PropertyValue::extractValue($data['identifier'], "id");
-        $this->personName = $data['name'];
+    {
+        $value = $data[0];
         
-        $this->navbar();
+        $id = PropertyValue::extractValue($value['identifier'], "id");
+        
+        $this->navbar($id, $value['name']);
         
         // form
-        $this->content['main'][] = self::form('edit', $data);
+        $this->content['main'][] = self::form('edit', $value);
         
         // contact point
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('person', $this->personId, $data['contactPoint']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('person', $id, $value['contactPoint']) ]);
         
         // address
-        $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddres", [ (new PostalAddressView())->getForm("person", $this->personId, $data['address']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddres", [ (new PostalAddressView())->getForm("person", $id, $value['address']) ]);
         
         return $this->content;
     }
