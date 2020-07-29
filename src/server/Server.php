@@ -29,7 +29,7 @@ class Server
     
     private static function unsetRelParams($params)
     {        
-        self::$tableHasPart = $params['tableHasPart'];
+        self::$tableHasPart = $params['tableHasPart'] ?? null;
         
         unset($params['tableHasPart']);
         unset($params['idHasPart']);
