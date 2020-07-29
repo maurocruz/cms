@@ -132,8 +132,7 @@ class AdvertisingView
             $idadvertising = PropertyValue::extractValue($value['identifier'], "id");
             
             $content[] = [ "tag" => "p", "content" => _("Edit Local Business"), "href" => "/admin/localBusiness/edit/".$idcustomer ];
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => "advertising" ]];
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ]];
+            
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $idadvertising ]];
             $tipos[] = [ "tag" => "option", "attributes" => [ "value" => $value['tipo'] ], "content" => self::contractTypeNumberToString($value['tipo']) ];
             
@@ -199,12 +198,12 @@ class AdvertisingView
             [ "tag" => "legend", "content" => _("Tags") ],
             [ "tag" => "input", "attributes" => [ "name" => "tags", "type" => "text", "value" => $value['tags'] ?? null ] ]
          ]];
-        $content[] = self::submitButtonSend();
-        if ($case == "edit") {
-            $content[] = self::submitButtonDelete("/admin/advertising/erase");
-        }        
         
-        return [ "tag" => "form", "attributes" => [ "id" => "contract-form", "class" => "box formPadrao", "action" => "/admin/advertising/$case", "method" => "post", "onsubmit" => "return setHistory(this);" ], "content" => $content ];
+        $content[] = $case == "edit" ? self::submitButtonSend([ "onclick" => "return setHistory(this.parentNode);" ]) : self::submitButtonSend();
+        
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/advertising/erase") : null;
+        
+        return [ "tag" => "form", "attributes" => [ "id" => "contract-form", "class" => "box formPadrao", "action" => "/admin/advertising/$case", "method" => "post" ], "content" => $content ];
     }
     
     public function payment($data)
