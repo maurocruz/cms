@@ -58,13 +58,13 @@ trait navbarTrait
     public function offerNavbar($id = null, $name = null, $type = null, $level = 4): array {
         if ($id ) { $list = [
                 "/admin/offer?$type=$id" => _("View offers"),
-                "/admin/offer/add?$type=$id" => _("Add new")
+                "/admin/offer/new?$type=$id" => _("Add new")
             ];
             $title = "'".$name."' "._("offers");
         } else {
             $list = [
                 "/admin/offer" => _("View all"),
-                "/admin/offer/add" => _("Add new")
+                "/admin/offer/new" => _("Add new")
             ];        
             $title = _("Offer");
         }
@@ -94,7 +94,7 @@ trait navbarTrait
             ];
             $title = "'".$name."' "._("person");
         } else { $list = [ 
-            "/admin/person" => _("View all"), "/admin/person/add" => _("Add new person") 
+            "/admin/person" => _("View all"), "/admin/person/new" => _("Add new person") 
             ];
             $title = _("Person");
         }        
@@ -112,19 +112,19 @@ trait navbarTrait
         } elseif ($type == "travelAgency") {          
             $list = [
                 "/admin/travelAgency/edit/$id?itemOfferedType=service" => _("View all"),
-                "/admin/travelAgency/edit/$id?itemOfferedType=service&act=add" => _("Add new")
+                "/admin/travelAgency/edit/$id?itemOfferedType=service&act=new" => _("Add new")
             ];
             $title = "'".$name."' "._("services");
         } elseif ($id && $name && $type) {
                 $list = [
                     "/admin/services?providerId=$id&providerType=$type" => _("View all"),
-                    "/admin/services/add?providerId=$id&providerType=$type" => _("Add new")
+                    "/admin/services/new?providerId=$id&providerType=$type" => _("Add new")
                 ];
                 $title = sprintf(_("Services of '%s'"), $name);
         } else {
             $list = [
                 "/admin/service" => _("View all"),
-                "/admin/service/add" => _("Add new")
+                "/admin/service/new" => _("Add new")
             ];
             $title = _("Services");
         }
@@ -135,13 +135,13 @@ trait navbarTrait
         if ($id && $name && $providerId) {
           $list = [ 
                 "/admin/travelAction/edit/$id?providerId=$providerId&providerType=trip" => _("View it"),
-                "/admin/travelAction/add?providerId=$providerId&providerType=trip" => _("Add new travelAction")
+                "/admin/travelAction/new?providerId=$providerId&providerType=trip" => _("Add new travelAction")
             ];
             $title = sprintf(_("'%s' travel action"),$name);   
         } else {
             $list = [ 
                 "/admin/travelAction?providerId=$id&providerType=trip" => _("View all"), 
-                "/admin/travelAction/add?providerId=$id&providerType=trip" => _("Add new travelAction")
+                "/admin/travelAction/new?providerId=$id&providerType=trip" => _("Add new travelAction")
             ];
             $title = sprintf(_("'%s' travel action"),$name);;
         }
@@ -162,7 +162,7 @@ trait navbarTrait
         } else {
             $list = [ 
                 "/admin/travelAgency" => _("View all"), 
-                "/admin/travelAgency/add" => _("Add new travel agency"),
+                "/admin/travelAgency/new" => _("Add new travel agency"),
                 "/admin/touristDestination" => _("Tourist destination"),
                 "/admin/touristAttraction" => _("Tourist attraction") 
             ];
@@ -181,7 +181,7 @@ trait navbarTrait
         } else {
             $list = [ 
                 "/admin/touristAttraction" => _("View all"), 
-                "/admin/touristAttraction/add" => _("Add new")
+                "/admin/touristAttraction/new" => _("Add new")
             ];
             $title = _("Tourist attraction");
         }
@@ -198,7 +198,7 @@ trait navbarTrait
         } else {            
             $list = [ 
                 "/admin/touristDestination" => _("View all"), 
-                "/admin/touristDestination/add" => _("Add new")
+                "/admin/touristDestination/new" => _("Add new")
             ];
             $title = _("Tourist destination");
         }
@@ -217,7 +217,7 @@ trait navbarTrait
         } else {
             $list = [ 
                 "/admin/trip?providerId=$id&providerType=travelAgency" => _("View all"), 
-                "/admin/trip/add?providerId=$id&providerType=travelAgency" => _("Add new trip")
+                "/admin/trip/new?providerId=$id&providerType=travelAgency" => _("Add new trip")
             ];
             $title = _("Trips");
         }
