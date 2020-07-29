@@ -26,12 +26,12 @@ class PlaceView
     {   
         $this->navbar();
         
-        $this->content['main'][] = self::listAll($data, "place", _("Places"), [ "additionalType" => _("Additional type") ]);
+        $this->content['main'][] = self::listAll($data, "place", _("Places"), [ "dateModified" => "Date modified" ]);
         
         return $this->content;
     }
     
-    public function add($data = null): array
+    public function new($data = null): array
     {
         $this->navbar();
         
@@ -42,27 +42,24 @@ class PlaceView
 
     public function edit(array $data): array
     {
-        if ($data['@context'] !== null) {
-            $this->placeId = PropertyValue::extractValue($data['identifier'], "id");
-            
-            $this->placeName = $data['name'];
-
-            //place
-            $place[] = self::form(null, null, 'edit', $data);
-
-            // address
-            $place[] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("Place", $this->placeId, $data['address']) ]);
-            
-            // images
-            $place[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("place", $this->placeId, $data['image']) ]);
-
-            // append
-            $this->content['main'][] = self::divBox($data['name'], 'place', $place);
-            
-        } else {
-             $this->content['main'][] = self::noContent();
-        }
+        $value = $data[0];
         
+        $this->placeId = PropertyValue::extractValue($value['identifier'], "id");
+
+        $this->placeName = $value['name'];
+
+        //place
+        $place[] = self::form(null, null, 'edit', $value);
+
+        // address
+        $place[] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("Place", $this->placeId, $value['address']) ]);
+
+        // images
+        $place[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("place", $this->placeId, $value['image']) ]);
+
+        // append
+        $this->content['main'][] = self::divBox($value['name'], 'place', $place);
+         
         $this->navbar();
         
         return $this->content;
