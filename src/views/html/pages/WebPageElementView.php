@@ -7,34 +7,29 @@ use Plinct\Api\Type\PropertyValue;
 class WebPageElementView
 {
     protected $idwebPage;
+    
     protected $idwebPageElement;
     
     use \Plinct\Web\Widget\FormTrait;
     
-    public function getForm($tableOwner, $idOwner, $value) 
+    public function getForm($tableHasPart, $idHasPart, $value) 
     {
-        $this->idwebPage = $idOwner;
+        $this->idwebPage = $idHasPart;
         
         // add new WebPagEelement
         $content[] = self::divBoxExpanding(_("Add new"), "WebPageelement", [ self::form() ]);
         
         // WebPageElements hasPart
-        if ($value['numberOfItems'] > 0) {
-            foreach ($value['itemListElement'] as $valuePart) {
-                $item = $valuePart['item'];
-                $title = $item['name'] !== ''? $item['name'] : _("[No title]");
-                $content[] = self::divBoxExpanding($title, "WebPageElement", [ self::edit($item) ]);
-            }
+        foreach ($value as $valueWebPageElement) {
+            
+            $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
+            
+            $content[] = self::divBoxExpanding("[".$this->idwebPageElement."] ".$valueWebPageElement['name'], "WebPageElement", [ self::edit($valueWebPageElement) ]);
         }
         
         return $content;
     }
     
-    public function index(array $data): array
-    {
-
-    }
-       
     public function new($data = null): array
     {   
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
@@ -44,28 +39,35 @@ class WebPageElementView
     } 
     
     public function edit(array $value): array
-    {
-        $this->idwebPageElement = PropertyValue::extractValue($value['identifier'], "ID");       
+    {        
         // content       
         $content[] = self::form("edit", $value);
+        
         // attributes
-        $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value) ]);
+        $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']) ]);
+        //
         // images
         $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("webPageElement", $this->idwebPageElement, $value['image']) ]);
+        
         return $content;
     }
     
     
-    protected function boxContent($value) {
+    /*protected function boxContent($value) 
+    {
         $contentForm[] = [ "tag" => "h4", "content" => "Content <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'form-webPageElement--edit-$this->idwebPageElement');\">Expandir</a>]</span>" ];
+        
         $contentForm[] = self::form("edit", $value);                
         return [ "tag" => "div", "attributes" => [ "id" => "form-webPageElement--edit-$this->idwebPageElement", "class" => "box box-expanding" ], "content" => $contentForm ];
-    }
+    }*/
 
     protected function form($case = "add", $value = null) 
     {
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "value" => "webPage", "type" => "hidden" ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "value" => $this->idwebPage, "type" => "hidden" ] ];        
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ];
+        
+        
+        
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPageElement", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
                              
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 93%;" ], "content" => [

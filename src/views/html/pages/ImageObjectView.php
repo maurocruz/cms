@@ -107,8 +107,7 @@ class ImageObjectView
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
         
-        
-        if ($mode == "complete") {
+        if (isset($value['width'])) {
             $content[] = "<br>";
             // width
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
@@ -121,7 +120,7 @@ class ImageObjectView
                 [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $value['height'] ] ]
             ]];
             // incontent
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 125px; margin: 5px 0;" ], "content" => [
+            /*$content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 125px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Colocar acima do texto?" ],
                 [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
                     [ "tag" => "input",  "attributes" => [ "name" => "incontent", "type" => "radio", "value" => 1, ($potentialAction['inContent'] == 1 ? "checked" : null) ] ], "Sim"
@@ -130,12 +129,12 @@ class ImageObjectView
                     [ "tag" => "input",  "attributes" => [ "name" => "incontent", "type" => "radio", "value" => 0, ($potentialAction['inContent'] == 0 ? "checked" : null) ] ], "Não"
                     ] ]
                 ]
-            ];
+            ];*/
             $content[] = "<br>";
             // href
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 540px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Link" ],
-                [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $potentialAction['href'] ?? null ] ]
+                [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
             ]];
         }
         //

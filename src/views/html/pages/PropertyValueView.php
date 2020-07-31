@@ -2,42 +2,41 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
-
+use Plinct\Api\Type\PropertyValue;
 
 class PropertyValueView
 {
-    protected $idWebPage;
+    //protected $idWebPage;
     
     use \Plinct\Web\Widget\FormTrait;
     
-    public function getForm($tableOwner, $idOwner, $value) 
-    {     
-        $this->idWebPage = $value['isPartOf']['identifier'];
-        
-        $idBox = "box-attributes-$tableOwner-$idOwner";  
-        
-        if (isset($value['cssSelector'])) {
-            foreach ($value['cssSelector'] as $value) {
-                $content[] = self::form($tableOwner, $idOwner, 'edit', $value);
+    public function getForm($tableHasPart, $idHasPart, $data) 
+    {
+        foreach ($data as $value) {
+            if (isset($value['identifier'])) {
+                    $content[] = self::form($tableHasPart, $idHasPart, 'edit', $value);         
             }
-        } 
+        }
         
         // new
-        $content[] = self::form($tableOwner, $idOwner);  
+        $content[] = self::form($tableHasPart, $idHasPart);  
         
         return $content;
     }
     
-    protected function form($tableOwner, $idOwner, $case = "add", $value = null)
-    {      
-        if ($case == "add") {
+    protected function form($tableHasPart, $idHasPart, $case = "new", $value = null)
+    {              
+        if ($case == "new") {
             $contentForm[] = "Novo: ";
+            
         } else {
-            $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idattributes", "type" => "hidden", "value" => $value['idattributes'] ] ];
+            $id = PropertyValue::extractValue($value['identifier'], 'id');
+            $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
-        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $this->idWebPage ] ];
-        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableOwner", "type" => "hidden", "value" => $tableOwner ] ];
-        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idOwner", "type" => "hidden", "value" => $idOwner ] ];
+        
+        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
+        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
+        
         $contentForm[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 15%;" ], "content" => [
                 [ "tag" => "legend", "content" => "Nome" ],
                 [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ?? null ] ]
@@ -50,8 +49,8 @@ class PropertyValueView
         
         $contentForm[] = self::submitButtonSend();
         
-        $contentForm[] = $case == "edit" ? self::submitButtonDelete("/admin/propertyValue/delete") : null;
+        $contentForm[] = $case == "edit" ? self::submitButtonDelete("/admin/propertyValue/erase") : null;
                 
-        return [ "tag" => "form", "attributes" => [ "id" => "form-attributes-$case-$tableOwner-$idOwner", "name" => "form-attributes--$case", "action" => "/admin/PropertyValue/$case", "class" => "formPadrao", "method" => "post" ], "content" => $contentForm ];
+        return [ "tag" => "form", "attributes" => [ "id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "action" => "/admin/PropertyValue/$case", "class" => "formPadrao", "method" => "post" ], "content" => $contentForm ];
     }
 }

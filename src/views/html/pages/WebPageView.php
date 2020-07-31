@@ -41,17 +41,17 @@ class WebPageView
 
     public function edit(array $data): array
     {
-        $valueWebPage = $data['webPage'];
+        $value = $data[0];
         
-        $valueWebPageElement = $data['webPageElement'];
+        //$valueWebPageElement = $data['webPageElement'];
         
-        $this->idwebPage = PropertyValue::extractValue($valueWebPage['identifier'], "id");
+        $this->idwebPage = PropertyValue::extractValue($value['identifier'], "id");
         
         // VIEW         
-        $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$valueWebPage['url']."\" target=\"_blank\">".$valueWebPage['url']."</a>" ];
+        $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
         
         // EDIT
-        $this->content['main'][] = self::divBox("Webpage", "WebPage", [ self::form("edit", $valueWebPage) ]);
+        $this->content['main'][] = self::divBox("Webpage", "WebPage", [ self::form("edit", $value) ]);
         
         // ATTRIBUTES
         //$content[] = self::divBoxExpanding(_("Properties"), "WebPage", [ (new PropertyValueView())->getForm("pages", $this->idwebPage, $value['propertyValue']) ]);
@@ -60,7 +60,7 @@ class WebPageView
        // $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
         
         // WEB ELEMENTS
-        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm("pages", $this->idwebPage, $valueWebPageElement) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm("pages", $this->idwebPage, $value['hasPart']) ]);
         
         return $this->content;
     }
@@ -91,8 +91,8 @@ class WebPageView
             ]];
         
         // show title
-        $content[] = self::radio("Mostrar título", "showtitle", $value['showtitle'], [ 1, 0 ] );        
-        $content[] = self::radio("Mostrar descrição", "showdescription", $value['showdescription'], [ 1, 0 ] );
+        //$content[] = self::radio("Mostrar título", "showtitle", $value['showtitle'], [ 1, 0 ] );        
+        //$content[] = self::radio("Mostrar descrição", "showdescription", $value['showdescription'], [ 1, 0 ] );
         
         $content[] = self::submitButtonSend();
         
