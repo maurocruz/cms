@@ -24,12 +24,12 @@ dd { margin-left: 20px; }
 
 /* ELEMENT _ table
 ============================================================================= */
-table{ display: table; width: 100%; border-collapse: collapse; color: #003366; background-color: #E0F9FF; }
-table caption{ text-align: left; font-weight: bold; font-size: 1.5em; }
-table tr{}
-table th{ background: #336699; color: white; font-weight: bold; padding: 2px; border: 1px #D0E2F5 solid; font-size: 0.85em; }
-table th a{ color: white; }
-table td{ border: 1px #336699 solid; padding: 2px 6px;  }
+table { display: table; width: 100%; border-collapse: collapse; color: #003366; background-color: #E0F9FF; }
+table caption { text-align: left; font-weight: bold; font-size: 1.5em; }
+table tr {}
+table th { background: #336699; color: white; font-weight: bold; padding: 2px; border: 1px #D0E2F5 solid; font-size: 0.85em; }
+table th a { color: white; }
+table td { border: 1px #336699 solid; padding: 2px 6px;  }
 tbody tr:nth-child(odd) { background-color: rgba(0,0,0,0.05); }
 tbody tr:nth-child(even) { background-color: #f2faff; }
 
@@ -60,12 +60,12 @@ a.white { color: white; }
 
 /* form
 ============================================================================= */
-.form{ max-width: 450px; margin: 0 auto; padding: 10px; border: 1px gray solid; }
-.form fieldset{ position: relative; overflow: hidden; }
-.form input{ border-radius: 2px; padding: 3px 1%; }
+.form { max-width: 450px; margin: 0 auto; padding: 10px; border: 1px gray solid; }
+.form fieldset { position: relative; overflow: hidden; }
+.form input { border-radius: 2px; padding: 3px 1%; }
 .aviso { margin: 25px 20%; padding: 15px; background-color: yellow; color: black; font-weight: bold; text-align: center; border: 3px red dashed; border-radius: 5px; font-size: 160%;}
 .warning { margin: 5px; padding: 5px; background-color: #FE3; color: black; font-weight: bold; text-align: left; border: 1px red dashed; border-radius: 5px; font-size: 1em;}
-.admin-bar-top{ display: flex; justify-content: space-around;}
+.admin-bar-top { display: flex; justify-content: space-around;}
 
 /* COMPONENT _ searchForm
 ============================================================================= */
@@ -86,11 +86,11 @@ a.white { color: white; }
 
 /* COMPONENT _ box
 ============================================================================= */
-.box{ margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
-.box h1{ margin: 0; font-size: 1.4em; }
+.box { margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
+.box h1 { margin: 0; font-size: 1.4em; }
 /*.box form{ display: block; }*/
-.box form fieldset{ display: inline; margin-right: 0px; }
-.posts-box{ max-height: 110px; overflow: hidden; }
+.box form fieldset { display: inline; margin-right: 0px; }
+.posts-box { max-height: 110px; overflow: hidden; }
 .box-expanding { max-height: 1rem; overflow: hidden; }
 .box-expanding--text { font-weight: normal; font-size: 0.85rem; }
 .button-dropdown { color: inherit; text-decoration: none; cursor: pointer; }
@@ -144,8 +144,8 @@ a.white { color: white; }
 /* COMPONENT _ form-table
 ======================================================================== */
 .form-table {  }
-.form-table-title{ font-size: 18px; }
-.form-table cite{ font-size: 32px; font-style: normal; font-weight: bold; }
+.form-table-title { font-size: 18px; }
+.form-table cite { font-size: 32px; font-style: normal; font-weight: bold; }
 .form-table fieldset { display: inline-block; padding: 0; border: none; position: relative; }
 .form-table fieldset legend { background-color: #336699; color: white; padding: 3px 6px; width: 85%; font-weight: bold; border-top-right-radius: 10px; }
 .form-table input { padding: 2px; border: 1px solid gray; box-sizing: border-box; min-height: 30px; }
