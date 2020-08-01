@@ -73,9 +73,9 @@ class ImageObjectView
         $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", $value['keywords'], [ "style" => "width: calc(100% - 280px);" ]);        
         
         $content[] = self::submitButtonSend();
-        //$content[] = self::submitButtonDelete("/admin/imageObject/erase");
+        
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
         
     private function formIsPartOf($value, $mode = 'simple') 
@@ -102,37 +102,26 @@ class ImageObjectView
         ];
         
         // caption
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 700px; margin 5px 0;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 435px); margin: 5px 0;" ], "content" => [
             [ "tag" => "legend", "content" => "Legenda" ],
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
         
         if (isset($value['width'])) {
-            $content[] = "<br>";
             // width
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Largura" ],
                 [ "tag" => "input", "attributes" => [ "name" => "width", "type" => "text", "value" => $value['width'] ] ]
             ]];
+            
             // height
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Altura" ],
                 [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $value['height'] ] ]
-            ]];
-            // incontent
-            /*$content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 125px; margin: 5px 0;" ], "content" => [
-                [ "tag" => "legend", "content" => "Colocar acima do texto?" ],
-                [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
-                    [ "tag" => "input",  "attributes" => [ "name" => "incontent", "type" => "radio", "value" => 1, ($potentialAction['inContent'] == 1 ? "checked" : null) ] ], "Sim"
-                    ] ],
-                [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
-                    [ "tag" => "input",  "attributes" => [ "name" => "incontent", "type" => "radio", "value" => 0, ($potentialAction['inContent'] == 0 ? "checked" : null) ] ], "Não"
-                    ] ]
-                ]
-            ];*/
-            $content[] = "<br>";
+            ]];            
+            
             // href
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 540px; margin: 5px 0;" ], "content" => [
+            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 480px); margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Link" ],
                 [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
             ]];
@@ -141,7 +130,7 @@ class ImageObjectView
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/erase");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
         
     protected function addImagesFromDatabase() 
@@ -149,7 +138,7 @@ class ImageObjectView
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
         
-        $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesfromdatabase", "class" => "imagesFromDatabase" ] ];
+        $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
         
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
     }
@@ -160,7 +149,7 @@ class ImageObjectView
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
         $content[] = $idwebPage ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $idwebPage ] ] : null;
         
-        $content[] = [ "tag" => "div", "attributes" => [ "id" => "imagesfromserver" ] ];        
+        $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromserver" ] ];        
         
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/insertHasPartFromServer", "name" => "images-selectedFromServer", "id" => "images-selectedFromServer-".$this->idHasPart, "class" => "formPadrao box", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
@@ -185,6 +174,6 @@ class ImageObjectView
         ] ];
         $content[] = self::submitButtonSend();
         
-        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idHasPart, "action" => '/admin/imageObject/newAndPostRelationship', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
+        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idHasPart, "action" => '/admin/imageObject/new', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ]; 
     }
 }
