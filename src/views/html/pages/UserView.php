@@ -13,7 +13,7 @@ class UserView
 
     public function __construct() {        
         $this->content['navbar'][] = [
-            "list" => [ "/admin/user" => _("View all"), "/admin/user/add" => _("Add new user") ],
+            "list" => [ "/admin/user" => _("View all"), "/admin/user/new" => _("Add new user") ],
             "attributes" => [ "class" => "menu menu2" ],
             "title" => _("Users")            
         ];
@@ -49,7 +49,7 @@ class UserView
         return $this->content;
     }
     
-    public function add($data = null): array 
+    public function new($data = null): array 
     {
         $this->content['main'][] = self::divBox(_("Add new"), "User", [self::form()]);
         return $this->content;
@@ -63,7 +63,7 @@ class UserView
        return $this->content;
     }
     
-    static private function form($case = 'add', $value = null) 
+    static private function form($case = 'new', $value = null) 
     {
         $id = PropertyValue::extractValue($value['identifier'], "id");
         
