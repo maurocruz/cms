@@ -8,6 +8,13 @@ trait navbarTrait
     public $providerType;
     public $providerName;
 
+    
+    public static function navbar(string $title, array $list, $level) 
+    {
+        return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title) ];
+    }
+
+
     private function setProviderData($data) 
     {
         $this->providerId = filter_input(INPUT_GET, 'providerId') ?? \fwc\Thing\PropertyValueGet::getValue($data['identifier'], "fwc_id");
