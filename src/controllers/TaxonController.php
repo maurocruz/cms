@@ -8,7 +8,7 @@ class TaxonController implements ControllerInterface
 {
     public function index($params = null): array 
     {        
-        $params2 = [ "format" => "ItemList" ];
+        $params2 = [ "format" => "ItemList", "properties" => "taxonRank,dateModified" , "orderBy" => "dateModified", "ordering" => "desc" ];
         
         $params3 = $params ? array_merge($params2, $params) : $params2;
         
