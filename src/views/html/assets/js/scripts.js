@@ -10,7 +10,7 @@ function CheckRequiredFieldsInForm(event, fields)
         
        if (fields.includes(item.name)) {
            if (item.value == "") {
-               alert("Você precisar preencher todos os campos obrigatórios!");
+               alert("You must fill in mandatory fields!");
                return false;
            }
        }
@@ -60,5 +60,13 @@ function expandBox(object, objectId)
     }
 }
 
-
+// EXPANDIR CAIXA DE TEXT
+function expandTextarea(objectId,increase = 100)
+{
+    var textarea = document.getElementById(objectId);
+    // obtém a altura atual
+    var atualHeight = textarea.clientHeight;
+    // configura nova altura
+    textarea.style.height = (atualHeight+increase)+'px';
+}
 
