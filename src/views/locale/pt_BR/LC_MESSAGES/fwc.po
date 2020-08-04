@@ -588,6 +588,50 @@ msgstr "Traslado de '%s' para '%s'"
 msgid "Potential %s"
 msgstr "Potencial %s"
 
+##################################   TAXON   ###################################
+
+msgid "Taxonomy"
+msgstr "Taxonomia"
+
+msgid "taxonomy"
+msgstr "taxonomia"
+
+msgid "Vernacular name"
+msgstr "Nome vernacular"
+
+msgid "Taxon rank"
+msgstr "Classificação taxonômica"
+
+msgid "Scientific name authorship"
+msgstr "Autoria do nome científico"
+
+msgid "Occurrence"
+msgstr "Ocorrência"
+
+msgid "Flowering"
+msgstr "Floração"
+
+msgid "Fructification"
+msgstr "Frutificação"
+
+msgid "Height"
+msgstr "Altura"
+
+msgid "Roots"
+msgstr "Raízes"
+
+msgid "Leafs"
+msgstr "Folhas"
+
+msgid "Flowers"
+msgstr "Flores"
+
+msgid "Fruits"
+msgstr "Frutos"
+
+msgid "Citations"
+msgstr "Citações"
+
 ##################################   USER   ####################################
 
 msgid "User"
