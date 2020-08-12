@@ -15,7 +15,23 @@ use Plinct\Cms\View\ViewBuilder;
 use Plinct\Cms\Server\Server;
 
 return function (Route $route) 
-{    
+{
+    // ASSETS
+    $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args)
+    {
+        $filename = $args['filename'];
+        $type = $args['type'];
+
+        $script = file_get_contents( __DIR__ ."/../views/html/assets/".$type."/".$filename.".".$type);
+
+        $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
+
+        $newResponse = $response->withHeader("Content-type", $contentType);
+
+        $newResponse->getBody()->write($script);
+
+        return $newResponse;
+    });
     /*
      * ADMIN ROUTES
      */
@@ -24,28 +40,12 @@ return function (Route $route)
         /* AUTHENTICATION ROUTES */
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
-        
-        // ASSETS 
-        $route->get('/assets/{type}/{filename}', function(Request $request, Response $response, array $args) 
-        {
-            $filename = $args['filename'];
-            $type = $args['type'];
-            
-            $script = file_get_contents( __DIR__ ."/../views/html/assets/".$type."/".$filename.".".$type);
-            
-            $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
-            
-            $newResponse = $response->withHeader("Content-type", $contentType);
-            
-            $newResponse->getBody()->write($script);
-            
-            return $newResponse;            
-        });
+
         
         /*
          * DEFAULTS
          */
-        $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response, $args) 
+        $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response)
         {
             $viewBuilder = new ViewBuilder();
                         
@@ -59,28 +59,6 @@ return function (Route $route)
             $response->getBody()->write($content);
             return $response;
         });
-
-        /* 
-         * UPGRADE
-        */
-        $route->post('/update[/{type}]', function(Request $request, Response $response, $args)
-        {
-            $response = new Slim\Psr7\Response(); 
-            switch ($args['type']) {
-                case "installMysqlDatabase":
-                    $content = (new \fwc\Cms\Update\Update())->installMysqlDatabase();
-                    break;
-                default:
-                    $content = "[INSTALL PAGE CMS Cruz]";
-                    break;
-            } 
-            if ($content === true) {
-                return $response->withHeader('Location', "/admin")->withStatus(301);        
-            } else {
-                $response->getBody()->write($content);
-                return $response;    
-            }
-        }); 
 
         /*
          * ADMIN POST
@@ -102,7 +80,7 @@ return function (Route $route)
                 
                 //  EDIT
                 if ($action == "edit" || $action == "put") {                  
-                    $data = (new Server())->edit($className, $params);     
+                    $data = (new Server())->edit($className, $params);
                 } 
                 
                 // NEW
@@ -115,7 +93,7 @@ return function (Route $route)
                     $data = (new Server())->delete($className, $params);
                 } 
                                         
-                return $response->withHeader('Location', $data)->withStatus(301);  
+                return $response->withHeader('Location', $data)->withStatus(301);
                 
             } else {            
                 return false;
