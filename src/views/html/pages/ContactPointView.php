@@ -3,10 +3,11 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Web\Widget\FormTrait;
 
 class contactPointView
 {
-    use \Plinct\Web\Widget\FormTrait;
+    use FormTrait;
         
     public function getForm($tableHasPart, $idHasPart, $data)
     {        
@@ -23,16 +24,14 @@ class contactPointView
     }
     
     static private function form($tableHasPart, $idHasPart, $case = 'new', $value = null, $key = null)
-    {          
-        $whatsapp = isset($value['contactOption']) ? PropertyValue::extractValue($value['contactOption'],"whatsapp") : null;
-        
-        $obs = isset($value['contactOption']) ? PropertyValue::extractValue($value['contactOption'],"obs") : null;        
-        
+    {
+        $obs = isset($value['contactOption']) ? PropertyValue::extractValue($value['contactOption'],"obs") : null;
+
         $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
-        $content[] = self::input('idHasPart', "hidden", $idHasPart);
-        
+
         if ($case === "new") {
             $content[] = _("new").": ";
+            $content[] = self::input('idHasPart', "hidden", $idHasPart);
             
         } else {     
             $id = PropertyValue::extractValue($value['identifier'],"id");
