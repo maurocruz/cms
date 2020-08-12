@@ -7,7 +7,7 @@ class Server
     private static $tableHasPart;
     
     public function edit($className, $params)
-    {     
+    {
         (new $className())->put($params);
         
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
@@ -20,15 +20,19 @@ class Server
         if (isset($data['id'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
         }
-        
-        return $this->return(self::unsetRelParams($params));
+
+        self::unsetRelParams($params);
+
+        return $this->return();
     }
     
     public function delete($className, $params)    
     {        
         (new $className())->delete($params);
-        
-        return $this->return(self::unsetRelParams($params));
+
+        self::unsetRelParams($params);
+
+        return $this->return();
     }
     
     private static function unsetRelParams($params)
