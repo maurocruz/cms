@@ -17,7 +17,8 @@ class TaxonController implements ControllerInterface
     
     public function edit(array $params): array 
     {        
-        $params2 = array_merge($params,[ "properties" => "*,image" ]);
+        $params2 = array_merge($params,[ "properties" => "*,image,parentTaxon" ]);
+        
         return (new Taxon())->get($params2);
     }
     
