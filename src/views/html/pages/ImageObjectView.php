@@ -2,15 +2,15 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\App;
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Web\Widget\FormTrait;
 
 class ImageObjectView
 {
     protected $tableHasPart;
     protected $idHasPart;
     
-    use \Plinct\Web\Widget\FormTrait;    
+    use FormTrait;
             
     public function getForm($tableHasPart, $idHasPart, $data = []) 
     {
@@ -29,8 +29,7 @@ class ImageObjectView
     
     /**
      * 
-     * @param type $data
-     * @param type $mode
+     * @param array $data
      * @return array
      */
     public function edit(array $data): array
@@ -49,14 +48,14 @@ class ImageObjectView
         return $content;
     }
     
-    private function form($value, $isPartOf = null, $mode = "simple") 
+    private function form($value, $isPartOf = null)
     { 
         $ID = PropertyValue::extractValue($value['identifier'], "id");
         
         if (isset($value['potentialAction'])) {
             foreach ($value['potentialAction'] as $valueAction) {
                 $potentialAction[$valueAction['name']] = $valueAction['result'];
-            };
+            }
         }
         
         $content[] = isset($isPartOf) && $isPartOf['@type'] == "WebPage" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $isPartOf['identifier'] ] ] : null;
@@ -78,7 +77,7 @@ class ImageObjectView
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
         
-    private function formIsPartOf($value, $mode = 'simple') 
+    private function formIsPartOf($value)
     {       
         $ID = PropertyValue::extractValue($value['identifier'], "id");
         
@@ -87,7 +86,7 @@ class ImageObjectView
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idIsPartOf", "type" => "hidden", "value" => $ID ] ];
         
         // position
-        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'], [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
+        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
         
         // highlights
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 125px; margin: 5px 0;" ], "content" => [
