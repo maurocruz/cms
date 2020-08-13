@@ -75,7 +75,8 @@ return function (Route $route)
             unset($params['y']);
             
             $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
-                                        
+            $classController = "\\Plinct\\Cms\\Controller\\".ucfirst($type)."Controller";
+
             if (class_exists($className)) {
                 
                 //  EDIT
@@ -84,8 +85,13 @@ return function (Route $route)
                 } 
                 
                 // NEW
-                elseif ($action == "new" || $action == "post" || $action == "add") {                    
-                    $data = (new Server())->new($className, $params);                  
+                elseif ($action == "new" || $action == "post" || $action == "add") {
+                    // put data
+                    $data = (new Server())->new($className, $params);
+                    // sitemap
+                    if (class_exists($classController)) {
+                        (new $classController())->saveSitemap();
+                    }
                 } 
                 
                 // DELETE

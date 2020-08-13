@@ -2,7 +2,9 @@
 
 namespace Plinct\Cms\Controller;
 
+use Plinct\Api\Type\PropertyValue;
 use Plinct\Api\Type\Taxon;
+use Plinct\Tool\Sitemap;
 
 class TaxonController implements ControllerInterface
 {
@@ -25,5 +27,26 @@ class TaxonController implements ControllerInterface
     public function new() 
     {
         return true;
+    }
+
+    public function saveSitemap()
+    {
+        $dataSitemap = null;
+
+        $params = [ "orderBy" => "taxonRank"];
+        $data = (new Taxon())->get($params);
+
+        foreach ($data as $value) {
+            $id = PropertyValue::extractValue($value['identifier'], 'id');
+
+            $url = $value['url'] == '' ? "/taxon?id=$id" : $value['url'];
+
+            $dataSitemap[] = [
+                "loc" => "//" . filter_input(INPUT_SERVER, 'HTTP_HOST') . $url,
+                "lastmod" => str_replace(" ", "T", $value['dateModified']) . "Z"
+            ];
+        }
+
+        (new Sitemap("sitemap-taxon.xml"))->createSitemap($dataSitemap);
     }
 }
