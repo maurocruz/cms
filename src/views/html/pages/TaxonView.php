@@ -3,13 +3,15 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Piece\navbarTrait;
+use Plinct\Web\Widget\FormTrait;
 
 class TaxonView implements ViewInterface
 {
     private $content;
     
-    use \Plinct\Cms\View\Html\Piece\navbarTrait;
-    use \Plinct\Web\Widget\FormTrait;
+    use navbarTrait;
+    use FormTrait;
     
     private function navbarTaxon(string $title = null, $level = 2, array $list = []) 
     {
@@ -24,7 +26,7 @@ class TaxonView implements ViewInterface
     {
         $this->navbarTaxon();
         
-        $this->content['main'][] = self::listAll($data, "Taxon", "List of taxons", [ "taxonRank" => "Taxon rank", "dateModified" => "date modified" ] );
+        $this->content['main'][] = self::listAll($data, "Taxon", "List of taxons", [ "taxonRank" => "Taxon rank", "parentTaxon" => "parent Taxon", "dateModified" => "date modified" ] );
         
         return $this->content;
     }
@@ -33,7 +35,7 @@ class TaxonView implements ViewInterface
     {        
         $value = $data[0];
         
-        $this->navbarTaxon($value['name'], 3);
+        $this->navbarTaxon($value['name']." (".$value['taxonRank'].")", 3);
                 
         $this->content['main'][] = self::form('edit', $value);
         
@@ -51,67 +53,64 @@ class TaxonView implements ViewInterface
         
         return $this->content;
     }
-    
-    
+
     private static function form($case = "new", $value = null)
-    {        
-        //var_dump($value);
-        
-        $content[] = [ "tag" => "h3", "content" => _("Taxonony") ];
+    {                
+        $content[] = [ "tag" => "h3", "content" => _("Taxon") ];
                 
         // id
         $content[] = $case == 'edit' ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'], 'id')) : null;
         
         // name
-        $content[] = self::fieldsetWithInput("Name", "name", $value['name'], [ "style" => "width: calc(36% - 120px)" ]);
+        $content[] = self::fieldsetWithInput("Name", "name", $value['name'], [ "style" => "width: calc(32% - 120px)" ]);
         
         // scientificNameAuthorship
-        $content[] = self::fieldsetWithInput("Scientific name authorship", "scientificNameAuthorship", $value['scientificNameAuthorship'], [ "style" => "width: calc(36% - 120px)" ]);
+        $content[] = self::fieldsetWithInput("Scientific name authorship", "scientificNameAuthorship", $value['scientificNameAuthorship'], [ "style" => "width: calc(32% - 120px)" ]);
         
         // vernacularName
-        $content[] = self::fieldsetWithInput("Vernacular name", "vernacularName", $value['vernacularName'], [ "style" => "width: calc(36% - 160px)" ]);
+        $content[] = self::fieldsetWithInput("Vernacular name", "vernacularName", $value['vernacularName'], [ "style" => "width: calc(32% - 160px)" ]);
         
         // taxonRank
-        $content[] = self::fieldsetWithSelect("Taxon rank", "taxonRank", $value['taxonRank'], [ "family" => "Family", "genus" => "Genus", "species" => "Species"], [ "style" => "width: 160px" ], [ "style" => "width: 160px" ]);
+        $content[] = self::fieldsetWithSelect("Taxon rank", "taxonRank", $value['taxonRank'], [ "family" => "family", "genus" => "genus", "species" => "species"], [ "style" => "width: 160px" ], [ "style" => "width: 160px", "id" => "taxonRank" ]);
         
         // parentTaxon
-        $content[] = self::fieldsetWithInput("Parent taxon", "parentTaxon", $value['parentTaxon'], [ "style" => "width: 120px" ]);
-        
-        // family
-        $content[] = self::fieldsetWithInput("Family", "family", $value['family'], [ "style" => "width: 120px" ]);
-        
-        // genus
-        $content[] = self::fieldsetWithInput("Genus", "genus", $value['genus'], [ "style" => "width: 120px" ]);
-        
-        // specie
-        $content[] = self::fieldsetWithInput("Specie", "specie", $value['specie'], [ "style" => "width: 120px" ]);
-        
+        $parentTaxon = $value['parentTaxon'];
+        $idParentTaxon = PropertyValue::extractValue($parentTaxon['identifier'], "id");
+        $content[] = self::fieldsetWithSelect("Parent taxon", "parentTaxon", [ $idParentTaxon => $parentTaxon['name'] ], [], [ "style" => "width: 160px" ], [ "style" => "width: 160px", "id" => "parentTaxon" ]);
+
+        // url
+        $content[] = self::fieldsetWithInput("Url", "url", $value['url'], [ "style" => "width: 50%; min-width: 300px;" ]);
+
         // description
         $content[] = self::fieldsetWithTextarea("Description", "description", $value['description'], 100);
-                
-        // occurrence
-        $content[] = self::fieldsetWithInput("Occurrence", "occurrence", $value['occurrence'], [ "style" => "width: 300px" ]);
         
-        // flowering
-        $content[] = self::fieldsetWithInput("Flowering", "flowering", $value['flowering'], [ "style" => "width: 300px" ]);
+        // plantIdentificationKeys        
+            // occurrence
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Occurrence", "occurrence", $value['occurrence'], [ "style" => "width: 300px" ]);
+
+            // flowering
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowering", "flowering", $value['flowering'], [ "style" => "width: 300px" ]);
+
+            // fructification
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Fructification", "fructification", $value['fructification'], [ "style" => "width: 300px" ]);
+
+            // height
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Height", "height", $value['height'], [ "style" => "width: 300px" ]);
+
+            // roots
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Roots", "roots", $value['roots'], [ "style" => "width: 300px" ]);
+
+            // leafs
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Leafs", "leafs", $value['leafs'], [ "style" => "width: 300px" ]);
+
+            // flowers
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowers", "flowers", $value['flowers'], [ "style" => "width: 300px" ]);
+
+            // fruits
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Fruits", "fruits", $value['fruits'], [ "style" => "width: 300px" ]);
         
-        // fructification
-        $content[] = self::fieldsetWithInput("Fructification", "fructification", $value['fructification'], [ "style" => "width: 300px" ]);
-        
-        // height
-        $content[] = self::fieldsetWithInput("Height", "height", $value['height'], [ "style" => "width: 300px" ]);
-        
-        // roots
-        $content[] = self::fieldsetWithInput("Roots", "roots", $value['roots'], [ "style" => "width: 300px" ]);
-        
-        // leafs
-        $content[] = self::fieldsetWithInput("Leafs", "leafs", $value['leafs'], [ "style" => "width: 300px" ]);
-        
-        // flowers
-        $content[] = self::fieldsetWithInput("Flowers", "flowers", $value['flowers'], [ "style" => "width: 300px" ]);
-        
-        // fruits
-        $content[] = self::fieldsetWithInput("Fruits", "fruits", $value['fruits'], [ "style" => "width: 300px" ]);
+        // plantIdentificationKeys container
+        $content[] = [ "tag" => "div", "attributes" => [ "id" => "plantIdentificationKeys", "style" => "display: none;" ], "content" => $plantIdentificationKeys ];
         
         // citations
         $content[] = self::fieldsetWithTextarea("Citations", "citations", $value['citations'], 100);
@@ -121,6 +120,6 @@ class TaxonView implements ViewInterface
         
         $content[] = $case == 'edit' ? self::submitButtonDelete("/admin/taxon/erase") : null;
         
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao box", "action" => "/admin/taxon/$case", "method" => "post", "onsubmit" => "return CheckRequiredFieldsInForm(event, 'name,taxonRank')" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "id" => "taxonForm", "class" => "formPadrao box", "action" => "/admin/taxon/$case", "method" => "post", "onsubmit" => "return CheckRequiredFieldsInForm(event, 'name,taxonRank')" ], "content" => $content ];
     }
 }
