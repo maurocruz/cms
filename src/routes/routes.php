@@ -90,7 +90,10 @@ return function (Route $route)
                     $data = (new Server())->new($className, $params);
                     // sitemap
                     if (class_exists($classController)) {
-                        (new $classController())->saveSitemap();
+                        $objectController = new $classController();
+                        if (method_exists($objectController, "saveSitemap")) {
+                            $objectController->saveSitemap();
+                        }
                     }
                 } 
                 
