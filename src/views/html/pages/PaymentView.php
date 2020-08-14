@@ -137,14 +137,15 @@ class PaymentView
         $dadosSaldo['atrasado'] = 0;
         
         foreach ($data as $value) {
+            //var_dump($value);
             // total
             $dadosSaldo['total'] += $value['valorparc'];
             // pago            
-            $dadosSaldo['credito'] += $value['quitado'] ? $value['valorparc'] : 0; 
+            $dadosSaldo['credito'] += $value['quitado'] !== "0000-00-00" ? $value['valorparc'] : 0;
             // debito
-            $dadosSaldo['debito'] += $value['quitado'] ? null : $value['valorparc'];
+            $dadosSaldo['debito'] += $value['quitado'] !== "0000-00-00" ? null : $value['valorparc'];
             // atrasado
-            $dadosSaldo['atrasado'] += $value['quitado'] == null && $value['vencimentoparc'] < date("Y-m-d") ? $value['valorparc'] : null;
+            $dadosSaldo['atrasado'] += $value['quitado'] == "0000-00-00" && $value['vencimentoparc'] < date("Y-m-d") ? $value['valorparc'] : null;
         }
         
         return $dadosSaldo;
