@@ -33,7 +33,7 @@ class TaxonController implements ControllerInterface
     {
         $dataSitemap = null;
 
-        $params = [ "orderBy" => "taxonRank"];
+        $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified" ];
         $data = (new Taxon())->get($params);
 
         foreach ($data as $value) {

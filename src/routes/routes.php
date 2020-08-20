@@ -13,6 +13,7 @@ use Plinct\Cms\Middleware\InitialChecking;
 
 use Plinct\Cms\View\ViewBuilder;
 use Plinct\Cms\Server\Server;
+use Plinct\Cms\Server\Sitemap;
 
 return function (Route $route) 
 {
@@ -64,7 +65,7 @@ return function (Route $route)
          * ADMIN POST
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) 
-        {                
+        {
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();
@@ -75,10 +76,8 @@ return function (Route $route)
             unset($params['y']);
             
             $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
-            $classController = "\\Plinct\\Cms\\Controller\\".ucfirst($type)."Controller";
 
             if (class_exists($className)) {
-                
                 //  EDIT
                 if ($action == "edit" || $action == "put") {                  
                     $data = (new Server())->edit($className, $params);
@@ -89,17 +88,15 @@ return function (Route $route)
                     // put data
                     $data = (new Server())->new($className, $params);
                     // sitemap
-                    if (class_exists($classController)) {
-                        $objectController = new $classController();
-                        if (method_exists($objectController, "saveSitemap")) {
-                            $objectController->saveSitemap();
-                        }
-                    }
+                    Sitemap::create($type);
                 } 
                 
                 // DELETE
-                elseif ($action == "delete" || $action == "erase") {                    
+                elseif ($action == "delete" || $action == "erase") {
+                    // delete data
                     $data = (new Server())->delete($className, $params);
+                    // sitemap
+                    Sitemap::create($type);
                 } 
                                         
                 return $response->withHeader('Location', $data)->withStatus(301);
