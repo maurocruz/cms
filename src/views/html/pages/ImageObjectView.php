@@ -42,7 +42,7 @@ class ImageObjectView
                 $content[] = self::simpleTag("div", [
                     self::form($valueEdit, $data['isPartOf'] ?? null),
                     self::formIsPartOf($valueEdit)
-                ], [ "class" => "box "]);
+                ], [ "class" => "box", "style" => "overflow: hidden;"]);
             }              
         }        
         return $content;
