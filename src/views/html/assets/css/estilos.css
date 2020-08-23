@@ -1,9 +1,8 @@
-/* 
+@charset "UTF-8";
+/*
  * document css
  * Styles for website admin
 */
-
-@charset 'uft-8';
 
 /* ELEMENTS
 ============================================================================= */
@@ -14,9 +13,15 @@ p { margin: 5px; }
 hr { margin: 15px 0; }
 h1 { font-size: 32px; margin: 10px; }
 h2 { font-size: 24px; margin: 10px; }
-h3 { font-size: 18px; margin: 0; margin-bottom: 5px; line-height: 1em; }
-h4 { font-size: 14px; margin: 0; margin-bottom: 10px; line-height: 1em; }
-h5 { font-size: 14px; margin: 0; margin-bottom: 5px; line-height: 1em; }
+h3 { font-size: 18px;
+    margin: 0 0 5px;
+    line-height: 1em; }
+h4 { font-size: 14px;
+    margin: 0 0 10px;
+    line-height: 1em; }
+h5 { font-size: 14px;
+    margin: 0 0 5px;
+    line-height: 1em; }
 div { display:block; }
 ul { padding-left: 40px; }
 dt { font-weight: bold; }
@@ -39,7 +44,7 @@ tbody tr:nth-child(even) { background-color: #f2faff; }
 
 /* HEADER
 ============================================================================= */
-.header{ background: white; overflow:hidden; }
+.header{ background: white; }
 
 .container { padding-bottom: 30px; }
 .content { padding: 5px 10px; max-width: 1520px; margin: 0 auto; min-height: 400px; }
@@ -69,7 +74,7 @@ a.white { color: white; }
 
 /* COMPONENT _ searchForm
 ============================================================================= */
-.searchForm { display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0px 0px 7px 0px #ccc; background-color: white; margin: 5px 0; padding: 4px; width: 320px; }
+.searchForm { display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 0 7px 0 #ccc; background-color: white; margin: 5px 0; padding: 4px; width: 320px; }
 .searchForm input[type=text] { border: 0; padding: 3px; vertical-align: middle; width: 293px; }
 .searchForm input[type=image] { height: 20px; }
 
@@ -77,19 +82,30 @@ a.white { color: white; }
 ======================================================================== */
 .menu { background: #3399CC;  padding-top: 5px; display: flex; }
 .menu h1 { margin: 5px; font-size:.9em;}
-.menu a { height: 22px; border-width: 1px 1px 0px 1px; border-color: white; border-style: solid; margin-left: 5px; padding: 5px 5px 0 5px; background: #336699; color: #99ccFF; text-decoration: none; font-weight: bold; font-size: .8em; }
+.menu a { height: 22px; border-width: 1px 1px 0 1px; border-color: white; border-style: solid; margin-left: 5px; padding: 5px 5px 0 5px; background: #336699; color: #99ccFF; text-decoration: none; font-weight: bold; font-size: .8em; }
 .menu a:hover { color: #336666; }
 .menu2 { background-color: #21C0F5; padding-left: 15px; }
 .menu3 { background-color: #6AD9F7; padding-left: 30px; }
 .menu4 { background-color: #C1E7F8; padding-left: 45px; }
 .menu5 { background-color: #d4ecf7; padding-left: 60px; }
 
+/* COMPONENT _ navbar-search
+============================================================================ */
+.navbar-search { margin: 0 5px; position: relative; }
+.navbar-search-form button { margin: 0; padding: 0; line-height: 0; border-width: 1px; }
+.navbar-search-form-input { height: 20px; border-width: 3px; }
+.navbar-search-form-image { height: 25px; vertical-align: middle; }
+.navbar-search-form ul { position: absolute; top: 25px; left: 0; width: 100%; background-color: #666666; z-index: 100;}
+.navbar-search-form li { background-color: rgba(255,255,255,0.85); padding: 3px; margin: 3px; border-radius: 3px; }
+.navbar-search-form li a { background-color: transparent; border: none; color: #666; font-size: 0.85em; margin: 0; }
+.navbar-search-form li a:hover { color: #999; }
+
 /* COMPONENT _ box
 ============================================================================= */
 .box { margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
 .box h1 { margin: 0; font-size: 1.4em; }
 /*.box form{ display: block; }*/
-.box form fieldset { display: inline; margin-right: 0px; }
+.box form fieldset { display: inline; margin-right: 0; }
 .posts-box { max-height: 110px; overflow: hidden; }
 .box-expanding { max-height: 1rem; overflow: hidden; }
 .box-expanding--text { font-weight: normal; font-size: 0.85rem; }
@@ -161,14 +177,15 @@ a.white { color: white; }
 
 /* COMPONENT _ menu
 =======================================================================*/
-a.menu{ color: #99cccc; text-decoration:none; font-weight:bold; font-size:.9em; padding-left: 10px; padding-right: 10px; height: 25px; font-size: .8em; }
+a.menu { color: #99cccc; text-decoration:none; font-weight:bold;
+    padding-left: 10px; padding-right: 10px; height: 25px; font-size: .8em; }
 a.menu:hover{ background: #2d577f; padding: 10px; height:25px; }
 a.subsubmenu{ color:white; text-decoration: none; font-weight: bold; padding-left: 5px; padding-right: 5px; height: 25px; font-size: .8em; }
 a.subsubmenu:hover{ background: #336666; height:25px; }
 a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; font-size: .8em; }
 /**/
 .menuAtivo{ color: #FFFFFF; text-decoration:none; font-weight: bold; padding: 10px; font-size: .8em; }
-.tituloColuna{ float: left; background: #336699; color: white; font-weight: bold; text-align:	center; border:1px white solid; border-bottom-width: 0px; border-top-width: 0px; padding:3px; font-size: .9em; }
+.tituloColuna{ float: left; background: #336699; color: white; font-weight: bold; text-align:	center; border:1px white solid; border-bottom-width: 0; border-top-width: 0; padding:3px; font-size: .9em; }
 .coluna{ float:left; height: 15px; border: 1px #336699 solid; padding:3px; }
 .linhaTabela{ clear:both; overflow:hidden; }
 .menu-inline{ float:left; display:inline; margin-top: 15px; margin-left: 5px; margin-right: 5px; }
@@ -178,10 +195,12 @@ a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; f
 =========================================================================== */
 .formPadrao { }
 .formPadrao cite { font-size: 32px; font-style: normal; font-weight: bold; }
-.formPadrao fieldset { position: relative; display: inline; border: none; background: white; border: 1px #336699 solid; box-sizing: border-box; padding: 3px; margin: 0 0 3px 0; vertical-align: middle; }
+.formPadrao fieldset { position: relative; display: inline;
+    background: white; border: 1px #336699 solid; box-sizing: border-box; padding: 3px; margin: 0 0 3px 0; vertical-align: middle; }
 .formPadrao legend { display: table-caption; width: 100%; background-color: #336699; color: white; padding: 4px 5px; box-sizing: border-box; font-weight: bold; border-radius: 7px 7px 0 0; font-size: 12px; }
 .formPadrao legend a { color: #E0F9FF; }
-.formPadrao input { position: relative; border: 1px #336699 solid; min-height: 20px; padding: 3px; overflow: hidden; width: 100%; box-sizing: border-box; border: none; }
+.formPadrao input { position: relative;
+    min-height: 20px; padding: 3px; overflow: hidden; width: 100%; box-sizing: border-box; border: none; }
 .formPadrao input[type=radio] { width: auto; vertical-align: middle; }
 .formPadrao input[type=checkbox] { display: inline; width: inherit;}
 .formPadrao input[type=image] { display: inline; width: inherit; padding: 0; vertical-align: text-bottom; }
@@ -189,7 +208,7 @@ a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; f
 .formPadrao label { margin: 0 3px; }
 .formPadrao .labelradio * { white-space: nowrap; }
 .formPadrao textarea { border: 1px #336699 solid; overflow: auto; margin: 0; width: calc(100% - 3px); }
-.formPadrao select { border: 1px #336699 solid; height: 20px; padding: 0px; }
+.formPadrao select { border: 1px #336699 solid; height: 20px; padding: 0; }
 .formPadrao figure { display: inline-block; line-height: normal; vertical-align: bottom; }
 .formPadrao .text-box-white { background-color: white; border: 1px #336699 solid; min-height: 20px; padding: 8px 10px; display: inline-block; }
 .submitButton { min-height: 0 !important; cursor: pointer; width: 100%; }
@@ -211,19 +230,6 @@ a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; f
 
 .linhaParcela{ clear: both; overflow:hidden; }
 .lista{ list-style: square; margin-left: 30px; }
-
-/* IMAGES FROM SERVERS
-============================================================================= */
-.imagesFromServer-wrapper{ overflow: hidden; display: flex; flex-wrap: wrap; justify-content: flex-start; }
-.imagesFromServer-figure{ overflow: hidden; text-align: center; min-height: 80px; margin: 5px 15px 30px; max-height: 200px; }
-
-/* IMAGES FROM DATABASE
-============================================================================= 
-.admin-images-grid{ display: grid; grid-gap: 15px; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); grid-auto-rows: 20px; }
-.admin-images-grid-figure{ position: relative; background-color: rgba(255,255,255,0.5); }
-.admin-image-grid-buttons{ position: absolute; right: 0; bottom: 0; width: 100%; background-color: rgba(255,255,255,0.1); text-align: right;  }
-.admin-image-grid-buttons *{ display: inline; margin-left: 5px; }
-.admin-image-grid-buttons p{ background-color: white; padding: 3px 5px; word-wrap: break-word; }*/
 
 /* COMPONENT _ sitemaptree
 ============================================================================= */
