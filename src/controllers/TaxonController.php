@@ -2,6 +2,7 @@
 
 namespace Plinct\Cms\Controller;
 
+use DateTime;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Api\Type\Taxon;
 use Plinct\Tool\Sitemap;
@@ -41,9 +42,16 @@ class TaxonController implements ControllerInterface
 
             $url = $value['url'] == '' ? "/taxon?id=$id" : $value['url'];
 
+            try {
+                $dateModified = new DateTime($value['dateModified']);
+                $lastmod = $dateModified->getTimestamp();
+            } catch (\Exception $e) {
+                $lastmod = date('c');
+            }
+
             $dataSitemap[] = [
                 "loc" => "//" . filter_input(INPUT_SERVER, 'HTTP_HOST') . $url,
-                "lastmod" => str_replace(" ", "T", $value['dateModified']) . "Z"
+                "lastmod" => date('c', $lastmod)
             ];
         }
 
