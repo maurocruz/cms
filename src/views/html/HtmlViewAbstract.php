@@ -54,7 +54,7 @@ class HtmlViewAbstract
     
     // ADD NAVBAR
     public function addNavBar(array $data) {
-        $this->addHeader([ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null ]);
+        $this->addHeader([ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null, "append" => $data['append'] ?? null ]);
     }
     
     // ADD MAIN

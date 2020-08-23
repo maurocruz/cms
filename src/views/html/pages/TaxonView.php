@@ -15,7 +15,9 @@ class TaxonView implements ViewInterface
     
     private function navbarTaxon(string $title = null, $level = 2, array $list = []) 
     {
-        $this->content['navbar'][] = self::navbar("Taxon", [ "/admin/taxon" => "List All", "/admin/taxon/new" => _("Add new") ], 2);
+        $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "taxon", "data-searchfor" => "name,vernacularName" ] ];
+
+        $this->content['navbar'][] = self::navbar("Taxon", [ "/admin/taxon" => "List All", "/admin/taxon/new" => _("Add new") ], 2, $appendNavbar);
         
         if ($title) {
             $this->content['navbar'][] = self::navbar($title, $list, $level);
