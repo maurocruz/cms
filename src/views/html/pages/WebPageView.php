@@ -3,20 +3,24 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Web\Widget\FormTrait;
 
 class WebPageView
 {
     protected $content;
     protected $idwebPage;
 
-    use \Plinct\Web\Widget\FormTrait;
+    use FormTrait;
     
     public function __construct()
-    {     
+    {
+        $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "webPage", "data-searchfor" => "name" ] ];
+
         $this->content['navbar'][] = [
             "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/add" => "add new WebPage" ],
             "attributes" => [ "class" => "menu menu3"],
-            "title" => "WebPage"
+            "title" => "WebPage",
+            "append" => $appendNavbar
         ];  
     }
     
@@ -42,9 +46,7 @@ class WebPageView
     public function edit(array $data): array
     {
         $value = $data[0];
-        
-        //$valueWebPageElement = $data['webPageElement'];
-        
+
         $this->idwebPage = PropertyValue::extractValue($value['identifier'], "id");
         
         // VIEW         
@@ -67,7 +69,7 @@ class WebPageView
     
     private function form($case = "new", $value = null) 
     {        
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
+        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         
         // title
         $content[] = self::fieldsetWithInput("Título", "name", $value['name'], [ "style" => "width: calc(100% - 400px);"]);

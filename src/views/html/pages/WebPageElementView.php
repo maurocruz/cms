@@ -51,24 +51,10 @@ class WebPageElementView
         
         return $content;
     }
-    
-    
-    /*protected function boxContent($value) 
-    {
-        $contentForm[] = [ "tag" => "h4", "content" => "Content <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'form-webPageElement--edit-$this->idwebPageElement');\">Expandir</a>]</span>" ];
-        
-        $contentForm[] = self::form("edit", $value);                
-        return [ "tag" => "div", "attributes" => [ "id" => "form-webPageElement--edit-$this->idwebPageElement", "class" => "box box-expanding" ], "content" => $contentForm ];
-    }*/
 
     protected function form($case = "add", $value = null) 
     {
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ];
-        
-        
-        
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPageElement", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
+        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
                              
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 93%;" ], "content" => [
                 [ "tag" => "legend", "content" => "Título" ],
@@ -84,7 +70,7 @@ class WebPageElementView
             ]];            
         $content[] = [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textareaPost-$this->idwebPageElement',100);", "style" => "width: 96%; display: block;" ], "content" => "Expandir textarea em 100px" ];              
         $content[] = self::submitButtonSend();
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPageElement/delete") : null;
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPageElement/erase") : null;
                 
         return [ "tag" => "form", "attributes" => [ "name" => "form-webPageElement--$case", "id" => "form-webPageElement-$case-$this->idwebPageElement", "action" => "/admin/webPageElement/$case", "class" => "formPadrao", "method" => "post" ], "content" => $content ];                           
     }
