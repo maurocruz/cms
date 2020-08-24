@@ -50,7 +50,7 @@ class TaxonController implements ControllerInterface
             }
 
             $dataSitemap[] = [
-                "loc" => "//" . filter_input(INPUT_SERVER, 'HTTP_HOST') . $url,
+                "loc" => "http://" . filter_input(INPUT_SERVER, 'HTTP_HOST') . $url,
                 "lastmod" => date('c', $lastmod)
             ];
         }
