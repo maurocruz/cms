@@ -3,6 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Web\Widget\FormTrait;
 
 class WebPageElementView
 {
@@ -10,7 +11,7 @@ class WebPageElementView
     
     protected $idwebPageElement;
     
-    use \Plinct\Web\Widget\FormTrait;
+    use FormTrait;
     
     public function getForm($tableHasPart, $idHasPart, $value) 
     {
@@ -35,7 +36,6 @@ class WebPageElementView
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
         $content[] = self::form();        
         return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
-        return $content;
     } 
     
     public function edit(array $value): array
