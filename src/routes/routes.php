@@ -81,6 +81,8 @@ return function (Route $route)
                 //  EDIT
                 if ($action == "edit" || $action == "put") {                  
                     $data = (new Server())->edit($className, $params);
+                    // sitemap
+                    Sitemap::create($type);
                 } 
                 
                 // NEW
