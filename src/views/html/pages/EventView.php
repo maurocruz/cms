@@ -2,6 +2,7 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
+use Plinct\Cms\View\Html\Piece\navbarTrait;
 use Plinct\Web\Widget\FormTrait;
 use Plinct\Api\Type\PropertyValue;
 
@@ -10,40 +11,42 @@ class EventView
     protected $content;
     
     use FormTrait;
+    use navbarTrait;
     
-    protected function navbar() 
-    {        
-        $this->content['navbar'][] = [
-            "list" => [ "/admin/event" => _("View all"), "/admin/event/add" => _("Add new event") ],
-            "attributes" => [ "class" => "menu menu3" ],
-            "title" => _("Events")            
+    protected function navbarEvent()
+    {
+        $title = _("Events");
+        $list = [
+            "/admin/event" => _("View all"),
+            "/admin/event/new" => _("Add new")
         ];
+        $level = 3;
+        $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "event", "data-searchfor" => "name" ] ];
+
+        $this->content['navbar'][] = self::navbar($title, $list, $level, $appendNavbar);
     }
     
     public function index(array $data): array 
     {
-        $this->navbar();
+        $this->navbarEvent();
         
         $this->content['main'][] = self::listAll($data, "event", _("List of events"), [ "startDate" => _("Date") ]);
         
         return $this->content;
     }
         
-    public function add($data = null): array
+    public function new($data = null): array
     {
-        $this->navbar();
+        $this->navbarEvent();
         
-        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "events" ], "content" => [
-            [ "tag" => "h1", "content" => _("Add") ],
-            self::form()
-        ]];
+        $this->content['main'][] = self::div(_("Add new"), "event", [ self::form() ]);
         
         return $this->content;
     }
         
     public function edit(array $data): array 
     {            
-        $this->navbar();
+        $this->navbarEvent();
         
         if (!$data) {
             $content[] = [ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => _("Event not found") ];            
@@ -76,7 +79,7 @@ class EventView
     /*
      * Formulário de edição dos dados do evento
      */
-    private static function form($case = 'add', $value = null) 
+    private static function form($case = 'new', $value = null)
     {
         $startDate = strstr($value['startDate'], " ", true); 
         $startTime = substr(strstr($value['startDate'], " "),1);
