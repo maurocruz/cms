@@ -95,10 +95,13 @@ a.white { color: white; }
 .navbar-search-form button { margin: 0; padding: 0; line-height: 0; border-width: 1px; }
 .navbar-search-form-input { height: 20px; border-width: 3px; }
 .navbar-search-form-image { height: 25px; vertical-align: middle; }
-.navbar-search-form ul { position: absolute; top: 25px; left: 0; width: 100%; background-color: #666666; z-index: 100;}
-.navbar-search-form li { background-color: rgba(255,255,255,0.85); padding: 3px; margin: 3px; border-radius: 3px; }
-.navbar-search-form li a { background-color: transparent; border: none; color: #666; font-size: 0.85em; margin: 0; }
-.navbar-search-form li a:hover { color: #999; }
+
+/* COMPONENT _ list-popup
+============================================================================ */
+.list-popup { position: absolute; top: 25px; left: 0; width: 100%; background-color: #666666; z-index: 100; list-style: none; padding-left: 0; }
+.list-popup li { background-color: rgba(255,255,255,0.85); color: #666; padding: 3px; margin: 3px; border-radius: 3px; cursor: pointer; }
+.list-popup li a { background-color: transparent; border: none; color: #666; font-size: 0.85em; margin: 0; }
+.list-popup li a:hover { color: #999; }
 
 /* COMPONENT _ box
 ============================================================================= */
