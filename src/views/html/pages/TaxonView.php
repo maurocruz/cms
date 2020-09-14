@@ -88,31 +88,31 @@ class TaxonView implements ViewInterface
         
         // plantIdentificationKeys        
             // occurrence
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Occurrence", "occurrence", $value['occurrence'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Occurrence", "occurrence", $value['occurrence'], [ "style" => "width: 25%" ]);
 
             // flowering
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowering", "flowering", $value['flowering'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowering", "flowering", $value['flowering'], [ "style" => "width: 25%" ]);
 
             // fructification
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Fructification", "fructification", $value['fructification'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Fructification", "fructification", $value['fructification'], [ "style" => "width: 25%" ]);
 
             // height
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Height", "height", $value['height'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Height", "height", $value['height'], [ "style" => "width: 25%" ]);
 
             // roots
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Roots", "roots", $value['roots'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Roots", "roots", $value['roots'], [ "style" => "width: 25%" ]);
 
             // leafs
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Leafs", "leafs", $value['leafs'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Leafs", "leafs", $value['leafs'], [ "style" => "width: 25%" ]);
 
             // flowers
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowers", "flowers", $value['flowers'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Flowers", "flowers", $value['flowers'], [ "style" => "width: 25%" ]);
 
             // fruits
-            $plantIdentificationKeys[] = self::fieldsetWithInput("Fruits", "fruits", $value['fruits'], [ "style" => "width: 300px" ]);
+            $plantIdentificationKeys[] = self::fieldsetWithInput("Fruits", "fruits", $value['fruits'], [ "style" => "width: 25%" ]);
         
         // plantIdentificationKeys container
-        $content[] = [ "tag" => "div", "attributes" => [ "id" => "plantIdentificationKeys", "style" => "display: none;" ], "content" => $plantIdentificationKeys ];
+        $content[] = $value['taxonRank'] == "species" ? [ "tag" => "div", "attributes" => [ "id" => "plantIdentificationKeys" ], "content" => $plantIdentificationKeys ] : NULL;
         
         // citations
         $content[] = self::fieldsetWithTextarea("Citations", "citations", $value['citations'], 100);
