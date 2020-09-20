@@ -1,9 +1,9 @@
 <?php
-
 /*
  * ROUTES CMS ADMIN
  */
 
+use Plinct\Cms\View\Html\HtmlView;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -11,7 +11,6 @@ use Slim\Routing\RouteCollectorProxy as Route;
 use Plinct\Api\Auth\AuthMiddleware;
 use Plinct\Cms\Middleware\InitialChecking;
 
-use Plinct\Cms\View\ViewBuilder;
 use Plinct\Cms\Server\Server;
 use Plinct\Cms\Server\Sitemap;
 
@@ -24,13 +23,10 @@ return function (Route $route)
         $type = $args['type'];
 
         $script = file_get_contents( __DIR__ ."/../views/html/assets/".$type."/".$filename.".".$type);
-
         $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
 
         $newResponse = $response->withHeader("Content-type", $contentType);
-
         $newResponse->getBody()->write($script);
-
         return $newResponse;
     });
     /*
@@ -42,19 +38,18 @@ return function (Route $route)
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
 
-        
         /*
-         * DEFAULTS
+         * DEFAULT
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response)
         {
-            $viewBuilder = new ViewBuilder();
-                        
+            $view = new HtmlView();
+
             if ($request->getAttribute('userAuth') === false) {
-                $content = $viewBuilder->login($request, $response);
-                
+                $content = $view->login();
+
             } else {
-                $content = $viewBuilder->build($request);
+                $content = $view->build($request);
             }
 
             $response->getBody()->write($content);
@@ -66,6 +61,7 @@ return function (Route $route)
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) 
         {
+            $data = null;
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();
@@ -106,7 +102,7 @@ return function (Route $route)
             } else {            
                 return false;
             }
-        }); 
+        });
         
     })->add(new AuthMiddleware())->add(new InitialChecking());
 };

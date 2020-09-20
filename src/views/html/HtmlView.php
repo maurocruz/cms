@@ -2,8 +2,9 @@
 
 namespace Plinct\Cms\View\Html;
     
+use Plinct\Cms\Views\Html\Pieces\AuthForms;
+use Plinct\Web\Render;
 use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
 
 use Plinct\Api\Auth\SessionUser;
 use Plinct\Cms\App;
@@ -12,6 +13,7 @@ class HtmlView extends HtmlViewContent
 {    
     public function __construct()
     {
+        parent::__construct();
         // gettext
         setlocale(LC_ALL, App::getLanguage() . ".utf8");
         bindtextdomain("fwc", __DIR__ . "/../locale");                
@@ -92,19 +94,23 @@ class HtmlView extends HtmlViewContent
     
     // LOGIN FORM
     public function login($message = null) 
-    {        
-        switch ($message) {
-            case "Password invalid":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Seu email confere, mas a senha não! Tente novamente ou entre em contato com o administrador" ]);
-                break;
-            
-            case "User not found":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Sinto muito, mas seu email não consta em nosso banco de dados! Tente de novo ou faça um novo <a href=\"/admin/registrar\">registro</a>" ]);
-                break;
-           
-            case "userNotAuthorized":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Você está devidamente registrado, mas não tem permissão para acessar este painel. Por favor, entre em contato com o administrador!" ]);
-                break;                
+    {
+        if ($message) {
+            switch ($message) {
+                case "Password invalid":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Seu email confere, mas a senha não! Tente novamente ou entre em contato com o administrador"]);
+                    break;
+
+                case "User not found":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Sinto muito, mas seu email não consta em nosso banco de dados! Tente de novo ou faça um novo <a href=\"/admin/registrar\">registro</a>"]);
+                    break;
+
+                case "userNotAuthorized":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Você está devidamente registrado, mas não tem permissão para acessar este painel. Por favor, entre em contato com o administrador!"]);
+                    break;
+                default:
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => $message]);
+            }
         }
                 
         parent::addMain(file_get_contents(__DIR__ . '/pieces/signupForm.html'));
@@ -113,7 +119,7 @@ class HtmlView extends HtmlViewContent
     }
     
     // REGISTER FORM
-    public function register($warning = null) 
+    public function register(string $warning = null)
     {
         switch ($warning) {
             case "repeatPasswordNotWork":
@@ -133,7 +139,29 @@ class HtmlView extends HtmlViewContent
         parent::addMain(file_get_contents(__DIR__ . '/pieces/registerForm.html'));
         return $this->ready();
     }
-    
+
+    // ERROR
+    public function error(int $code, string $message = null)
+    {
+        switch ($code) {
+            // table not exists
+            case 1146:
+                self::startApplication();
+                break;
+
+            default:
+                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Error code: ".$code." ".$message ]);
+        }
+
+        return $this->ready();
+    }
+
+    private function startApplication()
+    {
+        parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => _("Start application") ]);
+        parent::addMain(AuthForms::startApplication($_POST['email'], $_POST['password']));
+    }
+
     public function ready() 
     {
         //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>');
@@ -143,6 +171,6 @@ class HtmlView extends HtmlViewContent
         parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
         parent::addBody('<script src="/App/static/js/plinctcms.js"></script>');
         
-        return "<!DOCTYPE html>" . \Plinct\Web\Render::arrayToString($this->html);
+        return "<!DOCTYPE html>" . Render::arrayToString($this->html);
     }
 }

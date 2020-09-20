@@ -208,7 +208,7 @@ a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; f
 .formPadrao input[type=checkbox] { display: inline; width: inherit;}
 .formPadrao input[type=image] { display: inline; width: inherit; padding: 0; vertical-align: text-bottom; }
 .formPadrao input[type=submit] { border: 1px #333 solid; border-radius: 6px; }
-.formPadrao label { margin: 0 3px; }
+.formPadrao label { margin: 0; }
 .formPadrao .labelradio * { white-space: nowrap; }
 .formPadrao textarea { border: 1px #336699 solid; overflow: auto; margin: 0; width: calc(100% - 3px); }
 .formPadrao select { border: 1px #336699 solid; height: 20px; padding: 0; }
