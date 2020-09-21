@@ -95,7 +95,13 @@ return function (Route $route)
                     $data = (new Server())->delete($className, $params);
                     // sitemap
                     Sitemap::create($type);
-                } 
+                }
+
+                // CREATE SQL TABLE
+                elseif ($action == "createSqlTable") {
+                    (new $className())->createSqlTable($type);
+                    $data = $_SERVER['HTTP_REFERER'];
+                }
                                         
                 return $response->withHeader('Location', $data)->withStatus(301);
                 
