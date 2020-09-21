@@ -3,6 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Piece\HtmlPiecesTrait;
 use Plinct\Web\Widget\FormTrait;
 
 class WebPageView
@@ -11,13 +12,14 @@ class WebPageView
     protected $idwebPage;
 
     use FormTrait;
+    use HtmlPiecesTrait;
     
     public function __construct()
     {
         $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "webPage", "data-searchfor" => "name" ] ];
 
         $this->content['navbar'][] = [
-            "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/add" => "add new WebPage" ],
+            "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/new" => "add new WebPage" ],
             "attributes" => [ "class" => "menu menu3"],
             "title" => "WebPage",
             "append" => $appendNavbar
@@ -25,9 +27,9 @@ class WebPageView
     }
     
     public function index(array $data): array 
-    {            
-        if (isset($data['errorInfo'])) {
-            $this->content['main'][] = self::errorInfo($data['errorInfo'], "WebPage");
+    {
+        if (isset($data['error'])) {
+            $this->content['main'][] = self::error($data['error'], "WebPage");
         } else {
             $this->content['main'][] = self::listAll($data, "WebPage", "List of webpages", [ "dateModified" => "Date modified" ]);
         }
@@ -98,7 +100,7 @@ class WebPageView
         
         $content[] = self::submitButtonSend();
         
-        $content[] = self::submitButtonDelete("/admin/webPage/erase");
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPage/erase") : null;
         
         return [ "tag" => "form", "attributes" => [ "id" => "form-pages--edit", "name" => "form-pages--edit", "action" => "/admin/webPage/$case", "class" => "formPadrao", "method" => "post" ], "content" => $content ];
     }
