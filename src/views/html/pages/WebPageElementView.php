@@ -13,16 +13,15 @@ class WebPageElementView
     
     use FormTrait;
     
-    public function getForm($tableHasPart, $idHasPart, $value) 
+    public function getForm($idHasPart, $value)
     {
         $this->idwebPage = $idHasPart;
         
-        // add new WebPagEelement
-        $content[] = self::divBoxExpanding(_("Add new"), "WebPageelement", [ self::form() ]);
+        // add new WebPagElement
+        $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::form() ]);
         
         // WebPageElements hasPart
         foreach ($value as $valueWebPageElement) {
-            
             $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
             
             $content[] = self::divBoxExpanding("[".$this->idwebPageElement."] ".$valueWebPageElement['name'], "WebPageElement", [ self::edit($valueWebPageElement) ]);
@@ -31,7 +30,7 @@ class WebPageElementView
         return $content;
     }
     
-    public function new($data = null): array
+    public function new(): array
     {   
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
         $content[] = self::form();        

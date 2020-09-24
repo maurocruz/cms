@@ -1,10 +1,45 @@
 
-function CheckRequiredFieldsInForm(event, fields) 
-{
+function checkStartApplicationForm(form) {
+    const userAdmin = form.userAdmin.value;
+    const emailAdmin = form.emailAdmin.value;
+    const passwordAdmin = form.passwordAdmin.value;
+    const passwordRepeat = form.passwordRepeat.value;
+    const dbName = form.dbName.value;
+    const dbUserName = form.dbUserName.value;
+    const dbPassword = form.dbPassword.value;
+
+    if(!userAdmin) { alert("The Name field cant be empty!"); return false; }
+    if(!emailAdmin) { alert("The Email field cant be empty!"); return false; }
+    if(!passwordAdmin) { alert("The Password field cant be empty!"); return false; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAdmin)) { alert("Invalid email!"); return false; }
+    if (passwordAdmin != passwordRepeat) { alert("the password does not correspond with the repetition!"); return false; }
+
+    if(!dbName) { alert("The Database name field cant be empty!"); return false; }
+    if(!dbUserName) { alert("The Database user name field cant be empty!"); return false; }
+    if(!dbPassword) { alert("The Database password field cant be empty!"); return false; }
+
+    return true;
+}
+
+function checkRegisterForm(form) {
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const repeatPassword = form.passwordRepeat.value;
+
+    if(!name) { alert("The name field cant be empty!"); return false; }
+    if(!email) { alert("The email field cant be empty!"); return false; }
+    if(!password) { alert("The password field cant be empty!"); return false; }
+    if(!repeatPassword) { alert("The password repeat field cant be empty!"); return false; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Invalid email!"); return false; }
+    if (password != repeatPassword) { alert("the password does not correspond with the repetition!"); return false; }
+
+    return true;
+}
+
+function CheckRequiredFieldsInForm(event, fields) {
     const form = event.target;
-    
     const elements = form.elements;
-    
     for (var i=0; i<elements.length; i++) {        
         var item = elements.item(i);
         

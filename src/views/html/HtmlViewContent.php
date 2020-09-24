@@ -89,7 +89,11 @@ class HtmlViewContent extends HtmlViewAbstract
             }
             if(array_key_exists('navbar', $content)) {
                 foreach ($content['navbar'] as $valueNavBar) {
-                    parent::addNavBar($valueNavBar['list'], $valueNavBar['attributes'], $valueNavBar['title']);  
+                    parent::addNavBar([
+                        "list" =>$valueNavBar['list'],
+                        "attributes" =>$valueNavBar['attributes'],
+                        "title" => $valueNavBar['title']
+                    ]);
                 }
             }
             if(array_key_exists('main', $content)) {

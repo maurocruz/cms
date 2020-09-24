@@ -1,20 +1,28 @@
-<form action="/admin/register" method="post" class="form formPadrao">
+<form id="register-form" action="/admin/register" method="post" class="form formPadrao" onsubmit="return checkRegisterForm(this);">
     <h3>Novo registro de usuário</h3>    
     <fieldset style="width: 100%;">
         <legend>Nome</legend>
-        <input name="name" type="text" value="">
+        <label>
+            <input name="name" type="text" value=""/>
+        </label>
     </fieldset>
     <fieldset style="width: 100%;">
         <legend>Email</legend>
-        <input name="email" type="text" value="">
+        <label>
+            <input name="email" type="text" value=""/>
+        </label>
     </fieldset>
     <fieldset style="width: 100%;">
         <legend>Senha</legend>
-        <input name="password" type="password">
+        <label>
+            <input name="password" type="password"/>
+        </label>
     </fieldset>
     <fieldset style="width: 100%;">
         <legend>Repita a senha</legend>
-        <input name="passwordRepeat" type="password">
+        <label>
+            <input name="passwordRepeat" type="password"/>
+        </label>
     </fieldset>
-    <input name="submit" value="Enviar" type="submit">
+    <input value="Enviar" type="submit">
 </form>

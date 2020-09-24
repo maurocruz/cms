@@ -2,11 +2,14 @@
 
 namespace Plinct\Cms\View\Html;
 
-class HtmlViewAbstract 
+use Locale;
+
+class HtmlViewAbstract
 {
     protected $settings;
     protected $html;
     protected $language;
+    protected $siteName;
     
     protected $content = [];
 
@@ -20,17 +23,13 @@ class HtmlViewAbstract
     
     private function setLanguage($language) 
     {
-        $this->language = $language ?? (new \Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
+        $this->language = $language ?? (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
     }
 
     protected function setSiteName($siteName) 
     {
         $this->siteName = $siteName;
         $this->addHead([ "tag" => "title", "content" => _("Painel CMS [ ".$siteName." ]") ]);
-    }    
-
-    protected function setSection($sectionName) {
-        $this->sectionName = $sectionName;
     }
         
     // ADD HEAD

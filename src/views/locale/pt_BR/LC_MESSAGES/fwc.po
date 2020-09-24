@@ -17,16 +17,10 @@ msgstr ""
 #. use fot update -> msgfmt pt_BR/LC_MESSAGES/fwc.po --output-file=pt_BR/LC_MESSAGES/fwc.mo
 
 msgid "administrator"
-msgstr "adminitrador"
+msgstr "administrador"
 
-msgid "Administrator"
-msgstr "Adminitrador"
-
-msgid "administratores"
-msgstr "adminitradors"
-
-msgid "Administratores"
-msgstr "Adminitradors"
+msgid "administrators"
+msgstr "administradores"
 
 msgid "Yes"
 msgstr "Sim"
