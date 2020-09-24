@@ -31,13 +31,15 @@ class WebPageView
         if (isset($data['error'])) {
             $this->content['main'][] = self::error($data['error'], "WebPage");
         } else {
-            $this->content['main'][] = self::listAll($data, "WebPage", "List of webpages", [ "dateModified" => "Date modified" ]);
+            //$this->content['main'][] = (new DirectoryTree($data))->view();
+
+            $this->content['main'][] = self::listAll($data, "WebPage", "List of webpages", [ "url" => "Url", "dateModified" => "Date modified" ]);
         }
         
         return $this->content;
     }
     
-    public function new($data = null): array
+    public function new(): array
     {
         $content[] = [ "tag" => "h4", "content" => "Add new webPage" ];
         $content[] = self::form();
@@ -64,7 +66,7 @@ class WebPageView
        // $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
         
         // WEB ELEMENTS
-        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm("pages", $this->idwebPage, $value['hasPart']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm($this->idwebPage, $value['hasPart']) ]);
         
         return $this->content;
     }
