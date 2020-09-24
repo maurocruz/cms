@@ -14,9 +14,12 @@ class HtmlView extends HtmlViewContent
     public function __construct()
     {
         parent::__construct();
+
         // gettext
+        $lang = App::getLanguage();
+        putenv("LC_ALL=$lang");
         setlocale(LC_ALL, App::getLanguage() . ".utf8");
-        bindtextdomain("fwc", __DIR__ . "/../locale");                
+        bindtextdomain("fwc", __DIR__ . "/../locale");
         textdomain("fwc");
         
         // template
@@ -28,7 +31,7 @@ class HtmlView extends HtmlViewContent
         
         // status bar
         if (SessionUser::checkUserAdmin()) {
-            // userbar
+            // user bar
             parent::setUserBar();
             // navbar
             parent::navbar();
