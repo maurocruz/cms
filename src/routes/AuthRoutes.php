@@ -65,7 +65,13 @@ return function (Route $route)
                 return $response;
 
             } elseif ($data['message'] == "Session login started") {
-                return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
+                if (SessionUser::getStatus()) {
+                    return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
+                } else {
+                    $content = (new HtmlView())->login("userNotAuthorized");
+                    $response->getBody()->write($content);
+                    return $response;
+                }
                 
             } else {
                 $content = (new HtmlView())->login($data['message']);
