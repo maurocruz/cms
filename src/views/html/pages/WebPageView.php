@@ -57,13 +57,13 @@ class WebPageView
         $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
         
         // EDIT
-        $this->content['main'][] = self::divBox("Webpage", "WebPage", [ self::form("edit", $value) ]);
+        $content['main'][] = self::form("edit", $value);
         
         // ATTRIBUTES
-        //$content[] = self::divBoxExpanding(_("Properties"), "WebPage", [ (new PropertyValueView())->getForm("pages", $this->idwebPage, $value['propertyValue']) ]);
-        
-        // BOX 
-       // $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
+        $content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", $this->idwebPage, $value['identifier']) ]);
+
+        // BOX
+        $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
         
         // WEB ELEMENTS
         $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm($this->idwebPage, $value['hasPart']) ]);
