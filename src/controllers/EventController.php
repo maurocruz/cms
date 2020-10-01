@@ -29,6 +29,8 @@ class EventController implements ControllerInterface
 
     public function saveSitemap()
     {
+        $dataSitemap = null;
+
         $params = [ "orderBy" => "startDate", "ordering" => "desc", "limit" => "none" ];
         $data = (new Event())->get($params);
 
