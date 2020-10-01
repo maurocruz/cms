@@ -28,15 +28,14 @@ class PropertyValueView
     {              
         if ($case == "new") {
             $contentForm[] = "Novo: ";
+            $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
+            $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
             
         } else {
             $id = PropertyValue::extractValue($value['identifier'], 'id');
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
-        
-        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
-        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
-        
+
         $contentForm[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 15%;" ], "content" => [
                 [ "tag" => "legend", "content" => "Nome" ],
                 [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ?? null ] ]
