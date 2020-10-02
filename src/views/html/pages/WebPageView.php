@@ -76,10 +76,10 @@ class WebPageView
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         
         // title
-        $content[] = self::fieldsetWithInput("Título", "name", $value['name'], [ "style" => "width: calc(100% - 400px);"]);
+        $content[] = self::fieldsetWithInput("Título", "name", $value['name'], [ "style" => "width: 50%;"]);
         
         // url
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 400px"], "content" => [
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 50%"], "content" => [
                 [ "tag" => "legend", "content" => "Url" ],
                 [ "tag" => "input", "attributes" => [ "name" => "url", "type" => "text", "value" => str_replace("//".$_SERVER['HTTP_HOST'], "", $value['url']) ] ]
             ]];
