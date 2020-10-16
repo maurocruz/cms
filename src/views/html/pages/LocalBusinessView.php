@@ -3,6 +3,8 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Piece\navbarTrait;
+use Plinct\Cms\Views\Html\Piece\FormTrait;
 
 class LocalBusinessView
 {
@@ -10,8 +12,8 @@ class LocalBusinessView
     public $localBusinessId;
     public $localBusinessName;
 
-    use \Plinct\Cms\View\Html\Piece\navbarTrait;
-    use \Plinct\Web\Widget\FormTrait;
+    use navbarTrait;
+    use FormTrait;
     
     public function navbar() 
     {
@@ -55,8 +57,9 @@ class LocalBusinessView
         $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::form("edit", $value) ]);
         
         // place
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ (new PlaceView())->getForm("localBusiness", $id, $value['location'])]);
-        
+        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "address", $value['location']) ]);
+        //$this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ (new PlaceView())->getForm("localBusiness", $id, $value['location'])]);
+
         // Contact Point
         $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm("localBusiness", $id, $value['contactPoint']) ]); 
         
