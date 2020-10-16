@@ -25,6 +25,7 @@ form input[type=text] { background-color: #ccc; }
 form input[type=date] { background-color: #ccc; }
 form input[type=number] { background-color: #ccc; }
 form input[type=password] { background-color: #ccc; }
+form input:disabled { color: black; }
 form textarea { background-color: #bbb; }
 .searchForm { background-color: #979797; }
 
