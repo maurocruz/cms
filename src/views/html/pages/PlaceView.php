@@ -4,7 +4,7 @@ namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Piece\navbarTrait;
-use Plinct\Web\Widget\FormTrait;
+use Plinct\Cms\Views\Html\Piece\FormTrait;
 
 class PlaceView
 {
@@ -17,18 +17,22 @@ class PlaceView
     use navbarTrait;
     use FormTrait;
     
-    public function navbar() 
+    public function navbarPlace()
     {
-        $this->content['navbar'][] = $this->navbarPlace();
-        
-        if ($this->placeId) {
-            $this->content['navbar'][] = $this->navbarPlace($this->placeId, $this->placeName, null, 3);
-        }
+        $title = _("Place");
+        $list = [
+            "/admin/place" => _("View all"),
+            "/admin/place/new" => _("Add new place")
+        ];
+        $level = 2;
+        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "place", "data-searchfor" => "name" ] ];
+
+        $this->content['navbar'][] = self::navbar($title, $list, $level, $search);
     }
 
     public function index(array $data): array
     {   
-        $this->navbar();
+        $this->navbarPlace();
         
         $this->content['main'][] = self::listAll($data, "place", _("Places"), [ "dateModified" => "Date modified" ]);
         
@@ -37,7 +41,7 @@ class PlaceView
     
     public function new($data = null): array
     {
-        $this->navbar();
+        $this->navbarPlace();
 
         $this->content['main'][] = self::divBox(_("Add new"), "Place", [ self::form(null, null) ]);
         
@@ -46,6 +50,8 @@ class PlaceView
 
     public function edit(array $data): array
     {
+        $this->navbarPlace();
+
         $value = $data[0];
         
         $this->placeId = PropertyValue::extractValue($value['identifier'], "id");
@@ -63,8 +69,7 @@ class PlaceView
 
         // append
         $this->content['main'][] = self::divBox($value['name'], 'place', $place);
-         
-        $this->navbar();
+
         
         return $this->content;
     }
@@ -72,7 +77,7 @@ class PlaceView
     public function getForm($tableHasPart, $idHasPart, $value = null) 
     {
         $content[] = $value ? self::form($tableHasPart, $idHasPart, 'edit', $value) :  self::form($tableHasPart, $idHasPart);
-             
+
         return $content;
     }
     
