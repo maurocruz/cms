@@ -3,7 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Cms\View\Html\Piece\navbarTrait;
-use Plinct\Web\Widget\FormTrait;
+use Plinct\Cms\Views\Html\Piece\FormTrait;
 use Plinct\Api\Type\PropertyValue;
 
 class EventView
@@ -53,7 +53,7 @@ class EventView
         } else {
             $value = $data[0];
 
-            $ID = PropertyValue::extractValue($value['identifier'], 'id');
+            $idEvent = PropertyValue::extractValue($value['identifier'], 'id');
 
             $content[] = [ "tag" => "p", "content" => _("View on website"), "href" => "/eventos/". substr($value['startDate'], 0, 10)."/". urlencode($value['name']), "hrefAttributes" => [ "target" => "_blank" ] ];
 
@@ -61,19 +61,15 @@ class EventView
             $content[] = self::form('edit', $value);
 
             // place
-            $content[] = self::divBoxExpanding(_("Place"), "place", [(new PlaceView())->getForm("event", $ID, $value['location']) ]);
+            $content[] = self::divBoxExpanding(_("Place"), "place", [ self::relationshipOneToOne("event", $idEvent, "location", $value['location']) ]);
 
             // images
-            $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("event", $ID, $value['image']) ]);;
-        }        
-        $this->content['main'][] = self::wrapper($content);
+            $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("event", $idEvent, $value['image']) ]);;
+        }
+
+        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "events" ], "content" => $content ];
         
         return $this->content;
-    }
-    
-    private static function wrapper($content) 
-    {
-        return [ "tag" => "div", "attributes" => [ "class" => "events" ], "content" => $content ];
     }
 
     /*
