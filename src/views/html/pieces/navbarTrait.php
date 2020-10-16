@@ -47,21 +47,6 @@ trait navbarTrait
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
     }
     
-    public function navbarPlace($id = null, $name = null, $type = null, $level = 2) {
-        if ($id) {
-            $list = [];
-            $title = "'".$name."' "._("place");
-        } else {
-            $list = [ 
-                "/admin/place" => _("View all"), 
-                "/admin/place/new" => _("Add new place")            
-            ];
-            $title = _("Places");
-        }
-        return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
-        
-    
     public function offerNavbar($id = null, $name = null, $type = null, $level = 4): array {
         if ($id ) { $list = [
                 "/admin/offer?$type=$id" => _("View offers"),
