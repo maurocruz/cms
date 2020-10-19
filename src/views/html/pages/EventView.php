@@ -61,7 +61,7 @@ class EventView
             $content[] = self::form('edit', $value);
 
             // place
-            $content[] = self::divBoxExpanding(_("Place"), "place", [ self::relationshipOneToOne("event", $idEvent, "location", $value['location']) ]);
+            $content[] = self::divBoxExpanding(_("Place"), "place", [ self::relationshipOneToOne("event", $idEvent, "location", "place", $value['location']) ]);
 
             // images
             $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("event", $idEvent, $value['image']) ]);;
