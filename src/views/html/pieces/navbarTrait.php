@@ -13,31 +13,12 @@ trait navbarTrait
     {
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title), "append" => $appendNavbar ];
     }
-    
-    public function localBusinessNavbar($id = null, $name = null, $type = null, $level = 2) {                
-        if ($id && $type == "localBusiness") { 
-            $list = [
-                "/admin/localBusiness/edit/$id" => _("View it"),
-                "/admin/service?providerId=$id&providerType=$type" => _("Services"),
-                "/admin/product?providerId=$id&providerType=$type" => _("Products"),
-                "/admin/offer?providerId=$id&providerType=$type" => _("Has offer catalog")
-            ];
-            $title = "'".$name."' "._("local business");
-        } elseif ($type == "organization") { 
-            $list = [
-                "/admin/localBusiness?providerId=$id&providerType=$type" => _("View all"), 
-                "/admin/localBusiness/new?providerId=$id&providerType=$type" => _("Add new") 
-            ];
-            $title = _("Locals business");
-        } else { 
-            $list = [
-                "/admin/localBusiness" => _("View all"), 
-                "/admin/localBusiness/new" => _("Add new") 
-            ];
-            $title = _("Locals business");
-        }        
-        return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
+
+    public static function searchPopupList(string $table, string $property = "name"): array
+    {
+        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => $table, "data-searchfor" => $property ] ];
     }
+
     
     public function offerNavbar($id = null, $name = null, $type = null, $level = 4): array {
         if ($id ) { $list = [
