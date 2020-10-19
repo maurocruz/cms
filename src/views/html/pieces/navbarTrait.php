@@ -13,14 +13,6 @@ trait navbarTrait
     {
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title), "append" => $appendNavbar ];
     }
-
-
-    private function setProviderData($data) 
-    {
-        $this->providerId = filter_input(INPUT_GET, 'providerId') ?? \fwc\Thing\PropertyValueGet::getValue($data['identifier'], "fwc_id");
-        $this->providerType = filter_input(INPUT_GET, 'providerType') ?? $data['@type'];
-        $this->providerName = filter_input(INPUT_GET, 'providerName') ?? $data['name'];
-    }
     
     public function localBusinessNavbar($id = null, $name = null, $type = null, $level = 2) {                
         if ($id && $type == "localBusiness") { 
@@ -62,37 +54,6 @@ trait navbarTrait
         }
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
     }
-    
-    public function organizationNavbar($id = null, $name = null, $type = null, $level = 2) {
-        if ($id) { $list = [ 
-                "/admin/organization/edit/$id" => _("View it"),
-                "/admin/localBusiness?providerId=$id&providerType=$type" => _("Locals business"),
-                "/admin/service?providerId=$id&providerType=organization" => _("Services")
-            ];
-            $title = "'".$name."' "._("organization");
-        } else { $list = [ 
-                "/admin/organization" => _("View all"), 
-                "/admin/organization/new" => _("Add new organization") 
-            ];
-            $title = _("Organization");
-        }
-        return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
-    
-    public function personNavbar($id = null, $name = null, $type = null, $level = 2) {        
-        if ($id) { $list = [
-                "/admin/person/edit/$id" => _("View it"),
-                "/admin/service?providerId=$id&providerType=person" => _("Services")
-            ];
-            $title = "'".$name."' "._("person");
-        } else { $list = [ 
-            "/admin/person" => _("View all"), "/admin/person/new" => _("Add new person") 
-            ];
-            $title = _("Person");
-        }        
-        return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
-    
 
     public function serviceNavbar($id = null, $name = null, $type = null, $level = 3) {
         if ($type == "service") {
