@@ -2,8 +2,10 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
+use Plinct\Cms\View\Html\Piece\navbarTrait;
 use Plinct\Tool\DateTime;
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\Views\Html\Piece\FormTrait;
 
 class AdvertisingView
 {
@@ -11,25 +13,27 @@ class AdvertisingView
     
     private static $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
 
-    use \Plinct\Web\Widget\FormTrait;
+    use FormTrait;
+    use navbarTrait;
         
-    public function navbar() 
+    public function navbarAd()
     {
-        $this->content['navbar'][] = [
-            "list" => [ 
-                "/admin/advertising" => _("View all"), 
-                "/admin/advertising/new" => _("Add new advertising"), 
-                "/admin/advertising/payment" => ucfirst(_("payments")),
-                "/admin/advertising/expired" => ucfirst(_("expired contracts")) 
-            ],
-            "attributes" => [ "class" => "menu menu3" ],
-            "title" => _(ucfirst("advertising"))            
+        $list = [
+            "/admin/advertising" => _("View all"),
+            "/admin/advertising/new" => _("Add new advertising"),
+            "/admin/advertising/payment" => ucfirst(_("payments")),
+            "/admin/advertising/expired" => ucfirst(_("expired contracts"))
         ];
+        $level = 2;
+        $title = "advertising";
+
+        $this->content['navbar'][] = self::navbar($title, $list, $level);
     }
+
     
     public function index(array $data): array
     {        
-        $this->navbar();
+        $this->navbarAd();
         
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Advertisings") ]; 
         $this->content['main'][] = self::search("", "search", filter_input(INPUT_GET, 'search'));
@@ -84,7 +88,7 @@ class AdvertisingView
     
     public function new($data = null): array
     {
-        $this->navbar();
+        $this->navbarAd();
 
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Add contract") ];        
         // contract
@@ -100,7 +104,7 @@ class AdvertisingView
         $payment = $data['payment'];
         $banner = $data['banner'] ?? null;
         
-        $this->navbar();
+        $this->navbarAd();
         
         $idLocalBusiness = PropertyValue::extractValue($customer['identifier'], "id");
         
