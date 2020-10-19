@@ -20,7 +20,7 @@ class PersonView
             "/admin/person" => _("View all"),
             "/admin/person/new" => _("Add new person")
         ];
-        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "person", "data-searchfor" => "name" ] ];
+        $search = self::searchPopupList("person");
 
         $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
         
