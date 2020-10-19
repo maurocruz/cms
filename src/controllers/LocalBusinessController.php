@@ -17,7 +17,7 @@ class LocalBusinessController implements ControllerInterface
     
     public function edit(array $params): array 
     {
-        $newParams = array_merge($params, [ "properties" => "location,contactPoint,member,image" ]);
+        $newParams = array_merge($params, [ "properties" => "location,organization,contactPoint,member,image" ]);
         
         return (new LocalBusiness())->get($newParams);
     }
