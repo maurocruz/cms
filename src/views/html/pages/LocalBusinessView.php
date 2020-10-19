@@ -15,22 +15,25 @@ class LocalBusinessView
     use navbarTrait;
     use FormTrait;
     
-    public function navbar() 
+    public function navbarLocalBussines()
     {
-        if ($this->providerType ==  "organization") {
-            $this->content['navbar'][] = $this->organizationNavbar($this->providerId, $this->providerName, $this->providerType, 2);
-            $this->content['navbar'][] = $this->localBusinessNavbar($this->providerId, $this->providerName, $this->providerType, 3);
-        } else {
-            $this->content['navbar'][] = $this->localBusinessNavbar();
-        }
+        $title = _("Locals business");
+        $list = [
+            "/admin/localBusiness" => _("View all"),
+            "/admin/localBusiness/new" => _("Add new")
+        ];
+        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "localBusiness", "data-searchfor" => "name" ] ];
+
+        $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
+
         if ($this->localBusinessId) {
-            $this->content['navbar'][] = $this->localBusinessNavbar($this->localBusinessId, $this->localBusinessName, "localBusiness", 3);
+            $this->content['navbar'][] = self::navbar($this->localBusinessName, [], 3);
         } 
     }
 
     public function index($data): array
     {        
-        $this->navbar();
+        $this->navbarLocalBussines();
         
         $this->content['main'][] = self::listAll($data, "localBusiness", "LocalBusiness list", [ "dateModified" => "Date modified" ]);
                 
@@ -39,7 +42,7 @@ class LocalBusinessView
     
     public function new($data = null): array
     {
-        $this->navbar();        
+        $this->navbarLocalBussines();
         
         $this->content['main'][] = self::divBox(_("Localbusiness"), "LocalBusiness", [ self::form() ]);        
         
@@ -52,23 +55,22 @@ class LocalBusinessView
         
         $id = PropertyValue::extractValue($value['identifier'], "id");
         
-        $this->navbar();
+        $this->navbarLocalBussines();
         
         $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::form("edit", $value) ]);
         
         // place
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "address", $value['location']) ]);
-        //$this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ (new PlaceView())->getForm("localBusiness", $id, $value['location'])]);
+        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "address", "place", $value['location']) ]);
 
         // Contact Point
         $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm("localBusiness", $id, $value['contactPoint']) ]); 
         
         // organization
-        $this->content['main'][] = self::divBoxExpanding(_("Organization"), "Organization", [ (new OrganizationView())->getForm('localBusiness', $id, $value['organization']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Organization"), "Organization", [ self::relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']) ]);
         
         // person
-        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ (new PersonView())->getForm("localBusiness", $id, $value['member']) ]);
-        
+        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("localBusiness", $id, "person", $value['member']) ]);
+
         // images
         $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $id, $value['image']) ]);
         
