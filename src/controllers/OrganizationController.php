@@ -17,7 +17,7 @@ class OrganizationController implements ControllerInterface
     
     public function edit(array $params): array 
     {   
-        $params = [ "id" => $params['id'], "properties" => "*,address,contactPoint,member,image", "allDetails" => "true" ];
+        $params = [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image", "allDetails" => "true" ];
         
         return (new Organization())->get($params);
     }
