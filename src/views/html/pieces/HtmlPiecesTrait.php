@@ -13,6 +13,8 @@ trait HtmlPiecesTrait
                     [ "tag" => "input", "attributes" => [ "type" => "submit", "value" => _("Do you want to create it?"), "style" => "cursor: pointer;" ] ]
                 ]]
             ]];
+        } else {
+            return [ "tag" => "p", "attributes" => [ "class" => "warning"], "content" => $data['message'] ];
         }
     }
 }
