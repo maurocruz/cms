@@ -2,6 +2,7 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
+use DateTime;
 use Plinct\Api\Type\PropertyValue;
 
 class PaymentView
@@ -33,7 +34,7 @@ class PaymentView
     
     private static function form($idadvertising, $case = 'new', $value = null, $n = null) 
     {
-        $idpayment = $value ? \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id") : null;
+        $idpayment = $value ? PropertyValue::extractValue($value['identifier'], "id") : null;
         
         // hiddens
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "advertising", "type" => "hidden"] ];        
@@ -83,8 +84,11 @@ class PaymentView
     
     static private function classStyle($value) 
     {
-        $now = new \DateTime();
-        $expired = new \DateTime($value['vencimentoparc']); 
+        $now = new DateTime();
+        try {
+            $expired = new DateTime($value['vencimentoparc']);
+        } catch (\Exception $e) {
+        }
         $diff = $expired->diff($now);
                 
         if ($value == null) { 
@@ -137,15 +141,15 @@ class PaymentView
         $dadosSaldo['atrasado'] = 0;
         
         foreach ($data as $value) {
-            //var_dump($value);
+            $paid = $value['quitado'] !== "0000-00-00" && $value['quitado'] !== null;
             // total
             $dadosSaldo['total'] += $value['valorparc'];
             // pago            
-            $dadosSaldo['credito'] += $value['quitado'] !== "0000-00-00" ? $value['valorparc'] : 0;
+            $dadosSaldo['credito'] += $paid ? $value['valorparc'] : 0;
             // debito
-            $dadosSaldo['debito'] += $value['quitado'] !== "0000-00-00" ? null : $value['valorparc'];
+            $dadosSaldo['debito'] += $paid ? null : $value['valorparc'];
             // atrasado
-            $dadosSaldo['atrasado'] += $value['quitado'] == "0000-00-00" && $value['vencimentoparc'] < date("Y-m-d") ? $value['valorparc'] : null;
+            $dadosSaldo['atrasado'] += $paid && $value['vencimentoparc'] < date("Y-m-d") ? $value['valorparc'] : null;
         }
         
         return $dadosSaldo;
