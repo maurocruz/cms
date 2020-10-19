@@ -2,40 +2,37 @@
 
 namespace Plinct\Cms\View\Html\Page;
 
+use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Piece\navbarTrait;
+use Plinct\Cms\Views\Html\Piece\FormTrait;
+
 class OrganizationView
 {
     protected $content;
     protected $organizationId;
     protected $organizationName;
 
-    use \Plinct\Cms\View\Html\Piece\navbarTrait;
-    use \Plinct\Web\Widget\FormTrait;
+    use navbarTrait;
+    use FormTrait;
     
-    public function navbar() {
-        $this->content['navbar'][] = $this->organizationNavbar();
+    public function navbarOrganization() {
+        $title = _("Organization");
+        $list = [
+            "/admin/organization" => _("View all"),
+            "/admin/organization/new" => _("Add new organization")
+        ];
+        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "organization", "data-searchfor" => "name" ] ];
+
+        $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
+
         if ($this->organizationId) {
-            $this->content['navbar'][] = $this->organizationNavbar($this->organizationId, $this->organizationName, "organization", 3);
+            $this->content['navbar'][] = self::navbar($this->organizationName, [], 3);
         }
-    }
-    
-    public function getForm($tableHasPart, $idHasPart, $value) 
-    {
-        $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
-        $content[] = self::input('idHasPart', "hidden", $idHasPart);
-        
-        $content[] = self::fieldsetWithInput(_("Organization"), "organization", $value['name'], [ "style" => "min-width: 320px;" ], "text", [ "data-type" => "organization", "data-property" => "name", "onkeyup" => "searchNameAndInputId(event);", "autocomplete" => "off" ]);
-        
-        if ($value) {
-            $content[] = self::input("organization", "hidden", \fwc\Thing\PropertyValueGet::getValue($value['identifier'], "id"));
-            $content[] = self::submitButtonDelete("/admin/organization/eraseWithPartOf");
-        }
-        
-        return self::form('/admin/organization/addWithPartOf', $content);
     }
     
     public function index(array $data): array
     {        
-        $this->navbar();
+        $this->navbarOrganization();
         
         if (isset($data['errorInfo'])) {
             $this->content['main'][] = self::errorInfo($data['errorInfo'], "organization");
@@ -49,7 +46,7 @@ class OrganizationView
     
     public function new($data = null): array
     {
-        $this->navbar();
+        $this->navbarOrganization();
         
         $this->content['main'][] = self::divBox(_("Add organization"), "Organization", [ self::formOrganization() ]);
         
@@ -60,10 +57,10 @@ class OrganizationView
     {
         $value = $data[0];
         
-        $this->organizationId = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], "id");
+        $this->organizationId = PropertyValue::extractValue($value['identifier'], "id");
         $this->organizationName = $value['name'];
         
-        $this->navbar();
+        $this->navbarOrganization();
         
         // organization
         $this->content['main'][] = self::formOrganization('edit', $value);
@@ -75,10 +72,10 @@ class OrganizationView
         $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('organization', $this->organizationId, $value['contactPoint']) ]);
         
         // member
-        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ (new PersonView())->getForm("organization", $this->organizationId, $value['member']) ]);
-        
+        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("organization", $this->organizationId, "person", $value['member']) ]);
+
         // location
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ (new PlaceView())->getForm("organization", $this->organizationId, $value['location']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("organization", $this->organizationId, "location", "place", $value['location']) ]);
         
         // areaServed
         //$this->content['main'][] = self::divBoxExpanding(_("Area served"), "Place", [ (new PlaceView())->getForm("organization", $this->organizationId, $value['location']) ]);
@@ -94,7 +91,7 @@ class OrganizationView
         $content[] = [ "tag" => "h3", "content" => $value['name'] ];
         
         if ($case == "edit") {
-            $id = \Plinct\Api\Type\PropertyValue::extractValue($value['identifier'], 'id');
+            $id = PropertyValue::extractValue($value['identifier'], 'id');
             
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];            
         }
