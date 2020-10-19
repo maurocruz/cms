@@ -241,8 +241,17 @@ trait FormTrait
                 ]]
             ]];
         }
-
         return null;
     }
 
+    public static function search($action, $name,  $value = null, $method = "get")
+    {
+        return [ "tag" => "form", "attributes" => [ "name" => "formSearch", "class" => "form", "action" => $action, "method" => $method ], "content" => [
+            [ "tag" => "fieldset", "content" => [
+                [ "tag" => "legend", "content" => _("Search") ],
+                [ "tag" => "input", "attributes" => [ "name" => $name, "type" => "text", "value" => $value ]],
+                [ "tag" => "input", "attributes" => [ "type" => "submit", "value" => _("Submit") ] ]
+            ] ]
+        ]];
+    }
 }
