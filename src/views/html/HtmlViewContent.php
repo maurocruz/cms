@@ -104,7 +104,7 @@ class HtmlViewContent extends HtmlViewAbstract
     }
     
     protected function root() {
-        $content[] = [ "tag" => "p", "content" => "Control Panel CMSCruz - version ".self::VERSION ];
+        $content[] = [ "tag" => "p", "content" => "Control Panel CMSCruz - version " . App::getVersion() ];
         parent::addMain([ "tag" => "p", "content" => $content ]);   
     }
     
