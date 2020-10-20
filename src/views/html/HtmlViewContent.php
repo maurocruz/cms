@@ -7,8 +7,7 @@ use Plinct\Api\Auth\SessionUser;
 
 class HtmlViewContent extends HtmlViewAbstract 
 {
-    const VERSION = "2.3";
-        
+
     protected function navbar() 
     {
         $data['list'] = [
@@ -64,7 +63,7 @@ class HtmlViewContent extends HtmlViewAbstract
     {
         parent::addHeader([ 
             "tag" => "p", 
-            "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel")." v".self::VERSION, 
+            "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel") . ". " . _("Version") . ": " . App::getVersion(),
             "attributes" => [ "style" => "display: inline;" ] 
         ]);        
         if (!isset($_SESSION['userLogin'])) {        
