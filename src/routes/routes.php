@@ -22,7 +22,7 @@ return function (Route $route)
         $filename = $args['filename'];
         $type = $args['type'];
 
-        $file = realpath(__DIR__."/../View/Html/assets/$type/$filename".".".$type);
+        $file = realpath(__DIR__ . "/../View/Html/assets/$type/$filename" .".".$type);
 
         $script = file_get_contents($file);
         $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );

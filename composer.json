@@ -16,5 +16,10 @@
         "plinct/web": "0.*",
         "plinct/middleware": "0.*",
         "plinct/tool": "0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plinct\\Cmw\\": "src"
+        }
     }
 }
