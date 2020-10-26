@@ -3,6 +3,7 @@
  * ROUTES CMS ADMIN
  */
 
+use Plinct\Cms\App;
 use Plinct\Cms\View\Html\HtmlView;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -45,6 +46,8 @@ return function (Route $route)
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response)
         {
+            App::setVersion();
+
             $view = new HtmlView();
 
             if ($request->getAttribute('userAuth') === false) {
