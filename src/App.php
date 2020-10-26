@@ -30,7 +30,7 @@ class App
         $packages = json_decode(file_get_contents($installedFile));
 
         foreach ($packages->packages as $package) {
-            if ($packages->name && $package->name == "plinct/cms") {
+            if ($package->name && $package->name == "plinct/cms") {
                 $version = $package->version;
             }
         }
