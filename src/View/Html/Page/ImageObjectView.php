@@ -3,14 +3,51 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Web\Widget\FormTrait;
+use Plinct\Cms\View\Html\Widget\ImageObjectWidget;
+use Plinct\Cms\View\Html\Widget\navbarTrait;
 
-class ImageObjectView
+class ImageObjectView extends ImageObjectWidget
 {
+    private $content;
+
     protected $tableHasPart;
     protected $idHasPart;
-    
-    use FormTrait;
+
+    use navbarTrait;
+
+    private function navBarImageObject($titleLevel3 = null)
+    {
+        $title = _("Images");
+        $list = [
+            "/admin/imageObject" => _("View all"),
+            "/admin/imageObject/new" => _("Add new")
+        ];
+        $level = 2;
+
+        $this->content['navbar'][] = self::navbar($title, $list, $level);
+
+        if ($titleLevel3) {
+            $this->content['navbar'][] = self::navbar($titleLevel3, [], 3);
+        }
+    }
+
+    public function index($data)
+    {
+        $this->navBarImageObject();
+
+        $this->content['main'][] = parent::keywordsList($data);
+
+        return $this->content;
+    }
+
+    public function keywords($data)
+    {
+        $this->navBarImageObject("Keywords");
+
+        $this->content['main'][] = parent::imagesList($data);
+
+        return $this->content;
+    }
             
     public function getForm($tableHasPart, $idHasPart, $data = []) 
     {
@@ -42,42 +79,14 @@ class ImageObjectView
         } else {
             foreach ($data as $valueEdit) {
                 $content[] = self::simpleTag("div", [
-                    self::form($valueEdit, $data['isPartOf'] ?? null),
+                    parent::formImageObject($valueEdit, $data['isPartOf'] ?? null),
                     self::formIsPartOf($valueEdit)
                 ], [ "class" => "box", "style" => "overflow: hidden;"]);
             }              
         }        
         return $content;
     }
-    
-    private function form($value, $isPartOf = null)
-    { 
-        $ID = PropertyValue::extractValue($value['identifier'], "id");
-        
-        if (isset($value['potentialAction'])) {
-            foreach ($value['potentialAction'] as $valueAction) {
-                $potentialAction[$valueAction['name']] = $valueAction['result'];
-            }
-        }
-        
-        $content[] = isset($isPartOf) && $isPartOf['@type'] == "WebPage" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $isPartOf['identifier'] ] ] : null;
-        
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ] ];
-        
-        // figure
-        $content[] = [ "object" => "figure", "attributes" => [ "style" => "max-width: 200px; float: left; margin-right: 10px;" ], "src" => $value['contentUrl'], "width" => 200 ];
-        
-        // ID
-        $content[] = [ "tag" => "p", "content" => "[ID=$ID] ".$value['contentUrl'] ];
-        
-        // group
-        $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", $value['keywords'], [ "style" => "width: calc(100% - 280px);" ]);        
-        
-        $content[] = self::submitButtonSend();
-        
-        // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
-    }
+
         
     private function formIsPartOf($value)
     {       

@@ -2,7 +2,7 @@
 
 namespace Plinct\Cms\View\Html;
 
-use Plinct\Cms\View\Html\Piece\AuthForms;
+use Plinct\Cms\View\Html\Widget\AuthForms;
 use Plinct\Web\Render;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -116,7 +116,7 @@ class HtmlView extends HtmlViewContent
             }
         }
                 
-        parent::addMain(file_get_contents(__DIR__ . '/Piece/signupForm.html'));
+        parent::addMain(file_get_contents(__DIR__ . '/Widget/signupForm.html'));
         
         return $this->ready();
     }
@@ -139,7 +139,7 @@ class HtmlView extends HtmlViewContent
                 break;
         }
         
-        parent::addMain(file_get_contents(__DIR__ . '/Piece/registerForm.html'));
+        parent::addMain(file_get_contents(__DIR__ . '/Widget/registerForm.html'));
         return $this->ready();
     }
 
