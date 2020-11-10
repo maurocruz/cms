@@ -3,7 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Api\Auth\SessionUser;
+use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\View\Html\Piece\FormElementsTrait;
 use Plinct\Cms\View\Html\Piece\navbarTrait;
 
@@ -44,7 +44,7 @@ class UserView
             $body[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "content" => $id ],
                 [ "tag" => "td", "content" => "<a href=\"/admin/user/edit/".$id."\">".$item['name']."</a>" ],
-                [ "tag" => "td", "content" => _(SessionUser::getStatusWithString($item['status'])) ]
+                [ "tag" => "td", "content" => _(UserController::getStatusWithText($item['status'])) ]
             ]];
         }
         $content[] = [ "tag" => "tbody", "content" => $body ];
@@ -81,7 +81,7 @@ class UserView
         $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => _("Status") ],
             [ "tag" => "select", "attributes" => [ "name" => "status" ], "content" => [
-                [ "tag" => "option", "attributes" => [ "value" => $value['status'] ], "content" => SessionUser::getStatusWithString($value['status']) ],
+                [ "tag" => "option", "attributes" => [ "value" => $value['status'] ], "content" => _(UserController::getStatusWithText($value['status'])) ],
                 [ "tag" => "option", "attributes" => [ "value" => "" ], "content" => _("Choose") ],
                 [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => _("User") ],
                 [ "tag" => "option", "attributes" => [ "value" => "1" ], "content" => _("Administrator") ]
