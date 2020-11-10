@@ -124,19 +124,24 @@ class HtmlView extends HtmlViewContent
     // REGISTER FORM
     public function register(string $warning = null)
     {
-        switch ($warning) {
-            case "repeatPasswordNotWork":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "A repetição da senha não confere!" ]);
-                break;
-            case "emailExists":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Este email já existe em nosso banco de dados!" ]);
-                break;
-            case "userAdded":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Seu registro foi um sucesso! Aguarde a confirmação do administrador!" ]);
-                break;
-            case "error":
-                parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => "Desculpe! Algo está errado!" ]);
-                break;
+        if ($warning) {
+            switch ($warning) {
+                case "repeatPasswordNotWork":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Repeating the password doesn't work!")]);
+                    break;
+                case "emailExists":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("This email already exists in our database!")]);
+                    break;
+                case "userAdded":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Your registration was successful!") . "<br>" . _("Wait for confirmation from the administrator!")]);
+                    break;
+                case "error":
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Sorry! Something is wrong!")]);
+                    break;
+                default:
+                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration error!") . "<br>" . _($warning)]);
+                    break;
+            }
         }
         
         parent::addMain(file_get_contents(__DIR__ . '/Piece/registerForm.html'));
