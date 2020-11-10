@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-KeywordsList: _;gettext\n"
 
-#. use fot update -> msgfmt plinct/cms/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/View/locale/pt_BR/LC_MESSAGES/fwc.mo
+#. use fot update -> msgfmt plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.mo
 
 msgid "administrator"
 msgstr "administrador"
@@ -669,4 +669,26 @@ msgstr "usuários"
 msgid "Add new user"
 msgstr "Adicionar novo usuário"
 
+msgid "Registration error!"
+msgstr "Erro de Registo!"
 
+msgid "Your registration was successful!"
+msgstr "Seu registro foi um sucesso!"
+
+msgid "Registration not successful!"
+msgstr "Registro não efetuado!"
+
+msgid "Password must be a minimum of 8 characters"
+msgstr "A senha deve ter no mínimo 8 caracteres"
+
+msgid "Repeating the password doesn't work!"
+msgstr "A repetição da senha não confere!"
+
+msgid "This email already exists in our database!"
+msgstr "Este email já existe em nosso banco de dados!"
+
+msgid "Sorry! Something is wrong!"
+msgstr "Desculpe! Algo está errado!"
+
+msgid "Wait for confirmation from the administrator!"
+msgstr "Aguarde a confirmação do administrador!"
