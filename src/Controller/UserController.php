@@ -26,4 +26,14 @@ class UserController implements ControllerInterface
     {
         return null;
     }
+
+    public static function getStatusWithText($status): string
+    {
+        switch ($status) {
+            case 1:
+                return "administrator";
+            default:
+                return "user";
+        }
+    }
 }
