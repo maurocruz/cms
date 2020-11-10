@@ -69,10 +69,8 @@ class UserView
     static private function form($case = 'new', $value = null) 
     {
         $id = PropertyValue::extractValue($value['identifier'], "id");
-        
-        $content[] = $case == "edit" ? self::input("iduser", "hidden", $id) : null;
-        
-        $content[] = $case == "edit" ? self::fieldsetWithInput("ID", "iduser", $id, [ "style" => "width: 40px"], "text", [ "readonly" ]) : null;
+
+        $content[] = $case == "edit" ? self::fieldsetWithInput("ID", "id", $id, [ "style" => "width: 40px"], "text", [ "readonly" ]) : null;
         
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name']);
         
