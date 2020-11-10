@@ -94,12 +94,14 @@ class AdvertisingController
     {
         $date = self::translatePeriod(filter_input(INPUT_GET, 'period'));
         
-        $query = "SELECT *, (SELECT COUNT(*) FROM payment WHERE payment.idadvertising=advertising.idadvertising) as number_parc FROM payment, advertising, localBusiness, contratostipos WHERE payment.quitado is null AND payment.idadvertising=advertising.idadvertising and advertising.status=1 AND advertising.customer=localBusiness.idlocalBusiness AND advertising.tipo=contratostipos.idcontratostipo";
+        $query = "SELECT *, (SELECT COUNT(*) FROM payment WHERE payment.idadvertising=advertising.idadvertising) as number_parc FROM payment, advertising, localBusiness, contratostipos WHERE (payment.quitado = '0000-00-00' OR payment.quitado is null) AND payment.idadvertising=advertising.idadvertising and advertising.status!=0 AND advertising.customer=localBusiness.idlocalBusiness AND advertising.tipo=contratostipos.idcontratostipo";
         $query .= $date ? " AND payment.vencimentoparc <= '$date'" : null;
         $query .= " ORDER BY vencimentoparc ASC";
         $query .= ";";
-        
+
         $data = PDOConnect::run($query);
+
+        //var_dump($data);
 
         return [
             "@type" => "ItemList",

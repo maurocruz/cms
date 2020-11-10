@@ -216,6 +216,7 @@ class AdvertisingView
         $key = 0;
 
         $this->navbarAd();
+
         
         $content[] = [ "tag" => "h3", "content" => "Overdue payments" ];        
         $content[] = self::selectPeriodo($data['numberOfItems'], "payment");        
@@ -227,7 +228,8 @@ class AdvertisingView
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => number_format($value['valorparc'],2,",",".") ],
                 [ "tag" => "td", "content" => $value['name']." <a href=\"/admin/advertising/edit/".$value['idadvertising']."\">-></a>" ],
                 [ "tag" => "td", "content" => $value['parcela']." / ".$value['number_parc'] ],
-                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idadvertising']."\">".$value['contrato_name']."</a>" ]
+                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idadvertising']."\">".$value['contrato_name']."</a>" ],
+                [ "tag" => "td", "content" => $value['status'] == 2 ? 'Suspenso' : ($value['status'] == 1 ? 'Ativo' : 'Inativo') ]
             ]];
             $total += $value['valorparc'];
         }
@@ -247,7 +249,8 @@ class AdvertisingView
                     [ "tag" => "th", "attributes" => [ "style" => "width: 100px;" ], "content" => "Valor (R$)" ],
                     [ "tag" => "th", "content" => "Local Business" ],
                     [ "tag" => "th", "attributes" => [ "style" => "width: 80px;" ], "content" => "Parcela" ],
-                    [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => "Contract type" ]
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => _("Contract type") ],
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => _("Status") ]
                 ]]
             ]],
             [ "tag" => "tbody", "content" => $tbody ]

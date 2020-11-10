@@ -16,9 +16,8 @@ class PostalAddressView
     
     static private function form($tableHasPart, $idHasPart, $case = 'new', $value = null) 
     {
-        $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
-        $content[] = self::input('idHasPart', "hidden", $idHasPart);
-        $content[] = self::input('tableIsPartOf', "hidden", "postalAddress");
+        $content[] = $case == "new" ? self::input('tableHasPart', "hidden", $tableHasPart) : null;
+        $content[] = $case == "new" ? self::input('idHasPart', "hidden", $idHasPart) : null;
         
         if ($case == "edit") {
             $id = PropertyValue::extractValue($value['identifier'], 'id');
@@ -26,7 +25,6 @@ class PostalAddressView
         }
         
         // streetAddress
-        //$content[] = self::fieldsetWithInput(_("Street address"), "streetAddress", $value['streetAddress'], [ "style" => "width: calc(100% - 650px)"], "text", [ "data-type" => "PostalAddress", "data-property" => "streetAddress", "onKeyUp" => "searchAndFill(event);", "autocomplete" => "off" ]);
         $content[] = self::fieldsetWithInput(_("Street address"), "streetAddress", $value['streetAddress'], [ "style" => "width: calc(100% - 650px)"]);
         
         // addressLocality
