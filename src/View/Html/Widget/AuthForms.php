@@ -1,6 +1,6 @@
 <?php
 
-namespace Plinct\Cms\View\Html\Piece;
+namespace Plinct\Cms\View\Html\Widget;
 
 class AuthForms
 {

@@ -3,8 +3,8 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Cms\View\Html\Piece\FormElementsTrait;
-use Plinct\Cms\View\Html\Piece\navbarTrait;
+use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class PlaceView
 {

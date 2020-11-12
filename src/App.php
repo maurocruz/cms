@@ -6,6 +6,7 @@ use Slim\App as Slim;
 
 class App 
 {
+    private static $IMAGES_FOLDER;
     private $slim;
     private static $HostAPI;
     private static $TITLE;
@@ -23,6 +24,8 @@ class App
     public function setTypesEnabled(array $types) { self::$TypesEnabled = $types; return $this; }
     public function defineStaticFilesFolder(string $folderPath) { define('FOLDER_PATH', $folderPath); return $this; }
 
+    public function setImagesFolder($relativePath) { self::$IMAGES_FOLDER = $_SERVER['DOCUMENT_ROOT'] . $relativePath; return $this; }
+
     public static function setVersion()
     {
         $version = "developer version";
@@ -37,6 +40,7 @@ class App
         self::$VERSION = $version;
     }
 
+    public static function getImagesFolder() { return self::$IMAGES_FOLDER; }
     public static function getLanguage() { return self::$LANGUAGE; }
     public static function getTitle() { return self::$TITLE; }
     public static function getTypesEnabled() { return self::$TypesEnabled; }

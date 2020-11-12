@@ -1,6 +1,6 @@
 <?php
 
-namespace Plinct\Cms\View\Html\Piece;
+namespace Plinct\Cms\View\Html\Widget;
 
 trait navbarTrait 
 {
@@ -14,9 +14,9 @@ trait navbarTrait
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title), "append" => $appendNavbar ];
     }
 
-    public static function searchPopupList(string $table, string $property = "name"): array
+    public static function searchPopupList(string $table, string $property = "name", string $params = ""): array
     {
-        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => $table, "data-searchfor" => $property ] ];
+        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => $table, "data-like" => $property, "data-params" => $params  ] ];
     }
 
     

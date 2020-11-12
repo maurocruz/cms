@@ -3,7 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Cms\View\Html\Piece\HtmlPiecesTrait;
+use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 use Plinct\Web\Widget\FormTrait;
 
 class WebPageView
