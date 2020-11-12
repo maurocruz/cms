@@ -3,16 +3,67 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Web\Widget\FormTrait;
 
-class WebPageElementView
+class WebPageElementView implements ViewInterface
 {
+    private $content;
+
     protected $idwebPage;
     
     protected $idwebPageElement;
     
     use FormTrait;
-    
+    use navbarTrait;
+
+    private function navBarWebPageElement($title)
+    {
+        if ($title) {
+            $this->content['navbar'][] = self::navbar($title, [], 2);
+        }
+    }
+
+    public function index(array $data): array
+    {
+        $this->navBarWebPageElement(_("Web page element"));
+
+        return $this->content;
+    }
+
+    public function new($data = null): array
+    {
+        $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
+        $content[] = self::form();
+        return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
+    }
+    public function edit(array $data): array
+    {
+        $this->navBarWebPageElement(_("Web page element"));
+
+        $webPageEditHref = ("/admin/webPage/edit/".$data['idwebPage']);
+
+        $this->content['main'][] = [ "tag" => "p", "content" => _("Is part of: "). '<a href="'.$webPageEditHref.'">'.$webPageEditHref.'</a>' ];
+
+        $this->content['main'][] = self::divBox(_("Web page element"), "WebPageElement", [ self::editForms($data) ] );
+
+        return $this->content;
+    }
+
+    public function editForms(array $value): array
+    {
+        // content
+        $content[] = self::form("edit", $value);
+
+        // attributes
+        $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']) ]);
+        //
+        // images
+        $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("webPageElement", $this->idwebPageElement, $value['image']) ]);
+
+        return $content;
+    }
+
     public function getForm($idHasPart, $value)
     {
         $this->idwebPage = $idHasPart;
@@ -24,29 +75,8 @@ class WebPageElementView
         foreach ($value as $valueWebPageElement) {
             $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
             
-            $content[] = self::divBoxExpanding("[".$this->idwebPageElement."] ".$valueWebPageElement['name'], "WebPageElement", [ self::edit($valueWebPageElement) ]);
+            $content[] = self::divBoxExpanding("[".$this->idwebPageElement."] ".$valueWebPageElement['name'], "WebPageElement", [ self::editForms($valueWebPageElement) ]);
         }
-        
-        return $content;
-    }
-    
-    public function new(): array
-    {   
-        $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
-        $content[] = self::form();        
-        return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
-    } 
-    
-    public function edit(array $value): array
-    {        
-        // content       
-        $content[] = self::form("edit", $value);
-        
-        // attributes
-        $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']) ]);
-        //
-        // images
-        $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("webPageElement", $this->idwebPageElement, $value['image']) ]);
         
         return $content;
     }
