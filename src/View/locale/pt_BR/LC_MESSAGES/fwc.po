@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-KeywordsList: _;gettext\n"
 
-#. use fot update -> msgfmt plinct/cms/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/View/locale/pt_BR/LC_MESSAGES/fwc.mo
+#. use fot update -> msgfmt plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.mo
 
 msgid "administrator"
 msgstr "administrador"
@@ -192,32 +192,6 @@ msgstr "Artigo"
 msgid "Place"
 msgstr "Local"
 
-############################   ORGANIZATION   ##################################
-
-msgid "Organization"
-msgstr "Organização"
-
-msgid "organization"
-msgstr "organização"
-
-msgid "Organizations"
-msgstr "Organizações"
-
-msgid "organizations"
-msgstr "organizações"
-
-msgid "Add new organization"
-msgstr "Adicionar nova organização"
-
-msgid "List of organizations"
-msgstr "Lista das organizações"
-
-msgid "Legal Name"
-msgstr "Razão Social"
-
-msgid "Tax Id"
-msgstr "CNPJ"
-
 ############################   ADVERTISING   ###################################
 
 msgid "Advertisings"
@@ -277,6 +251,28 @@ msgstr "Tipo de contrato"
 msgid "Amount"
 msgstr "Montante"
 
+################################   ARTICLES   ##################################
+
+msgid "Articles"
+msgstr "Artigos"
+
+msgid "Add new article"
+msgstr "Adicionar novo artigo"
+
+msgid "Latest articles"
+msgstr "Últimos artigos"
+
+msgid "Date published"
+msgstr "Data de publicação"
+
+msgid "Publishied"
+msgstr "Publicado"
+
+#############################   CONTACT POINT   ################################
+
+msgid "Contact point"
+msgstr "Pontos de contato"
+
 #################################   EVENT   ####################################
 
 msgid "event"
@@ -315,32 +311,50 @@ msgstr "Hora fim"
 msgid "Update date"
 msgstr "Data de atualização"
 
-################################   ARTICLES   ##################################
-
-msgid "Articles"
-msgstr "Artigos"
-
-msgid "Add new article"
-msgstr "Adicionar novo artigo"
-
-msgid "Latest articles"
-msgstr "Últimos artigos"
-
-msgid "Date published"
-msgstr "Data de publicação"
-
-msgid "Publishied"
-msgstr "Publicado"
-
 #################################   IMAGES   ###################################
 
 msgid "Images"
 msgstr "Imagens"
 
-#############################   CONTACT POINT   ################################
+msgid "Image"
+msgstr "Imagem"
 
-msgid "Contact point"
-msgstr "Pontos de contato"
+msgid "This item is not part of any other."
+msgstr "Este item não faz parte de nenhum outro."
+
+msgid "Delete the record without deleting the file"
+msgstr "Apagar o registro sem excluir o arquivo"
+
+msgid "Keyword"
+msgstr "Palavra-chave"
+
+msgid "Keywords"
+msgstr "Palavras-chaves"
+
+msgid "List by keywords"
+msgstr "Listar por palavras-chaves"
+
+msgid "Is part of %s items"
+msgstr "É parte de %s itens"
+
+msgid "Content size"
+msgstr "Tamanho do conteúdo"
+
+msgid "Image width"
+msgstr "Largura da imagem"
+
+msgid "Image height"
+msgstr "Altura da imagem"
+
+msgid "Encoding format"
+msgstr "Formato de codificação"
+
+msgid "Upload date"
+msgstr "Data de envio"
+
+msgid "License"
+msgstr "Licença"
+
 
 ###########################   LOCAL BUSINESS   #################################
 
@@ -411,6 +425,33 @@ msgstr "Preço válido até"
 
 msgid "list of '%s' offers"
 msgstr "Ofertas de '%s'"
+
+
+############################   ORGANIZATION   ##################################
+
+msgid "Organization"
+msgstr "Organização"
+
+msgid "organization"
+msgstr "organização"
+
+msgid "Organizations"
+msgstr "Organizações"
+
+msgid "organizations"
+msgstr "organizações"
+
+msgid "Add new organization"
+msgstr "Adicionar nova organização"
+
+msgid "List of organizations"
+msgstr "Lista das organizações"
+
+msgid "Legal Name"
+msgstr "Razão Social"
+
+msgid "Tax Id"
+msgstr "CNPJ"
 
 #################################  PERSON   ####################################
 
