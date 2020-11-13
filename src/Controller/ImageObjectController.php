@@ -21,7 +21,7 @@ class ImageObjectController implements ControllerInterface
     {
         $keywords = urldecode($params['id']);
 
-        $params2 = [ "format" => "ItemList", "keywords" => $keywords, "limit" => "none", "orderBy" => "uploadDate desc, name" ];
+        $params2 = [ "format" => "ItemList", "keywords" => $keywords, "limit" => "none", "orderBy" => "uploadDate desc, keywords" ];
 
         $data['list'] = (new ImageObject())->get($params2);
         $data['paramsUrl'] = $params;
