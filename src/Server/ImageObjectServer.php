@@ -23,8 +23,8 @@ class ImageObjectServer
         $info = null;
 
         foreach ($this->tablesHasImageObject as $value) {
-            $tableHasName = $value['TABLE_NAME'];
-            $tableHasPart = strstr($value['TABLE_NAME'], "_", true);
+            $tableHasName = $value['table_name'];
+            $tableHasPart = strstr($value['table_name'], "_", true);
 
             $query = "select * from $tableHasName, $tableHasPart WHERE idimageObject=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
 
