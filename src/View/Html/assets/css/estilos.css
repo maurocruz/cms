@@ -273,7 +273,7 @@ ul.dropdown li:hover { font-size: 1.1em; color: darkslategray; }
 
 /* IMAGES GRID _ admin-images-grid
 ============================================================================ */
-.admin-images-grid { display: grid; grid-gap: 15px; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); grid-auto-rows: 15px; overflow: hidden; }
+.admin-images-grid { display: grid; grid-gap: 15px; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); grid-auto-rows: 5px; overflow: hidden; }
 .admin-images-grid a { text-decoration: none; }
 .admin-images-grid-figure{ position: relative; }
 .admin-images-grid-figure img{ width: 100%; }
