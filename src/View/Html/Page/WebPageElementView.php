@@ -37,8 +37,12 @@ class WebPageElementView implements ViewInterface
         $content[] = self::form();
         return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
     }
+
+
     public function edit(array $data): array
     {
+        $this->idwebPageElement = PropertyValue::extractValue($data['identifier'], "id");
+
         $this->navBarWebPageElement(_("Web page element"));
 
         $webPageEditHref = ("/admin/webPage/edit/".$data['idwebPage']);
