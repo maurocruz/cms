@@ -15,7 +15,7 @@ class ImageObjectServer
     public function __construct()
     {
         $table_schema = PDOConnect::getDbname();
-        $this->tablesHasImageObject = PDOConnect::run("select table_name from information_schema.tables WHERE table_schema = '$table_schema' AND  table_name LIKE '%_has_imageObject';");
+        $this->tablesHasImageObject = PDOConnect::run("select table_name as tableName from information_schema.tables WHERE table_schema = '$table_schema' AND table_name LIKE '%_has_imageObject';");
     }
 
     public function getImageHasPartOf($idIsPartOf)
@@ -23,8 +23,8 @@ class ImageObjectServer
         $info = null;
 
         foreach ($this->tablesHasImageObject as $value) {
-            $tableHasName = $value['table_name'];
-            $tableHasPart = strstr($value['table_name'], "_", true);
+            $tableHasName = $value['tableName'];
+            $tableHasPart = strstr($value['tableName'], "_", true);
 
             $query = "select * from $tableHasName, $tableHasPart WHERE idimageObject=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
 
