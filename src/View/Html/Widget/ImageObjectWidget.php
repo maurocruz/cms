@@ -54,8 +54,10 @@ class ImageObjectWidget
             $filename = $_SERVER['DOCUMENT_ROOT'].$item['contentUrl'];
             list($width, $height) = file_exists($filename) ? getimagesize($_SERVER['DOCUMENT_ROOT'].$item['contentUrl']) : null;
 
-            $span = $width ? ceil(($height/$width)*10) : 10;
+            $factor = 11;
+            $span = $width ? ceil(($height/$width)*$factor)+3 : $factor+3;
             $n = $info ? "<b style='color: red'>".count($info)."</b>" : "<b style='color: green'>0</b>";
+
             $caption = "<p>".$width."x".$height."px. ".sprintf(_("Is part of %s items"), $n) . "</p>";
 
             $containerImages[] = [
