@@ -278,7 +278,7 @@ ul.dropdown li:hover { font-size: 1.1em; color: darkslategray; }
 .admin-images-grid-figure{ position: relative; }
 .admin-images-grid-figure img{ width: 100%; }
 .admin-images-grid-figure figcaption{ background-color: rgba(0,0,0,1); line-height: normal; padding: 3px; }
-.admin-image-grid-buttons{ position: absolute; right: 0; bottom: 0; width: 100%; background-color: rgba(0,0,0,0.5); display: flex; }
+.admin-image-grid-buttons{ width: 100%; background-color: rgba(0,0,0,0.5); display: flex; }
 .admin-image-grid-buttons p { white-space: nowrap; width: calc(100% - 80px); }
 .admin-image-grid-buttons input[type=checkbox] { width: 20px; margin: 10px; }
 .admin-image-grid-buttons input[type=image] { width: 50px; height: 40px; }
