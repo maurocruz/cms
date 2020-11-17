@@ -9,7 +9,7 @@ trait navbarTrait
     public $providerName;
 
     
-    public static function navbar(string $title, array $list, $level, $appendNavbar = null)
+    public static function navbar(string $title, array $list = [], $level = 2, $appendNavbar = null)
     {
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title), "append" => $appendNavbar ];
     }
