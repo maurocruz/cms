@@ -131,8 +131,7 @@ trait FormElementsTrait
         ]];
     }
 
-
-    protected static function listAll($data, $type, string $title = null, array $row_column = null)
+    public static function listAll($data, $type, string $title = null, array $row_column = null)
     {
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
