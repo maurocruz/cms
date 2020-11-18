@@ -89,9 +89,9 @@ class ArticleView implements ViewInterface
         // dates
         if ($case == "edit") {
             // date created
-            $content[] = self::fieldsetWithInput(_("Date created"), "dateCreated", $value['dateCreated'], ["style" => "width: 148px;"], "text", [ "readonly" ]);
+            $content[] = self::fieldsetWithInput(_("Date created"), "dateCreated", $value['dateCreated'], ["style" => "width: 148px;"], "text", [ "disabled" ]);
             // date modified
-            $content[] = self::fieldsetWithInput(_("Date modified"), "dateModified", $value['dateModified'], ["style" => "width: 148px;"], "text", [ "readonly" ]);
+            $content[] = self::fieldsetWithInput(_("Date modified"), "dateModified", $value['dateModified'], ["style" => "width: 148px;"], "text", [ "disabled" ]);
             // date published
             $content[] = self::fieldsetWithInput(_("Date published"), "datePublished", $value['datePublished'], ["style" => "width: 148px;"], "text", [ "readonly" ]);
 
