@@ -60,7 +60,7 @@ class PersonView
         $this->content['main'][] = self::form('edit', $value);
         
         // contact point
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('person', $id, $value['contactPoint']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm('person', $id, $value['contactPoint']) ]);
         
         // address
         $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("person", $id, $value['address']) ]);
