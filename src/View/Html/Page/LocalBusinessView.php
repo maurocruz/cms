@@ -99,10 +99,10 @@ class LocalBusinessView
         $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'], [ "style" => "width: calc(100% - 400px);" ]);
         
         // dateCreated
-        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]) : null;
+        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'], [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
         
         // dateModified
-        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'], [ "style" => "width: 200px" ], "datetime", [ "readonly" ]) : null;
+        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'], [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
         
         // url
         $content[] = self::fieldsetWithInput( "url", "url", $value['url'], [ "style" => "width: 50%" ]);
