@@ -22,7 +22,7 @@ class ProductController implements ControllerInterface
         return (new Product())->get($params2);
     }
 
-    public function new()
+    public function new($params = null)
     {
         return [];
     }

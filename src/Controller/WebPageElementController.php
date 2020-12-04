@@ -11,7 +11,7 @@ class WebPageElementController implements ControllerInterface
         return [];
     }
 
-    public function new()
+    public function new($params = null)
     {
         return null;
     }

@@ -21,7 +21,7 @@ class WebPageController implements ControllerInterface
         return (new WebPage())->get($params2);
     }
     
-    public function new() 
+    public function new($params = null)
     {
         return true;
     }

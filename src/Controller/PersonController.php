@@ -15,7 +15,7 @@ class PersonController implements ControllerInterface
         return (new Person())->get($params3);
     }
     
-    public function new() 
+    public function new($params = null)
     {
         return true;
     }

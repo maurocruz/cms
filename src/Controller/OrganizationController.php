@@ -22,7 +22,7 @@ class OrganizationController implements ControllerInterface
         return (new Organization())->get($params);
     }
     
-    public function new() 
+    public function new($params = null)
     {
         return true;
     }

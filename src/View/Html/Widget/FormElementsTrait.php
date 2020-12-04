@@ -52,7 +52,7 @@ trait FormElementsTrait
 
             $content[] = self::input("id", "hidden", $idHasPart);
 
-            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "name", $value['name'], [ "style" => "min-width: 320px; max-width: 600px; width: 100%;" ], "text", [ "disabled" ]);
+            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], [ "style" => "min-width: 320px; max-width: 600px; width: 100%;" ], "text", [ "disabled" ]);
 
             $content[] = self::input($propertyName, "hidden", "");
 
@@ -136,8 +136,8 @@ trait FormElementsTrait
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
 
-        if (isset($data['errorInfo'])) {
-            return self::errorInfo($data['errorInfo'], $type);
+        if (isset($data['error'])) {
+            return self::errorInfo($data['error'], $type);
 
         } else {
             $content[] = [ "tag" => "h2", "content" => _($caption) ];
@@ -166,7 +166,7 @@ trait FormElementsTrait
 
                     $ID = PropertyValue::extractValue($item['identifier'],"id");
 
-                    $name = '<a href="/admin/'.$type.'/edit/'.$ID.'">'.($item['name'] ?? $item['headline'] ?? "[ND]").'</a>';
+                    $name = '<a href="/admin/' . lcfirst($type) . '/edit/' . $ID . '">'.($item['name'] ?? $item['headline'] ?? "[ND]").'</a>';
 
                     $rows[] = [ $ID, $name ];
 
@@ -234,10 +234,11 @@ trait FormElementsTrait
         return [ "tag" => "input", "attributes" => $attr2 ];
     }
 
-    protected static function errorInfo($data, $type) {
-        if ($data[0] == '42S02') {
+    protected static function errorInfo($data, $type)
+    {
+        if ($data['code'] == '42S02' || $data['code'] == '1146') {
             return [ "tag" => "div", "content" => [
-                [ "tag" => "p", "content" => _($data[2]) ],
+                [ "tag" => "p", "content" => _($data['message']) ],
                 [ "tag" => "form", "attributes" => [ "action" => "/admin/$type/createSqlTable", "method" => "post" ], "content" => [
                     [ "tag" => "input", "attributes" => [ "type" => "submit", "value" => _("Do you want to install it?") ] ]
                 ]]

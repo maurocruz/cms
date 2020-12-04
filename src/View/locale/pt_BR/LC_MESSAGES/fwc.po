@@ -40,6 +40,9 @@ msgstr "Não"
 msgid "Search"
 msgstr "Procurar"
 
+msgid "Provider"
+msgstr "Fornecedor"
+
 msgid "Submit"
 msgstr "Enviar"
 
@@ -423,9 +426,65 @@ msgstr "preços"
 msgid "price valid until"
 msgstr "Preço válido até"
 
+msgid "Price currency"
+msgstr "Moeda corrente"
+
+msgid "Valid through"
+msgstr "Válido até"
+
 msgid "list of '%s' offers"
 msgstr "Ofertas de '%s'"
 
+msgid "Discontinued"
+msgstr "Interrompido"
+
+msgid "In stock"
+msgstr "Em estoque"
+
+msgid "InStock"
+msgstr "Em estoque"
+
+msgid "In store only"
+msgstr "Somente na loja"
+
+msgid "InStoreOnly"
+msgstr "Somente na loja"
+
+msgid "Limited availability"
+msgstr "Disponibilidade limitada"
+
+msgid "LimitedAvailability"
+msgstr "Disponibilidade limitada"
+
+msgid "Online only"
+msgstr "Somente online"
+
+msgid "OnlineOnly"
+msgstr "Somente online"
+
+msgid "Out of stock"
+msgstr "Sem estoque"
+
+msgid "OutOfStock"
+msgstr "Sem estoque"
+
+msgid "Pre order"
+msgstr "Pedido antecipado"
+
+msgid "PreOrder"
+msgstr "Pedido antecipado"
+
+msgid "Pre sale"
+msgstr "Pré venda"
+
+msgid "PreSale"
+msgstr "Pré venda"
+
+msgid "Sould out"
+msgstr "Vendido"
+
+msgid "SouldOut"
+msgstr "Vendido"
 
 ############################   ORGANIZATION   ##################################
 
@@ -573,6 +632,12 @@ msgstr "Serviços de '%s'"
 
 msgid "list of '%s' services"
 msgstr "Lista de serviços de '%s'"
+
+msgid "Service type"
+msgstr "Tipo de serviço"
+
+msgid "Terms of service"
+msgstr "Termos do serviço"
 
 ##############################   TRAVEL AGENCY   ###############################
 

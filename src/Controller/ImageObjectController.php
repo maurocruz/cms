@@ -29,7 +29,7 @@ class ImageObjectController implements ControllerInterface
         return $data;
     }
 
-    public function new()
+    public function new($params = null)
     {
         return null;
     }

@@ -8,5 +8,5 @@ interface ControllerInterface
     
     public function edit(array $params): array;
     
-    public function new();
+    public function new($params = null);
 }
