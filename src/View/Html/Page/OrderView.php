@@ -31,7 +31,11 @@ class OrderView implements ViewInterface
 
     public function index(array $data): array
     {
-        return [];
+        $this->navbarOrder();
+
+        $this->content['main'][] = self::listAll($data, "order");
+
+        return $this->content;
     }
 
     public function edit(array $data): array
@@ -41,8 +45,9 @@ class OrderView implements ViewInterface
 
     public function new($value = null): array
     {
-        if ($value['orderedItem']) {
-            $title = sprintf(_("New order for %s"), $value['orderedItem']['@type']." \"".$value['orderedItem']['name']."\"");
+        $orderedItem = $value['orderedItem'] ?? null;
+        if ($orderedItem) {
+            $title = sprintf(_("New order for %s"), $orderedItem['@type']." \"".$orderedItem['name']."\"");
         } else {
             $title = _("New order");
         }
