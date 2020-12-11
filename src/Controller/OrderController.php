@@ -9,11 +9,9 @@ class OrderController implements ControllerInterface
 
     public function index($params = null): array
     {
-        $seller = $params['service'] ?? null;
-        $params2 = [ "format" => "ItemList", "seller" => $seller ];
-        $data = (new Order())->get($params2);
-        var_dump($data);
-        return $data;
+        $params2 = [ "format" => "ItemList" ];
+
+        return (new Order())->get($params2);
     }
 
     public function edit(array $params): array
@@ -28,7 +26,7 @@ class OrderController implements ControllerInterface
         if ($item) {
             $itemType = $params['itemType'];
             $classType = "\\Plinct\\Api\\Type\\".ucfirst($itemType);
-            $orderedItem = (new $classType())->get(["id" => $item]);
+            $orderedItem = (new $classType())->get(["id" => $item, "properties" => "*,offers"]);
             $data['orderedItem'] = $orderedItem[0];
             return $data;
         }
