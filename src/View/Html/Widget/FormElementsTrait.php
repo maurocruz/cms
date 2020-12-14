@@ -31,7 +31,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => "$type-form", "class" => "box" ], "content" => $contentOut ];
     }
 
-    protected static function divBoxExpanding($title, $type, $content)
+    protected static function divBoxExpanding($title, $type, $content): array
     {
         $id = "$type-form-". mt_rand(111,999);
 
@@ -44,7 +44,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => $id, "class" => "box box-expanding" ], "content" => $contentOut ];
     }
 
-    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null)
+    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
         $table = lcfirst($tableIsPartOf);
         if ($value) {
@@ -65,7 +65,7 @@ trait FormElementsTrait
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
     }
 
-    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null)
+    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array
     {
         if ($value) {
             foreach ($value as $person) {

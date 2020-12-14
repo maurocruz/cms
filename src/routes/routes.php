@@ -108,7 +108,7 @@ return function (Route $route)
                     $data = $_SERVER['HTTP_REFERER'];
                 }
                                         
-                return $response->withHeader('Location', $data)->withStatus(301);
+                //return $response->withHeader('Location', $data)->withStatus(301);
                 
             } else {            
                 return false;

@@ -468,12 +468,6 @@ msgstr "Sem estoque"
 msgid "OutOfStock"
 msgstr "Sem estoque"
 
-msgid "Pre order"
-msgstr "Pedido antecipado"
-
-msgid "PreOrder"
-msgstr "Pedido antecipado"
-
 msgid "Pre sale"
 msgstr "Pré venda"
 
@@ -485,6 +479,56 @@ msgstr "Vendido"
 
 msgid "SouldOut"
 msgstr "Vendido"
+
+################################   ORDER   #######################################
+
+msgid "Order"
+msgstr "Pedido"
+
+msgid "Seller"
+msgstr "Vendedor"
+
+msgid "Pre order"
+msgstr "Pedido antecipado"
+
+msgid "PreOrder"
+msgstr "Pedido antecipado"
+
+msgid "Order Cancelled"
+msgstr "Pedido cancelado"
+
+msgid "Order suspended"
+msgstr "Pedido suspenso"
+
+msgid "Order delivered"
+msgstr "Pedido entregue"
+
+msgid "Order in transit"
+msgstr "Pedido em trânsito"
+
+msgid "Order payment due"
+msgstr "Pedido com pagamento devido"
+
+msgid "Order pickup available"
+msgstr "Pedido disponível para coleta"
+
+msgid "Order problem"
+msgstr "Pedido com problema"
+
+msgid "Order processing"
+msgstr "Pedido em procesamento"
+
+msgid "Order returned"
+msgstr "Pedido devolvido"
+
+msgid "Order date"
+msgstr "Data do Pedido"
+
+msgid "Order status"
+msgstr "Status do pedido"
+
+msgid "Payment due date"
+msgstr "Data do vencimento"
 
 ############################   ORGANIZATION   ##################################
 

@@ -27,14 +27,14 @@ class ServiceController implements ControllerInterface
 
     public function order($params)
     {
-        var_dump($params);
         $id = $params['id'];
         $params2 = [ "id" => $id ];
         $dataService = (new Service())->get($params2);
         $valueService = $dataService[0];
 
-        $params3 = [ "format" => "ItemList", "seller" => $id ];
+        $params3 = [ "format" => "ItemList", "orderedItem" => $id, "orderedItemType" => "service", "properties" => "*,seller", "orderBy" => "orderDate" ];
         $valueService['orders'] = (new Order())->get($params3);
+
         return $valueService;
     }
 }

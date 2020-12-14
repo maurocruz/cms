@@ -28,7 +28,7 @@ class ServiceView implements ViewInterface
             $this->content['navbar'][] = navbarTrait::navbar(_($title),  [
                 "/admin/service/edit/".$this->id => _("View it"),
                 "/admin/service/order?id=".$this->id => _("List orders"),
-                "/admin/order/new?orderedItem=".$this->id."&itemType=service" => _("New order")
+                "/admin/order/new?orderedItem=".$this->id."&orderedItemType=service" => _("New order")
             ], 3);
         }
     }
@@ -75,17 +75,22 @@ class ServiceView implements ViewInterface
         return $this->content;
     }
 
-    public function order($value)
+    public function order($value): array
     {
         $this->id = PropertyValue::extractValue($value['identifier'], "id");
         $this->navbarService($value['name']);
 
-        $this->content['main'][] = self::listAll($value['orders'], "order", sprintf(_("Orders list of %s"), $value['name']));
+        $this->content['main'][] = self::listAll($value['orders'], "order", sprintf(_("Orders list of %s"), $value['name']), [
+            "orderDate" => _("Order date"),
+            "customer" => _("Customer"),
+            "seller" => _("Seller"),
+            "orderStatus" => _("Order status"),
+        ]);
 
         return $this->content;
     }
 
-    private function serviceForm($case = "new", $value = null)
+    private function serviceForm($case = "new", $value = null): array
     {
         // ID
         $content[] = $case == "edit" ? self::input("id", "hidden", $this->id) : null;

@@ -43,37 +43,45 @@ class OrderView implements ViewInterface
         return [];
     }
 
-    public function new($value = null): array
+    public function new($data = null): array
     {
-        $orderedItem = $value['orderedItem'] ?? null;
+        $orderedItem = $data['orderedItem'] ?? null;
         if ($orderedItem) {
             $title = sprintf(_("New order for %s"), $orderedItem['@type']." \"".$orderedItem['name']."\"");
+            $seller = $orderedItem['provider'];
         } else {
             $title = _("New order");
         }
 
         $this->navbarOrder($title);
 
-        $this->content['main'][] = self::divBox($title, "order", [ self::formOrder("new", null, $value['orderedItem']) ]);
+        // seller
+        $this->content['main'][] = self::divBox(_("Seller"), $seller['@type'], [ self::relationshipOneToOne("order", null, "seller", $seller['@type'], $seller) ]);
+        // order
+        $this->content['main'][] = self::divBox(_("Order"), "order", [ self::formOrder("new", null, $orderedItem) ]);
 
         return $this->content;
     }
 
-    private function formOrder($case = "new", $value = null, $orderedItem = null)
+    private function formOrder($case = "new", $value = null, $orderedItem = null): array
     {
         if ($orderedItem) {
             $orderedItemId = PropertyValue::extractValue($orderedItem['identifier'], "id");
+            $providerId = PropertyValue::extractValue($orderedItem['provider']['identifier'], "id");
             $content[] = self::input("orderedItem", "hidden", $orderedItemId);
+            $content[] = self::input("orderedItemType", "hidden", lcfirst($orderedItem['@type']));
+            $content[] = self::input("seller", "hidden", $providerId);
         }
 
         // ORDER DATE
-        $content[] = self::fieldsetWithInput(_("Order date"), "orderDate", $value['orderDate'], [], "date");
+        $content[] = self::fieldsetWithInput(_("Order date"), "orderDate", $value['orderDate'] ?? date("Y-m-d"), [], "date");
 
         // ORDER STATUS
         $content[] = self::fieldsetWithSelect(_("Order status"), "orderStatus", $value['orderStatus'], [
             "OrderCancelled" => _("Order Cancelled"),
             "OrderDelivered" => _("Order delivered"),
             "OrderInTransit" => _("Order in transit"),
+            "OrderISuspended" => _("Order suspended"),
             "OrderPaymentDue" => _("Order payment due"),
             "OrderPickupAvailable" => _("Order pickup available"),
             "OrderProblem" => _("Order problem"),
