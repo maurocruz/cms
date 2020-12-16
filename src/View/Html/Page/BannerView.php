@@ -31,7 +31,8 @@ class BannerView
     {
         $content[] = $case == "edit" ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'],"id")) : null;
 
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idadvertising", "type" => "hidden", "value" => $idadvertising ] ];
+        $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => "advertising" ] ] : null;
+        $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ] ] : null;
 
         // banner_title
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(98% - 400px);" ], "content" => [
