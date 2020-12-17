@@ -35,15 +35,17 @@ class BannerView
         $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ] ] : null;
 
         // banner_title
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(98% - 400px);" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(98% - 490px);" ], "content" => [
             [ "tag" => "legend", "content" => "Title" ],
             [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ] ]
-        ] ];        
+        ] ];
+        // type
+        $content[] = self::fieldsetWithSelect(_("Type"), "type", $value['type'], [ "square" => _("Square"), "responsive" => _("Respopnsive") ], [ "style" => "max-width: 120px" ] );
         // target
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 180px;" ], "content" => [
             [ "tag" => "legend", "content" => "target" ],
             [ "tag" => "input", "attributes" => [ "name" => "target", "type" => "text", "value" => $value['target'] ] ]
-        ] ];        
+        ] ];
         // position
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 180px;" ], "content" => [
             [ "tag" => "legend", "content" => "position" ],
