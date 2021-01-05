@@ -9,27 +9,31 @@ class BannerView
 {
     use FormTrait;
     
-    public function getBannerByIdcontrato($data) 
+    public function getBannerByIdcontrato($data): array
     {
-        $idbanner = PropertyValue::extractValue($data['identifier'], "id");
+        $id = PropertyValue::extractValue($data['identifier'], "id");
         
         $content[] = [ "tag" => "h4", "content" => "Banner" ];
-        
-        if ($idbanner) {            
-            $content[] = self::form($data['idadvertising'], "edit", $data);
+
+        if ($id) {
+            $content[] = self::formBanner($data['idadvertising'], "edit", $data);
             // images
-            $content[] = (new ImageObjectView())->getForm("banner", $idbanner, $data['image']);
+            $content[] = (new ImageObjectView())->getForm("banner", $id, $data['image']);
             
         } else {
-            $content[] = self::form($data['idadvertising']);
+            $content[] = self::formBanner($data['idadvertising']);
         } 
         
         return [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
     }
     
-    private static function form($idadvertising, $case = "add", $value = null) 
+    private static function formBanner($idadvertising, $case = "add", $value = null): array
     {
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idadvertising", "type" => "hidden", "value" => $idadvertising ] ];           
+        $content[] = $case == "edit" ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'],"id")) : null;
+
+        $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => "advertising" ] ] : null;
+        $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ] ] : null;
+
         // banner_title
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(98% - 400px);" ], "content" => [
             [ "tag" => "legend", "content" => "Title" ],
@@ -72,11 +76,9 @@ class BannerView
         ] ];  
         
         $content[] = self::submitButtonSend();
-        
-        if ($case == "edit") {
-            $content[] = self::submitButtonDelete("/admim/banner/delete");
-        }
-        
+
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admim/banner/erase") : null;
+
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "action" => "/admin/banner/$case", "method" => "post" ], "content" => $content ];
     }
 }
