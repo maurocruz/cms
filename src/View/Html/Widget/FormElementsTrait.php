@@ -9,7 +9,18 @@ trait FormElementsTrait
 {
     use FormTrait;
 
-    protected static function div($title, $type, $content)
+    protected static function datalist(string $id, array $array): string
+    {
+        $content = null;
+
+        foreach ($array as $value) {
+            $content .= "<option value='$value'>";
+        }
+
+        return "<datalist id='$id'>$content</datalist>";
+    }
+
+    protected static function div($title, $type, $content): array
     {
         $contentOut[] = [ "tag" => "h4", "content" => _($title) ];
 
@@ -20,7 +31,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => "$type-form" ], "content" => $contentOut ];
     }
 
-    protected static function divBox($title, $type, $content)
+    protected static function divBox($title, $type, $content): array
     {
         $contentOut[] = [ "tag" => "h4", "content" => $title ];
 
@@ -31,7 +42,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => "$type-form", "class" => "box" ], "content" => $contentOut ];
     }
 
-    protected static function divBoxExpanding($title, $type, $content)
+    protected static function divBoxExpanding($title, $type, $content): array
     {
         $id = "$type-form-". mt_rand(111,999);
 
@@ -44,7 +55,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => $id, "class" => "box box-expanding" ], "content" => $contentOut ];
     }
 
-    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null)
+    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
         $table = lcfirst($tableIsPartOf);
         if ($value) {
@@ -65,7 +76,7 @@ trait FormElementsTrait
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
     }
 
-    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null)
+    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array
     {
         if ($value) {
             foreach ($value as $person) {
@@ -93,7 +104,7 @@ trait FormElementsTrait
         return $return;
     }
 
-    protected static function input($name, $type, $value, $attributes = null)
+    protected static function input($name, $type, $value, $attributes = null): array
     {
         $attr = [ "name" => $name, "type" => $type, "value" => $value ];
 
@@ -102,7 +113,7 @@ trait FormElementsTrait
         return [ "tag" => "input", "attributes" => $attr2 ];
     }
 
-    protected static function fieldsetWithInput($legend, $name, $value, $attributes = null, $type = "text", $inputAttributes = null)
+    protected static function fieldsetWithInput($legend, $name, $value, $attributes = null, $type = "text", $inputAttributes = null): array
     {
         $attr = [ "name" => $name, "type" => $type, "value" => $value ];
         $attributesInput = $inputAttributes ? array_merge($attr, $inputAttributes) : $attr;
@@ -113,7 +124,7 @@ trait FormElementsTrait
         ]];
     }
 
-    protected static function fieldsetWithTextarea($legend, $name, $value, $height = 150, $attributes = null, $attributes_textarea = null)
+    protected static function fieldsetWithTextarea($legend, $name, $value, $height = 150, $attributes = null, $attributes_textarea = null): array
     {
         // attributes fieldset
         $h = $height."px";
@@ -131,7 +142,7 @@ trait FormElementsTrait
         ]];
     }
 
-    public static function listAll($data, $type, string $title = null, array $row_column = null)
+    public static function listAll($data, $type, string $title = null, array $row_column = null): ?array
     {
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
@@ -185,7 +196,7 @@ trait FormElementsTrait
         }
     }
 
-    protected static function tableItemList(array $columns, array $rows)
+    protected static function tableItemList(array $columns, array $rows): array
     {
         $ordering = filter_input(INPUT_GET, 'ordering');
         $orderingQuery = !$ordering || $ordering === "desc" ? "asc" : "desc";
@@ -220,21 +231,22 @@ trait FormElementsTrait
         ]];
     }
 
-    protected static function submitButtonSend($attributes = null)
+    protected static function submitButtonSend($attributes = null): array
     {
         $attr = [ "name" => "submit", "src" => "/App/static/cms/images/ok_64x64.png", "style" => "max-width: 40px; vertical-align: bottom; margin: 6px;", "type" => "image", "alt" => "Enviar", "title" => _("Submit") ];
         $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
         return [ "tag" => "input", "attributes" => $attr2 ];
     }
 
-    protected static function submitButtonDelete($formaction, $attributes = null)
+    protected static function submitButtonDelete($formaction, $attributes = null): array
     {
         $attr = [ "name" => "submit", "src" => "/App/static/cms/images/delete.png", "formaction" => $formaction, "style" => "max-width: 40px; vertical-align: bottom; margin: 6px;", "type" => "image", "alt" => _("Delete data"), "title" => _("Delete data"), "onclick" => "return confirm('".("Are you sure you want to delete this item?")."');" ];
         $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
         return [ "tag" => "input", "attributes" => $attr2 ];
     }
 
-    protected static function errorInfo($data, $type) {
+    protected static function errorInfo($data, $type): ?array
+    {
         if ($data[0] == '42S02') {
             return [ "tag" => "div", "content" => [
                 [ "tag" => "p", "content" => _($data[2]) ],
@@ -246,7 +258,7 @@ trait FormElementsTrait
         return null;
     }
 
-    public static function search($action, $name,  $value = null, $method = "get")
+    public static function search($action, $name,  $value = null, $method = "get"): array
     {
         return [ "tag" => "form", "attributes" => [ "name" => "formSearch", "class" => "form", "action" => $action, "method" => $method ], "content" => [
             [ "tag" => "fieldset", "content" => [
