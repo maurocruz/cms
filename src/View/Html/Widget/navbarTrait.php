@@ -4,12 +4,12 @@ namespace Plinct\Cms\View\Html\Widget;
 
 trait navbarTrait 
 {
-    public $providerId;
+    /*public $providerId;
     public $providerType;
-    public $providerName;
+    public $providerName;*/
 
     
-    public static function navbar(string $title, array $list = [], $level = 2, $appendNavbar = null)
+    public static function navbar(string $title, array $list = [], $level = 2, $appendNavbar = null): array
     {
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => _($title), "append" => $appendNavbar ];
     }
@@ -20,7 +20,7 @@ trait navbarTrait
     }
 
     
-    public function offerNavbar($id = null, $name = null, $type = null, $level = 4): array {
+    /*public function offerNavbar($id = null, $name = null, $type = null, $level = 4): array {
         if ($id ) { $list = [
                 "/admin/offer?$type=$id" => _("View offers"),
                 "/admin/offer/new?$type=$id" => _("Add new")
@@ -34,9 +34,9 @@ trait navbarTrait
             $title = _("Offer");
         }
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
+    }*/
 
-    public function serviceNavbar($id = null, $name = null, $type = null, $level = 3) {
+    /*public function serviceNavbar($id = null, $name = null, $type = null, $level = 3) {
         if ($type == "service") {
             $list = [
                 "/admin/service/edit/$id?providerId=$this->providerId&providerType=$this->providerType" => _("View it"),
@@ -63,9 +63,9 @@ trait navbarTrait
             $title = _("Services");
         }
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
+    }*/
         
-    public function travelActionNavbar($id = null, $name = null, $providerId = null, $level = 5) {
+    /*public function travelActionNavbar($id = null, $name = null, $providerId = null, $level = 5) {
         if ($id && $name && $providerId) {
           $list = [ 
                 "/admin/travelAction/edit/$id?providerId=$providerId&providerType=trip" => _("View it"),
@@ -137,9 +137,9 @@ trait navbarTrait
             $title = _("Tourist destination");
         }
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
+    }*/
 
-    public function tripNavbar($id = null, $name = null, $providerId = null, $level = 4) {
+    /*public function tripNavbar($id = null, $name = null, $providerId = null, $level = 4) {
         if ($id && $name && $providerId) {
           $list = [ 
                 "/admin/trip/edit/$id?providerId=$providerId&providerType=$this->providerType" => _("View it"),
@@ -156,5 +156,5 @@ trait navbarTrait
             $title = _("Trips");
         }
         return [ "list" => $list, "attributes" => [ "class" => "menu menu$level" ], "title" => $title ];
-    }
+    }*/
 }

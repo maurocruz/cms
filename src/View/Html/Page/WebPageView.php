@@ -3,6 +3,7 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 use Plinct\Web\Widget\FormTrait;
 
@@ -11,7 +12,7 @@ class WebPageView
     protected $content;
     protected $idwebPage;
 
-    use FormTrait;
+    use FormElementsTrait;
     use HtmlPiecesTrait;
     
     public function __construct()

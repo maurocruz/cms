@@ -80,7 +80,7 @@ return function (Route $route)
 
             if (class_exists($className)) {
                 //  EDIT
-                if ($action == "edit" || $action == "put") {                  
+                if ($action == "edit" || $action == "put") {
                     $data = (new Server())->edit($className, $params);
                     // sitemap
                     Sitemap::create($type);
@@ -107,8 +107,14 @@ return function (Route $route)
                     (new $className())->createSqlTable($type);
                     $data = $_SERVER['HTTP_REFERER'];
                 }
-                                        
-                //return $response->withHeader('Location', $data)->withStatus(301);
+
+                // GENERIC
+                else {
+                    (new $className())->$action($params);
+                    $data = $_SERVER['HTTP_REFERER'];
+                }
+
+                return $response->withHeader('Location', $data)->withStatus(301);
                 
             } else {            
                 return false;

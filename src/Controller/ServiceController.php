@@ -10,14 +10,14 @@ class ServiceController implements ControllerInterface
 
     public function index($params = null): array
     {
-        $params2 = [ "format" => "ItemList" ];
+        $params2 = [ "format" => "ItemList", "properties" => "provider,offers" ];
         return (new Service())->get($params2);
     }
 
     public function edit(array $params): array
     {
         $id = $params['id'];
-        return (new Service())->get([ "id" => $id, "properties" => "*,provider,offers" ]);
+        return (new Service())->get([ "id" => $id, "properties" => "*,provider,offers", "limit" => "none" ]);
     }
 
     public function new($params = null)
@@ -36,5 +36,14 @@ class ServiceController implements ControllerInterface
         $valueService['orders'] = (new Order())->get($params3);
 
         return $valueService;
+    }
+
+    public function provider($params): array
+    {
+        $id = $params['id'];
+
+        $params2 = [ "format" => "ItemList", "provider" => $id, "properties" => "*,provider" ];
+
+        return (new Service())->get($params2);
     }
 }

@@ -9,7 +9,41 @@ trait FormElementsTrait
 {
     use FormTrait;
 
-    protected static function div($title, $type, $content)
+    /**
+     * Creates a type selection form and chooses the type from a pop-up in an input form
+     * @param string $property
+     * @param string|array $typesForChoose
+     * @param array|bool $value
+     * @param string $nameLike
+     * @param array|null $attributes
+     * @return array
+     */
+    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = null) : array
+    {
+        $attributes2['class'] = "choose-type";
+        $attributes2['data-property'] = $property;
+        $attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
+        $attributes2['data-like'] = $nameLike;
+        $attributes2['data-currentType'] = $value['@type'];
+        $attributes2['data-currentName'] = $value['name'];
+        $attributes2['data-currentId'] = PropertyValue::extractValue($value['identifier'], "id");
+
+        $attributes3 = $attributes ? array_merge($attributes2, $attributes) : $attributes2;
+        return [ "tag" => "div", "attributes" => $attributes3 ];
+    }
+
+    protected static function datalist(string $id, array $array): string
+    {
+        $content = null;
+
+        foreach ($array as $value) {
+            $content .= "<option value='$value'>";
+        }
+
+        return "<datalist id='$id'>$content</datalist>";
+    }
+
+    protected static function div($title, $type, $content): array
     {
         $contentOut[] = [ "tag" => "h4", "content" => _($title) ];
 
@@ -20,7 +54,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => "$type-form" ], "content" => $contentOut ];
     }
 
-    protected static function divBox($title, $type, $content)
+    protected static function divBox($title, $type, $content): array
     {
         $contentOut[] = [ "tag" => "h4", "content" => $title ];
 
@@ -93,45 +127,7 @@ trait FormElementsTrait
         return $return;
     }
 
-    protected static function input($name, $type, $value, $attributes = null)
-    {
-        $attr = [ "name" => $name, "type" => $type, "value" => $value ];
-
-        $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
-
-        return [ "tag" => "input", "attributes" => $attr2 ];
-    }
-
-    protected static function fieldsetWithInput($legend, $name, $value, $attributes = null, $type = "text", $inputAttributes = null)
-    {
-        $attr = [ "name" => $name, "type" => $type, "value" => $value ];
-        $attributesInput = $inputAttributes ? array_merge($attr, $inputAttributes) : $attr;
-
-        return [ "tag" => "fieldset", "attributes" => $attributes, "content" => [
-            [ "tag" => "legend", "content" => _($legend) ],
-            [ "tag" => "input", "attributes" => $attributesInput ]
-        ]];
-    }
-
-    protected static function fieldsetWithTextarea($legend, $name, $value, $height = 150, $attributes = null, $attributes_textarea = null)
-    {
-        // attributes fieldset
-        $h = $height."px";
-        $attrFieldset = [ "style" => "width: 100%; min-height: $h;" ];
-
-        $attributesFieldset = $attributes ? array_merge($attrFieldset, $attributes) : $attrFieldset;
-        // attributes textarea
-        $attrTextarea = [ "name" => $name, "id" => "textarea-$name", "style" => "min-height: calc($h - 50px);" ];
-        $attr = $attributes_textarea ? array_merge($attrTextarea, $attributes_textarea) : $attrTextarea;
-
-        return [ "tag" => "fieldset", "attributes" => $attributesFieldset, "content" => [
-            [ "tag" => "legend", "content" => _($legend) ],
-            [ "tag" => "textarea", "attributes" => $attr, "content" => $value ],
-            [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textarea-$name',$height);", "style" => "width: 96%; display: block; font-size: 0.85em;" ], "content" => sprintf(_("Expandir textarea em %s"), $h) ]
-        ]];
-    }
-
-    public static function listAll($data, $type, string $title = null, array $row_column = null)
+    public static function listAll($data, $type, string $title = null, array $row_column = null): ?array
     {
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
@@ -140,14 +136,18 @@ trait FormElementsTrait
             return self::errorInfo($data['error'], $type);
 
         } else {
+            $itemListElement = $data['itemListElement'];
+
             $content[] = [ "tag" => "h2", "content" => _($caption) ];
             $content[] = [ "tag" => "p", "content" => $showText ];
 
             // columns
-            $columns = [
-                [ "label" => "ID", "property" => "id", "attributes" => [ "style" => "width: 40px;"] ],
-                [ "label" => _("Name"), "property" => "name" ]
-            ];
+            $columns[] = [ "label" => _("Action"), "property" => "action", "attributes" => [ "style" => "width: 40px;"] ];
+            $columns[] = [ "label" => "ID", "property" => "id", "attributes" => [ "style" => "width: 40px;"] ];
+            if (isset($itemListElement[0]['item']['name'])) {
+                $columns[] = ["label" => _("Name"), "property" => "name"];
+            }
+
 
             if ($row_column) {
                 foreach ($row_column as $keyCR => $valueCR) {
@@ -161,47 +161,59 @@ trait FormElementsTrait
                 $rows = [];
 
             } else {
-                foreach ($data['itemListElement'] as $key => $valueItems) {
+                foreach ($itemListElement as $key => $valueItems) {
                     $item = $valueItems['item'];
 
-                    $ID = PropertyValue::extractValue($item['identifier'],"id");
-
-                    $name = '<a href="/admin/' . lcfirst($type) . '/edit/' . $ID . '">'.($item['name'] ?? $item['headline'] ?? "[ND]").'</a>';
-
-                    $rows[] = [ $ID, $name ];
+                    $rowItem[] = PropertyValue::extractValue($item['identifier'],"id");
+                    if (isset($item['name'])) {
+                        $rowItem[] = $item['name'];
+                    }
 
                     if (isset($valueAddRows)) {
                         foreach ($valueAddRows as $valueR) {
-                            $array = is_array($item[$valueR]) ? $item[$valueR]['name'] : $item[$valueR];
-                            array_push($rows[$key],$array);
+                            $property = strstr($valueR,":",true) != false ? strstr($valueR,":",true) : $valueR;
+                            $index = substr(strstr($valueR,":"),1) != false ? substr(strstr($valueR,":"),1) : "name";
+                            if (is_string($item[$property])) {
+                                $rowItem[] = $item[$property];
+                            } elseif (isset($item[$property]) && is_array($item[$property])) {
+                                $rowItem[] = isset($item[$property][$index]) ? $item[$property][$index] : (isset($item[$property]) ? $item[$property] : null);
+                            } else {
+                                $rowItem[] = "No content";
+                            }
                         }
                     }
+                    $rows[] = $rowItem;
+                    unset($rowItem);
                 }
             }
-
-            $content[] = self::tableItemList($columns, $rows);
+            $content[] = self::tableItemList($type, $columns, $rows);
 
             return [ "tag" => "div", "content" => $content ];
         }
     }
 
-    protected static function tableItemList(array $columns, array $rows)
+    protected static function tableItemList(string $type, array $columns, array $rows): array
     {
         $ordering = filter_input(INPUT_GET, 'ordering');
         $orderingQuery = !$ordering || $ordering === "desc" ? "asc" : "desc";
 
         foreach ($columns as $valueColumns) {
-            $th[] = [ "tag" => "th", "attributes" => $valueColumns['attributes'] ?? null, "content" => '<a href="?orderBy='.$valueColumns['property'].'&ordering='.$orderingQuery.'">'._($valueColumns['label']).'</a>' ];
+            $content = $valueColumns['label'] != "Action" ? '<a href="?orderBy='.$valueColumns['property'].'&ordering='.$orderingQuery.'">'._($valueColumns['label']).'</a>' :$valueColumns['label'];
+            $th[] = [ "tag" => "th", "attributes" => $valueColumns['attributes'] ?? null, "content" => $content ];
         }
 
         $td = null;
+
         if (count($rows) == 0) { // NO ITENS FOUNDED
             $list[] = [ "tag" => "tr", "content" => [
-                [ "tag" => "td", "attributes" => [ "colspan" => "5", "style" => "text-align: center; font-weight: bold; font-size: 120%;" ], "content" => _("No items founded!") ]
+                [ "tag" => "td", "attributes" => [ "colspan" => count($columns), "style" => "text-align: center; font-weight: bold; font-size: 120%;" ], "content" => _("No items founded!") ]
             ]];
 
         } else {
             foreach ($rows as $valueRows) {
+                // actions
+                $td[] = [ "tag" => "td", "content" => '<a href="/admin/'.$type.'/edit/'.$valueRows[0].'">'._("Edit").'</a>' ];
+
                 foreach ($valueRows as $valueItens ) {
                     $td[] = [ "tag" => "td", "content" => $valueItens['rowText'] ?? $valueItens ];
                 }
@@ -220,21 +232,7 @@ trait FormElementsTrait
         ]];
     }
 
-    protected static function submitButtonSend($attributes = null)
-    {
-        $attr = [ "name" => "submit", "src" => "/App/static/cms/images/ok_64x64.png", "style" => "max-width: 40px; vertical-align: bottom; margin: 6px;", "type" => "image", "alt" => "Enviar", "title" => _("Submit") ];
-        $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
-        return [ "tag" => "input", "attributes" => $attr2 ];
-    }
-
-    protected static function submitButtonDelete($formaction, $attributes = null)
-    {
-        $attr = [ "name" => "submit", "src" => "/App/static/cms/images/delete.png", "formaction" => $formaction, "style" => "max-width: 40px; vertical-align: bottom; margin: 6px;", "type" => "image", "alt" => _("Delete data"), "title" => _("Delete data"), "onclick" => "return confirm('".("Are you sure you want to delete this item?")."');" ];
-        $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
-        return [ "tag" => "input", "attributes" => $attr2 ];
-    }
-
-    protected static function errorInfo($data, $type)
+    protected static function errorInfo($data, $type): ?array
     {
         if ($data['code'] == '42S02' || $data['code'] == '1146') {
             return [ "tag" => "div", "content" => [
@@ -245,16 +243,5 @@ trait FormElementsTrait
             ]];
         }
         return null;
-    }
-
-    public static function search($action, $name,  $value = null, $method = "get")
-    {
-        return [ "tag" => "form", "attributes" => [ "name" => "formSearch", "class" => "form", "action" => $action, "method" => $method ], "content" => [
-            [ "tag" => "fieldset", "content" => [
-                [ "tag" => "legend", "content" => _("Search") ],
-                [ "tag" => "input", "attributes" => [ "name" => $name, "type" => "text", "value" => $value ]],
-                [ "tag" => "input", "attributes" => [ "type" => "submit", "value" => _("Submit") ] ]
-            ] ]
-        ]];
     }
 }

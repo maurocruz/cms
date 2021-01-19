@@ -8,14 +8,16 @@ class OfferController implements ControllerInterface
 {
     public function index($params = null): array
     {
-        $params2 = [ "format" => "ItemList", "properties" => "*" ];
+        $params2 = [ "format" => "ItemList", "properties" => "*,itemOffered" ];
 
         return (new Offer())->get($params2);
     }
 
     public function edit(array $params): array
     {
-        return [];
+        $id = $params['id'];
+
+        return (new Offer())->get([ "id" => $id, "properties" => "*,itemOffered"]);
     }
 
     public function new($params = null)

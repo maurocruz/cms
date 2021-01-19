@@ -10,6 +10,9 @@ class OfferView implements ViewInterface
 {
     private $content = [];
 
+    private static $tableHasPart;
+    private static $idHasPart;
+
     use FormElementsTrait;
 
     private function navbarOffer($title = null, $list = [])
@@ -17,54 +20,97 @@ class OfferView implements ViewInterface
         $this->content['navbar'][] = navbarTrait::navbar(_("Offer"), [
             "/admin/offer" => _("List all"),
             "/admin/offer/new" => _("Add new")
-        ], 2);
+        ]);
     }
 
     public function index(array $data): array
     {
         $this->navbarOffer();
 
-        $this->content['main'][] = self::listAll($data, "offer");
+        $this->content['main'][] = self::listAll($data, "offer", null, [ "price" => _("Price"), "validThrough" => _("Valid through"), "itemOffered:name" => _("Item offered"), "itemOfferedType" => _("Item offered type") ]);
 
         return $this->content;
     }
 
     public function edit(array $data): array
     {
-        return [];
+        $this->navbarOffer();
+
+        if (empty($data)) {
+            $this->content['main'][] = self::noContent();
+        } else {
+            $value = $data[0];
+            $this->content['main'][] = self::divBox(_("Offer"), "offer", [ self::formOffer($value) ]);
+        }
+
+        return $this->content;
     }
 
     public function new($data = null): array
     {
         $this->navbarOffer();
 
-        //$this->content['main'][] = self::divBox(_("Add new"), "offer", [ self::formOffer() ]);
+        $this->content['main'][] = self::divBox(_("Add new"), "offer", [ self::formOffer() ]);
 
         return $this->content;
     }
 
-    public function getForm($tableHasPart, $idHasPart, $value)
+    public function getForm($tableHasPart, $idHasPart, $data): array
     {
-        if ($value) {
-            return self::formOffer($tableHasPart, $idHasPart,"edit", $value);
+        self::$tableHasPart = $tableHasPart;
+        self::$idHasPart = $idHasPart;
+
+        if ($data) {
+            foreach ($data as $value) {
+                $content[] = self::formOffer($value);
+            }
         } else {
-            return self::formOffer($tableHasPart, $idHasPart);
+            $content[] = ["New:", self::formOffer()];
         }
+
+        return $content;
     }
 
-    private function formOffer($tableHasPart, $idHasPart, $case = "new", $value = null)
+    public static function formChooseType($tableHasPart, $idHasPart, $idSeller, $n, $value = null): array
     {
-        $content[] = $case == "new" ? self::input('tableHasPart', "hidden", $tableHasPart) : null;
-        $content[] = $case == "new" ? self::input('idHasPart', "hidden", $idHasPart) : null;
+        $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
+        $content[] = self::input("idHasPart", "hidden", $idHasPart);
+        $content[] = $n.": ";
+        $content[] = self::chooseType("itemOffered", "service,product", $value['itemOffered'], "name", [ "style" => "width: 70%; display: inline-flex;", "data-params" => "provider=$idSeller" ]);
 
-        if ($case == "edit") {
+        $content[] = $value['price'] ? self::input("price", "text", $value['priceCurrency']." ".number_format($value['price'],2,',','.'), [ "readonly", "style" => "width: auto; margin-left: 2px;" ]): null;
+
+        $content[] = self::submitButtonSend([ "style" => "height: 30px; vertical-align: middle" ]);
+        $content[] = $value ? self::submitButtonDelete("/admin/offer/erase", [ "style" =>"height: 30px; vertical-align: middle" ]) : null;
+
+        $case = $tableHasPart == "order" ? "addInOrder" : "new";
+        return self::form("/admin/offer/$case", $content);
+    }
+
+    private static function formOffer($value = null): array
+    {
+        $case = $value ? "edit" : "new";
+
+        if (isset(self::$tableHasPart)) {
+            $itemOffered = self::$idHasPart;
+            $itemOfferedType = self::$tableHasPart;
+            $content[] = self::input("tableHasPart", "hidden", $itemOfferedType);
+            //$content[] = self::input("idHasPart", "hidden", $itemOffered);
+            $content[] = self::input("itemOffered", "hidden", $itemOffered);
+            $content[] = self::input("itemOfferedType", "hidden", $itemOfferedType);
+        } else {
+            $content[] = self::fieldset(self::chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
+        }
+
+        if ($value) {
             $id = PropertyValue::extractValue($value['identifier'], 'id');
             $content[] = self::input("id", "hidden", $id);
         }
 
-        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", [ "style" => "width: 120px;"]);
 
-        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'], [ "style" => "width: 120px;" ], "number", [ "min" => 1, "step" => "any" ]);
+        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'], [ "style" => "width: 120px;" ], "number", [ "min" => 0, "step" => "any" ]);
+
+        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", [ "style" => "width: 102px;"], "text", [ "maxlength" => "2" ]);
 
         $content[] = self::fieldsetWithSelect(_("Availability"), "availability", $value['availability'], [
             "Discontinued" => _("Discontinued"),
@@ -78,12 +124,15 @@ class OfferView implements ViewInterface
             "SoldOut" => _("Sould out")
         ]);
         // VALID THROUGH
-        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough']);
-
+        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough'], [ "style" => "width: 150px;" ]);
+        // ELEGIBLE QUANTITY
+        $content[] = self::fieldsetWithInput(_("Elegible quantity"), "elegibleQuantity", $value['elegibleQuantity'], [ "style" => "width: 150px;" ]);
+        // ELEGIBLE DURATION
+        $content[] = self::fieldsetWithInput(_("Elegible duration"), "elegibleDuration", $value['elegibleDuration']);
 
         $content[] = self::submitButtonSend();
 
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/offer/erase") : null;
+        $content[] = $value ? self::submitButtonDelete("/admin/offer/erase") : null;
 
         return self::form("/admin/offer/$case", $content);
     }

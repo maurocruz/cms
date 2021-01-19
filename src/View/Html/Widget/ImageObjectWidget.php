@@ -5,16 +5,15 @@ namespace Plinct\Cms\View\Html\Widget;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\ImageObjectServer;
-use Plinct\Web\Widget\FormTrait;
 
 class ImageObjectWidget
 {
     protected $tableHasPart;
     protected $idHasPart;
 
-    use FormTrait;
+    use FormElementsTrait;
 
-    protected function keywordsList($data)
+    protected function keywordsList($data): array
     {
         $numberOfItems = $data['numberOfItems'];
 
@@ -39,7 +38,7 @@ class ImageObjectWidget
         return [ "tag" => "div", "content" => $content ];
     }
 
-    protected function imagesList($data)
+    protected function imagesList($data): array
     {
         $content[] = [ "tag" => "p", "content" => sprintf(_("Show %s items!"), $data['numberOfItems']) ];
 
@@ -99,7 +98,7 @@ class ImageObjectWidget
         return $content;
     }
 
-    protected function formImageObject($value, $isPartOf = null, $info = null)
+    protected function formImageObject($value, $isPartOf = null, $info = null): array
     {
         $ID = PropertyValue::extractValue($value['identifier'], "id");
 
@@ -132,7 +131,7 @@ class ImageObjectWidget
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
-    protected static function formImageObjectEdit($value)
+    protected static function formImageObjectEdit($value): array
     {
         $ID = PropertyValue::extractValue($value['identifier'], "id");
 
@@ -172,7 +171,7 @@ class ImageObjectWidget
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
-    protected function formIsPartOf($value)
+    protected function formIsPartOf($value): array
     {
         $ID = PropertyValue::extractValue($value['identifier'], "id");
 
@@ -239,7 +238,7 @@ class ImageObjectWidget
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
-    protected static function infoIsPartOf($id, $info)
+    protected static function infoIsPartOf($id, $info): array
     {
         if ($info) {
             $list = null;
@@ -260,7 +259,7 @@ class ImageObjectWidget
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao box", "style" => "overflow: hidden;", "name" => "form-images-edit", "action" => "/admin/imageObject/erase", "method" => "post" ], "content" => $content ];
     }
 
-    protected function upload($tableHasPart = null, $idHasPart = null)
+    protected function upload($tableHasPart = null, $idHasPart = null): array
     {
         $content[] = [ "tag" => "h4", "content" => "Enviar imagem" ];
 

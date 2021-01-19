@@ -24,7 +24,7 @@ class TaxonController implements ControllerInterface
         return (new Taxon())->get($params2);
     }
     
-    public function new($params = null)
+    public function new($params = null): bool
     {
         return true;
     }

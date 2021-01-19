@@ -9,14 +9,16 @@ class OrderController implements ControllerInterface
 
     public function index($params = null): array
     {
-        $params2 = [ "format" => "ItemList" ];
+        $params2 = [ "format" => "ItemList", "properties" => "*,seller,customer,orderedItem" ];
 
         return (new Order())->get($params2);
     }
 
     public function edit(array $params): array
     {
-        return [];
+        $params2 = [ "id" => $params['id'], "properties" => "*,seller,offer,customer,orderedItem,partOfInvoice" ];
+
+        return $data = (new Order())->get($params2);
     }
 
     public function new($params = null): ?array

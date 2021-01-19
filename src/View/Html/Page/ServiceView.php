@@ -14,30 +14,22 @@ class ServiceView implements ViewInterface
 
     use FormElementsTrait;
 
-    private function navbarService($title = null)
+    private function navbarService($title = null, $list = null, $level = 2, $search = null)
     {
-        $list2 = [
-            "/admin/service" => _("List all"),
-            "/admin/service/new" => _("Add new")
-        ];
-        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "service", "data-searchfor" => "name" ] ];
+        $title = $title ?? _("Service");
 
-        $this->content['navbar'][] = navbarTrait::navbar(_("Service"), $list2, 2, $search);
+        $list = $list ?? [ "/admin/service" => _("List all"), "/admin/service/new" => _("Add new") ];
 
-        if ($title) {
-            $this->content['navbar'][] = navbarTrait::navbar(_($title),  [
-                "/admin/service/edit/".$this->id => _("View it"),
-                "/admin/service/order?id=".$this->id => _("List orders"),
-                "/admin/order/new?orderedItem=".$this->id."&orderedItemType=service" => _("New order")
-            ], 3);
-        }
+        $search = $search ?? [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "service", "data-searchfor" => "name" ] ];
+
+        $this->content['navbar'][] = navbarTrait::navbar($title, $list, $level, $search);
     }
 
     public function index(array $data): array
     {
         $this->navbarService();
-        
-        $this->content['main'][] = self::listAll($data, "Service");
+
+        $this->content['main'][] = self::listAll($data, "service", null, [ "provider:name" => _("Provider") ]);
 
         return $this->content;
     }
@@ -55,21 +47,25 @@ class ServiceView implements ViewInterface
 
     public function edit(array $data): array
     {
+        $this->navbarService();
+
         if (empty($data)) {
-            $this->navbarService();
             $this->content['main'][] = self::noContent();
         } else {
             $value = $data[0];
             $this->id = PropertyValue::extractValue($value['identifier'], "id");
 
-            $this->navbarService($value['name']);
+            $this->navbarService($value['name'], [
+                    "/admin/service/edit/".$this->id => _("View it"),
+                    "/admin/service/order?id=".$this->id => _("List orders"),
+                    "/admin/order/new?orderedItem=".$this->id."&orderedItemType=service" => _("New order")
+                ], 3, false
+            );
 
             // form service
             $this->content['main'][] = self::divBox(_("Edit"), "service", [ self::serviceForm("edit", $value) ]);
             // OFFER
             $this->content['main'][] = self::divBox(_("Offer"), "offer", [ (new OfferView())->getForm("service", $this->id, $value['offers']) ]);
-            // provider
-            $this->content['main'][] = self::divBox(_("Provider"), "organization", [ self::relationshipOneToOne("service", $this->id, "provider", "organization", $value['provider']) ]);
         }
 
         return $this->content;
@@ -80,7 +76,7 @@ class ServiceView implements ViewInterface
         $this->id = PropertyValue::extractValue($value['identifier'], "id");
         $this->navbarService($value['name']);
 
-        $this->content['main'][] = self::listAll($value['orders'], "order", sprintf(_("Orders list of %s"), $value['name']), [
+        $this->content['main'][] = self::listAll($value['orders'], "order", sprintf(_("'%s' service order list"), $value['name']), [
             "orderDate" => _("Order date"),
             "customer" => _("Customer"),
             "seller" => _("Seller"),
@@ -90,12 +86,27 @@ class ServiceView implements ViewInterface
         return $this->content;
     }
 
+    public function provider($data): array
+    {
+        $this->navbarService();
+
+        $providerName = $data['itemListElement'][0]['item']['provider']['name'];
+
+        $this->navbarService(sprintf(_("Services of '%s'"), $providerName), [], 3, false);
+
+        $this->content['main'][] = self::listAll($data, "Service", sprintf(_("Services list of '%s'"), $providerName));
+
+        return $this->content;
+    }
+
     private function serviceForm($case = "new", $value = null): array
     {
         // ID
         $content[] = $case == "edit" ? self::input("id", "hidden", $this->id) : null;
+        // PROVIDER
+        $content[] = self::fieldset( self::chooseType("provider","organization,person", $value['provider'], "name", [ "style" => "display: flex;"]), _("Provider"), [ "style" => "width: 100%" ]);
         // NAME
-        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'], [ "style" => "width: 70%; "]);
+        $content[] = self::fieldsetWithInput(_("Service name"), "name", $value['name'], [ "style" => "width: 70%; "]);
         // ADDITIONAL TYPE
         $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'], [ "style" => "width: 30%; "]);
         // DESCRIPTION
@@ -104,8 +115,6 @@ class ServiceView implements ViewInterface
         //$content[] = self::fieldsetWithInput(_("Has offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'], [ "style" => "width: 100%; "]);
         // SERVICE TYPE
         $content[] = self::fieldsetWithInput(_("Service type"), "serviceType", $value['serviceType'], [ "style" => "width: 100%; "]);
-        // SERVICE OUTPUT
-        //$content[] = self::fieldsetWithInput(_("Service output"), "serviceOutput", $value['serviceOutput'], [ "style" => "width: 100%; "]);
         // TERMS OF SERVICE
         $content[] = self::fieldsetWithTextarea(_("Terms of service"), "termsOfService", $value['termsOfService']);
 

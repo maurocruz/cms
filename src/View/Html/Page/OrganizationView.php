@@ -26,7 +26,7 @@ class OrganizationView
         $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
 
         if ($this->organizationId) {
-            $this->content['navbar'][] = self::navbar($this->organizationName, [], 3);
+            $this->content['navbar'][] = self::navbar($this->organizationName, [ "/admin/service/provider/".$this->organizationId => _("Services") ], 3);
         }
     }
     
@@ -86,7 +86,7 @@ class OrganizationView
         return $this->content;
     }
     
-    static private function formOrganization($case = 'new', $value = null) 
+    static private function formOrganization($case = 'new', $value = null): array
     {
         $content[] = [ "tag" => "h3", "content" => $value['name'] ];
         

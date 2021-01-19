@@ -33,7 +33,7 @@ class ArticleView implements ViewInterface
     {
         $this->navbarArticle();
 
-        $this->content['main'][] = FormElementsTrait::listAll($data, "article", _("List of articles"), [ "datePublished" => _("Date published"), "dateModified" => _("Date modified") ]);
+        $this->content['main'][] = FormElementsTrait::listAll($data, "article", _("List of articles"), [ "headline" => _("Title"), "datePublished" => _("Date published"), "dateModified" => _("Date modified") ]);
 
         return $this->content;
     }
