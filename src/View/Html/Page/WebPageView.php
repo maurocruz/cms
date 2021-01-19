@@ -3,15 +3,15 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
-use Plinct\Web\Widget\FormTrait;
 
 class WebPageView
 {
     protected $content;
     protected $idwebPage;
 
-    use FormTrait;
+    use FormElementsTrait;
     use HtmlPiecesTrait;
     
     public function __construct()
@@ -42,7 +42,7 @@ class WebPageView
     public function new(): array
     {
         $content[] = [ "tag" => "h4", "content" => "Add new webPage" ];
-        $content[] = self::form();
+        $content[] = self::formWebPage();
         $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
         return $this->content;
     }
@@ -57,7 +57,7 @@ class WebPageView
         $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
         
         // EDIT
-        $content['main'][] = self::form("edit", $value);
+        $content['main'][] = self::formWebPage("edit", $value);
         
         // ATTRIBUTES
         $content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", $this->idwebPage, $value['identifier']) ]);
@@ -71,7 +71,7 @@ class WebPageView
         return $this->content;
     }
     
-    private function form($case = "new", $value = null) 
+    private function formWebPage($case = "new", $value = null): array
     {        
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         
