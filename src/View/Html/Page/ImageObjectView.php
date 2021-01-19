@@ -3,7 +3,6 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\ImageObjectWidget;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
@@ -12,7 +11,6 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
     private $content;
 
     use navbarTrait;
-    use FormElementsTrait;
 
     private function navBarImageObject($titleLevel3 = null)
     {
@@ -49,19 +47,19 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
         return $this->content;
     }
 
-    public function edit(array $value): array
+    public function edit(array $data): array
     {
-        $id = PropertyValue::extractValue($value['identifier'], "id");
+        $id = PropertyValue::extractValue($data['identifier'], "id");
 
-        $this->navBarImageObject(_("Image") . ": " . $value['contentUrl']);
+        $this->navBarImageObject(_("Image") . ": " . $data['contentUrl']);
 
         // edit image
         $this->content['main'][] = self::divBox(_("Image"), "ImageObject", [
-            self::formImageObjectEdit($value),
-            self::infoIsPartOf($id, $value['info'])
+            self::formImageObjectEdit($data),
+            self::infoIsPartOf($id, $data['info'])
             ]);
         // author
-        $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [ self::relationshipOneToOne("ImageObject", $id, "author", "Person", $value['author']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [ self::relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author']) ]);
 
         $this->content['main'][] = self::arrowBack();
 
@@ -79,7 +77,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
         return $this->content;
     }
             
-    public function getForm($tableHasPart, $idHasPart, $data = []) 
+    public function getForm($tableHasPart, $idHasPart, $data = []): array
     {
         $this->tableHasPart = $tableHasPart;
         $this->idHasPart = $idHasPart;
@@ -96,7 +94,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
     }
 
         
-    protected function addImagesFromDatabase() 
+    protected function addImagesFromDatabase(): array
     {        
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
@@ -106,7 +104,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
     }
     
-    protected function addImagesFromServer($idwebPage = null) 
+    protected function addImagesFromServer($idwebPage = null): array
     {        
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
