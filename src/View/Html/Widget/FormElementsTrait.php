@@ -18,7 +18,7 @@ trait FormElementsTrait
      * @param array|null $attributes
      * @return array
      */
-    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = null) : array
+    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
     {
         $attributes2['class'] = "choose-type";
         $attributes2['data-property'] = $property;
@@ -27,6 +27,10 @@ trait FormElementsTrait
         $attributes2['data-currentType'] = $value['@type'];
         $attributes2['data-currentName'] = $value['name'];
         $attributes2['data-currentId'] = PropertyValue::extractValue($value['identifier'], "id");
+
+        $widthAttr = "display: flex; min-height: 23px;";
+        $attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
+        unset($attributes['style']);
 
         $attributes3 = $attributes ? array_merge($attributes2, $attributes) : $attributes2;
         return [ "tag" => "div", "attributes" => $attributes3 ];
