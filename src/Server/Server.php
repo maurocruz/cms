@@ -17,7 +17,7 @@ class Server
     {        
         $data = (new $className())->post($params);
 
-        if (isset($data['id'])) {
+        if (isset($data['id']) && !isset($params['tableHasPart'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
         }
 
