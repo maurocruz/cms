@@ -71,22 +71,6 @@ class OfferView implements ViewInterface
         return $content;
     }
 
-    public static function formChooseType($tableHasPart, $idHasPart, $idSeller, $n, $value = null): array
-    {
-        $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
-        $content[] = self::input("idHasPart", "hidden", $idHasPart);
-        $content[] = $n.": ";
-        $content[] = self::chooseType("itemOffered", "service,product", $value['itemOffered'], "name", [ "style" => "width: 70%; display: inline-flex;", "data-params" => "provider=$idSeller" ]);
-
-        $content[] = $value['price'] ? self::input("price", "text", $value['priceCurrency']." ".number_format($value['price'],2,',','.'), [ "readonly", "style" => "width: auto; margin-left: 2px;" ]): null;
-
-        $content[] = self::submitButtonSend([ "style" => "height: 30px; vertical-align: middle" ]);
-        $content[] = $value ? self::submitButtonDelete("/admin/offer/erase", [ "style" =>"height: 30px; vertical-align: middle" ]) : null;
-
-        $case = $tableHasPart == "order" ? "addInOrder" : "new";
-        return self::form("/admin/offer/$case", $content);
-    }
-
     private static function formOffer($value = null): array
     {
         $case = $value ? "edit" : "new";

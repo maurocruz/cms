@@ -14,7 +14,7 @@ class InvoiceView implements ViewInterface
     private static $customer;
     private static $customerType;
     private static $provider;
-    private static $providerType;
+    protected static $providerType;
 
     private $content = [];
 
@@ -67,22 +67,7 @@ class InvoiceView implements ViewInterface
 
     public static function getForm($tableHasPart, $idHasPart, $data): array
     {
-        self::$tableHasPart = $tableHasPart;
-        self::$idHasPart = $idHasPart;
-
-        self::$provider = PropertyValue::extractValue($data['seller']['identifier'], "id");
-        self::$providerType = $data['sellerType'];
-        self::$customer = PropertyValue::extractValue($data['customer']['identifier'], "id");
-        self::$customerType = $data['customerType'];
-
-        if(!empty($data['partOfInvoice'])) {
-            foreach ($data['partOfInvoice'] as $key => $value) {
-                $content[] = self::formInvoice($value, $key+1);
-            }
-        }
-        // NEW
-        $content[] = self::formInvoice();
-
+        $content[] = PaymentView::edit($data);
         return $content;
     }
 

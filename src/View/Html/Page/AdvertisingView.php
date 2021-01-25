@@ -60,18 +60,17 @@ class AdvertisingView
         if ($data['itemListElement']) {
             foreach ($data['itemListElement'] as $key => $value) {
                 $item = $value['item'];
-                
                 $id = PropertyValue::extractValue($item['identifier'], "id");
                 
-                $body[] = [ "tag" => "tr", "attributes" => [ "style" => $item['status'] == 1 ? "opacity: 1;" : "opacity: 0.5;" ], "content" => [
+                $body[] = [ "tag" => "tr", "attributes" => [ "style" => $item['orderStatus'] == 'orderProcessing' ? "opacity: 1;" : "opacity: 0.5;" ], "content" => [
                     [ "tag" => "td", "content" => $key+1 ],
                     [ "tag" => "td", "content" => $id ],
-                    [ "tag" => "td", "content" => DateTime::formatDate($item['data']) ],
+                    [ "tag" => "td", "content" => DateTime::formatDate($item['orderDate']) ],
                     [ "tag" => "td", "content" => $item['customer']['name'] ],
-                    [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/$id\">". self::contractTypeNumberToString($item['tipo'])."</a>" ],
-                    [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($item['vencimento']) ],
+                    [ "tag" => "td", "content" => "<a href=\"/admin/order/edit/$id\">". self::contractTypeNumberToString($item['tipo'])."</a>" ],
+                    [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($item['paymentDueDate']) ],
                     [ "tag" => "td", "attributes" => [ "style" => "text-align: right;" ], "content" => number_format($item['valor'],2,",",".") ],
-                    [ "tag" => "td", "content" => $item['status'] ]
+                    [ "tag" => "td", "content" => $item['orderStatus'] ]
                 ]];
             }
             
@@ -94,15 +93,15 @@ class AdvertisingView
 
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Add contract") ];        
         // contract
-        $this->content['main'][] = self::form("new", $data);
+        $this->content['main'][] = self::formOrder("new", $data);
         
         return $this->content;
     }
     
     public function edit(array $data): array
-    {        
-        $advertising = $data['advertising'];        
-        $customer = $advertising['customer'];
+    {
+        $order = $data['order'];
+        $customer = $order['customer'];
         $banner = $data['banner'] ?? null;
         
         $this->navbarAd();
@@ -113,13 +112,13 @@ class AdvertisingView
         $this->content['main'][] = [ "tag" => "p", "content" => _("View ad"), "href" => "/". str_replace(" ", "", $customer['name'])."/".$idLocalBusiness, "hrefAttributes" => [ "target" => "_blank" ] ];
         
         // advertising
-        $this->content['main'][] = self::form("edit", $advertising);
+        $this->content['main'][] = self::formOrder("edit", $order);
         
         // payments
-        $this->content['main'][] = (new PaymentView())->edit($data);
+        $this->content['main'][] = self::divBox(_("Invoices"), "invoice", (new PaymentView())->edit($order));
         
         // history
-        $this->content['main'][] = (new HistoryView())->view($data['history']);
+        $this->content['main'][] = (new HistoryView())->view($order['history']);
                
         // banner
         $this->content['main'][] = $banner ? (new BannerView())->getBannerByIdcontrato($banner) : null;
@@ -127,7 +126,7 @@ class AdvertisingView
         return $this->content;
     }
     
-    static private function form($case = "new", $value = null) 
+    private static function formOrder($case = "new", $value = null): array
     {
         
         $content[] = [ "tag" => "h3", "content" => $value['customer']['name'] ?? _("New advertising") ];
@@ -185,9 +184,9 @@ class AdvertisingView
          ]];
         
         // status
-        $valuesStatus = [ 0 => "Inativo", 1 => "Ativo", 2 => "Suspenso" ];
+        $valuesStatus = [ "0" => "Inativo", "orderPrecessing" => "Ativo", "orderSuspended" => "Suspenso" ];
         if ($case == "edit") {
-            $statusValue[] = [ "tag" => "option", "attributes" => [ "value" => $value['status'] ], "content" => ucfirst($valuesStatus[$value['status']]) ];
+            $statusValue[] = [ "tag" => "option", "attributes" => [ "value" => $value['orderStatus'] ], "content" => ucfirst($value['orderStatus']) ];
         }
         $statusValue[] = [ "tag" => "option", "attributes" => [ "value" => 0 ], "content" => _("Choose...") ];
         foreach ($valuesStatus as $key => $valueOption) {
@@ -224,20 +223,21 @@ class AdvertisingView
         $total = 0;
         foreach ($data['itemListElement'] as $key => $value) {
             $tbody[] = [ "tag" => "tr", "content" => [
-                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($value['vencimentoparc']) ],
-                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => number_format($value['valorparc'],2,",",".") ],
-                [ "tag" => "td", "content" => $value['name']." <a href=\"/admin/advertising/edit/".$value['idadvertising']."\">-></a>" ],
-                [ "tag" => "td", "content" => $value['parcela']." / ".$value['number_parc'] ],
-                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idadvertising']."\">".$value['contrato_name']."</a>" ],
-                [ "tag" => "td", "content" => $value['status'] == 2 ? 'Suspenso' : ($value['status'] == 1 ? 'Ativo' : 'Inativo') ]
+                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($value['paymentDueDate']) ],
+                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => number_format($value['totalPaymentDue'],2,",",".") ],
+                [ "tag" => "td", "content" => $value['name']." <a href=\"/admin/advertising/edit/".$value['idorder']."\">-></a>" ],
+                [ "tag" => "td", "content" => ($key+1)." / ".$value['number_parc'] ],
+                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idorder']."\">".$value['contrato_name']."</a>" ],
+                [ "tag" => "td", "content" => $value['orderStatus'] == 'orderSuspended' ? 'Suspenso' : ($value['orderStatus'] == 'orderProcessing' ? 'Ativo' : 'Inativo') ]
             ]];
-            $total += $value['valorparc'];
+            $total += $value['totalPaymentDue'];
         }
         // total
         $tbody[] = [ "tag" => "tr", "attributes" => [ "style" => "background-color: rgba(0,0,0,0.65);" ], "content" => [
             [ "tag" => "td", "attributes" => [ "style" => "text-align: center"], "content" => "TOTAL" ],
             [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => "R$ ".number_format($total,2,",",".") ],
             [ "tag" => "td", "attributes" => [ "style" => "text-align: center"], "content" => ($key+1). " itens" ],
+            [ "tag" => "td", "content" => "" ],
             [ "tag" => "td", "content" => "" ],
             [ "tag" => "td", "content" => "" ]
         ]];
@@ -274,9 +274,9 @@ class AdvertisingView
         
         foreach ($data['itemListElement'] as $key => $value) {
             $tbody[] = [ "tag" => "tr", "content" => [
-                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($value['vencimento']) ],
+                [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($value['paymentDueDate']) ],
                 [ "tag" => "td", "content" => $value['name'] ],
-                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idadvertising']."\">".$value['contrato_name']."</a>" ]
+                [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idorder']."\">".$value['contrato_name']."</a>" ]
             ]];
         }   
         
@@ -297,7 +297,7 @@ class AdvertisingView
         return $this->content;
     }
     
-    static private function selectPeriodo($numberOfItens, $section) 
+    static private function selectPeriodo($numberOfItens, $section): array
     {
         $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/advertising/$section", "method" => "get" ], "content" => [
             [ "tag" => "select", "attributes" => [ "onchange" => "submit();", "name" => "period" ], "content" => [
