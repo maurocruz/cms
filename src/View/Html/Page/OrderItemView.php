@@ -119,8 +119,8 @@ class OrderItemView implements ViewInterface
 
          $content[] = "Add new: ";
          $content[] = self::fieldset(self::chooseType("orderedItem", "service,product", null, "name", [ "data-params" => "provider=$idSeller" ]), _("Ordered item"), [ "style" => "width: 70%; "]);
-
-         $content[] = self::fieldsetWithInput(_("Order quantity"), "orderQuantity", null, [ "style" => "width: 170px;"]);
+         // QUANTITY
+         $content[] = self::fieldsetWithInput(_("Order quantity"), "orderQuantity", "1", [ "style" => "width: 170px;"], "number", [ "min" => "1" ]);
 
          $content[] = self::submitButtonSend();
 
