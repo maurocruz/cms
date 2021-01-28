@@ -3,13 +3,8 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Server\PDOConnect;
-use Plinct\Api\Type\Invoice;
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Api\Type\LocalBusiness;
 use Plinct\Api\Type\Order;
-use Plinct\Api\Type\Payment;
-use Plinct\Api\Type\History;
-use Plinct\Api\Type\Banner;
 
 class AdvertisingController 
 {
@@ -46,36 +41,7 @@ class AdvertisingController
 
     public function edit($params): array 
     {
-        // advertising
-        $params["properties"] = "*,customer,partOfInvoice,history";
-        $adverisingData = (new Order())->get($params);
-
-        if (isset($adverisingData['message']) && $adverisingData['message'] == "No data founded") {
-            $response = $adverisingData;
-            
-        } else {
-            $response['order'] = $adverisingData[0];
-            $idorder = PropertyValue::extractValue($adverisingData[0]['identifier'], 'id');
-
-            // payments
-            /*$paramsPayment = [ "where" => "`referencesOrder`=$idorder", "orderBy" => "paymentDueDate DESC" ];
-            $paymentData = (new Invoice())->get($paramsPayment);
-            $response['invoice'] = $paymentData;
-
-            // history
-            $paramsHistory = [ "tableHasPart" => "order", "idHasPart" => $idorder ];
-            $historyData = (new History())->get($paramsHistory);
-            $response['history'] = $historyData;*/
-
-            // banner
-            if ($adverisingData[0]['tipo'] == '4') {
-                $paramsBanner = [ "where" => "`idorder`=$idorder" ];
-                $bannerData = (new Banner())->get($paramsBanner);
-                $response['banner'] = $bannerData[0] ?? null;
-            }
-        }
-
-        return $response;
+        return (new OrderController())->edit($params);
     }
     
     public function new(): array
