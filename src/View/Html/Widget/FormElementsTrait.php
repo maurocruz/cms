@@ -9,7 +9,16 @@ trait FormElementsTrait
 {
     use FormTrait;
 
-    protected static function div($title, $type, $content)
+    /**
+     * Creates a type selection form and chooses the type from a pop-up in an input form
+     * @param string $property
+     * @param string|array $typesForChoose
+     * @param array|bool $value
+     * @param string $nameLike
+     * @param array|null $attributes
+     * @return array
+     */
+    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
     {
         $attributes2['class'] = "choose-type";
         $attributes2['data-property'] = $property;
@@ -123,44 +132,6 @@ trait FormElementsTrait
     }
 
     public static function listAll($data, $type, string $title = null, array $row_column = null): ?array
-    {
-        $attr = [ "name" => $name, "type" => $type, "value" => $value ];
-
-        $attr2 = $attributes ? array_merge($attr, $attributes) : $attr;
-
-        return [ "tag" => "input", "attributes" => $attr2 ];
-    }
-
-    protected static function fieldsetWithInput($legend, $name, $value, $attributes = null, $type = "text", $inputAttributes = null)
-    {
-        $attr = [ "name" => $name, "type" => $type, "value" => $value ];
-        $attributesInput = $inputAttributes ? array_merge($attr, $inputAttributes) : $attr;
-
-        return [ "tag" => "fieldset", "attributes" => $attributes, "content" => [
-            [ "tag" => "legend", "content" => _($legend) ],
-            [ "tag" => "input", "attributes" => $attributesInput ]
-        ]];
-    }
-
-    protected static function fieldsetWithTextarea($legend, $name, $value, $height = 150, $attributes = null, $attributes_textarea = null)
-    {
-        // attributes fieldset
-        $h = $height."px";
-        $attrFieldset = [ "style" => "width: 100%; min-height: $h;" ];
-
-        $attributesFieldset = $attributes ? array_merge($attrFieldset, $attributes) : $attrFieldset;
-        // attributes textarea
-        $attrTextarea = [ "name" => $name, "id" => "textarea-$name", "style" => "min-height: calc($h - 50px);" ];
-        $attr = $attributes_textarea ? array_merge($attrTextarea, $attributes_textarea) : $attrTextarea;
-
-        return [ "tag" => "fieldset", "attributes" => $attributesFieldset, "content" => [
-            [ "tag" => "legend", "content" => _($legend) ],
-            [ "tag" => "textarea", "attributes" => $attr, "content" => $value ],
-            [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textarea-$name',$height);", "style" => "width: 96%; display: block; font-size: 0.85em;" ], "content" => sprintf(_("Expandir textarea em %s"), $h) ]
-        ]];
-    }
-
-    public static function listAll($data, $type, string $title = null, array $row_column = null)
     {
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
@@ -276,16 +247,5 @@ trait FormElementsTrait
             ]];
         }
         return null;
-    }
-
-    public static function search($action, $name,  $value = null, $method = "get")
-    {
-        return [ "tag" => "form", "attributes" => [ "name" => "formSearch", "class" => "form", "action" => $action, "method" => $method ], "content" => [
-            [ "tag" => "fieldset", "content" => [
-                [ "tag" => "legend", "content" => _("Search") ],
-                [ "tag" => "input", "attributes" => [ "name" => $name, "type" => "text", "value" => $value ]],
-                [ "tag" => "input", "attributes" => [ "type" => "submit", "value" => _("Submit") ] ]
-            ] ]
-        ]];
     }
 }
