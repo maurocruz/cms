@@ -40,6 +40,9 @@ msgstr "Não"
 msgid "Search"
 msgstr "Procurar"
 
+msgid "Provider"
+msgstr "Fornecedor"
+
 msgid "Submit"
 msgstr "Enviar"
 
@@ -423,9 +426,109 @@ msgstr "preços"
 msgid "price valid until"
 msgstr "Preço válido até"
 
+msgid "Price currency"
+msgstr "Moeda corrente"
+
+msgid "Valid through"
+msgstr "Válido até"
+
 msgid "list of '%s' offers"
 msgstr "Ofertas de '%s'"
 
+msgid "Discontinued"
+msgstr "Interrompido"
+
+msgid "In stock"
+msgstr "Em estoque"
+
+msgid "InStock"
+msgstr "Em estoque"
+
+msgid "In store only"
+msgstr "Somente na loja"
+
+msgid "InStoreOnly"
+msgstr "Somente na loja"
+
+msgid "Limited availability"
+msgstr "Disponibilidade limitada"
+
+msgid "LimitedAvailability"
+msgstr "Disponibilidade limitada"
+
+msgid "Online only"
+msgstr "Somente online"
+
+msgid "OnlineOnly"
+msgstr "Somente online"
+
+msgid "Out of stock"
+msgstr "Sem estoque"
+
+msgid "OutOfStock"
+msgstr "Sem estoque"
+
+msgid "Pre sale"
+msgstr "Pré venda"
+
+msgid "PreSale"
+msgstr "Pré venda"
+
+msgid "Sould out"
+msgstr "Vendido"
+
+msgid "SouldOut"
+msgstr "Vendido"
+
+################################   ORDER   #######################################
+
+msgid "Order"
+msgstr "Pedido"
+
+msgid "Seller"
+msgstr "Vendedor"
+
+msgid "Pre order"
+msgstr "Pedido antecipado"
+
+msgid "PreOrder"
+msgstr "Pedido antecipado"
+
+msgid "Order Cancelled"
+msgstr "Pedido cancelado"
+
+msgid "Order suspended"
+msgstr "Pedido suspenso"
+
+msgid "Order delivered"
+msgstr "Pedido entregue"
+
+msgid "Order in transit"
+msgstr "Pedido em trânsito"
+
+msgid "Order payment due"
+msgstr "Pedido com pagamento devido"
+
+msgid "Order pickup available"
+msgstr "Pedido disponível para coleta"
+
+msgid "Order problem"
+msgstr "Pedido com problema"
+
+msgid "Order processing"
+msgstr "Pedido em procesamento"
+
+msgid "Order returned"
+msgstr "Pedido devolvido"
+
+msgid "Order date"
+msgstr "Data do Pedido"
+
+msgid "Order status"
+msgstr "Status do pedido"
+
+msgid "Payment due date"
+msgstr "Data do vencimento"
 
 ############################   ORGANIZATION   ##################################
 
@@ -573,6 +676,12 @@ msgstr "Serviços de '%s'"
 
 msgid "list of '%s' services"
 msgstr "Lista de serviços de '%s'"
+
+msgid "Service type"
+msgstr "Tipo de serviço"
+
+msgid "Terms of service"
+msgstr "Termos do serviço"
 
 ##############################   TRAVEL AGENCY   ###############################
 

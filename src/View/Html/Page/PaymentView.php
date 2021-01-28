@@ -5,91 +5,86 @@ namespace Plinct\Cms\View\Html\Page;
 use DateTime;
 use Exception;
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 
 class PaymentView
-{      
-    public function edit(array $data): array
-    {
-        $idadvertising = PropertyValue::extractValue($data['advertising']['identifier'], "id");
-        
-        $content[] = [ "tag" => "h4", "content" => "Payments" ];  
-        
-        $data_exists = isset($data['payment']['message']) && $data['payment']['message'] == "No data founded" ? false : true;
-        
-        // new
-        $nparc = $data_exists === true ? (count($data['payment'])+1) : 1;
-        
-        $content[] = self::form($idadvertising, "new", null, $nparc );
-        
-        if ($data_exists) {
-            foreach ($data['payment'] as $value) {
-                $content[] = self::form($idadvertising, 'edit', $value);
-            }
+{
+    private static $totalPaymentAmount;
 
-            // balance
-            $content[] = self::balance($data['payment']);  
-        }
+    use FormElementsTrait;
+
+    public static function edit(array $data): array
+    {
+        $idorder = $data['idorder'];
+
+        $lenght = count($data['partOfInvoice']);
+        $content[] = self::formPayment($idorder, "new", null, $lenght+1 );
         
-        return [ "tag" => "div", "attributes" => [ "id" => "account-form", "class" => "box" ], "content" => $content ];
+        if ($lenght > 0) {
+            foreach ($data['partOfInvoice'] as $key => $value) {
+                $content[] = self::formPayment($idorder, 'edit', $value, $lenght - $key);
+            }
+            // balance
+            $dadosSaldo = self::saldoData($data['partOfInvoice']);
+            $content[] = self::balance($dadosSaldo);
+        }
+        return $content;
     }
     
-    private static function form($idadvertising, $case = 'new', $value = null, $n = null) 
+    private static function formPayment($idorder, $case = 'new', $value = null, $n = null): array
     {
-        $idpayment = $value ? PropertyValue::extractValue($value['identifier'], "id") : null;
-        
-        // hiddens
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "advertising", "type" => "hidden"] ];        
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $idadvertising, "type" => "hidden"] ];        
-        
+        $idinvoice = $value ? PropertyValue::extractValue($value['identifier'], "id") : null;
+
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "order", "type" => "hidden"] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $idorder, "type" => "hidden"] ];
+
         if ($case == "edit") {
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idpayment, "type" => "hidden"] ];
+            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
         }   
                     
-        // parcela
-        $p = $case == "new" ? $n : $value['parcela'];
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            $case == "new" ? [ "tag" => "legend", "content" => "Parcela" ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "parcela", "value" => $p, "type" => "text" ] ]
-        ]];        
-        // valor
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            $case == "new" ? [ "tag" => "legend", "content" => "Valor" ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "valorparc", "value" => $value['valorparc'], "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right;" ]]
+        // #
+        $p = $case == "new" ? "+" : $n;
+        $content[] = "<span style=\"display: inline-block; width: 30px;\">".$p.".</span>";
+        // TOTAL PAYMENT DUE
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 135px; display: inline-block;"], "content" => [
+            $case == "new" ? [ "tag" => "legend", "content" => _("Total payment due") ] : null,
+            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'], "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right; width: inherit;" ]]
         ]];
-        // Vencimento
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            $case == "new" ? [ "tag" => "legend", "content" => "Vencimento" ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "vencimentoparc", "value" => $value['vencimentoparc'], "type" => "date" ]]
+        // Payment due date
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 145px; display: inline-block;"], "content" => [
+            $case == "new" ? [ "tag" => "legend", "content" => _("Payment due date") ] : null,
+            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'], "type" => "date", "style" => "width: inherit;" ]]
         ]];
         // Quitado em
         $content[] = [ "tag" => "fieldset", "content" => [ 
-            $case == "new" ? [ "tag" => "legend", "content" => "Quitado em" ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "quitado", "value" => $value['quitado'], "type" => "date" ]]
+            $case == "new" ? [ "tag" => "legend", "content" => _("Payment date") ] : null,
+            [ "tag" => "input", "attributes" => [ "name" => "paymentDate", "value" => $value['paymentDate'], "type" => "date" ]]
         ]];
-                
-        if ($case == "new") {
-            $content[] = [ "tag" => "fieldset", "content" => [ 
-                [ "tag" => "input", "attributes" => [ "name" => "submit", "value" => "Adicionar novo", "class" => "form-button-submit", "type" => "submit" ]]
-            ]];
-        } elseif ($case == "edit" ) {
-            $content[] = [ "tag" => "fieldset", "content" => [ 
-                [ "tag" => "input", "attributes" => [ "name" => "submit", "value" => "Atualizar", "class" => "form-button-submit", "onclick" => "this.value = 'Aguarde...'", "type" => "submit" ]]
-            ]];
-            $content[] = [ "tag" => "fieldset", "content" => [ 
-                [ "tag" => "input", "attributes" => [ "name" => "submit", "value" => "Eliminar", "class" => "form-button-submit", "onclick" => "return confirm('Tem certeza que deseja excluir esta parcela?'); this.value = 'Aguarde...'", "formaction" => "/admin/payment/erase", "type" => "submit" ]]
-            ]];
-        }
+        // PAYMENT STATUS
+        $content[] = [ "tag" => "fieldset", "content" => [
+            $case == "new" ? [ "tag" => "legend", "content" => _("Payment status") ] : null,
+            self::select("paymentStatus", $value['paymentStatus'], [
+                "PaymentAutomaticallyApplied" => _("Payment automatically applied"),
+                "PaymentComplete" => _("Payment complete"),
+                "PaymentDeclined" => _("Payment declined"),
+                "PaymentDue" => _("Payment due"),
+                "PaymentPastDue" => _("Payment past due")
+            ])
+        ]];
+        // submit
+        $content[] = self::submitButtonSend([ "style" => "height: 30px; background-color: transparent !important; padding: 0 5px; border: 0;"]);
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase", [ "style" => "height: 30px; background-color: transparent !important; padding: 0; border: 0;"]) : null;
         
-        return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idpayment, "name" => "form-payments", "action" => "/admin/payment/".$case, "method" => "post", "class" => "form-table ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['valorparc','vencimentoparc']);" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
     }
     
-    static private function classStyle($value) 
+    static private function classStyle($value): string
     {
         $expired = null;
         $now = new DateTime();
 
         try {
-            $expired = new DateTime($value['vencimentoparc']);
+            $expired = new DateTime($value['paymentDueDate']);
         } catch (Exception $e) {
         }
         $diff = $expired->diff($now);
@@ -97,7 +92,7 @@ class PaymentView
         if ($value == null) { 
             return "form-back-gray"; 
             
-        } elseif ($value['quitado'] && $value['quitado'] !== "0000-00-00") {
+        } elseif ($value['paymentDate'] && $value['paymentDate'] !== "0000-00-00") {
             return "form-back-green";
             
         } elseif($diff->invert == 0) {
@@ -111,49 +106,63 @@ class PaymentView
         }
     }
 
+    private static function balance($dadosSaldo): array
+    {
+        $totalWithoutDiscount = OrderItemView::$totalWithoutDiscount;
+        $totalWithDiscount = OrderItemView::$totalWithDiscount;
+        if($totalWithDiscount != self::$totalPaymentAmount) {
+            $diffWithoutDiscount = self::$totalPaymentAmount - $totalWithoutDiscount;
+            $diffWithDiscount = self::$totalPaymentAmount - $totalWithDiscount;
+            $content[] = [ "tag" => "tr", "attributes" => [ "style" => "background-color: #e7e7e7; color: red;" ], "content" => [
+                [ "tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => sprintf(_("Order total does not match invoice total. Differences: without discount %s; with discount %s"), number_format($diffWithoutDiscount,2,',','.'), number_format($diffWithDiscount,2,',','.')) ]
+            ]];
+        }
+        
+        $content[] = [
+            [ "tag" => "tr", "attributes" => [ "style" => "background-color: #e7e7e7;" ], "content" => [
+                [ "tag" => "td", "attributes" => [ "style" => "color: blue;" ], "content" => number_format(self::$totalPaymentAmount,2,",",".") ],
+                [ "tag" => "td", "attributes" => [ "style" => "color: blue;" ], "content" => number_format($dadosSaldo['credito'],2,",",".") ],
+                [ "tag" => "td", "attributes" => [ "style" => "color: #333" ], "content" => number_format($dadosSaldo['debito'],2,",",".") ],
+                [ "tag" => "td", "attributes" => [ "style" => "color: red;" ], "content" => "(".number_format($dadosSaldo['atrasado'],2,",",".").")" ]
+            ] ]
+        ];
 
-    private static function balance($data) {        
-        $dadosSaldo = self::saldoData($data);        
-        return [ "tag" => "table", "content" => [
-            [ "tag" => "h5", "content" => "Saldo" ],
+        return [ "tag" => "table", "attributes" => [ "style" => "margin-top: 10px; text-align: center; font-weight: bold;" ], "content" => [
+            [ "tag" => "caption", "attributes" => [ "style" => "font-size: 1em;" ], "content" => _("Balance") ],
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
-                    [ "tag" => "th", "content" => "Total das parcelas"],
-                    [ "tag" => "th", "content" => "Valor pago"],
-                    [ "tag" => "th", "content" => "Valor a receber"],
-                    [ "tag" => "th", "content" => "Valor em débito"]
+                    [ "tag" => "th", "content" => _("Total order amount") ],
+                    [ "tag" => "th", "content" => _("Amounts paid") ],
+                    [ "tag" => "th", "content" => _("Amounts payable") ],
+                    [ "tag" => "th", "content" => _("Amounts past due") ]
                 ]]
             ]],
-            [ "tag" => "tbody", "content" => [
-                [ "tag" => "tr", "content" => [
-                    [ "tag" => "td", "content" => "R$ ".number_format($dadosSaldo['total'],2,",",".") ],
-                    [ "tag" => "td", "content" => "RS ".number_format($dadosSaldo['credito'],2,",",".") ],
-                    [ "tag" => "td", "content" => "RS ".number_format($dadosSaldo['debito'],2,",",".")],
-                    [ "tag" => "td", "content" => "RS ".number_format($dadosSaldo['atrasado'],2,",",".")]
-                ]]
-            ]]
+            [ "tag" => "tbody", "content" => $content ]
         ]];
     }
     
     // SALDO
-    private static function saldoData($data) {        
+    private static function saldoData($data): array
+    {
         $dadosSaldo = [];
-        $dadosSaldo['total'] = 0;
+        $totalPaymentAmount = 0;
         $dadosSaldo['credito'] = 0;
         $dadosSaldo['debito'] = 0;
         $dadosSaldo['atrasado'] = 0;
         
         foreach ($data as $value) {
-            $paid = $value['quitado'] !== "0000-00-00" && $value['quitado'] !== null;
+            $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
             // total
-            $dadosSaldo['total'] += $value['valorparc'];
+            $totalPaymentAmount += $value['totalPaymentDue'];
             // pago            
-            $dadosSaldo['credito'] += $paid ? $value['valorparc'] : 0;
+            $dadosSaldo['credito'] += $paid ? $value['totalPaymentDue'] : 0;
             // debito
-            $dadosSaldo['debito'] += $paid ? null : $value['valorparc'];
+            $dadosSaldo['debito'] += $paid ? null : $value['totalPaymentDue'];
             // atrasado
-            $dadosSaldo['atrasado'] += $paid && $value['vencimentoparc'] < date("Y-m-d") ? $value['valorparc'] : null;
+            $dadosSaldo['atrasado'] += $paid === false && $value['paymentDueDate'] < date("Y-m-d") ? $value['totalPaymentDue'] : null;
         }
+
+        self::$totalPaymentAmount = $totalPaymentAmount;
         
         return $dadosSaldo;
     }

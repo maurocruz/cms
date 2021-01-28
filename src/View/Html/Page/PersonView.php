@@ -53,8 +53,8 @@ class PersonView
         $value = $data[0];
         
         $id = PropertyValue::extractValue($value['identifier'], "id");
-        
-        $this->navbarPerson($id, $value['name']);
+
+        $this->navbarPerson($id, $value['name'] ?? "ND");
         
         // form
         $this->content['main'][] = self::form('edit', $value);

@@ -16,12 +16,12 @@ class BannerView
         $content[] = [ "tag" => "h4", "content" => "Banner" ];
 
         if ($id) {
-            $content[] = self::formBanner($data['idadvertising'], "edit", $data);
+            $content[] = self::formBanner($data['idorder'], "edit", $data);
             // images
             $content[] = (new ImageObjectView())->getForm("banner", $id, $data['image']);
             
         } else {
-            $content[] = self::formBanner($data['idadvertising']);
+            $content[] = self::formBanner($data['idorder']);
         } 
         
         return [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];

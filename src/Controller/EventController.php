@@ -15,7 +15,7 @@ class EventController implements ControllerInterface
         return (new Event())->get($params2);
     }
 
-    public function new()
+    public function new($params = null)
     {
         return true;
     }

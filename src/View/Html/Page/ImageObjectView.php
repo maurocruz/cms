@@ -90,6 +90,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface
         $content[] = self::addImagesFromDatabase();
         // save with a server image
         $content[] = self::addImagesFromServer();
+
         return $content;
     }
 

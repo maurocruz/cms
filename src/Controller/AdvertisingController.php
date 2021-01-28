@@ -3,105 +3,61 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Server\PDOConnect;
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Api\Type\LocalBusiness;
-use Plinct\Api\Type\Advertising;
-use Plinct\Api\Type\Payment;
-use Plinct\Api\Type\History;
-use Plinct\Api\Type\Banner;
+use Plinct\Api\Type\Order;
 
 class AdvertisingController 
 {
-    public function index($params) 
+    public function index($params): array
     {
         $search = $params['search'] ?? null;
         
         if ($search) {
-            $query = "SELECT * FROM advertising,localBusiness WHERE localBusiness.name LIKE '%$search%' AND localBusiness.idlocalBusiness=advertising.customer ORDER BY vencimento DESC, status DESC;";
-            
+            $query = "SELECT * FROM `order`,localBusiness WHERE localBusiness.name LIKE '%$search%' AND localBusiness.idlocalBusiness=`order`.customer ORDER BY paymentDueDate DESC, orderStatus DESC;";
             $data = PDOConnect::run($query);
             
             $response['numberOfItems'] = count($data);
-            
             foreach ($data as $value) {
-                //var_dump($value);
-                $item['item']['identifier'][] = [ "value" => $value['idadvertising'], "name" => "id" ]; 
+                $item['item']['identifier'][] = [ "value" => $value['idorder'], "name" => "id" ];
                 $item['item']['customer']['name'] = $value['name']; 
-                $item['item']['status'] = $value['status']; 
-                $item['item']['data'] = $value['data']; 
+                $item['item']['orderStatus'] = $value['orderStatus'];
+                $item['item']['orderDate'] = $value['orderDate'];
                 $item['item']['tipo'] = $value['tipo']; 
-                $item['item']['vencimento'] = $value['vencimento']; 
+                $item['item']['paymentDueDate'] = $value['paymentDueDate'];
                 $item['item']['valor'] = $value['valor']; 
                 $response['itemListElement'][] = $item;
                 unset($item);
             }
-            
             return $response;
             
-        } else {        
-
-            $requiredParams = [ "format" => "ItemList", "where" => "vencimento >=CURDATE()", "orderBy" => "vencimento" ];
-
+        } else {
+            $requiredParams = [ "format" => "ItemList", "properties" => "*,customer", "where" => "paymentDueDate>=CURDATE()", "orderBy" => "paymentDueDate" ];
             $finalParams = array_merge($requiredParams, $params);
-
-            $data = (new Advertising())->get($finalParams);
+            $data = (new Order())->get($finalParams);
         }
-        
         return $data;
     }
 
 
     public function edit($params): array 
     {
-        // advertising
-        $params["properties"] = "tags,history";        
-        $adverisingData = (new Advertising())->get($params);
-        
-        if (isset($adverisingData['message']) && $adverisingData['message'] == "No data founded") {
-            $response = $adverisingData;
-            
-        } else {
-            $response['advertising'] = $adverisingData[0];
-            $idadvertising = PropertyValue::extractValue($adverisingData[0]['identifier'], 'id');
-
-            // payments
-            $paramsPayment = [ "where" => "`idadvertising`=$idadvertising", "orderBy" => "vencimentoparc", "ordering" => "desc" ];
-            $paymentData = (new Payment())->get($paramsPayment);        
-            $response['payment'] = $paymentData;
-
-            // history
-            $paramsHistory = [ "tableHasPart" => "advertising", "idHasPart" => $idadvertising, "orderBy" => "datetime", "ordering" => "desc" ];
-            $historyData = (new History())->get($paramsHistory);
-            $response['history'] = $historyData;
-
-            // banner
-            if ($adverisingData[0]['tipo'] == '4') {
-                $paramsBanner = [ "where" => "`idadvertising`=$idadvertising" ];
-                $bannerData = (new Banner())->get($paramsBanner);
-                $response['banner'] = $bannerData[0] ?? null;
-            }
-        }
-        
-        return $response;
+        return (new OrderController())->edit($params);
     }
     
-    public function new() 
+    public function new(): array
     {
         return (new LocalBusiness())->get([ "limit" => "none", "orderBy" => "name" ]);
     }
     
-    public function payment()
+    public function payment(): array
     {
         $date = self::translatePeriod(filter_input(INPUT_GET, 'period'));
         
-        $query = "SELECT *, (SELECT COUNT(*) FROM payment WHERE payment.idadvertising=advertising.idadvertising) as number_parc FROM payment, advertising, localBusiness, contratostipos WHERE (payment.quitado = '0000-00-00' OR payment.quitado is null) AND payment.idadvertising=advertising.idadvertising and advertising.status!=0 AND advertising.customer=localBusiness.idlocalBusiness AND advertising.tipo=contratostipos.idcontratostipo";
-        $query .= $date ? " AND payment.vencimentoparc <= '$date'" : null;
-        $query .= " ORDER BY vencimentoparc ASC";
-        $query .= ";";
+        $query = "SELECT *, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as number_parc FROM `invoice`, `order`, localBusiness, contratostipos WHERE (`invoice`.paymentDate = '0000-00-00' OR `invoice`.paymentDate is null) AND `invoice`.referencesOrder=`order`.idorder and `order`.orderStatus!='' AND `order`.customer=localBusiness.idlocalBusiness AND `order`.tipo=contratostipos.idcontratostipo";
+        $query .= $date ? " AND `invoice`.paymentDueDate <= '$date'" : null;
+        $query .= " ORDER BY `invoice`.paymentDueDate ASC;";
 
         $data = PDOConnect::run($query);
-
-        //var_dump($data);
 
         return [
             "@type" => "ItemList",
@@ -110,14 +66,13 @@ class AdvertisingController
         ];
     }
     
-    public function expired() 
+    public function expired(): array
     {           
         $dateLimit = self::translatePeriod(filter_input(INPUT_GET, 'period'));
             
-        $query = "SELECT advertising.*, localBusiness.name, contratostipos.contrato_name FROM advertising, contratostipos, localBusiness WHERE advertising.status=1 AND contratostipos.idcontratostipo=advertising.tipo AND advertising.customer=localBusiness.idlocalBusiness";
-        $query .= $dateLimit ? " AND advertising.vencimento < '$dateLimit'" : null;
-        $query .= " ORDER BY vencimento ASC";
-        $query .= ";";
+        $query = "SELECT `order`.*, localBusiness.name, contratostipos.contrato_name FROM `order`, contratostipos, localBusiness WHERE `order`.orderStatus='orderProcessing' AND contratostipos.idcontratostipo=`order`.tipo AND `order`.customer=localBusiness.idlocalBusiness";
+        $query .= $dateLimit ? " AND `order`.paymentDueDate < '$dateLimit'" : null;
+        $query .= " ORDER BY `order`.paymentDueDate ASC;";
         
         $data = PDOConnect::run($query);
 

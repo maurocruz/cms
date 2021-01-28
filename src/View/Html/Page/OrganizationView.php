@@ -26,7 +26,7 @@ class OrganizationView
         $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
 
         if ($this->organizationId) {
-            $this->content['navbar'][] = self::navbar($this->organizationName, [], 3);
+            $this->content['navbar'][] = self::navbar($this->organizationName, [ "/admin/service/provider/".$this->organizationId => _("Services") ], 3);
         }
     }
     
@@ -69,7 +69,7 @@ class OrganizationView
         $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("organization", $this->organizationId, $value['address']) ]);
         
         // contact point
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new contactPointView())->getForm('organization', $this->organizationId, $value['contactPoint']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm('organization', $this->organizationId, $value['contactPoint']) ]);
         
         // member
         $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("organization", $this->organizationId, "person", $value['member']) ]);
@@ -81,12 +81,12 @@ class OrganizationView
         //$this->content['main'][] = self::divBoxExpanding(_("Area served"), "Place", [ (new PlaceView())->getForm("organization", $this->organizationId, $value['location']) ]);
         //
         // image
-        $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("organization", $this->organizationId. $value['image']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("organization", $this->organizationId, $value['image']) ]);
         
         return $this->content;
     }
     
-    static private function formOrganization($case = 'new', $value = null) 
+    static private function formOrganization($case = 'new', $value = null): array
     {
         $content[] = [ "tag" => "h3", "content" => $value['name'] ];
         

@@ -13,7 +13,7 @@ class PlaceController implements ControllerInterface
         return (new Place())->get($params);
     }
     
-    public function new() 
+    public function new($params = null)
     {
         return true;
     }

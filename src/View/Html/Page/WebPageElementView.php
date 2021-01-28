@@ -20,7 +20,7 @@ class WebPageElementView implements ViewInterface
     private function navBarWebPageElement($title)
     {
         if ($title) {
-            $this->content['navbar'][] = self::navbar($title, []);
+            $this->content['navbar'][] = self::navbar($title);
         }
     }
 

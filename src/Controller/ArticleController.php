@@ -31,7 +31,7 @@ class ArticleController implements ControllerInterface
         return $data[0] ?? [];
     }
 
-    public function new()
+    public function new($params = null)
     {
         return null;
     }
