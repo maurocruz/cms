@@ -100,30 +100,7 @@ class AdvertisingView
     
     public function edit(array $data): array
     {
-        $order = $data['order'];
-        $customer = $order['customer'];
-        $banner = $data['banner'] ?? null;
-        
-        $this->navbarAd();
-        
-        $idLocalBusiness = PropertyValue::extractValue($customer['identifier'], "id");
-        
-        $this->content['main'][] = [ "tag" => "h4", "content" => _("Editing contract") ];
-        $this->content['main'][] = [ "tag" => "p", "content" => _("View ad"), "href" => "/". str_replace(" ", "", $customer['name'])."/".$idLocalBusiness, "hrefAttributes" => [ "target" => "_blank" ] ];
-        
-        // advertising
-        $this->content['main'][] = self::formOrder("edit", $order);
-        
-        // payments
-        $this->content['main'][] = self::divBox(_("Invoices"), "invoice", (new PaymentView())->edit($order));
-        
-        // history
-        $this->content['main'][] = (new HistoryView())->view($order['history']);
-               
-        // banner
-        $this->content['main'][] = $banner ? (new BannerView())->getBannerByIdcontrato($banner) : null;
-        
-        return $this->content;
+        return (new OrderView())->edit($data);
     }
     
     private static function formOrder($case = "new", $value = null): array
