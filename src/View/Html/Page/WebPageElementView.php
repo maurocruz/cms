@@ -3,8 +3,8 @@
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
-use Plinct\Web\Widget\FormTrait;
 
 class WebPageElementView implements ViewInterface
 {
@@ -14,13 +14,13 @@ class WebPageElementView implements ViewInterface
     
     protected $idwebPageElement;
     
-    use FormTrait;
+    use FormElementsTrait;
     use navbarTrait;
 
     private function navBarWebPageElement($title)
     {
         if ($title) {
-            $this->content['navbar'][] = self::navbar($title, [], 2);
+            $this->content['navbar'][] = self::navbar($title);
         }
     }
 
@@ -34,7 +34,7 @@ class WebPageElementView implements ViewInterface
     public function new($data = null): array
     {
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
-        $content[] = self::form();
+        $content[] = self::formWebPageElement();
         return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
     }
 
@@ -57,7 +57,7 @@ class WebPageElementView implements ViewInterface
     public function editForms(array $value): array
     {
         // content
-        $content[] = self::form("edit", $value);
+        $content[] = self::formWebPageElement("edit", $value);
 
         // attributes
         $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']) ]);
@@ -68,12 +68,12 @@ class WebPageElementView implements ViewInterface
         return $content;
     }
 
-    public function getForm($idHasPart, $value)
+    public function getForm($idHasPart, $value): array
     {
         $this->idwebPage = $idHasPart;
         
         // add new WebPagElement
-        $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::form() ]);
+        $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::formWebPageElement() ]);
         
         // WebPageElements hasPart
         foreach ($value as $valueWebPageElement) {
@@ -85,7 +85,7 @@ class WebPageElementView implements ViewInterface
         return $content;
     }
 
-    protected function form($case = "new", $value = null)
+    protected function formWebPageElement($case = "new", $value = null): array
     {
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ] : null;
