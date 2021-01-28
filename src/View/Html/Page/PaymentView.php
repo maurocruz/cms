@@ -44,7 +44,7 @@ class PaymentView
                     
         // #
         $p = $case == "new" ? "+" : $n;
-        $content[] = $p.". ";
+        $content[] = "<span style=\"display: inline-block; width: 30px;\">".$p.".</span>";
         // TOTAL PAYMENT DUE
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 135px; display: inline-block;"], "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Total payment due") ] : null,
