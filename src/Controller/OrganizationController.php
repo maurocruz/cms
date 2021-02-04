@@ -17,12 +17,12 @@ class OrganizationController implements ControllerInterface
     
     public function edit(array $params): array 
     {   
-        $params = [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image", "allDetails" => "true" ];
+        $params = [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ];
         
         return (new Organization())->get($params);
     }
     
-    public function new($params = null)
+    public function new($params = null): bool
     {
         return true;
     }
