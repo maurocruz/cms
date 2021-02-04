@@ -133,7 +133,7 @@ class OrderView implements ViewInterface
         // TIPO (DEPRECATED)
         $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
         $tipo = $value['tipo'] ? $ContractTypes[$value['tipo']] : null;
-        $content[] = self::fieldsetWithInput("Tipo (deprecated)", "tipo", $tipo, null, "text", [ "disabled" ]);
+        $content[] = self::fieldsetWithInput("Tipo ".$value['tipo']." (deprecated)", "tipo", $tipo, null, "text", [ "disabled" ]);
         // TAGS
         $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'], [ "style" => "width: 100%;" ]);
 
