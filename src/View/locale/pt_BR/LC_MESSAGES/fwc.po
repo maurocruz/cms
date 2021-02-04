@@ -52,6 +52,9 @@ msgstr "Data"
 msgid "Type"
 msgstr "Tipo"
 
+msgid "Types"
+msgstr "Tipos"
+
 msgid "Name"
 msgstr "Nome"
 
@@ -642,6 +645,9 @@ msgstr "País"
 
 msgid "Postal code"
 msgstr "CEP"
+
+msgid "Telephone"
+msgstr "Telefone"
 
 ################################   PRODUCT ####################################
 
