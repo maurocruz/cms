@@ -52,26 +52,23 @@ class LocalBusinessView
     public function edit($data): array
     {        
         $value = $data[0];
-        
         $id = PropertyValue::extractValue($value['identifier'], "id");
         
         $this->navbarLocalBussines();
         
         $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::form("edit", $value) ]);
         
-        // place
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "address", "place", $value['location']) ]);
-
-        // Contact Point
+        // PLACE
+        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']) ]);
+        // CONTACT POINT
         $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm("localBusiness", $id, $value['contactPoint']) ]);
-        
-        // organization
+        // ADDRESS
+        $this->content['main'][] = self::divBoxExpanding(_("Address"), "PostalAddress", [ (new PostalAddressView())->getForm("localBusiness", $id, $value['address']) ]);
+        // ORGANIZATION
         $this->content['main'][] = self::divBoxExpanding(_("Organization"), "Organization", [ self::relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']) ]);
-        
-        // person
+        // PERSON
         $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("localBusiness", $id, "person", $value['member']) ]);
-
-        // images
+        // IMAGE
         $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $id, $value['image']) ]);
         
         return $this->content;
