@@ -3,6 +3,7 @@
 namespace Plinct\Cms\View\Html;
 
 use Plinct\Cms\View\Html\Widget\AuthForms;
+use Plinct\Cms\View\locale\Locale;
 use Plinct\Web\Render;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -16,11 +17,7 @@ class HtmlView extends HtmlViewContent
         parent::__construct();
 
         // gettext
-        $lang = App::getLanguage();
-        putenv("LC_ALL=$lang");
-        setlocale(LC_ALL, App::getLanguage() . ".utf8");
-        bindtextdomain("fwc", __DIR__ . "/../locale");
-        textdomain("fwc");
+        Locale::setTranslate();
         
         // template
         parent::setTemplate();
@@ -41,7 +38,7 @@ class HtmlView extends HtmlViewContent
         parent::footer();
     }
     
-    public function build(Request $request)
+    public function build(Request $request): string
     {
         $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
         $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
@@ -96,7 +93,7 @@ class HtmlView extends HtmlViewContent
     }
     
     // LOGIN FORM
-    public function login($message = null) 
+    public function login($message = null): string
     {
         if ($message) {
             switch ($message) {
@@ -122,7 +119,7 @@ class HtmlView extends HtmlViewContent
     }
     
     // REGISTER FORM
-    public function register(string $warning = null)
+    public function register(string $warning = null): string
     {
         if ($warning) {
             switch ($warning) {
@@ -149,7 +146,7 @@ class HtmlView extends HtmlViewContent
     }
 
     // ERROR
-    public function error(int $code, string $message = null)
+    public function error(int $code, string $message = null): string
     {
         switch ($code) {
             // table not exists
@@ -170,7 +167,7 @@ class HtmlView extends HtmlViewContent
         parent::addMain(AuthForms::startApplication($_POST['email'], $_POST['password']));
     }
 
-    public function ready() 
+    public function ready(): string
     {
         //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>');
         //parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>');
