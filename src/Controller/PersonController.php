@@ -9,21 +9,18 @@ class PersonController implements ControllerInterface
     public function index($params = null): array 
     {
         $params2 = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "dateModified" ];
-        
         $params3 = $params ? array_merge($params2, $params) : $params2;
-        
         return (new Person())->get($params3);
     }
-    
-    public function new($params = null)
+
+    public function edit(array $params): array
     {
-        return true;
+        $params = array_merge($params, [ "properties" => "*,contactPoint,address,image" ]);
+        return (new Person())->get($params);
     }
     
-    public function edit(array $params): array 
+    public function new($params = null): bool
     {
-        $params = array_merge($params, [ "properties" => "*,contactPoint,address" ]);
-        
-        return (new Person())->get($params);
+        return true;
     }
 }
