@@ -18,6 +18,8 @@ Enabled types:
 10. Product;
 11. Taxon;
 12. Event;
+13. Order;
+14. Invoice
 
 >###Installation
 >`composer install plinct/cms`
