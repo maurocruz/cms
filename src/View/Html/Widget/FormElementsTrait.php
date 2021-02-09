@@ -219,7 +219,14 @@ trait FormElementsTrait
                 $td[] = [ "tag" => "td", "content" => '<a href="/admin/'.$type.'/edit/'.$valueRows[0].'">'._("Edit").'</a>' ];
 
                 foreach ($valueRows as $valueItens ) {
-                    $td[] = [ "tag" => "td", "content" => $valueItens['rowText'] ?? $valueItens ];
+                    if ($valueItens !== '' && !isset($valueItens['rowText'])) {
+                        $contentTd = _($valueItens);
+                    } elseif(isset($valueItens['rowText']) && $valueItens['rowText'] !== ''){
+                        $contentTd = _($valueItens['rowText']);
+                    } else {
+                        $contentTd = $valueItens;
+                    }
+                    $td[] = [ "tag" => "td", "content" => $contentTd ];
                 }
 
                 $list[] = [ "tag" => "tr", "content" => $td ];
