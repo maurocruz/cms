@@ -16,158 +16,10 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.mo
 
-msgid "administrator"
-msgstr "administrador"
-
-msgid "administrators"
-msgstr "administradores"
-
-msgid "Availability"
-msgstr "Disponibilidade"
-
-msgid "Farm"
-msgstr "Fazenda"
-
-msgid "House"
-msgstr "Casa"
-
-msgid "Yes"
-msgstr "Sim"
-
-msgid "No"
-msgstr "Não"
-
-msgid "Search"
-msgstr "Procurar"
-
-msgid "Provider"
-msgstr "Fornecedor"
-
-msgid "Submit"
-msgstr "Enviar"
-
-msgid "Date"
-msgstr "Data"
-
-msgid "Type"
-msgstr "Tipo"
-
-msgid "Types"
-msgstr "Tipos"
-
-msgid "Name"
-msgstr "Nome"
-
-msgid "Value"
-msgstr "Valor"
-
-msgid "Title"
-msgstr "Título"
-
-msgid "Description"
-msgstr "Descrição"
-
-msgid "Text"
-msgstr "Texto"
-
-msgid "Sections"
-msgstr "Seções"
-
-msgid "Tags"
-msgstr "Etiquetas"
-
-msgid "Add"
-msgstr "Adicionar"
-
-msgid "add"
-msgstr "adicionar"
-
-msgid "Edit"
-msgstr "Editar"
-
-msgid "edit"
-msgstr "editar"
-
-msgid "Expand"
-msgstr "Expandir"
-
-msgid "Delete data"
-msgstr "Excluir dados"
-
-msgid "Nothing found!"
-msgstr "Nada encontrado!"
-
-msgid "No items founded!"
-msgstr "Nenhum item encontrado!"
-
-msgid "Are you sure you want to delete this item?"
-msgstr "Tem certeza que deseja excluir este item?"
-
-#, php-format
-msgid "Expand textarea by %s px"
-msgstr "Expandir textarea em %s px"
-
-msgid "Show %s items!"
-msgstr "Mostrando %s itens!"
-
-msgid "Showing %s items!"
-msgstr "Mostrando %s itens!"
-
-msgid "Show %s items in alfabetical order"
-msgstr "Mostrando %s itens em order alfabética"
-
-msgid "Show %s items in date modified order"
-msgstr "Mostrando %s itens em ordem de data de modificação"
-
-msgid "Showing %s items ordered by modification date."
-msgstr "Mostrando %s itens ordenados por data de modificação."
-
-msgid "Showing %s items sorted by expired date"
-msgstr "Mostrando %s itens ordenandos por data de vencimento"
-
-msgid "Showing %s items by registration date order"
-msgstr "Mostrando %s itens ordenados por data de vencimento"
-
-msgid "Date created"
-msgstr "Data de criação"
-
-msgid "Date modified"
-msgstr "Data da modificação"
-
-msgid "Date registration"
-msgstr "Data do registro"
-
-#, phph-format
-msgid "The %s module is not properly installed. Do you want to install it?"
-msgstr "O módulo %s não está devidamente instalado. Deseja instalá-lo?"
-
-#, phph-format
-msgid "Install %s module"
-msgstr "Instalar o módulo %s"
-
-#. MENUS 1
-msgid "Default"
-msgstr "Padrão"
-
-msgid "Log out"
-msgstr "Sair"
-
-msgid "Control Panel"
-msgstr "Painel de Controle"
-
-msgid "Version"
-msgstr "Versão"
-
-msgid "Home"
-msgstr "Início"
-
-msgid "Modules"
-msgstr "Módulos"
-
-msgid "Hello, %s. You logged with %s!"
-msgstr "Olá, %s. Você entrou no sistema como %s!"
-
 #################################  ACTIONS   ################################### 
+
+msgid "Action"
+msgstr "Ação"
 
 msgid "Add new"
 msgstr "Adicionar novo"
@@ -181,19 +33,8 @@ msgstr "Adicionar como parte de"
 msgid "View it"
 msgstr "Veja isto"
 
-#. MODULES
-
 msgid "There are no enabled modules!"
 msgstr "Não há módulos habilitados!"
-
-msgid "LocalBusiness"
-msgstr "Negócios Locais"
-
-msgid "Event"
-msgstr "Evento"
-
-msgid "Article"
-msgstr "Artigo"
 
 msgid "Place"
 msgstr "Local"
@@ -259,6 +100,9 @@ msgstr "Montante"
 
 ################################   ARTICLES   ##################################
 
+msgid "Article"
+msgstr "Artigo"
+
 msgid "Articles"
 msgstr "Artigos"
 
@@ -274,12 +118,18 @@ msgstr "Data de publicação"
 msgid "Publishied"
 msgstr "Publicado"
 
+msgid "Articles and news"
+msgstr "Artigos e notícias"
+
 #############################   CONTACT POINT   ################################
 
 msgid "Contact point"
 msgstr "Pontos de contato"
 
 #################################   EVENT   ####################################
+
+msgid "Event"
+msgstr "Evento"
 
 msgid "event"
 msgstr "evento"
@@ -317,7 +167,200 @@ msgstr "Hora fim"
 msgid "Update date"
 msgstr "Data de atualização"
 
+msgid "Shows, parties and events"
+msgstr "Shows, festas e eventos"
+
+msgid "Schedule"
+msgstr "Calendário"
+
+###########################   GENERAL PHRASES   ################################
+
+msgid "Delete data"
+msgstr "Excluir dados"
+
+msgid "Nothing found!"
+msgstr "Nada encontrado!"
+
+msgid "No items founded!"
+msgstr "Nenhum item encontrado!"
+
+msgid "Are you sure you want to delete this item?"
+msgstr "Tem certeza que deseja excluir este item?"
+
+#, php-format
+msgid "Expand textarea by %s px"
+msgstr "Expandir textarea em %s px"
+
+msgid "Show %s items!"
+msgstr "Mostrando %s itens!"
+
+msgid "Showing %s items!"
+msgstr "Mostrando %s itens!"
+
+msgid "Showing %s items"
+msgstr "Mostrando %s itens"
+
+msgid "Showing %s items %s"
+msgstr "Mostrando %s itens %s"
+
+msgid "Show %s items in alfabetical order"
+msgstr "Mostrando %s itens em order alfabética"
+
+msgid "Show %s items in date modified order"
+msgstr "Mostrando %s itens em ordem de data de modificação"
+
+msgid "Showing %s items ordered by modification date."
+msgstr "Mostrando %s itens ordenados por data de modificação."
+
+msgid "Showing %s items sorted by expired date"
+msgstr "Mostrando %s itens ordenandos por data de vencimento"
+
+msgid "Showing %s items by registration date order"
+msgstr "Mostrando %s itens ordenados por data de vencimento"
+
+msgid "Date created"
+msgstr "Data de criação"
+
+msgid "Date modified"
+msgstr "Data da modificação"
+
+msgid "Date registration"
+msgstr "Data do registro"
+
+#, phph-format
+msgid "The %s module is not properly installed. Do you want to install it?"
+msgstr "O módulo %s não está devidamente instalado. Deseja instalá-lo?"
+
+#, phph-format
+msgid "Install %s module"
+msgstr "Instalar o módulo %s"
+
+###############################   GENERAL WORDS   ##############################
+
+msgid "administrator"
+msgstr "administrador"
+
+msgid "administrators"
+msgstr "administradores"
+
+msgid "Availability"
+msgstr "Disponibilidade"
+
+msgid "Farm"
+msgstr "Fazenda"
+
+msgid "House"
+msgstr "Casa"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "No"
+msgstr "Não"
+
+msgid "Search"
+msgstr "Procurar"
+
+msgid "Provider"
+msgstr "Fornecedor"
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Value"
+msgstr "Valor"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Text"
+msgstr "Texto"
+
+msgid "Sections"
+msgstr "Seções"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "add"
+msgstr "adicionar"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "edit"
+msgstr "editar"
+
+msgid "Expand"
+msgstr "Expandir"
+
+msgid "Default"
+msgstr "Padrão"
+
+msgid "Version"
+msgstr "Versão"
+
+msgid "Home"
+msgstr "Início"
+
+msgid "Modules"
+msgstr "Módulos"
+
+msgid "Restaurant"
+msgstr "Restaurante"
+
+msgid "FoodEstablishment"
+msgstr "Estabelecimento Alimentar"
+
+msgid "Log out"
+msgstr "Sair"
+
+msgid "Control Panel"
+msgstr "Painel de Controle"
+
+msgid "Hello, %s. You logged with %s!"
+msgstr "Olá, %s. Você entrou no sistema como %s!"
+
+msgid "Visit us"
+msgstr "Visite-nos"
+
+msgid "List all"
+msgstr "Listar tudo"
+
+msgid "Quantity"
+msgstr "Quantidade"
+
+msgid "Items"
+msgstr "Itens"
+
+msgid "items"
+msgstr "itens"
+
+msgid "History"
+msgstr "História"
+
+msgid "Summary"
+msgstr "Sumário"
+
+msgid "Author"
+msgstr "Autor"
+
 #################################   IMAGES   ###################################
+
+msgid "ImageObject"
+msgstr "Imagens"
 
 msgid "Images"
 msgstr "Imagens"
@@ -361,6 +404,70 @@ msgstr "Data de envio"
 msgid "License"
 msgstr "Licença"
 
+#############################   INVOICE   #####################################
+
+msgid "Invoice"
+msgstr "Fatura"
+
+msgid "Invoices"
+msgstr "Faturas"
+
+msgid "Total payment due"
+msgstr "Total do pagamento"
+
+msgid "Invoice amount"
+msgstr "Valor da fatura"
+
+msgid "Payment date"
+msgstr "Data do pagamento"
+
+msgid "Balance"
+msgstr "Saldo"
+
+msgid "Payment status"
+msgstr "Status da parcela"
+
+msgid "Total order amount"
+msgstr "Valor total do pedido"
+
+msgid "Payment automatically applied"
+msgstr "Pagamento automático"
+
+msgid "PaymentAutomaticallyApplied"
+msgstr "Pagamento automático"
+
+msgid "PaymentDue"
+msgstr "À pagar"
+
+msgid "Payment due"
+msgstr "À pagar"
+
+msgid "PaymentComplete"
+msgstr "Pago"
+
+msgid "Payment complete"
+msgstr "Pago"
+
+msgid "Payment declined"
+msgstr "Pagamento recusado"
+
+msgid "PaymentDeclined"
+msgstr "Pagamento recusado"
+
+msgid "Payment past due"
+msgstr "Pagamento atrasado"
+
+msgid "PaymentPastDue"
+msgstr "Pagamento atrasado"
+
+msgid "Amounts paid"
+msgstr "Valores pagos"
+
+msgid "Amounts payable"
+msgstr "Valores a pagar"
+
+msgid "Amounts past due"
+msgstr "Valores em atraso"
 
 ###########################   LOCAL BUSINESS   #################################
 
@@ -379,6 +486,9 @@ msgstr "Negócios locais"
 msgid "locals business"
 msgstr "negócios locais"
 
+msgid "LocalBusiness"
+msgstr "Negócio local"
+
 msgid "Add new local business"
 msgstr "Adiciona novo negócio local"
 
@@ -388,9 +498,6 @@ msgstr "Editando negócio local"
 msgid "Disambiguating Description"
 msgstr "Descrição de desambiguação"
 
-msgid "Additional type"
-msgstr "Tipo adicional"
-
 msgid "Has offer catalog"
 msgstr "Lista de ofertas "
 
@@ -399,6 +506,15 @@ msgstr "Lista dos negócios locais"
 
 msgid "List of '%s' locals business"
 msgstr "Lista de '%s' para negócios locais"
+
+msgid "Business, services and products"
+msgstr "Negócios, serviços e produtos"
+
+##################################   NEWS   ###################################
+
+msgid "NewsMediaOrganization"
+msgstr "Empresa de notícias"
+
 
 ###################################   OFFER   ##################################
 
@@ -483,6 +599,12 @@ msgstr "Vendido"
 msgid "SouldOut"
 msgstr "Vendido"
 
+msgid "Elegible quantity"
+msgstr "Quantidade elegível"
+
+msgid "Elegible duration"
+msgstr "Duração elegível"
+
 ################################   ORDER   #######################################
 
 msgid "Order"
@@ -533,6 +655,48 @@ msgstr "Status do pedido"
 msgid "Payment due date"
 msgstr "Data do vencimento"
 
+msgid "List orders"
+msgstr "Listar pedidos"
+
+msgid "New order"
+msgstr "Novo pedido"
+
+msgid "List of order"
+msgstr "Lista de pedidos"
+
+msgid "Ordered item"
+msgstr "Item pedido"
+
+msgid "OrderProcessing"
+msgstr "Pedido em execução"
+
+msgid "orderProcessing"
+msgstr "pedido em execução"
+
+msgid "Discount"
+msgstr "Desconto"
+
+msgid "Ordered items"
+msgstr "Itens pedidos"
+
+msgid "Unit price"
+msgstr "Preço unitário"
+
+msgid "Total price"
+msgstr "Preço total"
+
+msgid "Order quantity"
+msgstr "Quantidade pedida"
+
+msgid "Overdue payments"
+msgstr "Pagamentos em atraso"
+
+msgid "Expired orders"
+msgstr "Pedidos expirados"
+
+msgid "Order item"
+msgstr "Item do pedido"
+
 ############################   ORGANIZATION   ##################################
 
 msgid "Organization"
@@ -558,6 +722,9 @@ msgstr "Razão Social"
 
 msgid "Tax Id"
 msgstr "CNPJ"
+
+msgid "Companies and institutions"
+msgstr "Empresas e instituições"
 
 #################################  PERSON   ####################################
 
@@ -606,6 +773,9 @@ msgstr "Editar pessoa"
 msgid "Job title"
 msgstr "Cargo"
 
+msgid "Names and contact points"
+msgstr "Nomes e pontos de contatos"
+
 ################################    PLACE    ###################################
 
 msgid "List of places"
@@ -622,6 +792,9 @@ msgstr "Coordenadas geográficas (WGS 84)"
 
 msgid "Elevation"
 msgstr "Elevação"
+
+msgid "Address and coordinates"
+msgstr "Endereços e coordenadas"
 
 ############################    POSTAL ADDRESS    ##############################
 
@@ -668,6 +841,9 @@ msgstr "Lista de produtos"
 
 #################################   SERVICES   #################################
 
+msgid "Service"
+msgstr "Serviço"
+
 msgid "Services"
 msgstr "Serviços"
 
@@ -688,6 +864,32 @@ msgstr "Tipo de serviço"
 
 msgid "Terms of service"
 msgstr "Termos do serviço"
+
+msgid "Service name"
+msgstr "Nome do serviço"
+
+###################################   TYPES   ####################################
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Types"
+msgstr "Tipos"
+
+msgid "Page %s. Showing %s from %s items in %s pages."
+msgstr "Página %s. Mostrando %s de %s itens em %s páginas."
+
+msgid "Physical person"
+msgstr "Pessoa física"
+
+msgid "Additional type"
+msgstr "Tipo adicional"
+
+msgid "Type: %s."
+msgstr "Tipo: %s."
+
+msgid "Additional types: %s."
+msgstr "Tipos adicionais: %s."
 
 ##############################   TRAVEL AGENCY   ###############################
 
@@ -765,9 +967,14 @@ msgid "Potential %s"
 msgstr "Potencial %s"
 
 ##################################   TAXON   ###################################
+msgid "Taxon"
+msgstr "Táxon"
 
 msgid "Taxonomy"
 msgstr "Taxonomia"
+
+msgid "Taxons and biodiversity"
+msgstr "Táxons e biodiversidade"
 
 msgid "taxonomy"
 msgstr "taxonomia"
@@ -778,8 +985,14 @@ msgstr "Nome vernacular"
 msgid "Taxon rank"
 msgstr "Classificação taxonômica"
 
+msgid "taxon properties"
+msgstr "propriedades taxonômicas"
+
 msgid "Scientific name authorship"
 msgstr "Autoria do nome científico"
+
+msgid "scientific name"
+msgstr "nome científico"
 
 msgid "Occurrence"
 msgstr "Ocorrência"
@@ -807,6 +1020,15 @@ msgstr "Frutos"
 
 msgid "Citations"
 msgstr "Citações"
+
+msgid "species"
+msgstr "espécie"
+
+msgid "genus"
+msgstr "gênero"
+
+msgid "family"
+msgstr "família"
 
 ##################################   USER   ####################################
 
