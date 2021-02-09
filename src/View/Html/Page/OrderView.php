@@ -152,7 +152,7 @@ class OrderView implements ViewInterface
         $key = 0;
         $this->navbarOrder();
 
-        $content[] = [ "tag" => "h3", "content" => "Overdue payments" ];
+        $content[] = [ "tag" => "h3", "content" => _("Overdue payments") ];
         $content[] = self::selectPeriodo(count($data), "payment");
 
         $total = 0;
@@ -180,9 +180,9 @@ class OrderView implements ViewInterface
         $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
-                    [ "tag" => "th", "attributes" => [ "style" => "width: 100px;" ], "content" => "Vencimento" ],
-                    [ "tag" => "th", "attributes" => [ "style" => "width: 100px;" ], "content" => "Valor (R$)" ],
-                    [ "tag" => "th", "content" => "Local Business" ],
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 115px;" ], "content" => _("Payment due date") ],
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 100px;" ], "content" => _("Invoice amount") ],
+                    [ "tag" => "th", "content" => _("Customer") ],
                     [ "tag" => "th", "attributes" => [ "style" => "width: 80px;" ], "content" => "Parcela" ],
                     [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => _("Contract type") ],
                     [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => _("Status") ]
@@ -192,9 +192,7 @@ class OrderView implements ViewInterface
         ] ];
 
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
-
         $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
-
         return $this->content;
     }
 
@@ -204,7 +202,7 @@ class OrderView implements ViewInterface
 
         $this->navbarOrder();
 
-        $content[] = [ "tag" => "h3", "content" => "Expired contracts" ];
+        $content[] = [ "tag" => "h3", "content" => _("Expired orders") ];
         $content[] = self::selectPeriodo(count($data), "expired");
 
         foreach ($data as $key => $value) {
@@ -218,9 +216,9 @@ class OrderView implements ViewInterface
         $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
-                    [ "tag" => "th", "attributes" => [ "style" => "width: 100px;" ], "content" => "Vencimento" ],
-                    [ "tag" => "th", "content" => "Local Business" ],
-                    [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => "Contract type" ]
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 115px;" ], "content" => _("Payment due date") ],
+                    [ "tag" => "th", "content" => _("Customer") ],
+                    [ "tag" => "th", "attributes" => [ "style" => "width: 180px;" ], "content" => _("Order item") ]
                 ]]
             ]],
             [ "tag" => "tbody", "content" => $tbody ]
@@ -253,7 +251,7 @@ class OrderView implements ViewInterface
                 $period = null;
                 break;
         }
-        $content[] = [ "tag" => "p", "content" => "Showing ".$numberOfItens." itens $period" ];
+        $content[] = [ "tag" => "p", "content" => sprintf(_("Showing %s items %s"), $numberOfItens, $period) ];
 
         return [ "tag" => "div", "content" => $content ];
     }
