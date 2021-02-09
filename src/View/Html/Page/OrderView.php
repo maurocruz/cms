@@ -85,7 +85,7 @@ class OrderView implements ViewInterface
             // ORDERED ITEMS
             $this->content['main'][] = self::divBox(_("Ordered items"), "offer", [ OrderItemView::getForm($value) ]);
             // INVOICES
-            $this->content['main'][] = self::divBox(_("Invoices"), "invoice", [ InvoiceView::getForm("order", self::$idOrder, $value) ]);
+            $this->content['main'][] = $value['orderedItem'] ? self::divBox(_("Invoices"), "invoice", [ InvoiceView::getForm("order", self::$idOrder, $value) ]) : null;
             // HISTORY
             $this->content['main'][] = (new HistoryView())->view($value['history']);
             // banner
@@ -144,8 +144,6 @@ class OrderView implements ViewInterface
 
         return self::form("/admin/order/$case", $content);
     }
-
-
 
     public function payment($data): array
     {
