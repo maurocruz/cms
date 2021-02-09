@@ -11,22 +11,22 @@ class OrderController implements ControllerInterface
     public function index($params = null): array
     {
         $nameLike = $params['search'] ?? null;
-
+        $orderBy = $params['orderBy'] ?? null;
+        $ordering = $params['ordering'] ?? null;
         $params2 = [ "format" => "ItemList", "properties" => "*,seller,customer,orderedItem", "orderBy" => "orderStatus='orderProcessing' DESC, orderDate DESC", "limit" => "200" ];
-
+        if ($orderBy && $orderBy != "orderedItem") {
+            $params2['orderBy'] = "$orderBy $ordering";
+        }
         if($nameLike) {
             return (new Order())->search($params2, $nameLike);
         }
-
         return (new Order())->get($params2);
     }
 
     public function edit(array $params): array
     {
         $params2 = [ "id" => $params['id'], "properties" => "*,customer,seller,orderedItem,partOfInvoice,history" ];
-
         $data = (new Order())->get($params2);
-
         // banner
         if ($data[0]['tipo'] == '4') {
             $idorder = $data[0]['idorder'];
@@ -34,7 +34,6 @@ class OrderController implements ControllerInterface
             $bannerData = (new Banner())->get($paramsBanner);
             $data['banner'] = $bannerData[0] ?? null;
         }
-
         return $data;
     }
 
