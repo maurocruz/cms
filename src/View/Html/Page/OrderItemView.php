@@ -117,7 +117,7 @@ class OrderItemView implements ViewInterface
          $content[] = self::input("tableHasPart", "hidden", "order");
          $content[] = self::input("orderItemNumber", "hidden", $value['idorder']);
 
-         $content[] = "Add new: ";
+         $content[] = _("Add new").": ";
          $content[] = self::fieldset(self::chooseType("orderedItem", "service,product", null, "name", [ "data-params" => "provider=$idSeller" ]), _("Ordered item"), [ "style" => "width: 70%; "]);
          // QUANTITY
          $content[] = self::fieldsetWithInput(_("Order quantity"), "orderQuantity", "1", [ "style" => "width: 170px;"], "number", [ "min" => "1" ]);
