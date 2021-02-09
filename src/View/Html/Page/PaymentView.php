@@ -16,10 +16,8 @@ class PaymentView
     public static function edit(array $data): array
     {
         $idorder = $data['idorder'];
-
-        $lenght = count($data['partOfInvoice']);
+        $lenght = $data['partOfInvoice'] ? count($data['partOfInvoice']): 0;
         $content[] = self::formPayment($idorder, "new", null, $lenght+1 );
-        
         if ($lenght > 0) {
             foreach ($data['partOfInvoice'] as $key => $value) {
                 $content[] = self::formPayment($idorder, 'edit', $value, $lenght - $key);
