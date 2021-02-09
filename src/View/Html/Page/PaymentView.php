@@ -40,14 +40,13 @@ class PaymentView
 
         if ($case == "edit") {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
-        }   
-                    
+        }
         // #
         $p = $case == "new" ? "+" : $n;
         $content[] = "<span style=\"display: inline-block; width: 30px;\">".$p.".</span>";
         // TOTAL PAYMENT DUE
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 135px; display: inline-block;"], "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Total payment due") ] : null,
+            $case == "new" ? [ "tag" => "legend", "content" => _("Invoice amount") ] : null,
             [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'], "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right; width: inherit;" ]]
         ]];
         // Payment due date
@@ -55,20 +54,20 @@ class PaymentView
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment due date") ] : null,
             [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'], "type" => "date", "style" => "width: inherit;" ]]
         ]];
-        // Quitado em
-        $content[] = [ "tag" => "fieldset", "content" => [ 
+        // PAYMENT DATE
+        $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment date") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "paymentDate", "value" => $value['paymentDate'], "type" => "date" ]]
+            self::input('paymentDate','date',$value['paymentDate'], [ "style" => "width: 145px;"])
         ]];
         // PAYMENT STATUS
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment status") ] : null,
             self::select("paymentStatus", $value['paymentStatus'], [
-                "PaymentAutomaticallyApplied" => _("Payment automatically applied"),
-                "PaymentComplete" => _("Payment complete"),
-                "PaymentDeclined" => _("Payment declined"),
                 "PaymentDue" => _("Payment due"),
-                "PaymentPastDue" => _("Payment past due")
+                "PaymentComplete" => _("Payment complete"),
+                "PaymentPastDue" => _("Payment past due"),
+                "PaymentDeclined" => _("Payment declined"),
+                "PaymentAutomaticallyApplied" => _("Payment automatically applied")
             ])
         ]];
         // submit
