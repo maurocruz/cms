@@ -5,6 +5,7 @@ namespace Plinct\Cms\Controller;
 use Plinct\Api\Server\PDOConnect;
 use Plinct\Api\Type\Banner;
 use Plinct\Api\Type\Order;
+use Plinct\Api\Type\OrderItem;
 
 class OrderController implements ControllerInterface
 {
@@ -13,7 +14,7 @@ class OrderController implements ControllerInterface
         $nameLike = $params['search'] ?? null;
         $orderBy = $params['orderBy'] ?? null;
         $ordering = $params['ordering'] ?? null;
-        $params2 = [ "format" => "ItemList", "properties" => "*,seller,customer,orderedItem", "orderBy" => "orderStatus='orderProcessing' DESC, orderDate DESC", "limit" => "200" ];
+        $params2 = [ "format" => "ItemList", "properties" => "*,seller,customer,orderedItem", "orderBy" => "orderStatus='orderProcessing' DESC, orderDate DESC", "limit" => "50", "count" => "all" ];
         if ($orderBy && $orderBy != "orderedItem") {
             $params2['orderBy'] = "$orderBy $ordering";
         }
@@ -53,24 +54,39 @@ class OrderController implements ControllerInterface
 
     public function payment(): array
     {
+        $data2 = [];
         $date = self::translatePeriod(filter_input(INPUT_GET, 'period'));
-
-        $query = "SELECT `invoice`.paymentDueDate, `localBusiness`.name, `invoice`.totalPaymentDue, `order`.idorder, `contratostipos`.contrato_name, `order`.orderStatus, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as number_parc FROM `invoice`, `order`, localBusiness, contratostipos WHERE (`invoice`.paymentDate = '0000-00-00' OR `invoice`.paymentDate is null) AND `invoice`.referencesOrder=`order`.idorder and `order`.orderStatus!='' AND `order`.customer=localBusiness.idlocalBusiness AND `order`.tipo=contratostipos.idcontratostipo";
-        $query .= $date ? " AND `invoice`.paymentDueDate <= '$date'" : null;
-        $query .= " ORDER BY `invoice`.paymentDueDate ASC;";
-
-        return PDOConnect::run($query);
+        $query = "select `order`.idorder, `order`.orderStatus, `invoice`.paymentDueDate, `invoice`.totalPaymentDue, `order`.customer, `order`.customerType, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as totalOfInstallments, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder AND invoice.paymentDate is not null AND invoice.paymentDate!='0000-00-00')+1 as numberOfTheInstallments";
+        $query .= " FROM `invoice`, `order`";
+        $query .= " WHERE (invoice.paymentDate is null OR invoice.paymentDate='0000-00-00')";
+        $query .= " AND `order`.idorder= `invoice`.referencesOrder AND `order`.orderStatus!='orderCancelled'";
+        $query .= $date ? " AND invoice.paymentDueDate <= '$date'" : null;
+        $query .= " ORDER BY `invoice`.paymentDueDate";
+        $query .= ";";
+        $data =  PDOConnect::run($query);
+        foreach ($data as $value) {
+            $id = $value['customer'];
+            $table = lcfirst($value['customerType']);
+            $idName = "id".$table;
+            // CUSTOMER
+            $dataCustomer = PDOConnect::run("SELECT * FROM $table WHERE `$idName`=$id;");
+            $value['customer'] = $dataCustomer[0] ?? null;
+            // ORDERED ITEM
+            $dataOrderedItem = (new OrderItem())->get([ "orderItemNumber" => $value['idorder'] ]);
+            $value['orderedItem'] = $dataOrderedItem;
+            $data2[] = $value;
+        }
+        return $data2;
     }
 
     public function expired(): array
     {
         $dateLimit = self::translatePeriod(filter_input(INPUT_GET, 'period'));
-
-        $query = "SELECT `order`.*, localBusiness.name, contratostipos.contrato_name FROM `order`, contratostipos, localBusiness WHERE `order`.orderStatus='orderProcessing' AND contratostipos.idcontratostipo=`order`.tipo AND `order`.customer=localBusiness.idlocalBusiness";
-        $query .= $dateLimit ? " AND `order`.paymentDueDate < '$dateLimit'" : null;
-        $query .= " ORDER BY `order`.paymentDueDate ASC;";
-
-        return PDOConnect::run($query);
+        $params = [ "format" => "ItemList", "properties" => "*,customer,orderedItem", "orderStatus" => "orderProcessing", "orderBy" => "paymentDueDate asc" ];
+        if($dateLimit) {
+            $params['where'] = "paymentDueDate<'$dateLimit'";
+        }
+        return (new Order())->get($params);
     }
 
     static private function translatePeriod($get)
@@ -78,10 +94,8 @@ class OrderController implements ControllerInterface
         switch ($get) {
             case "past":
                 return date("Y-m-d");
-
             case "current_month":
                 return date('Y-m-t');
-
             default:
                 return null;
         }
