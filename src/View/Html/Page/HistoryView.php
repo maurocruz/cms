@@ -14,12 +14,18 @@ class HistoryView
                 [ "tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => "Não há registros!" ] ] 
             ];
         } else {
-            foreach ($data as $value) {
-                $body[] = [ "tag" => "tr", "content" => [
-                    [ "tag" => "td", "content" => DateTime::formatDateTime($value['datetime']) ],
-                    [ "tag" => "td", "content" => $value['action'] ],
-                    [ "tag" => "td", "content" => stripslashes($value['summary']) ],
-                    [ "tag" => "td", "content" => $value['user'] ]
+            if ($data) {
+                foreach ($data as $value) {
+                    $body[] = ["tag" => "tr", "content" => [
+                        ["tag" => "td", "content" => DateTime::formatDateTime($value['datetime'])],
+                        ["tag" => "td", "content" => $value['action']],
+                        ["tag" => "td", "content" => stripslashes($value['summary'])],
+                        ["tag" => "td", "content" => $value['user']]
+                    ]];
+                }
+            } else {
+                $body =  ["tag" => "tr", "content" => [
+                    ["tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => _("No history") ]
                 ]];
             }
         }
