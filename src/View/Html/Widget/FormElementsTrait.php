@@ -111,7 +111,7 @@ trait FormElementsTrait
     public static function listAll($data, $type, string $title = null, array $row_column = null): ?array
     {
         $caption = $title ? $title : "List of $type";
-        $showText = sprintf(_("Show %s items!"), $data['numberOfItems'] ?? 0);
+        $showText = sprintf(_("Showing %s from %s items."), count($data['itemListElement']), $data['numberOfItems']);
         if (isset($data['error'])) {
             return self::errorInfo($data['error'], $type);
         } else {
