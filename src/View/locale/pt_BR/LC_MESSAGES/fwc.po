@@ -218,6 +218,9 @@ msgstr "Mostrando %s itens ordenandos por data de vencimento"
 msgid "Showing %s items by registration date order"
 msgstr "Mostrando %s itens ordenados por data de vencimento"
 
+msgid "Showing %s from %s items."
+msgstr "Mostrando %s de %s itens."
+
 msgid "Date created"
 msgstr "Data de criação"
 
@@ -356,6 +359,9 @@ msgstr "Sumário"
 
 msgid "Author"
 msgstr "Autor"
+
+msgid "Cancelled"
+msgstr "Cancelado"
 
 #################################   IMAGES   ###################################
 
@@ -668,10 +674,10 @@ msgid "Ordered item"
 msgstr "Item pedido"
 
 msgid "OrderProcessing"
-msgstr "Pedido em execução"
+msgstr "Processando"
 
 msgid "orderProcessing"
-msgstr "pedido em execução"
+msgstr "processando"
 
 msgid "Discount"
 msgstr "Desconto"
@@ -696,6 +702,36 @@ msgstr "Pedidos expirados"
 
 msgid "Order item"
 msgstr "Item do pedido"
+
+msgid "Expired or due orders"
+msgstr "Pedidos vencidos ou a vencer"
+
+msgid "Due date"
+msgstr "Vencimento"
+
+msgid "Due dates"
+msgstr "Vencimentos"
+
+msgid "Delivered or performed"
+msgstr "Entregue ou realizado"
+
+msgid "In transit"
+msgstr "Em trânsito"
+
+msgid "Suspended"
+msgstr "Suspenso"
+
+msgid "Pickup available"
+msgstr "Disponível para coleta"
+
+msgid "With problem"
+msgstr "Com problema"
+
+msgid "In processing"
+msgstr "Processando"
+
+msgid "Returned"
+msgstr "Devolvido"
 
 ############################   ORGANIZATION   ##################################
 
