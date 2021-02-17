@@ -135,7 +135,7 @@ class OrderView implements ViewInterface
     {
         $key = 0;
         $this->navbarOrder();
-        $content[] = [ "tag" => "h3", "content" => _("Overdue payments") ];
+        $content[] = [ "tag" => "h3", "content" => ucfirst(_("payments")) ];
         $content[] = self::selectPeriodo(count($data), "payment");
         $total = 0;
         foreach ($data as $key => $value) {
