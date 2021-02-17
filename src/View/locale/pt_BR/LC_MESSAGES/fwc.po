@@ -59,6 +59,9 @@ msgstr "Adicionar novo anúncio"
 msgid "payments"
 msgstr "pagamentos"
 
+msgid "Payments"
+msgstr "Pagamentos"
+
 msgid "expired contracts"
 msgstr "contratos vencidos"
 
