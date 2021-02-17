@@ -59,7 +59,7 @@ class OrderController implements ControllerInterface
         $query = "select `order`.idorder, `order`.orderStatus, `invoice`.paymentDueDate, `invoice`.totalPaymentDue, `order`.customer, `order`.customerType, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as totalOfInstallments, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder AND invoice.paymentDate is not null AND invoice.paymentDate!='0000-00-00')+1 as numberOfTheInstallments";
         $query .= " FROM `invoice`, `order`";
         $query .= " WHERE (invoice.paymentDate is null OR invoice.paymentDate='0000-00-00')";
-        $query .= " AND `order`.idorder= `invoice`.referencesOrder AND `order`.orderStatus!='orderCancelled'";
+        $query .= " AND `order`.idorder= `invoice`.referencesOrder AND `order`.orderStatus!='OrderCancelled' AND `order`.orderStatus!='OrderDelivered'";
         $query .= $date ? " AND invoice.paymentDueDate <= '$date'" : null;
         $query .= " ORDER BY `invoice`.paymentDueDate";
         $query .= ";";
