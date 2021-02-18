@@ -68,30 +68,24 @@ class WebPageElementView implements ViewInterface
         return $content;
     }
 
-    public function getForm($idHasPart, $value): array
-    {
+    public function getForm($idHasPart, $value): array {
         $this->idwebPage = $idHasPart;
-        
         // add new WebPagElement
         $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::formWebPageElement() ]);
-        
         // WebPageElements hasPart
-        foreach ($value as $valueWebPageElement) {
-            $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
-            
-            $content[] = self::divBoxExpanding("[".$this->idwebPageElement."] ".$valueWebPageElement['name'], "WebPageElement", [ self::editForms($valueWebPageElement) ]);
+        if ($value) {
+            foreach ($value as $valueWebPageElement) {
+                $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
+                $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $valueWebPageElement['name'], "WebPageElement", [self::editForms($valueWebPageElement)]);
+            }
         }
-        
         return $content;
     }
 
-    private function formWebPageElement($case = "new", $value = null): array
-    {
+    private function formWebPageElement($case = "new", $value = null): array {
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ] : null;
-
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
-
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 93%;" ], "content" => [
                 [ "tag" => "legend", "content" => "Título" ],
                 [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ] ]
@@ -107,7 +101,6 @@ class WebPageElementView implements ViewInterface
         $content[] = [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textareaPost-$this->idwebPageElement',100);", "style" => "width: 96%; display: block;" ], "content" => "Expandir textarea em 100px" ];              
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPageElement/erase") : null;
-                
         return [ "tag" => "form", "attributes" => [ "name" => "form-webPageElement--$case", "id" => "form-webPageElement-$case-$this->idwebPageElement", "action" => "/admin/webPageElement/$case", "class" => "formPadrao", "method" => "post" ], "content" => $content ];                           
     }
 }
