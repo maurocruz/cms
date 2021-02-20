@@ -5,7 +5,7 @@ use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 
-class WebPageView
+class WebPageView extends AbstractView
 {
     protected $content;
     protected $idwebPage;
@@ -16,7 +16,7 @@ class WebPageView
     public function __construct() {
         $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "webPage", "data-searchfor" => "name" ] ];
         $this->content['navbar'][] = [
-            "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/new" => "add new WebPage" ],
+            "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/new" => "add new WebPage", "/admin/webPage/sitemap" => _("Site map") ],
             "attributes" => [ "class" => "menu menu3"],
             "title" => "WebPage",
             "append" => $appendNavbar
@@ -54,7 +54,15 @@ class WebPageView
         $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm($this->idwebPage, $value['hasPart']) ]);
         return $this->content;
     }
-    
+
+    public function sitemap() {
+        // TTITLE
+        parent::addMain(self::simpleTag("h2",_("Sitemaps")));
+        // INDEX
+        parent::addMain((new SitemapWidget())->index());
+        return $this->content;
+    }
+
     private function formWebPage($case = "new", $value = null): array {
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         // title

@@ -13,21 +13,18 @@ class HtmlViewAbstract
     
     protected $content = [];
 
-    public function __construct() 
-    {
+    public function __construct() {
         // language
         $this->setLanguage($this->settings['language']);
         // set html
         $this->html = [ "tag" => "html", "attributes" => [ "lang" => $this->language ] ];
     }
     
-    private function setLanguage($language) 
-    {
+    private function setLanguage($language) {
         $this->language = $language ?? (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
     }
 
-    protected function setSiteName($siteName) 
-    {
+    protected function setSiteName($siteName) {
         $this->siteName = $siteName;
         $this->addHead([ "tag" => "title", "content" => _("Painel CMS [ ".$siteName." ]") ]);
     }

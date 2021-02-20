@@ -1,43 +1,39 @@
 <?php
-
 namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Type\WebPage;
+use Plinct\Cms\App;
 use Plinct\Tool\Sitemap;
 
 class WebPageController implements ControllerInterface
 {   
-    public function index($params = null): array 
-    {
+    public function index($params = null): array {
         $params2 = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "dateModified" ], $params);
-        
         return (new WebPage())->get($params2);
     }
     
-    public function edit(array $params): array 
-    {
+    public function edit(array $params): array {
         $params2 = array_merge($params, [ "properties" => "alternativeHeadline,hasPart" ]);
-        
         return (new WebPage())->get($params2);
     }
     
-    public function new($params = null)
-    {
+    public function new($params = null): bool {
         return true;
     }
 
-    public function saveSitemap()
-    {
+    public function sitemap($params): bool {
+        return true;
+    }
+
+    public function saveSitemap($params = null) {
         $dataSitemap = null;
-
-        $data = (new WebPage())->get([]);
-
+        $data = (new WebPage())->get(["properties" => "url,dateModified", "orderBy" => "dateModified desc"]);
         foreach ($data as $value) {
             $dataSitemap[] = [
-                "loc" => "http://" . filter_input(INPUT_SERVER, 'HTTP_HOST').$value['url'],
+                "loc" => App::$HOST . $value['url'],
+                "lastmod" => $value['dateModified']
             ];
         }
-
-        (new Sitemap("sitemap.xml"))->createSitemap($dataSitemap);
+        (new Sitemap("sitemap-webPage.xml"))->saveSitemap($dataSitemap);
     }
 }

@@ -64,7 +64,7 @@ trait FormElementsTrait
     protected static function divBoxExpanding($title, $type, $content): array
     {
         $id = "$type-form-". mt_rand(111,999);
-        $contentOut[] = [ "tag" => "h4", "content" => strip_tags(str_replace("<br>"," ",$title)), "attributes" => [ "class" => "button-dropdown button-dropdown-contracted", "onclick" => "expandBox(this,'$id');" ] ];
+        $contentOut[] = [ "tag" => "h4", "content" => $title, "attributes" => [ "class" => "button-dropdown button-dropdown-contracted", "onclick" => "expandBox(this,'$id');" ] ];
         foreach ($content as $value) {
             $contentOut[] = $value;
         }

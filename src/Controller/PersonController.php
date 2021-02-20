@@ -3,6 +3,10 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Type\Person;
+use Plinct\Api\Type\PropertyValue;
+use Plinct\Cms\App;
+use Plinct\Tool\DateTime;
+use Plinct\Tool\Sitemap;
 
 class PersonController implements ControllerInterface
 {
@@ -22,5 +26,22 @@ class PersonController implements ControllerInterface
     public function new($params = null): bool
     {
         return true;
+    }
+
+    public function saveSitemap($params) {
+        var_dump($params);
+        $data = (new Person())->get([ "orderBy" => "dateModified desc", "properties" => "dateModified,image" ]);
+
+        $loc = App::$HOST ."/t/Person/";
+        foreach ($data as $value) {
+            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $lastmod = DateTime::formatISO8601($value['dateModified']);
+            $dataSitemap[] = [
+                "loc" => $loc.$id,
+                "lastmod" => $lastmod,
+                "image" => $value['image']
+            ];
+        }
+        (new Sitemap("sitemap-person.xml"))->saveSitemap($dataSitemap);
     }
 }
