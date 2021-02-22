@@ -28,15 +28,27 @@ class TaxonController implements ControllerInterface
         $dataSitemap = null;
         $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image" ];
         $data = (new Taxon())->get($params);
-        foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], 'id');
-            $lastmod = DateTime::formatISO8601($value['dateModified']);
-            $dataSitemap[] = [
+        // for type pages
+        foreach ($data as $valueForType) {
+            $id = PropertyValue::extractValue($valueForType['identifier'], 'id');
+            $lastmod = DateTime::formatISO8601($valueForType['dateModified']);
+            $dataForType[] = [
                 "loc" => App::$HOST . "/t/taxon/$id",
                 "lastmod" => $lastmod,
-                "image" => $value['image']
+                "image" => $valueForType['image']
             ];
         }
-        (new Sitemap("sitemap-taxon.xml"))->saveSitemap($dataSitemap);
+        // for url (herbariodigital)
+        foreach ($data as $valueForPage) {
+            $lastmod = DateTime::formatISO8601($valueForPage['dateModified']);
+            $url = $valueForPage['url'];
+            $dataforPage[] = [
+                "loc" => App::$HOST . $url,
+                "lastmod" => $lastmod,
+                "image" => $valueForPage['image']
+            ];
+        }
+
+        (new Sitemap("sitemap-taxon.xml"))->saveSitemap(array_merge($dataforPage, $dataForType));
     }
 }

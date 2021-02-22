@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\Html\Page;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
+use Plinct\Cms\View\Html\Widget\SitemapWidget;
 
 class WebPageView extends AbstractView
 {
@@ -55,11 +56,11 @@ class WebPageView extends AbstractView
         return $this->content;
     }
 
-    public function sitemap() {
+    public function sitemap($sitemaps) {
         // TTITLE
         parent::addMain(self::simpleTag("h2",_("Sitemaps")));
         // INDEX
-        parent::addMain((new SitemapWidget())->index());
+        parent::addMain((new SitemapWidget())->index($sitemaps));
         return $this->content;
     }
 

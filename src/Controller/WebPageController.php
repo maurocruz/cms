@@ -21,8 +21,8 @@ class WebPageController implements ControllerInterface
         return true;
     }
 
-    public function sitemap($params): bool {
-        return true;
+    public function sitemap($params): array {
+        return (new \Plinct\Cms\Server\Sitemap())->getSitemaps();
     }
 
     public function saveSitemap($params = null) {
