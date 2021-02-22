@@ -39,7 +39,7 @@ class ImageObjectController implements ControllerInterface
 
     public function saveSitemap($params = null) {
         $dataSitemap = null;
-        $data = (new ImageObject())->get([ "properties" => "license", "orderBy" => "uploadDate", "limit" => "3" ]);
+        $data = (new ImageObject())->get([ "properties" => "license", "orderBy" => "uploadDate" ]);
         foreach ($data as $value) {
             $id = PropertyValue::extractValue($value['identifier'], "id");
             $imageLoc = App::$HOST . str_replace(" ", "%20", $value['contentUrl']);
