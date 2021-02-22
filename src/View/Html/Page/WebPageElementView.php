@@ -76,7 +76,8 @@ class WebPageElementView implements ViewInterface
         if ($value) {
             foreach ($value as $valueWebPageElement) {
                 $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
-                $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $valueWebPageElement['name'], "WebPageElement", [self::editForms($valueWebPageElement)]);
+                $name = strip_tags(str_replace("<br>"," ",$valueWebPageElement['name']));
+                $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $name , "WebPageElement", [self::editForms($valueWebPageElement)]);
             }
         }
         return $content;

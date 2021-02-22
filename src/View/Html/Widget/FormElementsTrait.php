@@ -52,19 +52,28 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => "$type-form" ], "content" => $contentOut ];
     }
 
-    protected static function divBox($title, $type, $content): array
-    {
+    protected static function divBox2($title, $content): array {
         $contentOut[] = [ "tag" => "h4", "content" => $title ];
         foreach ($content as $value) {
             $contentOut[] = $value;
         }
-        return [ "tag" => "div", "attributes" => [ "id" => "$type-form", "class" => "box" ], "content" => $contentOut ];
+        return [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $contentOut ];
+    }
+
+    protected static function divBox($title, $type, $content): array
+    {
+        $id = "$type-form-". mt_rand(111,999);
+        $contentOut[] = [ "tag" => "h4", "content" => $title ];
+        foreach ($content as $value) {
+            $contentOut[] = $value;
+        }
+        return [ "tag" => "div", "attributes" => [ "id" => $id, "class" => "box" ], "content" => $contentOut ];
     }
 
     protected static function divBoxExpanding($title, $type, $content): array
     {
         $id = "$type-form-". mt_rand(111,999);
-        $contentOut[] = [ "tag" => "h4", "content" => strip_tags(str_replace("<br>"," ",$title)), "attributes" => [ "class" => "button-dropdown button-dropdown-contracted", "onclick" => "expandBox(this,'$id');" ] ];
+        $contentOut[] = [ "tag" => "h4", "content" => $title, "attributes" => [ "class" => "button-dropdown button-dropdown-contracted", "onclick" => "expandBox(this,'$id');" ] ];
         foreach ($content as $value) {
             $contentOut[] = $value;
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html;
 
 use Plinct\Cms\View\Html\Widget\AuthForms;
@@ -12,20 +11,15 @@ use Plinct\Cms\App;
 
 class HtmlView extends HtmlViewContent
 {    
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
-
         // gettext
         Locale::setTranslate();
-        
         // template
         parent::setTemplate();
-        // site name
         parent::setSiteName(App::getTitle());        
         // header
         parent::setHeader();
-        
         // status bar
         if (SessionUser::checkUserAdmin()) {
             // user bar
@@ -33,7 +27,6 @@ class HtmlView extends HtmlViewContent
             // navbar
             parent::navbar();
         }
-        
         // footer
         parent::footer();
     }
