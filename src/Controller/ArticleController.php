@@ -3,6 +3,7 @@ namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Type\Article;
 use Plinct\Cms\App;
+use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
 class ArticleController implements ControllerInterface
@@ -35,7 +36,7 @@ class ArticleController implements ControllerInterface
                 "news" => [
                     "name" => App::getTitle(),
                     "language" => App::getLanguage(),
-                    "publication_date" => $value['datePublished'],
+                    "publication_date" => DateTime::formatISO8601($value['datePublished']),
                     "title" => $value['headline']
                 ]
             ];

@@ -3,6 +3,7 @@ namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Type\WebPage;
 use Plinct\Cms\App;
+use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
 class WebPageController implements ControllerInterface
@@ -31,7 +32,7 @@ class WebPageController implements ControllerInterface
         foreach ($data as $value) {
             $dataSitemap[] = [
                 "loc" => App::$HOST . $value['url'],
-                "lastmod" => $value['dateModified']
+                "lastmod" => DateTime::formatISO8601($value['dateModified'])
             ];
         }
         (new Sitemap("sitemap-webPage.xml"))->saveSitemap($dataSitemap);
