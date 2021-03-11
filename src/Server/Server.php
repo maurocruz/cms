@@ -1,9 +1,7 @@
 <?php
-
 namespace Plinct\Cms\Server;
 
-class Server
-{   
+class Server {
     private static $tableHasPart;
     
     public function edit($className, $params) {
@@ -25,10 +23,6 @@ class Server
         self::unsetRelParams($params);
         return $this->return();
     }
-
-    /*public function sitemap() {
-
-    }*/
 
     private static function unsetRelParams($params) {
         self::$tableHasPart = $params['tableHasPart'] ?? null;

@@ -3,8 +3,7 @@ namespace Plinct\Cms;
 
 use Slim\App as Slim;
 
-class App 
-{
+class App {
     private static $IMAGES_FOLDER;
     private $slim;
     private static $HostAPI;
@@ -18,7 +17,7 @@ class App
         $this->slim = $slim;
         self::$HOST = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
         self::$HostAPI = "//" . $_SERVER['HTTP_HOST']. "/api";
-
+        self::setVersion();
     }
     public function setLanguage($language): App {
         self::$LANGUAGE = $language; return $this;

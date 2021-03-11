@@ -11,8 +11,6 @@ class Sitemap
             $objectController = new $classController();
             if (method_exists($objectController, "saveSitemap")) {
                 $objectController->saveSitemap($params);
-            } else {
-                die('Method '.$classController.'::saveSitemap() not exists');
             }
         }
     }

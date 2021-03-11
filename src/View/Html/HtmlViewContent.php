@@ -1,28 +1,21 @@
 <?php
-
 namespace Plinct\Cms\View\Html;
 
 use Plinct\Cms\App;
-use Plinct\Api\Auth\SessionUser;
 
-class HtmlViewContent extends HtmlViewAbstract 
-{
+class HtmlViewContent extends HtmlViewAbstract {
 
-    protected function navbar() 
-    {
+    protected function navbar() {
         $data['list'] = [
             "/admin" => _("Home"),
             "/admin/user" => _("Users")
         ];
-                
         if (App::getTypesEnabled()) {
             foreach (App::getTypesEnabled() as $key => $value) {
                 $data['list']['/admin/'.$value] = _(ucfirst($value));
             }
-        }        
-        
-        $data['attributes'] = ["class"=>"menu"];        
-        
+        }
+        $data['attributes'] = ["class"=>"menu"];
         parent::addNavBar($data);            
     } 
 
@@ -47,31 +40,19 @@ class HtmlViewContent extends HtmlViewAbstract
         ];
     }
     
-    protected function setUserBar() 
-    {        
-        parent::addHeader([
-            "tag"=>"div",
-            "attributes"=>["class"=>"admin admin-bar-top"],
-            "content"=>[
-                [ "tag"=>"p", "content" => sprintf(_("Hello, %s. You logged with %s!"), SessionUser::getName(), SessionUser::getStatusWithString()) ],
+    protected function setUserBar() {
+        parent::addHeader([ "tag"=>"div", "attributes" => ["class"=>"admin admin-bar-top"], "content" => [
+                [ "tag"=>"p", "content" => sprintf(_("Hello, %s. You logged with %s!"), $_SESSION['userLogin']['name'], $_SESSION['userLogin']['admin'] ? "admin" : "user") ],
                 [ "tag"=>"p", "content"=> _("Log out"), "href"=>"/admin/logout" ]
             ]            
         ],1);
     }
     
-    protected function setHeader() 
-    {
-        parent::addHeader([ 
-            "tag" => "p", 
-            "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel") . ". " . _("Version") . ": " . App::getVersion(),
-            "attributes" => [ "style" => "display: inline;" ] 
+    protected function setHeader() {
+        parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel") . ". " . _("Version") . ": " . App::getVersion()
         ]);        
         if (!isset($_SESSION['userLogin'])) {        
-            parent::addHeader([ 
-                "tag" => "p", 
-                "content" => '<a href="/admin/login">Entrar</a>', 
-                "attributes" => [ "style" => "float: right;" ]  
-            ]);
+            parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "float: right;" ], "content" => '<a href="/admin/login">Entrar</a>' ]);
         } else { 
             parent::addHeader([ 
                 "tag" => "p", 

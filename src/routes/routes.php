@@ -3,21 +3,18 @@
  * ROUTES CMS ADMIN
  */
 
-use Plinct\Cms\App;
+use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\View\Html\HtmlView;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
-
-use Plinct\Api\Auth\AuthMiddleware;
-use Plinct\Cms\Middleware\InitialChecking;
-
 use Plinct\Cms\Server\Server;
 use Plinct\Cms\Server\Sitemap;
 
-return function (Route $route) 
-{
-    // ASSETS
+return function (Route $route) {
+    /**
+     * ASSETS
+     */
     $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args) {
         $filename = $args['filename'];
         $type = $args['type'];
@@ -28,28 +25,29 @@ return function (Route $route)
         $newResponse->getBody()->write($script);
         return $newResponse;
     });
-    /*
+    /**
      * ADMIN ROUTES
      */
     $route->group('/admin', function(Route $route) {
-        /* AUTHENTICATION ROUTES */
+        /**
+         * AUTHENTICATION ROUTES
+         */
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
-        /*
+        /**
          * DEFAULT
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response) {
-            App::setVersion();
-            $view = new HtmlView();
-            if ($request->getAttribute('userAuth') === false) {
-                $content = $view->login();
+            if (isset($_SESSION['userLogin']['admin'])) {
+                $content = (new HtmlView())->build($request);
+                $response->getBody()->write($content);
             } else {
-                $content = $view->build($request);
+                $content = (new HtmlView())->login();
+                $response->getBody()->write($content);
             }
-            $response->getBody()->write($content);
             return $response;
-        });
-        /*
+        })->addMiddleware(new Authentication());
+        /**
          * ADMIN POST
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) {
@@ -104,6 +102,6 @@ return function (Route $route)
             } else {            
                 return false;
             }
-        });
-    })->add(new AuthMiddleware())->add(new InitialChecking());
+        })->addMiddleware(new Authentication());
+    });
 };
