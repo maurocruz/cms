@@ -23,6 +23,8 @@ class Authentication implements MiddlewareInterface
             $_SESSION['userLogin']['name'] = $tokenDecode->name;
             $_SESSION['userLogin']['admin'] = $tokenDecode->admin;
             $_SESSION['userLogin']['uid'] = $tokenDecode->uid;
+        } elseif(!$token && isset($_SESSION['userLogin'])) {
+            unset($_SESSION['userLogin']);
         }
         return $handler->handle($request);
     }
