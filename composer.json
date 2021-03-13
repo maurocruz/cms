@@ -13,7 +13,7 @@
         "slim/slim": "4.*",
         "slim/psr7": "1.*",
         "tuupola/slim-jwt-auth": "3.*",
-        "plinct/api": "dev-AuthJwt",
+        "plinct/pdo": "0.0.*",
         "plinct/web": "0.*",
         "plinct/middleware": "0.*",
         "plinct/tool": "0.*"

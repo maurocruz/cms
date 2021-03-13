@@ -16,7 +16,7 @@ class Authentication implements MiddlewareInterface
      * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) session_start();
         $token = $_COOKIE['API_TOKEN'] ?? null;
         if ($token && !isset($_SESSION['userLogin'])) {
             $tokenDecode = JWT::decode($token, PlinctApi::$JWT_SECRET_API_KEY, ["HS256"]);

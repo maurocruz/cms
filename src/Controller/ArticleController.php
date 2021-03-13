@@ -8,7 +8,6 @@ use Plinct\Tool\Sitemap;
 
 class ArticleController implements ControllerInterface
 {
-
     public function index($params = null): array {
         $params2 = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "datePublished", "ordering" => "desc" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
