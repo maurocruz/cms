@@ -6,11 +6,10 @@ use Plinct\Cms\View\locale\Locale;
 use Plinct\Web\Render;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 
-use Plinct\Api\Auth\SessionUser;
 use Plinct\Cms\App;
 
-class HtmlView extends HtmlViewContent
-{    
+class HtmlView extends HtmlViewContent {
+
     public function __construct() {
         parent::__construct();
         // gettext
@@ -21,7 +20,7 @@ class HtmlView extends HtmlViewContent
         // header
         parent::setHeader();
         // status bar
-        if (SessionUser::checkUserAdmin()) {
+        if (isset($_SESSION['userLogin']['admin'])) {
             // user bar
             parent::setUserBar();
             // navbar
@@ -31,8 +30,7 @@ class HtmlView extends HtmlViewContent
         parent::footer();
     }
     
-    public function build(Request $request): string
-    {
+    public function build(Request $request): string {
         $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
         $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
         $id = $request->getAttribute('identifier') ?? $request->getQueryParams()['id'] ?? null;
@@ -86,28 +84,13 @@ class HtmlView extends HtmlViewContent
     }
     
     // LOGIN FORM
-    public function login($message = null): string
-    {
-        if ($message) {
-            switch ($message) {
-                case "Password invalid":
-                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Seu email confere, mas a senha não! Tente novamente ou entre em contato com o administrador"]);
-                    break;
-
-                case "User not found":
-                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Sinto muito, mas seu email não consta em nosso banco de dados! Tente de novo ou faça um novo <a href=\"/admin/registrar\">registro</a>"]);
-                    break;
-
-                case "userNotAuthorized":
-                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Você está devidamente registrado, mas não tem permissão para acessar este painel. Por favor, entre em contato com o administrador!"]);
-                    break;
-                default:
-                    parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => $message]);
-            }
-        }
-                
+    public function login($token = true): string {
+        // USER NOT FOUNDED
+        if ($token === null) parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Sinto muito, mas seu email não consta em nosso banco de dados! Tente de novo ou faça um novo <a href=\"/admin/registrar\">registro</a>"]);
+        // PASSWORD INVALID
+        if ($token === false || $token === '') parent::addMain(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => "Seu email confere, mas a senha não! Tente novamente ou entre em contato com o administrador"]);
+        // FORM LOGIN
         parent::addMain(file_get_contents(__DIR__ . '/Widget/signupForm.html'));
-        
         return $this->ready();
     }
     
@@ -164,9 +147,9 @@ class HtmlView extends HtmlViewContent
     {
         //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>');
         //parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>');
-        parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>');
-        parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>');
-        parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
+        //parent::addBody('<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>');
+        //parent::addBody('<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>');
+        //parent::addBody('<script src="https://unpkg.com/axios/dist/axios.min.js"></script>');
         parent::addBody('<script src="/App/static/cms/js/plinctcms.js"></script>');
         
         return "<!DOCTYPE html>" . Render::arrayToString($this->html);

@@ -1,16 +1,14 @@
 <?php
-
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Server\PDOConnect;
+use Plinct\PDO\PDOConnect;
 use Plinct\Api\Type\Banner;
 use Plinct\Api\Type\Order;
 use Plinct\Api\Type\OrderItem;
 
 class OrderController implements ControllerInterface
 {
-    public function index($params = null): array
-    {
+    public function index($params = null): array {
         $nameLike = $params['search'] ?? null;
         $orderBy = $params['orderBy'] ?? null;
         $ordering = $params['ordering'] ?? null;

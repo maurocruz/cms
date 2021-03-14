@@ -1,17 +1,17 @@
 <?php
-
 namespace Plinct\Cms\View\Html;
 
 use Locale;
 
-class HtmlViewAbstract
-{
+class HtmlViewAbstract {
     protected $settings;
     protected $html;
     protected $language;
     protected $siteName;
-    
     protected $content = [];
+
+    protected $userName;
+    protected $userAdmin;
 
     public function __construct() {
         // language
