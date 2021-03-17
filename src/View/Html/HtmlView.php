@@ -35,51 +35,39 @@ class HtmlView extends HtmlViewContent {
         $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
         $id = $request->getAttribute('identifier') ?? $request->getQueryParams()['id'] ?? null;
         $params = $request->getQueryParams();
-        
         if ($id) {
             $params['id'] = $id;
         }
-        
         if($type) {            
             $controlClassName = "\\Plinct\\Cms\\Controller\\".ucfirst($type)."Controller";
-            
             if (class_exists($controlClassName)) {
                 $controlData = (new $controlClassName($request))->{$action}($params);
-                
                 $viewClassName = "\\Plinct\\Cms\\View\\Html\\Page\\".ucfirst($type)."View";
-                                
                 if (class_exists($viewClassName)) {
-                    
                     if(isset($controlData['message']) && $controlData['message'] == "No data founded") {
                         $viewData['main'][] = (new $viewClassName())->noContent();
-                        
                     } else {
                         $viewData = (new $viewClassName())->{$action}($controlData);
                     }
-                                                            
                     // navbar
                     if (array_key_exists('navbar', $viewData)) {
                         foreach ($viewData['navbar'] as $value) {
                             parent::addNavBar($value);
                         }
                     }
-                    
                     // main
                     if (array_key_exists('main', $viewData)) {
                         parent::addMain($viewData['main']);
                     }
-                    
                 } else {
                     parent::addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => "$type type view not founded" ]);
                 }
             } else {
                 parent::addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => "$type type not founded" ]);
             }
-            
         } else {
             parent::root();
         }
-        
         return $this->ready();
     }
     

@@ -1,18 +1,18 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\User;
+use Plinct\Cms\Server\Api;
 
 class UserController implements ControllerInterface
 {   
     public function index($params = null): array {
         $params = [ "format" => "ItemList" ];
-        return (new User())->get($params);
+        return Api::get("user", $params);
     }
     
     public function edit($params): array {
         $params = array_merge($params, [ "properties" => "email,create_time" ]);
-        $data = (new User())->get($params);
+        $data = Api::get("user", $params);
         return $data[0];        
     }
     
