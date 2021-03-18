@@ -2,7 +2,6 @@
 namespace Plinct\Cms\Server;
 
 use Plinct\PDO\PDOConnect;
-use Plinct\Api\Type\ImageObject;
 
 class ImageObjectServer {
     private $tablesHasImageObject;
@@ -38,12 +37,14 @@ class ImageObjectServer {
     }
 
     private static function listDirectories($directory, $arrayReturn = null) {
-        foreach (scandir($directory) as $key => $value) {
-            if (!in_array($value,array(".","..","thumbs"))) {
-                $path = $directory . DIRECTORY_SEPARATOR . $value;
-                if (is_dir($directory . DIRECTORY_SEPARATOR . $value)) {
-                    $arrayReturn[] = str_replace($_SERVER['DOCUMENT_ROOT'], "",$path);
-                    $arrayReturn = self::listDirectories($path, $arrayReturn);
+        if (is_dir($directory)) {
+            foreach (scandir($directory) as $key => $value) {
+                if (!in_array($value, array(".", "..", "thumbs"))) {
+                    $path = $directory . DIRECTORY_SEPARATOR . $value;
+                    if (is_dir($directory . DIRECTORY_SEPARATOR . $value)) {
+                        $arrayReturn[] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $path);
+                        $arrayReturn = self::listDirectories($path, $arrayReturn);
+                    }
                 }
             }
         }
@@ -51,7 +52,7 @@ class ImageObjectServer {
     }
 
     public static function listKeywords(): array {
-        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? (new ImageObject())->get([ "groupBy" => "keywords", "orderBy" => "keywords" ]);
+        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "groupBy" => "keywords", "orderBy" => "keywords" ]);
         if(self::$KEYWORDS === null) {
             foreach (self::$KEYWORDS_LIST as $value) {
                 self::$KEYWORDS[] = $value['keywords'];

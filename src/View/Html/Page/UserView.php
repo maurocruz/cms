@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
@@ -7,8 +6,7 @@ use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
-class UserView
-{
+class UserView {
     private $content;
 
     use navbarTrait;
@@ -19,12 +17,10 @@ class UserView
         $title = "Users";
         $level = 2;
         $append = self::searchPopupList("user");
-
         $this->content['navbar'][] = self::navbar($title, $list, $level, $append);
     }
     
-    public function index(array $data): array 
-    {
+    public function index(array $data): array {
         $this->content['main'][] = [ "tag" => "p", "content" => sprintf(_("Showing %s items!"), count($data) )];
         // thead
         $content[] = [ "tag" => "thead", "content" => [
@@ -38,9 +34,7 @@ class UserView
         $body = null;
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
-            
             $id = PropertyValue::extractValue($item['identifier'], "id");
-            
             $body[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "content" => $id ],
                 [ "tag" => "td", "content" => "<a href=\"/admin/user/edit/".$id."\">".$item['name']."</a>" ],
@@ -52,30 +46,21 @@ class UserView
         return $this->content;
     }
     
-    public function new(): array
-    {
-        $this->content['main'][] = self::divBox(_("Add new"), "User", [self::form()]);
+    public function new(): array {
+        $this->content['main'][] = self::divBox(_("Add new"), "User", [self::formUser()]);
         return $this->content;
     }
 
-
-    public function edit(array $data): array 
-    {
-        
-       $this->content['main'][] = self::divBox(_("Edit user"), "User", [ self::form("edit", $data)]);
+    public function edit(array $data): array {
+       $this->content['main'][] = self::divBox(_("Edit user"), "User", [ self::formUser("edit", $data)]);
        return $this->content;
     }
     
-    static private function form($case = 'new', $value = null) 
-    {
+    static private function formUser($case = 'new', $value = null): array {
         $id = PropertyValue::extractValue($value['identifier'], "id");
-
         $content[] = $case == "edit" ? self::fieldsetWithInput("ID", "id", $id, [ "style" => "width: 40px"], "text", [ "readonly" ]) : null;
-        
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name']);
-        
         $content[] = self::fieldsetWithInput(_("Email"), "email", $value['email']);
-        
         $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => _("Status") ],
             [ "tag" => "select", "attributes" => [ "name" => "status" ], "content" => [
@@ -86,13 +71,9 @@ class UserView
             ]]
         ]];
         //$content[] = self::fieldsetWithInput(_("Status"), "status", $value['status']);
-        
         $content[] = self::fieldsetWithInput(_("Created date"), "create_time", $value['create_time'], null, "text", [ "readonly" ]);
-        
         $content[] = self::submitButtonSend();
-        
         $content[] = $case =="edit" ? self::submitButtonDelete("/admin/user/erase") : null;
-        
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "action" => "/admin/user/$case", "method" => "post"], "content" => $content ];
     }
 }
