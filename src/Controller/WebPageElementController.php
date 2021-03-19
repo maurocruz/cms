@@ -1,29 +1,22 @@
 <?php
-
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\WebPageElement;
+use Plinct\Cms\Server\Api;
 
 class WebPageElementController implements ControllerInterface
 {
-    public function index($params = null): array
-    {
+    public function index($params = null): array {
         return [];
     }
 
-    public function new($params = null)
-    {
+    public function new($params = null) {
         return null;
     }
 
-    public function edit(array $params): array
-    {
+    public function edit(array $params): array {
         $params2 = [ "properties" => "*" ];
-
         $params3 = array_merge($params, $params2);
-
-        $data = (new WebPageElement())->get($params3);
-
+        $data = Api::get("webPageElement", $params3);
         return $data[0];
     }
 }

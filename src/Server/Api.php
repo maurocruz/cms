@@ -12,7 +12,8 @@ class Api {
 
     public static function get(string $type, array $params = null): array {
         if (self::$API_HOST) {
-            return json_decode((new Curl(self::$API_HOST))->get($type, $params), true);
+            $relativeUrl = lcfirst($type);
+            return json_decode((new Curl(self::$API_HOST))->get($relativeUrl, $params), true);
         } else {
             $className = "Plinct\\Api\\Type\\".ucfirst($type);
             if (class_exists($className)) {

@@ -1,9 +1,8 @@
 <?php
 namespace Plinct\Cms\Controller;
 
+use Plinct\Cms\Server\Api;
 use Plinct\PDO\PDOConnect;
-use Plinct\Api\Type\LocalBusiness;
-use Plinct\Api\Type\Order;
 
 class AdvertisingController 
 {
@@ -28,7 +27,7 @@ class AdvertisingController
         } else {
             $requiredParams = [ "format" => "ItemList", "properties" => "*,customer", "where" => "paymentDueDate>=CURDATE()", "orderBy" => "paymentDueDate" ];
             $finalParams = array_merge($requiredParams, $params);
-            $data = (new Order())->get($finalParams);
+            $data = Api::get("order", $finalParams);
         }
         return $data;
     }
@@ -38,7 +37,7 @@ class AdvertisingController
     }
     
     public function new(): array {
-        return (new LocalBusiness())->get([ "limit" => "none", "orderBy" => "name" ]);
+        return Api::get("localBusiness", [ "limit" => "none", "orderBy" => "name" ]);
     }
     
     public function payment(): array {

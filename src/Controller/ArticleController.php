@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\Article;
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -11,13 +11,13 @@ class ArticleController implements ControllerInterface
     public function index($params = null): array {
         $params2 = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "datePublished", "ordering" => "desc" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
-        return (new Article())->get($params3);
+        return Api::get("article", $params3);
     }
 
     public function edit(array $params): array {
         $params2 = [ "properties" => "*,image,author" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
-        $data = (new Article())->get($params3);
+        $data = Api::get("article", $params3);
         return $data[0] ?? [];
     }
 
@@ -28,7 +28,7 @@ class ArticleController implements ControllerInterface
     public function saveSitemap() {
         $dataSitemap = null;
         $params = [ "orderBy" => "datePublished", "ordering" => "desc" ];
-        $data = (new Article())->get($params);
+        $data = Api::get("article", $params);
         foreach ($data as $value) {
             $dataSitemap[] = [
                 "loc" => App::$HOST . DIRECTORY_SEPARATOR . "noticia" . DIRECTORY_SEPARATOR . substr($value['datePublished'],0,10) . DIRECTORY_SEPARATOR . urlencode($value['headline']),

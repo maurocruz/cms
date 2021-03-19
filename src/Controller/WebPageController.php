@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\WebPage;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
 use Plinct\Tool\DateTime;

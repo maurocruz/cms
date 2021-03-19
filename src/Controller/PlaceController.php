@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\Place;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -11,7 +11,7 @@ class PlaceController implements ControllerInterface
 {
     public function index($params = null): array {
         $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], $params);
-        return (new Place())->get($params);
+        return Api::get("place", $params);
     }
     
     public function new($params = null): bool {
@@ -20,12 +20,13 @@ class PlaceController implements ControllerInterface
     
     public function edit(array $params): array {
         $params= array_merge($params, [ "properties" => "address,image" ]);
-        return (new Place())->get($params);
+        return Api::get("place", $params);
     }
 
     public function saveSitemap($params = null) {
         $dataSitemap = null;
-        $data = (new Place())->get([ "orderBy" => "dateModified desc", "properties" => "*,image" ]);
+        $params = [ "orderBy" => "dateModified desc", "properties" => "*,image" ];
+        $data =  Api::get("place", $params);
         foreach ($data as $value) {
             $id = PropertyValue::extractValue($value['identifier'], "id");
             $dataSitemap[] = [
