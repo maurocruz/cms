@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\Html\Widget;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Tool\Image;
 
 class ImageObjectWidget {
     protected $tableHasPart;
@@ -140,16 +141,18 @@ class ImageObjectWidget {
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idIsPartOf", "type" => "hidden", "value" => $ID ] ];
         // FIGURE
-        list($width, $height) = getimagesize($_SERVER['DOCUMENT_ROOT'] . $value['contentUrl'] );
-        $caption = $width."x".$height."px";
+        $image = new Image($value['contentUrl']);
+        $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
         $content[] = [
             "object" => "figure",
             "attributes" => [ "class" => "figure-caption-black", "style" => "max-width: 200px; float: left; margin-right: 10px;" ],
-            "src" => $value['contentUrl'],
+            "src" => $image->getSrc(),
             "width" => 200,
             "href" => "/admin/imageObject/edit/$ID",
             "caption" => $caption
         ];
+        // content url
+        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: 80%;" ], "text", [ "readonly" ]);
         // position
         $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
         // highlights
