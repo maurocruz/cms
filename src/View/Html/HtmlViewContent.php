@@ -2,7 +2,6 @@
 namespace Plinct\Cms\View\Html;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
 
 class HtmlViewContent extends HtmlViewAbstract {
 
@@ -48,9 +47,10 @@ class HtmlViewContent extends HtmlViewAbstract {
     
     protected function setHeader() {
         // TITLE
+        $apiLocation = App::$API_HOST ? '<a href="' . App::$API_HOST . '" target="_blank">' . App::$API_HOST . '</a>' : "Localhost";
         parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" =>
             '<a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> '. _("Control Panel")
-            . '. Api: <a href="' . App::$API_HOST . '" target="_blank">' . App::$API_HOST . '</a>'
+            . '. Api: '. $apiLocation
             . ". " . _("Version") . ": " . App::getVersion()
         ]);
         // LOG IN OUT
