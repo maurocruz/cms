@@ -7,13 +7,13 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class UserView {
-    private $content;
+    private array $content = [];
 
     use navbarTrait;
     use FormElementsTrait;
 
     public function __construct() {
-        $list = [ "/admin/user" => _("View all"), "/admin/user/new" => _("Add new user") ];
+        $list = [ "/admin/user" => _("View all") ];
         $title = "Users";
         $level = 2;
         $append = self::searchPopupList("user");
@@ -57,21 +57,21 @@ class UserView {
     }
     
     static private function formUser($case = 'new', $value = null): array {
-        $id = PropertyValue::extractValue($value['identifier'], "id");
+        $id = isset($value) ? PropertyValue::extractValue($value['identifier'], "id") : null;
         $content[] = $case == "edit" ? self::fieldsetWithInput("ID", "id", $id, [ "style" => "width: 40px"], "text", [ "readonly" ]) : null;
-        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name']);
-        $content[] = self::fieldsetWithInput(_("Email"), "email", $value['email']);
+        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null);
+        $content[] = self::fieldsetWithInput(_("Email"), "email", $value['email'] ?? null);
+        $statusText = _(UserController::getStatusWithText($value['status'] ?? null));
         $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => _("Status") ],
             [ "tag" => "select", "attributes" => [ "name" => "status" ], "content" => [
-                [ "tag" => "option", "attributes" => [ "value" => $value['status'] ], "content" => _(UserController::getStatusWithText($value['status'])) ],
+                [ "tag" => "option", "attributes" => [ "value" => $value['status'] ?? null ], "content" => $statusText ],
                 [ "tag" => "option", "attributes" => [ "value" => "" ], "content" => _("Choose") ],
                 [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => _("User") ],
                 [ "tag" => "option", "attributes" => [ "value" => "1" ], "content" => _("Administrator") ]
             ]]
         ]];
-        //$content[] = self::fieldsetWithInput(_("Status"), "status", $value['status']);
-        $content[] = self::fieldsetWithInput(_("Created date"), "create_time", $value['create_time'], null, "text", [ "readonly" ]);
+        $content[] = $case == "edit" ? self::fieldsetWithInput(_("Created date"), "create_time", $value['create_time'] ?? null, null, "text", [ "readonly" ]) : null;
         $content[] = self::submitButtonSend();
         $content[] = $case =="edit" ? self::submitButtonDelete("/admin/user/erase") : null;
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "action" => "/admin/user/$case", "method" => "post"], "content" => $content ];

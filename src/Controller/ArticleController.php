@@ -17,8 +17,7 @@ class ArticleController implements ControllerInterface
     public function edit(array $params): array {
         $params2 = [ "properties" => "*,image,author" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
-        $data = Api::get("article", $params3);
-        return $data[0] ?? [];
+        return Api::get("article", $params3);
     }
 
     public function new($params = null) {

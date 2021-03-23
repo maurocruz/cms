@@ -6,16 +6,13 @@ use Plinct\Cms\View\Html\Widget\ImageObjectWidget;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class ImageObjectView extends ImageObjectWidget implements ViewInterface {
-    private $content;
+    private array $content;
 
     use navbarTrait;
 
     private function navBarImageObject($titleLevel3 = null) {
         $title = _("Images");
-        $list = [
-            "/admin/imageObject" => _("List by keywords"),
-            "/admin/imageObject/new" => _("Add")
-        ];
+        $list = [ "/admin/imageObject" => _("List by keywords"), "/admin/imageObject/new" => _("Add") ];
         $level = 2;
         $append = self::searchPopupList("imageObject", "keywords", "groupBy=keywords&orderBy=keywords&ordering=asc");
         $this->content['navbar'][] = self::navbar($title, $list, $level, $append);
@@ -32,7 +29,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
 
     public function new($data = null): array {
         $this->navBarImageObject("Add");
-        $this->content['main'][] = self::upload($data['listLocation'], $data['listKeywords']);
+        $this->content['main'][] = self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null);
         return $this->content;
     }
 
@@ -50,7 +47,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
         return $this->content;
     }
 
-    public function keywords($data) {
+    public function keywords($data): array {
         $this->navBarImageObject(_("Keyword") . ": " . $data['paramsUrl']['id']);
         $this->content['main'][] = parent::imagesList($data['list']);
         $this->content['main'][] = self::arrowBack();

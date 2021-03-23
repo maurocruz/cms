@@ -27,7 +27,7 @@ class ImageObjectWidget {
                     "height" => 0.68,
                     "href" => "/admin/imageObject/keywords/".urlencode($item['keywords'])
                 ]
-            ] ];
+            ]];
         }
         $content[] = [ "tag" => "ul", "attributes" => [ "class" => "list-folder" ], "content" => $list ];
         return [ "tag" => "div", "content" => $content ];
@@ -107,26 +107,28 @@ class ImageObjectWidget {
         $ID = PropertyValue::extractValue($value['identifier'], "id");
         $content[] = self::input("id", "hidden", $ID);
         // FIGURE
+        $image = new Image($value['contentUrl']);
+        $contentSize = $value['contentSize'] ?? $image->getFileSize();
+        $imageWidth = $value['width'] ?? $image->getWidth();
+        $imageHeight = $value['height'] ?? $image->getHeight();
+        $imageType = $value['type'] ?? $image->getMimeType();
         $content[] = [ "object" => "figure", "attributes" => [ "style" => "display: block;" ], "src" => $value['contentUrl'] ];
-        // id
+        // ID
         $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 80px;" ], "text", [ "disabled" ] );
         // url
         $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 80px);" ], "text", [ "disabled"] );
-        $filepath = $_SERVER['DOCUMENT_ROOT'].$value['contentUrl'];
-        $imageInfo = file_exists($filepath) ? getimagesize($filepath) : null;
         // content size
-        $contentSize = $value['contentSize'] ?? file_exists($filepath) ? filesize($filepath) : null;
-        $content[] = self::fieldsetWithInput(_("Content size") . " (bytes)", "contentSize", $contentSize, [ "style" => "width: 180px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Content size") . " (bytes)", "contentSize", $contentSize, [ "style" => "width: 180px;" ], "text", [ "readonly"] );
         // width
-        $content[] = self::fieldsetWithInput(_("Image width") . " (px)", "width", $imageInfo[0], [ "style" => "width: 160px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Image width") . " (px)", "width", $imageWidth, [ "style" => "width: 160px;" ], "text", [ "readonly"] );
         // height
-        $content[] = self::fieldsetWithInput(_("Image height") . " (px)", "height", $imageInfo[1], [ "style" => "width: 140px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Image height") . " (px)", "height", $imageHeight, [ "style" => "width: 140px;" ], "text", [ "readonly"] );
         // encodingFormat
-        $content[] = self::fieldsetWithInput(_("Encoding format"), "encodingFormat", $imageInfo['mime'], [ "style" => "width: 150px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Encoding format"), "encodingFormat", $imageType, [ "style" => "width: 150px;" ], "text", [ "disabled"] );
         // uploadDate
         $content[] = self::fieldsetWithInput(_("Upload date"), "uploadDate", $value['uploadDate'], [ "style" => "width: 140px;" ], "text", [ "disabled"] );
         // license
-        $content[] = self::fieldsetWithInput(_("License"), "license", $value['license'], [ "style" => "width: 140px;" ]);
+        $content[] = self::fieldsetWithInput(_("License"), "license", $value['license'], [ "style" => "width: 100%;" ]);
         // group
         $content[] = self::fieldsetWithInput(_("Keywords")." [<a href='/admin/imageObject/keywords/".$value['keywords']."'>"._("edit")."</a>]", "keywords", $value['keywords'], [ "style" => "width: calc(100% - 315px);" ]);
         $content[] = self::submitButtonSend();

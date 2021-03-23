@@ -64,21 +64,21 @@ return function (Route $route) {
             if (class_exists($className)) {
                 //  EDIT
                 if ($action == "edit" || $action == "put") {
-                    $data = (new Server())->edit($className, $params);
+                    $data = (new Server())->edit($type, $params);
                     // sitemap
                     Sitemap::create($type);
                 }
                 // NEW
                 elseif ($action == "new" || $action == "post" || $action == "add") {
                     // put data
-                    $data = (new Server())->new($className, $params);
+                    $data = (new Server())->new($type, $params);
                     // sitemap
                     Sitemap::create($type);
                 }
                 // DELETE
                 elseif ($action == "delete" || $action == "erase") {
                     // delete data
-                    $data = (new Server())->delete($className, $params);
+                    $data = (new Server())->delete($type, $params);
                     // sitemap
                     Sitemap::create($type);
                 }
@@ -95,7 +95,7 @@ return function (Route $route) {
                 }
                 // GENERIC
                 else {
-                    (new $className())->$action($params);
+                    (new Server())->request($type, $action, $params);
                     $data = $_SERVER['HTTP_REFERER'];
                 }
                 return $response->withHeader('Location', $data)->withStatus(301);

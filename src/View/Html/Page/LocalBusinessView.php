@@ -1,63 +1,45 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
-class LocalBusinessView
-{
-    protected $content;
-    public $localBusinessId;
-    public $localBusinessName;
+class LocalBusinessView {
+    protected array $content;
+    public ?string $localBusinessId = null;
+    public string $localBusinessName;
 
     use navbarTrait;
     use FormElementsTrait;
     
-    public function navbarLocalBussines()
-    {
+    public function navbarLocalBussines() {
         $title = _("Locals business");
-        $list = [
-            "/admin/localBusiness" => _("View all"),
-            "/admin/localBusiness/new" => _("Add new")
-        ];
+        $list = [ "/admin/localBusiness" => _("View all"), "/admin/localBusiness/new" => _("Add new") ];
         $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "localBusiness", "data-searchfor" => "name" ] ];
-
         $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
-
         if ($this->localBusinessId) {
             $this->content['navbar'][] = self::navbar($this->localBusinessName, [], 3);
         } 
     }
 
-    public function index($data): array
-    {        
+    public function index($data): array {
         $this->navbarLocalBussines();
-        
         $this->content['main'][] = self::listAll($data, "localBusiness", "LocalBusiness list", [ "dateModified" => "Date modified" ]);
-                
         return $this->content;
     }
     
-    public function new(): array
-    {
+    public function new(): array {
         $this->navbarLocalBussines();
-        
-        $this->content['main'][] = self::divBox(_("Localbusiness"), "LocalBusiness", [ self::form() ]);        
-        
+        $this->content['main'][] = self::divBox(_("Localbusiness"), "LocalBusiness", [ self::formLocalBussiness() ]);
         return $this->content;
     }
     
-    public function edit($data): array
-    {        
+    public function edit($data): array {
         $value = $data[0];
         $id = PropertyValue::extractValue($value['identifier'], "id");
-        
         $this->navbarLocalBussines();
-        
-        $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::form("edit", $value) ]);
-        
+        $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::formLocalBussiness("edit", $value) ]);
         // PLACE
         $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']) ]);
         // CONTACT POINT
@@ -70,46 +52,32 @@ class LocalBusinessView
         $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("localBusiness", $id, "person", $value['member']) ]);
         // IMAGE
         $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $id, $value['image']) ]);
-        
         return $this->content;
     }
 
-    private static function form($case = "new", $value = null)
-    { 
-        $id = PropertyValue::extractValue($value['identifier'], "id");
-                
+    private static function formLocalBussiness($case = "new", $value = null): array {
+        $id = isset($value) ? PropertyValue::extractValue($value['identifier'], "id") : null;
         $content[] = $case == "edit" ? self::input("id", "hidden", $id) : null;
-                    
         // name
-        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'], [ "style" => "width: 50%" ]);
-        
+        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%" ]);
         // additionalType
-        $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'], [ "style" => "width: 50%" ]);
-        
+        $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'] ?? null, [ "style" => "width: 50%" ]);
         // description
-        $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description']);
-        
+        $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null);
         // disambiguatingDescription
-        $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription']);
-        
+        $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'] ?? null);
         // hasOfferCatalog
-        $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'], [ "style" => "width: calc(100% - 400px);" ]);
-        
+        $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null, [ "style" => "width: calc(100% - 400px);" ]);
         // dateCreated
-        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'], [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
-        
+        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'] ?? null, [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
         // dateModified
-        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'], [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
-        
+        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'] ?? null, [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
         // url
-        $content[] = self::fieldsetWithInput( "url", "url", $value['url'], [ "style" => "width: 50%" ]);
-        
+        $content[] = self::fieldsetWithInput( "url", "url", $value['url'] ?? null, [ "style" => "width: 50%" ]);
         $content[] = self::submitButtonSend();
-        
         if ($case == "edit") {
             $content[] = self::submitButtonDelete("/admin/localBusiness/erase");
         }
-        
         return [ "tag" => "form", "attributes" => [ "id" => "localBusiness-form", "class" => "formPadrao", "action" => "/admin/localBusiness/$case", "method" => "post" ], "content" => $content ];
     }
 }

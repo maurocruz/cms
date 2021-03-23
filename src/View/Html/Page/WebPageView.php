@@ -6,10 +6,8 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Html\Widget\SitemapWidget;
 
-class WebPageView extends AbstractView
-{
-    protected $content;
-    protected $idwebPage;
+class WebPageView extends AbstractView {
+    protected ?string $idwebPage;
 
     use FormElementsTrait;
     use HtmlPiecesTrait;
@@ -56,8 +54,8 @@ class WebPageView extends AbstractView
         return $this->content;
     }
 
-    public function sitemap($sitemaps) {
-        // TTITLE
+    public function sitemap($sitemaps): array {
+        // TITLE
         parent::addMain(self::simpleTag("h2",_("Sitemaps")));
         // INDEX
         parent::addMain((new SitemapWidget())->index($sitemaps));
@@ -67,21 +65,21 @@ class WebPageView extends AbstractView
     private function formWebPage($case = "new", $value = null): array {
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         // title
-        $content[] = self::fieldsetWithInput("Título", "name", $value['name'], [ "style" => "width: 50%;"]);
+        $content[] = self::fieldsetWithInput("Título", "name", $value['name'] ?? null , [ "style" => "width: 50%;"]);
         // url
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 50%"], "content" => [
                 [ "tag" => "legend", "content" => "Url" ],
-                [ "tag" => "input", "attributes" => [ "name" => "url", "type" => "text", "value" => str_replace("//".$_SERVER['HTTP_HOST'], "", $value['url']) ] ]
+                [ "tag" => "input", "attributes" => [ "name" => "url", "type" => "text", "value" => $value['url'] ?? null ] ]
             ]];
         // description
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%;"], "content" => [
                 [ "tag" => "legend", "content" => "Descrição (não usar html)" ],
-                [ "tag" => "textarea", "attributes" => [ "style" => "height: auto; width: 100%;", "name" => "description" ], "content" => $value['description'] ]
+                [ "tag" => "textarea", "attributes" => [ "style" => "height: auto; width: 100%;", "name" => "description" ], "content" => $value['description'] ?? null  ]
             ]];
         // alternativeHeadline
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 400px"], "content" => [
                 [ "tag" => "legend", "content" => "alternativeHeadline" ],
-                [ "tag" => "input", "attributes" => [ "name" => "alternativeHeadline", "type" => "text", "value" => $value['alternativeHeadline'] ] ]
+                [ "tag" => "input", "attributes" => [ "name" => "alternativeHeadline", "type" => "text", "value" => $value['alternativeHeadline'] ?? null  ] ]
             ]];
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPage/erase") : null;
