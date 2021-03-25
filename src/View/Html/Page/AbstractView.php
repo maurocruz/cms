@@ -1,8 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-abstract class AbstractView
-{
+abstract class AbstractView {
     protected string $title;
     protected string $description;
     protected array $content;

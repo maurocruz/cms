@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
@@ -7,17 +6,14 @@ use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Tool\DateTime;
 use Plinct\Api\Type\PropertyValue;
 
-class AdvertisingView
-{
-    protected $content;
-    
-    private static $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
+class AdvertisingView {
+    protected array $content;
+    private static array $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
 
     use FormElementsTrait;
     use navbarTrait;
         
-    public function navbarAd()
-    {
+    public function navbarAd() {
         $list = [
             "/admin/advertising" => _("View all"),
             "/admin/advertising/new" => _("Add new advertising"),
@@ -26,22 +22,15 @@ class AdvertisingView
         ];
         $level = 2;
         $title = "advertising";
-
         $this->content['navbar'][] = self::navbar($title, $list, $level);
     }
-
     
-    public function index(array $data): array
-    {
+    public function index(array $data): array {
         $body = null;
-
         $this->navbarAd();
-        
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Advertisings") ]; 
         $this->content['main'][] = self::search("", "search", filter_input(INPUT_GET, 'search'));
-        
         $this->content['main'][] = [ "tag" => "p", "content" => sprintf("Mostrando %s contratos não vencidos e por ordem descendente de vencimento", $data['numberOfItems']) ];
-        
         // table head
         $content[] = [ "tag" => "thead", "content" => [
             [ "tag" => "tr", "content" => [
@@ -55,7 +44,6 @@ class AdvertisingView
                 [ "tag" => "th", "attributes" => [ "style" => "width: 15px;" ],"content" => "Status" ]
             ]]
         ] ];
-        
         // table body
         if ($data['itemListElement']) {
             foreach ($data['itemListElement'] as $key => $value) {
@@ -73,93 +61,70 @@ class AdvertisingView
                     [ "tag" => "td", "content" => $item['orderStatus'] ]
                 ]];
             }
-            
         } else {
             $body[] = [ "tag" => "tr", "content" => 
                 [ "tag" => "td", "attributes" => [ "colspan" => "8", "style" => "font-size: 130%; text-align: center; font-weight: bold;" ], "content" => "Nada encontrado!" ]
             ];
         }
-        
         $content[] = [ "tag" => "tbody", "content" => $body ];
-        
         $this->content['main'][] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => $content ];
-        
         return $this->content;
     }        
     
-    public function new($data = null): array
-    {
+    public function new($data = null): array {
         $this->navbarAd();
-
         $this->content['main'][] = [ "tag" => "h4", "content" => _("Add contract") ];        
         // contract
         $this->content['main'][] = self::formOrder("new", $data);
-        
         return $this->content;
     }
     
-    public function edit(array $data): array
-    {
+    public function edit(array $data): array {
         return (new OrderView())->edit($data);
     }
     
-    private static function formOrder($case = "new", $value = null): array
-    {
-        
+    private static function formOrder($case = "new", $value = null): array {
         $content[] = [ "tag" => "h3", "content" => $value['customer']['name'] ?? _("New advertising") ];
-        
         if ($case == "edit") {        
             $idcustomer = PropertyValue::extractValue($value['customer']['identifier'], "id");
             $idadvertising = PropertyValue::extractValue($value['identifier'], "id");
-            
             $content[] = [ "tag" => "p", "content" => _("Edit Local Business"), "href" => "/admin/localBusiness/edit/".$idcustomer ];
-            
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $idadvertising ]];
             $tipos[] = [ "tag" => "option", "attributes" => [ "value" => $value['tipo'] ], "content" => self::contractTypeNumberToString($value['tipo']) ];
-            
         } elseif ($case = "new") {
             $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => _("Choose a local business...") ];
-            
             foreach ($value as $valueLB) {            
                 $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => PropertyValue::extractValue($valueLB['identifier'], "id") ], "content" => $valueLB['name'] ];
-            } 
-            
+            }
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
                 [ "tag" => "legend", "content" => _("Local business") ],
                 [ "tag" => "select", "attributes" => [ "name" => "customer"], "content" => $localBusiness ]
             ]];
         }
-        
         // contract types 
-        $tipos[] = [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => "Escolha um tipo..." ];   
-        
+        $tipos[] = [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => "Escolha um tipo..." ];
         foreach (self::$ContractTypes as $key => $valueTypes) {            
             $tipos[] = [ "tag" => "option", "attributes" => [ "value" => $key ], "content" => $valueTypes ];
-        }   
-        
+        }
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
             [ "tag" => "legend", "content" => _("Contract type") ],
             [ "tag" => "select", "attributes" => [ "name" => "tipo"], "content" => $tipos ]
         ]];
-        
         // date
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
             [ "tag" => "legend", "content" => _("Date") ],
             [ "tag" => "input", "attributes" => [ "name" => "data", "type" => "date", "value" => $value['data'] ?? null ] ]
          ]];
-        
         // valor
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
             [ "tag" => "legend", "content" => _("Amount") ],
             [ "tag" => "input", "attributes" => [ "name" => "valor", "type" => "number", "value" => $value['valor'] ?? null ] ]
          ]];
-        
         // date
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
             [ "tag" => "legend", "content" => _("Expired date") ],
             [ "tag" => "input", "attributes" => [ "name" => "vencimento", "type" => "date", "value" => $value['vencimento'] ?? null ] ]
          ]];
-        
         // status
         $valuesStatus = [ "0" => "Inativo", "orderPrecessing" => "Ativo", "orderSuspended" => "Suspenso" ];
         if ($case == "edit") {
@@ -173,22 +138,17 @@ class AdvertisingView
             [ "tag" => "legend", "content" => "Status" ],
             [ "tag" => "select", "attributes" => [ "name" => "status"], "content" => $statusValue ]
         ]];
-        
         // tags
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 70%;" ], "content" => [
             [ "tag" => "legend", "content" => _("Tags") ],
             [ "tag" => "input", "attributes" => [ "name" => "tags", "type" => "text", "value" => $value['tags'] ?? null ] ]
          ]];
-        
         $content[] = $case == "edit" ? self::submitButtonSend([ "onclick" => "return setHistory(this.parentNode);" ]) : self::submitButtonSend();
-        
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/advertising/erase") : null;
-        
         return [ "tag" => "form", "attributes" => [ "id" => "contract-form", "class" => "box formPadrao", "action" => "/admin/advertising/$case", "method" => "post" ], "content" => $content ];
     }
     
-    public function payment($data)
-    {
+    public function payment($data): array {
         $key = 0;
 
         $this->navbarAd();
@@ -240,23 +200,18 @@ class AdvertisingView
         return $this->content;
     }
     
-    public function expired($data) 
-    {
+    public function expired($data): array {
         $tbody = null;
-
         $this->navbarAd();
-        
         $content[] = [ "tag" => "h3", "content" => "Expired contracts" ];        
         $content[] = self::selectPeriodo($data['numberOfItems'], "expired");
-        
         foreach ($data['itemListElement'] as $key => $value) {
             $tbody[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => DateTime::formatDate($value['paymentDueDate']) ],
                 [ "tag" => "td", "content" => $value['name'] ],
                 [ "tag" => "td", "content" => "<a href=\"/admin/advertising/edit/".$value['idorder']."\">".$value['contrato_name']."</a>" ]
             ]];
-        }   
-        
+        }
         $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
@@ -311,13 +266,10 @@ class AdvertisingView
                 
             case 3:
                 return "Subdomínio";
-                
             case 4:
                 return "Banner";
-                
             case 5:
                 return "Inserção sem Vínculo";
-
             default:
                 return "Tipo $number - Não definido";
         }

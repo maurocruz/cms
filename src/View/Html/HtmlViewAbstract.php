@@ -4,24 +4,24 @@ namespace Plinct\Cms\View\Html;
 use Locale;
 
 class HtmlViewAbstract {
-    protected $settings;
-    protected $html;
-    protected $language;
-    protected $siteName;
-    protected $content = [];
+    protected array $settings;
+    protected array $html;
+    protected string $language;
+    protected string $siteName;
+    protected array $content = [];
 
-    protected $userName;
-    protected $userAdmin;
+    protected string $userName;
+    protected string $userAdmin;
 
     public function __construct() {
         // language
-        $this->setLanguage($this->settings['language']);
+        $this->setLanguage();
         // set html
         $this->html = [ "tag" => "html", "attributes" => [ "lang" => $this->language ] ];
     }
     
-    private function setLanguage($language) {
-        $this->language = $language ?? (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
+    private function setLanguage() {
+        $this->language = (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
     }
 
     protected function setSiteName($siteName) {

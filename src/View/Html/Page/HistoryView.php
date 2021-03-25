@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Tool\DateTime;

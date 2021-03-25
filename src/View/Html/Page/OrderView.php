@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
@@ -7,18 +6,14 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Tool\DateTime;
 
-class OrderView implements ViewInterface
-{
-    private $content = [];
-
-    private static $idOrder;
-
-    private static $total;
+class OrderView implements ViewInterface {
+    private array $content = [];
+    private static ?string $idOrder;
+    private static string $total;
 
     use FormElementsTrait;
 
-    private function navbarOrder($title = null, $list = null, $level = 2)
-    {
+    private function navbarOrder($title = null, $list = null, $level = 2) {
         $title = $title ?? _("Order");
         $list = $list ?? [
             "/admin/order" => _("List all"),
@@ -29,8 +24,7 @@ class OrderView implements ViewInterface
         $this->content['navbar'][] = navbarTrait::navbar($title, $list, $level);
     }
 
-    public function index(array $data): array
-    {
+    public function index(array $data): array {
         $this->navbarOrder();
         // SEARCH
         $this->content['main'][] = self::search("","search",$_GET['search'] ?? null);
@@ -48,8 +42,7 @@ class OrderView implements ViewInterface
         return $this->content;
     }
 
-    public function new($data = null): array
-    {
+    public function new($data = null): array {
         $this->navbarOrder();
         $orderedItem = $data['orderedItem'] ?? null;
         if ($orderedItem) {
@@ -63,8 +56,7 @@ class OrderView implements ViewInterface
         return $this->content;
     }
 
-    public function edit(array $data): array
-    {
+    public function edit(array $data): array {
         $this->navbarOrder();
         if (empty($data)) {
             $this->content['main'][] = self::noContent();
@@ -88,8 +80,7 @@ class OrderView implements ViewInterface
         return $this->content;
     }
 
-    private function formOrder($case = "new", $value = null, $orderedItem = null): array
-    {
+    private function formOrder($case = "new", $value = null, $orderedItem = null): array {
         $content[] = $case == "edit" ? self::input("id", "hidden", self::$idOrder) : null;
         if ($orderedItem) {
             $orderedItemId = PropertyValue::extractValue($orderedItem['identifier'], "id");
@@ -99,13 +90,13 @@ class OrderView implements ViewInterface
             $content[] = self::input("seller", "hidden", $providerId);
         }
         // CUSTOMER
-        $content[] = self::fieldset(self::chooseType("customer", "localBusiness,organization,person", $value['customer']), _("Customer"), [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldset(self::chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"), [ "style" => "width: 100%;" ]);
         // SELLER
-        $content[] = self::fieldset(self::chooseType("seller", "organization,person", $value['seller']), _("Seller"), [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldset(self::chooseType("seller", "organization,person", $value['seller'] ?? null), _("Seller"), [ "style" => "width: 100%;" ]);
         // ORDER DATE
-        $content[] = self::fieldsetWithInput(_("Order date"), "orderDate", $value['orderDate'] ? substr($value['orderDate'],0,10) : date("Y-m-d"), [], "date");
+        $content[] = self::fieldsetWithInput(_("Order date"), "orderDate", isset($value['orderDate']) ? substr($value['orderDate'],0,10) : date("Y-m-d"), [], "date");
         // ORDER STATUS
-        $content[] = self::fieldsetWithSelect(_("Order status"), "orderStatus", $value['orderStatus'], [
+        $content[] = self::fieldsetWithSelect(_("Order status"), "orderStatus", $value['orderStatus'] ?? null, [
             "OrderProcessing" => _("In processing"),
             "OrderInTransit" => _("In transit"),
             "OrderDelivered" => _("Delivered or performed"),
@@ -116,23 +107,22 @@ class OrderView implements ViewInterface
             "OrderReturned" => _("Returned")
         ]);
         // PAYMENT DUE DATE
-        $content[] = self::fieldsetWithInput(_("Payment due date"), "paymentDueDate", substr($value['paymentDueDate'],0,10), [], "date");
+        $content[] = self::fieldsetWithInput(_("Payment due date"), "paymentDueDate", isset($value['paymentDueDate']) ? substr($value['paymentDueDate'],0,10) : null, [], "date");
         // DISCOUNT
-        $content[] = self::fieldsetWithInput(_("Discount"), "discount", $value['discount']);
+        $content[] = self::fieldsetWithInput(_("Discount"), "discount", $value['discount'] ?? null);
         // TIPO (DEPRECATED)
-        $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
-        $tipo = $value['tipo'] ? $ContractTypes[$value['tipo']] : null;
-        $content[] = self::fieldsetWithInput("Tipo ".$value['tipo']." (deprecated)", "tipo", $tipo, null, "text", [ "disabled" ]);
+        //$ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
+        //$tipo = isset($value['tipo']) ? $ContractTypes[$value['tipo']] : null;
+        //$content[] = isset($value['tipo']) ? self::fieldsetWithInput("Tipo ".$value['tipo']." (deprecated)", "tipo", $tipo, null, "text", [ "disabled" ]) : null;
         // TAGS
-        $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'], [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'] ?? null, [ "style" => "width: 100%;" ]);
         $submitAttributes = $case == "edit" ? [ "onclick" => "return setHistory(this.parentNode);" ] : null;
         $content[] = self::submitButtonSend($submitAttributes);
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/order/erase") : null;
         return self::form("/admin/order/$case", $content);
     }
 
-    public function payment($data): array
-    {
+    public function payment($data): array {
         $key = 0;
         $this->navbarOrder();
         $content[] = [ "tag" => "h3", "content" => ucfirst(_("payments")) ];
@@ -189,8 +179,7 @@ class OrderView implements ViewInterface
         return $this->content;
     }
 
-    public function expired($data): array
-    {
+    public function expired($data): array {
         $tbody = null;
         $this->navbarOrder();
         $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
@@ -208,7 +197,6 @@ class OrderView implements ViewInterface
                 [ "tag" => "td", "content" => _($item['orderStatus'])]
             ]];
         }
-
         $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
@@ -228,8 +216,7 @@ class OrderView implements ViewInterface
         return $this->content;
     }
 
-    private static function getOrderedItems($orderedItem): string
-    {
+    private static function getOrderedItems($orderedItem): string {
         if (empty($orderedItem)) {
             return _("Unidentified");
         } else {
@@ -239,8 +226,7 @@ class OrderView implements ViewInterface
         }
     }
 
-    static private function selectPeriodo($numberOfItens, $section): array
-    {
+    static private function selectPeriodo($numberOfItens, $section): array {
         $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/order/$section", "method" => "get" ], "content" => [
             [ "tag" => "select", "attributes" => [ "onchange" => "submit();", "name" => "period" ], "content" => [
                 [ "tag" => "option", "attributes" => [ "value" => "" ], "content" => "Selecionar por período" ],

@@ -24,9 +24,9 @@ trait FormElementsTrait
         $attributes2['data-property'] = $property;
         $attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
         $attributes2['data-like'] = $nameLike;
-        $attributes2['data-currentType'] = $value['@type'];
-        $attributes2['data-currentName'] = $value['name'];
-        $attributes2['data-currentId'] = PropertyValue::extractValue($value['identifier'], "id");
+        $attributes2['data-currentType'] = $value['@type'] ?? null;
+        $attributes2['data-currentName'] = $value['name'] ?? null;
+        $attributes2['data-currentId'] = isset($value['identifier']) ? PropertyValue::extractValue($value['identifier'], "id") : null;
         $widthAttr = "display: flex; min-height: 23px;";
         $attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
         unset($attributes['style']);
@@ -140,9 +140,8 @@ trait FormElementsTrait
                 }
             }
             // rows
-            if (!isset($data['numberOfItems']) || $data['numberOfItems'] == 0) {
-                $rows = [];
-            } else {
+            $rows = [];
+            if (isset($data['numberOfItems']) || $data['numberOfItems'] !== 0) {
                 foreach ($itemListElement as $key => $valueItems) {
                     $item = $valueItems['item'];
                     $rowItem[] = PropertyValue::extractValue($item['identifier'],"id");
@@ -171,10 +170,12 @@ trait FormElementsTrait
         }
     }
 
-    protected static function tableItemList(string $type, array $columns, array $rows): array
-    {
+    protected static function tableItemList(string $type, array $columns, array $rows): array {
         $ordering = filter_input(INPUT_GET, 'ordering');
         $orderingQuery = !$ordering || $ordering === "desc" ? "asc" : "desc";
+        $th = null;
+        $td = null;
+        $list = null;
         // LABEL COLUMNS
         foreach ($columns as $valueColumns) {
             $property = $valueColumns['property'];
@@ -183,7 +184,6 @@ trait FormElementsTrait
             $content = $valueColumns['label'] != "Action" ? sprintf('<a href="?orderBy=%s&ordering=%s">%s</a>', $property, $orderingQuery, _($label)) : _($label);
             $th[] = [ "tag" => "th", "attributes" => $valueColumns['attributes'] ?? null, "content" => $content ];
         }
-        $td = null;
         if (count($rows) == 0) { // NO ITENS FOUNDED
             $list[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "attributes" => [ "colspan" => count($columns), "style" => "text-align: center; font-weight: bold; font-size: 120%;" ], "content" => _("No items founded!") ]

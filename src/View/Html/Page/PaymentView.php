@@ -1,5 +1,4 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use DateTime;
@@ -45,22 +44,22 @@ class PaymentView
         // TOTAL PAYMENT DUE
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 135px; display: inline-block;"], "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Invoice amount") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'], "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right; width: inherit;" ]]
+            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'] ?? null, "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right; width: inherit;" ]]
         ]];
         // Payment due date
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 145px; display: inline-block;"], "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment due date") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'], "type" => "date", "style" => "width: inherit;" ]]
+            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'] ?? null, "type" => "date", "style" => "width: inherit;" ]]
         ]];
         // PAYMENT DATE
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment date") ] : null,
-            self::input('paymentDate','date',$value['paymentDate'], [ "style" => "width: 145px;"])
+            self::input('paymentDate','date',$value['paymentDate'] ?? null, [ "style" => "width: 145px;"])
         ]];
         // PAYMENT STATUS
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment status") ] : null,
-            self::select("paymentStatus", $value['paymentStatus'], [
+            self::select("paymentStatus", $value['paymentStatus'] ?? null, [
                 "PaymentDue" => _("Payment due"),
                 "PaymentComplete" => _("Payment complete"),
                 "PaymentPastDue" => _("Payment past due"),
@@ -75,16 +74,16 @@ class PaymentView
         return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
     }
     
-    static private function classStyle($value): string
-    {
-        $expired = null;
-        $now = new DateTime();
-
-        try {
-            $expired = new DateTime($value['paymentDueDate']);
-        } catch (Exception $e) {
+    static private function classStyle($value): string {
+        if ($value) {
+            $expired = null;
+            $now = new DateTime();
+            try {
+                $expired = new DateTime($value['paymentDueDate']);
+            } catch (Exception $e) {
+            }
+            $diff = $expired->diff($now);
         }
-        $diff = $expired->diff($now);
                 
         if ($value == null) { 
             return "form-back-gray"; 
