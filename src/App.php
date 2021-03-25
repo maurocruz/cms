@@ -1,23 +1,28 @@
 <?php
 namespace Plinct\Cms;
 
+use Plinct\Cms\Server\Api;
 use Slim\App as Slim;
 
 class App {
     private static $IMAGES_FOLDER;
     private $slim;
-    private static $HostAPI;
     private static $TITLE;
     private static $LANGUAGE;
     public static $TypesEnabled;
     private static $VERSION;
     public static $HOST;
+    public static $API_HOST;
 
     public function __construct(Slim $slim) {
         $this->slim = $slim;
         self::$HOST = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
-        self::$HostAPI = "//" . $_SERVER['HTTP_HOST']. "/api";
         self::setVersion();
+    }
+
+    public function setApiHost(string $absoluteUrl) {
+        self::$API_HOST = $absoluteUrl;
+        Api::setApiHost($absoluteUrl);
     }
     public function setLanguage($language): App {
         self::$LANGUAGE = $language; return $this;
@@ -56,9 +61,6 @@ class App {
     }
     public static function getTypesEnabled() {
         return self::$TypesEnabled;
-    }
-    public static function getHostAPI(): string {
-        return self::$HostAPI;
     }
     public static function getVersion() {
         return self::$VERSION;

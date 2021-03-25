@@ -2,8 +2,8 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Api\Type\PropertyValue;
-use Plinct\Api\Type\Taxon;
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -12,12 +12,12 @@ class TaxonController implements ControllerInterface
     public function index($params = null): array {
         $params2 = [ "format" => "ItemList", "properties" => "taxonRank,dateModified" , "orderBy" => "dateModified", "ordering" => "desc" ];
         $params3 = $params ? array_merge($params2, $params) : $params2;
-        return (new Taxon())->get($params3);
+        return Api::get("taxon", $params3);
     }
     
     public function edit(array $params): array {
         $params2 = array_merge($params,[ "properties" => "*,image,parentTaxon" ]);
-        return (new Taxon())->get($params2);
+        return Api::get("taxon", $params2);
     }
     
     public function new($params = null): bool {
@@ -27,7 +27,7 @@ class TaxonController implements ControllerInterface
     public function saveSitemap() {
         $dataSitemap = null;
         $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image" ];
-        $data = (new Taxon())->get($params);
+        $data = Api::get("taxon", $params);
         // for type pages
         foreach ($data as $valueForType) {
             $id = PropertyValue::extractValue($valueForType['identifier'], 'id');
@@ -48,7 +48,6 @@ class TaxonController implements ControllerInterface
                 "image" => $valueForPage['image']
             ];
         }
-
         (new Sitemap("sitemap-taxon.xml"))->saveSitemap(array_merge($dataforPage, $dataForType));
     }
 }

@@ -2,14 +2,12 @@
 namespace Plinct\Cms\View\Html;
 
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 
 class HtmlViewContent extends HtmlViewAbstract {
 
     protected function navbar() {
-        $data['list'] = [
-            "/admin" => _("Home"),
-            "/admin/user" => _("Users")
-        ];
+        $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
             foreach (App::getTypesEnabled() as $key => $value) {
                 $data['list']['/admin/'.$value] = _(ucfirst($value));
@@ -49,8 +47,13 @@ class HtmlViewContent extends HtmlViewAbstract {
     }
     
     protected function setHeader() {
-        parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" => "<a href=\"/admin\" style=\"font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;\">" . App::getTitle() . "</a> ". _("Control Panel") . ". " . _("Version") . ": " . App::getVersion()
-        ]);        
+        // TITLE
+        parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" =>
+            '<a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> '. _("Control Panel")
+            . '. Api: <a href="' . App::$API_HOST . '" target="_blank">' . App::$API_HOST . '</a>'
+            . ". " . _("Version") . ": " . App::getVersion()
+        ]);
+        // LOG IN OUT
         if (!isset($_SESSION['userLogin'])) {        
             parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "float: right;" ], "content" => '<a href="/admin/login">Entrar</a>' ]);
         } else { 
@@ -83,7 +86,11 @@ class HtmlViewContent extends HtmlViewAbstract {
             parent::addMain($content);
         }
     }
-    
+
+    protected function warningBar(string $message) {
+        parent::addMain([ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => $message ]);
+    }
+
     protected function root() {
         $content[] = [ "tag" => "p", "content" => "Control Panel CMSCruz - version " . App::getVersion() ];
         parent::addMain([ "tag" => "p", "content" => $content ]);   

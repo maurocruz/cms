@@ -1,10 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
+use Plinct\Cms\Server\Api;
 use Plinct\PDO\PDOConnect;
-use Plinct\Api\Type\Banner;
 use Plinct\Api\Type\Order;
-use Plinct\Api\Type\OrderItem;
 
 class OrderController implements ControllerInterface
 {
@@ -19,39 +18,35 @@ class OrderController implements ControllerInterface
         if($nameLike) {
             return (new Order())->search($params2, $nameLike);
         }
-        return (new Order())->get($params2);
+        return Api::get("order", $params2);
     }
 
-    public function edit(array $params): array
-    {
+    public function edit(array $params): array {
         $params2 = [ "id" => $params['id'], "properties" => "*,customer,seller,orderedItem,partOfInvoice,history" ];
-        $data = (new Order())->get($params2);
+        $data = Api::get("order", $params2);
         // banner
         if ($data[0]['tipo'] == '4') {
             $idorder = $data[0]['idorder'];
             $paramsBanner = [ "where" => "`idorder`=$idorder" ];
-            $bannerData = (new Banner())->get($paramsBanner);
+            $bannerData = Api::get("banner",$paramsBanner);
             $data['banner'] = $bannerData[0] ?? null;
         }
         return $data;
     }
 
-    public function new($params = null): ?array
-    {
+    public function new($params = null): ?array {
         $data = [];
         $item = $params['orderedItem'] ?? null;
         if ($item) {
             $itemType = $params['orderedItemType'];
-            $classType = "\\Plinct\\Api\\Type\\".ucfirst($itemType);
-            $orderedItem = (new $classType())->get(["id" => $item, "properties" => "*,offers,provider"]);
+            $orderedItem = Api::get($itemType, ["id" => $item, "properties" => "*,offers,provider"]);
             $data['orderedItem'] = $orderedItem[0];
             return $data;
         }
         return null;
     }
 
-    public function payment(): array
-    {
+    public function payment(): array {
         $data2 = [];
         $date = self::translatePeriod(filter_input(INPUT_GET, 'period'));
         $query = "select `order`.idorder, `order`.orderStatus, `invoice`.paymentDueDate, `invoice`.totalPaymentDue, `order`.customer, `order`.customerType, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as totalOfInstallments, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder AND invoice.paymentDate is not null AND invoice.paymentDate!='0000-00-00')+1 as numberOfTheInstallments";
@@ -70,7 +65,7 @@ class OrderController implements ControllerInterface
             $dataCustomer = PDOConnect::run("SELECT * FROM $table WHERE `$idName`=$id;");
             $value['customer'] = $dataCustomer[0] ?? null;
             // ORDERED ITEM
-            $dataOrderedItem = (new OrderItem())->get([ "orderItemNumber" => $value['idorder'] ]);
+            $dataOrderedItem = Api::get("orderItem", [ "orderItemNumber" => $value['idorder'] ]);
             $value['orderedItem'] = $dataOrderedItem;
             $data2[] = $value;
         }
@@ -84,7 +79,7 @@ class OrderController implements ControllerInterface
         if($dateLimit) {
             $params['where'] = "paymentDueDate<'$dateLimit'";
         }
-        return (new Order())->get($params);
+        return Api::get("order",$params);
     }
 
     static private function translatePeriod($get)
