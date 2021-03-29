@@ -5,7 +5,7 @@ use Plinct\Cms\App;
 
 class HtmlViewContent extends HtmlViewAbstract {
 
-    protected function navbar() {
+    /*protected function navbar() {
         $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
             foreach (App::getTypesEnabled() as $key => $value) {
@@ -14,7 +14,7 @@ class HtmlViewContent extends HtmlViewAbstract {
         }
         $data['attributes'] = ["class"=>"menu"];
         parent::addNavBar($data);            
-    } 
+    } */
 
     protected function setTemplate() {
         $this->html['content'] = [
@@ -45,9 +45,9 @@ class HtmlViewContent extends HtmlViewAbstract {
         ],1);
     }
     
-    protected function setHeader() {
+    /*protected function setHeader() {
         // TITLE
-        $apiLocation = App::$API_HOST ? '<a href="' . App::$API_HOST . '" target="_blank">' . App::$API_HOST . '</a>' : "Localhost";
+        $apiLocation = App::getApiHost() ? '<a href="' . App::getApiHost() . '" target="_blank">' . App::getApiHost() . '</a>' : "Localhost";
         parent::addHeader([ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" =>
             '<a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> '. _("Control Panel")
             . '. Api: '. $apiLocation
@@ -63,7 +63,7 @@ class HtmlViewContent extends HtmlViewAbstract {
                 "attributes" => [ "style" => "float: right;" ]  
             ]);
         }
-    }
+    }*/
     
     protected function addContent($content) {
         if (is_array($content)) {

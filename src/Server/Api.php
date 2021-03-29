@@ -1,25 +1,21 @@
 <?php
 namespace Plinct\Cms\Server;
 
+use Plinct\Cms\App;
 use Plinct\Tool\Curl;
 
 class Api {
-    private static string $API_HOST;
-
-    public static function setApiHost(string $absoluteUrl) {
-        self::$API_HOST = $absoluteUrl;
-    }
 
     public static function get(string $type, array $params = null): array {
-        if (self::$API_HOST) {
-            $relativeUrl = lcfirst($type);
-            return json_decode((new Curl(self::$API_HOST))->get($relativeUrl, $params), true) ?? [];
-        } else {
-            $className = "Plinct\\Api\\Type\\".ucfirst($type);
-            if (class_exists($className)) {
-                return json_decode((new $className())->get($params), true);
-            }
-            return [];
-        }
+        $relativeUrl = lcfirst($type);
+        return json_decode((new Curl(App::getApiHost()))->get($relativeUrl, $params), true);
+    }
+
+    public static function login(string $email, string $password) {
+        return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ] ));
+    }
+
+    public static function register() {
+
     }
 }

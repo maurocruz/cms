@@ -1,27 +1,15 @@
 <?php
 namespace Plinct\Cms\View\Html;
 
-use Locale;
+use Plinct\Tool\Locale;
 
 class HtmlViewAbstract {
-    protected array $settings;
     protected array $html;
-    protected string $language;
     protected string $siteName;
     protected array $content = [];
 
-    protected string $userName;
-    protected string $userAdmin;
-
     public function __construct() {
-        // language
-        $this->setLanguage();
-        // set html
-        $this->html = [ "tag" => "html", "attributes" => [ "lang" => $this->language ] ];
-    }
-    
-    private function setLanguage() {
-        $this->language = (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
+        $this->html = [ "tag" => "html", "attributes" => [ "lang" => Locale::getServerLanguage() ] ];
     }
 
     protected function setSiteName($siteName) {

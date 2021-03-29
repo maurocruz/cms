@@ -5,6 +5,7 @@ use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class UserView {
     private array $content = [];
@@ -34,7 +35,7 @@ class UserView {
         $body = null;
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
-            $id = PropertyValue::extractValue($item['identifier'], "id");
+            $id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
             $body[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "content" => $id ],
                 [ "tag" => "td", "content" => "<a href=\"/admin/user/edit/".$id."\">".$item['name']."</a>" ],

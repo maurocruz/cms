@@ -8,12 +8,12 @@ class Server {
     private ?string $tableHasPart;
     
     public function edit($type, $params) {
-        (new Curl(App::$API_HOST))->put($type, $params, $_COOKIE['API_TOKEN']);
+        (new Curl(App::getApiHost()))->put($type, $params, $_COOKIE['API_TOKEN']);
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
     public function new($type, $params): string {
-        $data = json_decode((new Curl(App::$API_HOST))->post($type, $params, $_COOKIE['API_TOKEN']), true);
+        $data = json_decode((new Curl(App::getApiHost()))->post($type, $params, $_COOKIE['API_TOKEN']), true);
         if (isset($data['id']) && !isset($params['tableHasPart'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
         }
@@ -29,7 +29,7 @@ class Server {
 
     public function request($type, $action, $params) {
         $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-        return (new Curl(App::$API_HOST))->{$action}($type, $params, $token);
+        return (new Curl(App::getApiHost()))->{$action}($type, $params, $token);
     }
 
     private function unsetRelParams($params) {

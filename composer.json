@@ -1,7 +1,7 @@
 {
     "name": "plinct/cms",
     "description": "Cms for Plinct app",
-    "license": "MIT",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Mauro Cruz",
@@ -12,7 +12,8 @@
         "php": "^7.2",
         "slim/slim": "4.*",
         "slim/psr7": "1.*",
-        "tuupola/slim-jwt-auth": "3.*"
+        "tuupola/slim-jwt-auth": "3.*",
+        "plinct/middleware": "0.*"
     },
     "autoload": {
         "psr-4": {

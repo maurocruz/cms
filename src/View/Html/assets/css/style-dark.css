@@ -9,7 +9,7 @@ body {  background: #222226; color: #d7d7d9; }
 
 a { color: #979797; }
 
-.wrapper { background-color: #444; }
+.content { background-color: #444; }
 
 .menu { background-color: #4e4e4e; color: #eecc77; }
 .menu a { background-color: #222226; color: #97b7c7; border-color: #aaa; font-weight: 700; }
@@ -67,3 +67,6 @@ tbody tr:nth-child(even) {
 .form-back-red input { background-color: #fab5b5 !important; }
 .form-back-green input { background-color: #b5fafa !important; }
 .form-back-yellow input { background-color: #fafab5 !important; }
+
+.xdebug-error { font-size: 16px; }
+.xdebug-error tr td span{ display: none; }

@@ -4,7 +4,8 @@
  */
 
 use Plinct\Cms\Middleware\Authentication;
-use Plinct\Cms\View\Html\HtmlView;
+use Plinct\Cms\Middleware\GatewayMiddleware;
+use Plinct\Cms\View\Template\TemplateController;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -38,13 +39,13 @@ return function (Route $route) {
          * DEFAULT
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response) {
+            $template = new TemplateController();
             if (isset($_SESSION['userLogin']['admin'])) {
-                $content = (new HtmlView())->build($request);
-                $response->getBody()->write($content);
+                $template->getContent($request);
             } else {
-                $content = (new HtmlView())->login();
-                $response->getBody()->write($content);
+                $template->login();
             }
+            $response->getBody()->write($template->ready());
             return $response;
         })->addMiddleware(new Authentication());
         /**
@@ -103,5 +104,5 @@ return function (Route $route) {
                 return false;
             }
         })->addMiddleware(new Authentication());
-    });
+    })->addMiddleware(new GatewayMiddleware());
 };
