@@ -21,7 +21,7 @@ class TemplateView extends TemplateAbstract {
     protected function header() {
         // TITLE
         $apiHost = App::getApiHost();
-        $apiLocation = $apiHost ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "not set";
+        $apiLocation = $apiHost && filter_var($apiHost, FILTER_VALIDATE_URL) ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "localhost";
         parent::append("header", [ "tag" => "p", "attributes" => [ "style" => "display: inline;" ],  "content" =>
             '<a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> '. _("Control Panel")
             . '. Api: '. $apiLocation
@@ -71,6 +71,10 @@ class TemplateView extends TemplateAbstract {
         parent::append('main',[ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
     }
 
+    /**
+     * LOGIN
+     * @param null $auth
+     */
     public function login($auth = null) {
         if ($auth && $auth['status'] == "Access unauthorized") {
             if ($auth['data'] == "Invalid email") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry but this email is invalid!")]);
@@ -80,7 +84,10 @@ class TemplateView extends TemplateAbstract {
         parent::append('main', file_get_contents(__DIR__ . '/../Html/Widget/signupForm.html'));
     }
 
-    // REGISTER FORM
+    /**
+     * REGISTER FORM
+     * @param string|null $warning
+     */
     public function register(string $warning = null) {
         if ($warning) {
             switch ($warning) {
