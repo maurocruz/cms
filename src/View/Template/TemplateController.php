@@ -5,12 +5,15 @@ use Plinct\Cms\App;
 use Plinct\Cms\Controller\Controller;
 use Plinct\Cms\View\Page\IndexView;
 use Plinct\Cms\View\View;
+use Plinct\Tool\Locale;
 use Plinct\Web\Render;
 
 class TemplateController extends TemplateView {
 
     public function __construct() {
         parent::__construct();
+        // TRANSLATE BY GETTEXT
+        Locale::translateByGettext(App::getLanguage(), "fwc", __DIR__."/../../Locale");
         // HEAD
         parent::head();
         // HEADER
@@ -48,16 +51,19 @@ class TemplateController extends TemplateView {
             $content = (new IndexView())->view();
             parent::append("main", $content['main']);
         }
-
     }
 
     public function ready(): string {
         if (!App::getTitle()) {
             parent::warning(_("You need to set site name on index.php!"));
         }
+        // TITLE
         parent::setTitle();
-        parent::append("body", '<script src="/WebApp/static/cms/js/plinctcms.js"></script>');
+        // MOUNT ELEMENTS
         parent::simpleMain();
+        // JS
+        $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js"></script>';
+        // RETURN
         return "<!DOCTYPE html>" . Render::arrayToString($this->html);
     }
 }
