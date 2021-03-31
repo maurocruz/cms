@@ -29,7 +29,7 @@ class Api {
             return (new $classname())->{$action}($params);
         } else {
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-            return json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token));
+            return json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true);
         }
     }
 
