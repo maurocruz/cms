@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Widget;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image;
 
 class ImageObjectWidget {
@@ -40,7 +40,7 @@ class ImageObjectWidget {
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
             // is part of
-            $id = PropertyValue::extractValue($item['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['name'];
             $info = $imageServer->getImageHasPartOf($id);
             $filename = $_SERVER['DOCUMENT_ROOT'].$item['contentUrl'];
             list($width, $height) = file_exists($filename) ? getimagesize($_SERVER['DOCUMENT_ROOT'].$item['contentUrl']) : null;
@@ -81,7 +81,7 @@ class ImageObjectWidget {
     }
 
     protected function formImageObject($value, $isPartOf = null, $info = null): array {
-        $ID = PropertyValue::extractValue($value['identifier'], "id");
+        $ID = ArrayTool::searchByValue($value['identifier'], "id")['name'];
         if (isset($value['potentialAction'])) {
             foreach ($value['potentialAction'] as $valueAction) {
                 $potentialAction[$valueAction['name']] = $valueAction['result'];
@@ -104,7 +104,7 @@ class ImageObjectWidget {
     }
 
     protected static function formImageObjectEdit($value): array {
-        $ID = PropertyValue::extractValue($value['identifier'], "id");
+        $ID = ArrayTool::searchByValue($value['identifier'], "id")['name'];
         $content[] = self::input("id", "hidden", $ID);
         // FIGURE
         $image = new Image($value['contentUrl']);
@@ -138,7 +138,7 @@ class ImageObjectWidget {
     }
 
     protected function formIsPartOf($value): array {
-        $ID = PropertyValue::extractValue($value['identifier'], "id");
+        $ID = ArrayTool::searchByValue($value['identifier'], "id")['name'];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idIsPartOf", "type" => "hidden", "value" => $ID ] ];
