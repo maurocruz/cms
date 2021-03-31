@@ -110,7 +110,7 @@ a.white { color: white; }
 ============================================================================= */
 .list-folder { list-style: none; display: flex; flex-wrap: wrap; }
 .list-folder li { display: inline-block; margin: 5px; }
-/*.list-folder-figure { line-height: normal; background-image: url('/App/static/cms/images/folder_120w.png'); padding: 17px 5px 0; background-repeat: no-repeat; width: 110px; }*/
+.list-folder-figure { line-height: normal; background-image: url('/App/static/cms/images/folder_120w.png'); padding: 17px 5px 0; background-repeat: no-repeat; width: 110px; }
 .list-folder-figure img { width: 110px; height: 75px; border-radius: 5px; margin-bottom: 3px; }
 
 /* COMPONENT _ box
