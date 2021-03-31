@@ -6,7 +6,7 @@ use Plinct\Cms\View\Html\Widget\ImageObjectWidget;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class ImageObjectView extends ImageObjectWidget implements ViewInterface {
-    private array $content;
+    private $content;
 
     use navbarTrait;
 

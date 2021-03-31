@@ -6,9 +6,9 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class PlaceView {
-    private array $content;
-    protected ?string $placeId;
-    protected string $placeName;
+    private $content;
+    protected $placeId;
+    protected $placeName;
 
     use navbarTrait;
     use FormElementsTrait;

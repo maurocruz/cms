@@ -6,7 +6,7 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class ArticleView implements ViewInterface {
-    protected array $content;
+    protected $content;
 
     use FormElementsTrait;
 

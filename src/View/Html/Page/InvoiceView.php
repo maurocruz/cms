@@ -6,13 +6,13 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class InvoiceView implements ViewInterface {
-    private static ?string $tableHasPart = null;
-    private static ?string $idHasPart = null;
-    private static string $customer;
-    private static string $customerType;
-    private static string $provider;
-    protected static string $providerType;
-    private array $content = [];
+    private static $tableHasPart = null;
+    private static $idHasPart = null;
+    private static $customer;
+    private static $customerType;
+    private static $provider;
+    protected static $providerType;
+    private $content = [];
 
     use FormElementsTrait;
     use navbarTrait;

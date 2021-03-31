@@ -6,9 +6,9 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class WebPageElementView implements ViewInterface {
-    private array $content;
-    protected string $idwebPage;
-    protected ?string $idwebPageElement;
+    private $content;
+    protected $idwebPage;
+    protected $idwebPageElement;
     
     use FormElementsTrait;
     use navbarTrait;

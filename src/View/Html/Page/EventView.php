@@ -6,7 +6,7 @@ use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Api\Type\PropertyValue;
 
 class EventView {
-    protected array $content;
+    protected $content;
     
     use FormElementsTrait;
     use navbarTrait;

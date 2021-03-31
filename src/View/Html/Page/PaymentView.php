@@ -6,8 +6,7 @@ use Exception;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 
-class PaymentView
-{
+class PaymentView {
     private static $totalPaymentAmount;
 
     use FormElementsTrait;

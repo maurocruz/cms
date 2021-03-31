@@ -5,8 +5,7 @@ namespace Plinct\Cms\View\Html\Page;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 
-class OrderItemView implements ViewInterface
-{
+class OrderItemView implements ViewInterface {
     public static $totalWithoutDiscount;
     public static $totalWithDiscount;
 

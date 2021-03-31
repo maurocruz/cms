@@ -6,7 +6,7 @@ use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 
 class PersonView {
-    protected array $content;
+    protected $content;
         
     use navbarTrait;
     use FormElementsTrait;

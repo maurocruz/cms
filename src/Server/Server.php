@@ -1,19 +1,18 @@
 <?php
 namespace Plinct\Cms\Server;
 
-use Plinct\Cms\App;
-use Plinct\Tool\Curl;
+class Server extends Api {
+    private $tableHasPart;
 
-class Server {
-    private ?string $tableHasPart;
-    
     public function edit($type, $params) {
-        (new Curl(App::getApiHost()))->put($type, $params, $_COOKIE['API_TOKEN']);
+        parent::put($type, $params);
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
     public function new($type, $params): string {
-        $data = json_decode((new Curl(App::getApiHost()))->post($type, $params, $_COOKIE['API_TOKEN']), true);
+        // API
+        $data = parent::post($type, $params);
+        // REDIRECT TO EDIT PAGE
         if (isset($data['id']) && !isset($params['tableHasPart'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
         }
@@ -21,15 +20,15 @@ class Server {
         return $this->return();
     }
     
-    public function delete($type, $params): string {
-        $this->request($type, "delete", $params);
+    public function erase($type, $params): string {
+        parent::delete($type, $params);
         $this->unsetRelParams($params);
         return $this->return();
     }
 
-    public function request($type, $action, $params) {
-        $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-        return (new Curl(App::getApiHost()))->{$action}($type, $params, $token);
+    public function createSqlTable($type) {
+        $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+        (new $classname())->createSqlTable($type);
     }
 
     private function unsetRelParams($params) {

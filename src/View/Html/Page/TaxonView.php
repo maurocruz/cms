@@ -6,7 +6,7 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class TaxonView implements ViewInterface {
-    private array $content;
+    private $content;
     
     use navbarTrait;
     use FormElementsTrait;

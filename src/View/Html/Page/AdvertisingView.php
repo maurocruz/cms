@@ -7,8 +7,8 @@ use Plinct\Tool\DateTime;
 use Plinct\Api\Type\PropertyValue;
 
 class AdvertisingView {
-    protected array $content;
-    private static array $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
+    protected $content;
+    private static $ContractTypes = [ "Não definido", "Hospedagem de Domínio", "Inserção com Vínculo", "Subdomínio", "Banner", "Inserção sem Vínculo" ];
 
     use FormElementsTrait;
     use navbarTrait;

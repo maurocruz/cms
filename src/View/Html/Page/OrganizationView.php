@@ -6,9 +6,9 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class OrganizationView {
-    protected array $content;
-    protected ?string $organizationId = null;
-    protected string $organizationName;
+    protected $content;
+    protected $organizationId = null;
+    protected $organizationName;
 
     use navbarTrait;
     use FormElementsTrait;

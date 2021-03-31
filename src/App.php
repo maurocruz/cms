@@ -9,15 +9,16 @@ use Slim\App as Slim;
  * @package Plinct\Cms
  */
 class App {
-    private static string $IMAGES_FOLDER;
-    private Slim $slim;
-    private static ?string $TITLE = null;
-    private static string $LANGUAGE;
-    public static array $TypesEnabled = [];
-    private static string $VERSION;
-    public static string $HOST;
-    private static ?string $API_HOST = null;
-    private static string $API_SECRET_KEY;
+    private static $IMAGES_FOLDER;
+    private $slim;
+    private static $TITLE = null;
+    private static $LANGUAGE;
+    public static $TypesEnabled = [];
+    private static $VERSION;
+    public static $HOST;
+    private static $API_HOST = null;
+    private static $API_SECRET_KEY;
+    private static $STATIC_FOLDER = "/App/static/cms";
 
     /**
      * App constructor.
@@ -33,9 +34,9 @@ class App {
     /**
      * API SETTINGS
      * @param string $apiUrl
-     * @param string $apiSecretKey
+     * @param string|null $apiSecretKey
      */
-    public function setApi(string $apiUrl, string $apiSecretKey) {
+    public function setApi(string $apiUrl, ?string $apiSecretKey = null) {
         self::$API_HOST = $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
     }
@@ -52,8 +53,24 @@ class App {
      * API SECRET KEY GETTING
      * @return string
      */
-    public static function getApiSecretKey(): string {
+    public static function getApiSecretKey(): ?string {
         return self::$API_SECRET_KEY;
+    }
+
+    /**
+     * GET STATIC FOLDER
+     * @return string
+     */
+    public static function getStaticFolder(): string {
+        return self::$STATIC_FOLDER;
+    }
+
+    /**
+     * SET STATIC FOLDER
+     * @param string $STATIC_FOLDER
+     */
+    public static function setStaticFolder(string $STATIC_FOLDER): void {
+        self::$STATIC_FOLDER = $STATIC_FOLDER;
     }
 
     public function setLanguage($language): App {

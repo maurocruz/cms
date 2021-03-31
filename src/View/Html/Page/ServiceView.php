@@ -6,8 +6,8 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class ServiceView implements ViewInterface {
-    private array $content = [];
-    private ?string $id;
+    private $content = [];
+    private $id;
 
     use FormElementsTrait;
 

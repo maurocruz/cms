@@ -6,9 +6,9 @@ use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
 class LocalBusinessView {
-    protected array $content;
-    public ?string $localBusinessId = null;
-    public string $localBusinessName;
+    protected $content;
+    public $localBusinessId = null;
+    public $localBusinessName;
 
     use navbarTrait;
     use FormElementsTrait;

@@ -1,30 +1,24 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Web\Widget\FormTrait;
 
-class PropertyValueView
-{
+class PropertyValueView {
     use FormTrait;
     
-    public function getForm($tableHasPart, $idHasPart, $data) 
-    {
+    public function getForm($tableHasPart, $idHasPart, $data): array {
         foreach ($data as $value) {
             if (isset($value['identifier'])) {
-                    $content[] = self::form($tableHasPart, $idHasPart, 'edit', $value);         
+                    $content[] = self::formPropertyValue($tableHasPart, $idHasPart, 'edit', $value);
             }
         }
-        
         // new
-        $content[] = self::form($tableHasPart, $idHasPart);  
-        
+        $content[] = self::formPropertyValue($tableHasPart, $idHasPart);
         return $content;
     }
     
-    protected function form($tableHasPart, $idHasPart, $case = "new", $value = null)
-    {              
+    protected function formPropertyValue($tableHasPart, $idHasPart, $case = "new", $value = null): array {
         if ($case == "new") {
             $contentForm[] = "Novo: ";
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];

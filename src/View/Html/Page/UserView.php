@@ -8,7 +8,7 @@ use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class UserView {
-    private array $content = [];
+    private $content = [];
 
     use navbarTrait;
     use FormElementsTrait;

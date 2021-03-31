@@ -2,9 +2,9 @@
 namespace Plinct\Cms\View\Html\Page;
 
 abstract class AbstractView {
-    protected string $title;
-    protected string $description;
-    protected array $content;
+    protected $title;
+    protected $description;
+    protected $content;
 
     protected function addMain(array $content) {
         $this->content['main'][] = $content;

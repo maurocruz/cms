@@ -7,9 +7,9 @@ use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Tool\DateTime;
 
 class OrderView implements ViewInterface {
-    private array $content = [];
-    private static ?string $idOrder;
-    private static string $total;
+    private $content = [];
+    private static $idOrder;
+    private static $total;
 
     use FormElementsTrait;
 

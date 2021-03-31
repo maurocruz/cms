@@ -7,7 +7,7 @@ use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Html\Widget\SitemapWidget;
 
 class WebPageView extends AbstractView {
-    protected ?string $idwebPage;
+    protected $idwebPage;
 
     use FormElementsTrait;
     use HtmlPiecesTrait;

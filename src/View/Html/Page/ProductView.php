@@ -1,20 +1,17 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 
-class ProductView implements ViewInterface
-{
+class ProductView implements ViewInterface {
     private $content;
 
     use FormElementsTrait;
     Use navbarTrait;
 
-    private function navbarProduct($value = null)
-    {
+    private function navbarProduct($value = null) {
         $list = [
             "/admin/product" => _("View all"),
             "/admin/product/new" => _("Add new")
@@ -30,8 +27,7 @@ class ProductView implements ViewInterface
         }
     }
 
-    public function index(array $data): array
-    {
+    public function index(array $data): array {
         self::navbarProduct();
 
         $additionalColumns = [
