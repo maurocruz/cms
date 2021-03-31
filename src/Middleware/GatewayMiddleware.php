@@ -16,9 +16,9 @@ class GatewayMiddleware implements MiddlewareInterface {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
         $response = $handler->handle($request);
         $warning = null;
-        // IF API IS SETTING
+        // IF API IS NOT SETTING
         if (!App::getApiHost()) {
-            $warning[] = _("You need to set the API server on index.php!");
+            $warning[] = _("You need to set the API server!");
         }
         if ($warning) {
             $template = new TemplateController();

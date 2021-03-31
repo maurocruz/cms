@@ -61,48 +61,43 @@ return function (Route $route) {
             unset($params['submit_y']);
             unset($params['x']);
             unset($params['y']);
-            $className = "\\Plinct\\Api\\Type\\".ucfirst($type);
-            if (class_exists($className)) {
-                //  EDIT
-                if ($action == "edit" || $action == "put") {
-                    $data = (new Server())->edit($type, $params);
-                    // sitemap
-                    Sitemap::create($type);
-                }
-                // NEW
-                elseif ($action == "new" || $action == "post" || $action == "add") {
-                    // put data
-                    $data = (new Server())->new($type, $params);
-                    // sitemap
-                    Sitemap::create($type);
-                }
-                // DELETE
-                elseif ($action == "delete" || $action == "erase") {
-                    // delete data
-                    $data = (new Server())->delete($type, $params);
-                    // sitemap
-                    Sitemap::create($type);
-                }
-                // CREATE SQL TABLE
-                elseif ($action == "createSqlTable") {
-                    (new $className())->createSqlTable($type);
-                    $data = $_SERVER['HTTP_REFERER'];
-                }
-                // SITEMAP
-                elseif (($action == "sitemap")) {
-                    $data = $_SERVER['HTTP_REFERER'];
-                    // sitemap
-                    Sitemap::create($type, $params);
-                }
-                // GENERIC
-                else {
-                    (new Server())->request($type, $action, $params);
-                    $data = $_SERVER['HTTP_REFERER'];
-                }
-                return $response->withHeader('Location', $data)->withStatus(301);
-            } else {            
-                return false;
+            //  EDIT
+            if ($action == "edit" || $action == "put") {
+                $data = (new Server())->edit($type, $params);
+                // sitemap
+                Sitemap::create($type);
             }
+            // NEW
+            elseif ($action == "new" || $action == "post" || $action == "add") {
+                // put data
+                $data = (new Server())->new($type, $params);
+                // sitemap
+                Sitemap::create($type);
+            }
+            // DELETE
+            elseif ($action == "delete" || $action == "erase") {
+                // delete data
+                $data = (new Server())->erase($type, $params);
+                // sitemap
+                Sitemap::create($type);
+            }
+            // CREATE SQL TABLE
+            elseif ($action == "createSqlTable") {
+                (new Server())->createSqlTable($type);
+                $data = $_SERVER['HTTP_REFERER'];
+            }
+            // SITEMAP
+            elseif (($action == "sitemap")) {
+                $data = $_SERVER['HTTP_REFERER'];
+                // sitemap
+                Sitemap::create($type, $params);
+            }
+            // GENERIC
+            else {
+                (new Server())->request($type, $action, $params);
+                $data = $_SERVER['HTTP_REFERER'];
+            }
+            return $response->withHeader('Location', $data)->withStatus(301);
         })->addMiddleware(new Authentication());
     })->addMiddleware(new GatewayMiddleware());
 };
