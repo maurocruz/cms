@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
@@ -58,7 +57,7 @@ class UserView {
     }
     
     static private function formUser($case = 'new', $value = null): array {
-        $id = isset($value) ? PropertyValue::extractValue($value['identifier'], "id") : null;
+        $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $content[] = $case == "edit" ? self::fieldsetWithInput("ID", "id", $id, [ "style" => "width: 40px"], "text", [ "readonly" ]) : null;
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null);
         $content[] = self::fieldsetWithInput(_("Email"), "email", $value['email'] ?? null);

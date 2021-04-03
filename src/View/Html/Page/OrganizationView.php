@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class OrganizationView {
     protected $content;
@@ -44,7 +44,7 @@ class OrganizationView {
 
     public function edit(array $data): array {
         $value = $data[0];
-        $this->organizationId = PropertyValue::extractValue($value['identifier'], "id");
+        $this->organizationId = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $this->organizationName = $value['name'];
         $this->navbarOrganization();
         // organization
@@ -67,7 +67,7 @@ class OrganizationView {
     static private function formOrganization($case = 'new', $value = null): array {
         $content[] = [ "tag" => "h3", "content" => $value['name'] ?? null ];
         if ($case == "edit") {
-            $id = PropertyValue::extractValue($value['identifier'], 'id');
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];            
         }
         // legal name

@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class PlaceView {
     private $content;
@@ -39,7 +39,7 @@ class PlaceView {
     public function edit(array $data): array {
         $this->navbarPlace();
         $value = $data[0];
-        $this->placeId = isset($value) ? PropertyValue::extractValue($value['identifier'], "id") : null;
+        $this->placeId = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $this->placeName = $value['name'];
         //place
         $place[] = self::formPlace(null, null, 'edit', $value);

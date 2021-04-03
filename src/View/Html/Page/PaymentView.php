@@ -3,16 +3,15 @@ namespace Plinct\Cms\View\Html\Page;
 
 use DateTime;
 use Exception;
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Tool\ArrayTool;
 
 class PaymentView {
     private static $totalPaymentAmount;
 
     use FormElementsTrait;
 
-    public static function edit(array $data): array
-    {
+    public static function edit(array $data): array {
         $idorder = $data['idorder'];
         $lenght = $data['partOfInvoice'] ? count($data['partOfInvoice']): 0;
         $content[] = self::formPayment($idorder, "new", null, $lenght+1 );
@@ -27,13 +26,10 @@ class PaymentView {
         return $content;
     }
     
-    private static function formPayment($idorder, $case = 'new', $value = null, $n = null): array
-    {
-        $idinvoice = $value ? PropertyValue::extractValue($value['identifier'], "id") : null;
-
+    private static function formPayment($idorder, $case = 'new', $value = null, $n = null): array {
+        $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "order", "type" => "hidden"] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $idorder, "type" => "hidden"] ];
-
         if ($case == "edit") {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
         }
@@ -69,7 +65,6 @@ class PaymentView {
         // submit
         $content[] = self::submitButtonSend([ "style" => "height: 30px; background-color: transparent !important; padding: 0 5px; border: 0;"]);
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase", [ "style" => "height: 30px; background-color: transparent !important; padding: 0; border: 0;"]) : null;
-        
         return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
     }
     
@@ -83,26 +78,20 @@ class PaymentView {
             }
             $diff = $expired->diff($now);
         }
-                
         if ($value == null) { 
-            return "form-back-gray"; 
-            
+            return "form-back-gray";
         } elseif ($value['paymentDate'] && $value['paymentDate'] !== "0000-00-00") {
             return "form-back-green";
-            
         } elseif($diff->invert == 0) {
             return "form-back-red";
-            
         } elseif($diff->days < 30) {
             return "form-back-yellow";
-            
         } else { 
             return "form-back-white";             
         }
     }
 
-    private static function balance($dadosSaldo): array
-    {
+    private static function balance($dadosSaldo): array {
         $totalWithoutDiscount = OrderItemView::$totalWithoutDiscount;
         $totalWithDiscount = OrderItemView::$totalWithDiscount;
         if($totalWithDiscount != self::$totalPaymentAmount) {
@@ -112,7 +101,6 @@ class PaymentView {
                 [ "tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => sprintf(_("Order total does not match invoice total. Differences: without discount %s; with discount %s"), number_format($diffWithoutDiscount,2,',','.'), number_format($diffWithDiscount,2,',','.')) ]
             ]];
         }
-        
         $content[] = [
             [ "tag" => "tr", "attributes" => [ "style" => "background-color: #e7e7e7;" ], "content" => [
                 [ "tag" => "td", "attributes" => [ "style" => "color: blue;" ], "content" => number_format(self::$totalPaymentAmount,2,",",".") ],
@@ -121,7 +109,6 @@ class PaymentView {
                 [ "tag" => "td", "attributes" => [ "style" => "color: red;" ], "content" => "(".number_format($dadosSaldo['atrasado'],2,",",".").")" ]
             ] ]
         ];
-
         return [ "tag" => "table", "attributes" => [ "style" => "margin-top: 10px; text-align: center; font-weight: bold;" ], "content" => [
             [ "tag" => "caption", "attributes" => [ "style" => "font-size: 1em;" ], "content" => _("Balance") ],
             [ "tag" => "thead", "content" => [
@@ -135,16 +122,18 @@ class PaymentView {
             [ "tag" => "tbody", "content" => $content ]
         ]];
     }
-    
-    // SALDO
-    private static function saldoData($data): array
-    {
+
+    /**
+     * SALDO
+     * @param $data
+     * @return array
+     */
+    private static function saldoData($data): array {
         $dadosSaldo = [];
         $totalPaymentAmount = 0;
         $dadosSaldo['credito'] = 0;
         $dadosSaldo['debito'] = 0;
         $dadosSaldo['atrasado'] = 0;
-        
         foreach ($data as $value) {
             $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
             // total
@@ -156,9 +145,7 @@ class PaymentView {
             // atrasado
             $dadosSaldo['atrasado'] += $paid === false && $value['paymentDueDate'] < date("Y-m-d") ? $value['totalPaymentDue'] : null;
         }
-
         self::$totalPaymentAmount = $totalPaymentAmount;
-        
         return $dadosSaldo;
     }
 }

@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class ServiceView implements ViewInterface {
     private $content = [];
@@ -37,7 +37,7 @@ class ServiceView implements ViewInterface {
             $this->content['main'][] = self::noContent();
         } else {
             $value = $data[0];
-            $this->id = PropertyValue::extractValue($value['identifier'], "id");
+            $this->id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $this->navbarService($value['name'], [
                     "/admin/service/edit/".$this->id => _("View it"),
                     "/admin/service/order?id=".$this->id => _("List orders"),
@@ -53,7 +53,7 @@ class ServiceView implements ViewInterface {
     }
 
     public function order($value): array {
-        $this->id = PropertyValue::extractValue($value['identifier'], "id");
+        $this->id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $this->navbarService($value['name']);
         $this->content['main'][] = self::listAll($value['orders'], "order", sprintf(_("'%s' service order list"), $value['name']), [
             "orderDate" => _("Order date"),

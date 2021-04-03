@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 
 class OrderView implements ViewInterface {
@@ -62,7 +62,7 @@ class OrderView implements ViewInterface {
             $this->content['main'][] = self::noContent();
         } else {
             $value = $data[0];
-            self::$idOrder = PropertyValue::extractValue($value['identifier'], "id");
+            self::$idOrder = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $title = sprintf(_("Order from '%s' for '%s'"), $value['customer']['name'], $value['seller']['name']);
             $this->navbarOrder($title, [], 3);
             // ORDER
@@ -83,8 +83,8 @@ class OrderView implements ViewInterface {
     private function formOrder($case = "new", $value = null, $orderedItem = null): array {
         $content[] = $case == "edit" ? self::input("id", "hidden", self::$idOrder) : null;
         if ($orderedItem) {
-            $orderedItemId = PropertyValue::extractValue($orderedItem['identifier'], "id");
-            $providerId = PropertyValue::extractValue($orderedItem['provider']['identifier'], "id");
+            $orderedItemId = ArrayTool::searchByValue($orderedItem['identifier'], "id")['value'];
+            $providerId = ArrayTool::searchByValue($orderedItem['provider']['identifier'], "id")['value'];
             $content[] = self::input("orderedItem", "hidden", $orderedItemId);
             $content[] = self::input("orderedItemType", "hidden", lcfirst($orderedItem['@type']));
             $content[] = self::input("seller", "hidden", $providerId);

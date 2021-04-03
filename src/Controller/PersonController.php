@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -30,7 +30,7 @@ class PersonController implements ControllerInterface
         $data = Api::get("person", $params);
         $loc = App::$HOST ."/t/Person/";
         foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $lastmod = DateTime::formatISO8601($value['dateModified']);
             $dataSitemap[] = [
                 "loc" => $loc.$id,

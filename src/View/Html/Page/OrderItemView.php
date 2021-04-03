@@ -1,9 +1,8 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Tool\ArrayTool;
 
 class OrderItemView implements ViewInterface {
     public static $totalWithoutDiscount;
@@ -11,29 +10,24 @@ class OrderItemView implements ViewInterface {
 
     use FormElementsTrait;
 
-    public function index(array $data): array
-    {
+    public function index(array $data): array {
         return [];
     }
 
-    public function new($data = null): array
-    {
+    public function new($data = null): array {
         return [];
     }
 
-    public function edit(array $data): array
-    {
+    public function edit(array $data): array {
         return [];
     }
 
-    public static function getForm($value): array
-    {
+    public static function getForm($value): array {
         $orderedItem = $value['orderedItem'];
         $itemsLength = (int) 0;
         $Quantities = (int) 0;
         $subtotal = (int) 0;
         $discount = $value['discount'];
-
         if (is_array($orderedItem)) {
             foreach ($orderedItem as $key => $valueOffer) {
                 $item = $valueOffer['orderedItem'];
@@ -41,7 +35,6 @@ class OrderItemView implements ViewInterface {
                 $priceCurrency = $item['offers'][0]['priceCurrency'];
                 $unitPrice = $item['offers'][0]['price'];
                 $totalPrice = $unitPrice*$quantity;
-
                 $trBody[] = ["tag" => "tr", "attributes" => [ "style" => "color: black; background-color: white;" ], "content" => [
                     [ "tag" => "td", "content" => $key+1 ],
                     [ "tag" => "td", "content" => $item['@type'] ],
@@ -110,19 +103,15 @@ class OrderItemView implements ViewInterface {
         return [ "tag" => "div", "content" => $content ];
     }
 
-    private static function formChooseType($value): array
-     {
-         $idSeller = PropertyValue::extractValue($value['seller']['identifier'], "id");
+    private static function formChooseType($value): array {
+         $idSeller = ArrayTool::searchByValue($value['seller']['identifier'], "id")['value'];
          $content[] = self::input("tableHasPart", "hidden", "order");
          $content[] = self::input("orderItemNumber", "hidden", $value['idorder']);
-
          $content[] = _("Add new").": ";
          $content[] = self::fieldset(self::chooseType("orderedItem", "service,product", null, "name", [ "data-params" => "provider=$idSeller" ]), _("Ordered item"), [ "style" => "width: 70%; "]);
          // QUANTITY
          $content[] = self::fieldsetWithInput(_("Order quantity"), "orderQuantity", "1", [ "style" => "width: 170px;"], "number", [ "min" => "1" ]);
-
          $content[] = self::submitButtonSend();
-
          return self::form("/admin/orderItem/new", $content);
      }
 }

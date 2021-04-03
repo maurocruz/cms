@@ -3,8 +3,8 @@ namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
-use Plinct\Api\Type\PropertyValue;
 
 class AdvertisingView {
     protected $content;
@@ -48,7 +48,7 @@ class AdvertisingView {
         if ($data['itemListElement']) {
             foreach ($data['itemListElement'] as $key => $value) {
                 $item = $value['item'];
-                $id = PropertyValue::extractValue($item['identifier'], "id");
+                $id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
                 
                 $body[] = [ "tag" => "tr", "attributes" => [ "style" => $item['orderStatus'] == 'orderProcessing' ? "opacity: 1;" : "opacity: 0.5;" ], "content" => [
                     [ "tag" => "td", "content" => $key+1 ],
@@ -86,15 +86,15 @@ class AdvertisingView {
     private static function formOrder($case = "new", $value = null): array {
         $content[] = [ "tag" => "h3", "content" => $value['customer']['name'] ?? _("New advertising") ];
         if ($case == "edit") {        
-            $idcustomer = PropertyValue::extractValue($value['customer']['identifier'], "id");
-            $idadvertising = PropertyValue::extractValue($value['identifier'], "id");
+            $idcustomer = ArrayTool::searchByValue($value['customer']['identifier'], "id")['value'];
+            $idadvertising = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $content[] = [ "tag" => "p", "content" => _("Edit Local Business"), "href" => "/admin/localBusiness/edit/".$idcustomer ];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $idadvertising ]];
             $tipos[] = [ "tag" => "option", "attributes" => [ "value" => $value['tipo'] ], "content" => self::contractTypeNumberToString($value['tipo']) ];
         } elseif ($case = "new") {
             $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => "0" ], "content" => _("Choose a local business...") ];
             foreach ($value as $valueLB) {            
-                $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => PropertyValue::extractValue($valueLB['identifier'], "id") ], "content" => $valueLB['name'] ];
+                $localBusiness[] = [ "tag" => "option", "attributes" => [ "value" => ArrayTool::searchByValue($valueLB['identifier'], "id")['value'] ], "content" => $valueLB['name'] ];
             }
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: auto;" ], "content" => [
                 [ "tag" => "legend", "content" => _("Local business") ],
@@ -148,7 +148,7 @@ class AdvertisingView {
         return [ "tag" => "form", "attributes" => [ "id" => "contract-form", "class" => "box formPadrao", "action" => "/admin/advertising/$case", "method" => "post" ], "content" => $content ];
     }
     
-    public function payment($data): array {
+    /*public function payment($data): array {
         $key = 0;
 
         $this->navbarAd();
@@ -198,9 +198,9 @@ class AdvertisingView {
         $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
         
         return $this->content;
-    }
+    }*/
     
-    public function expired($data): array {
+    /*public function expired($data): array {
         $tbody = null;
         $this->navbarAd();
         $content[] = [ "tag" => "h3", "content" => "Expired contracts" ];        
@@ -227,9 +227,9 @@ class AdvertisingView {
         $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
         
         return $this->content;
-    }
+    }*/
     
-    static private function selectPeriodo($numberOfItens, $section): array
+    /*static private function selectPeriodo($numberOfItens, $section): array
     {
         $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/advertising/$section", "method" => "get" ], "content" => [
             [ "tag" => "select", "attributes" => [ "onchange" => "submit();", "name" => "period" ], "content" => [
@@ -253,7 +253,7 @@ class AdvertisingView {
         $content[] = [ "tag" => "p", "content" => "Showing ".$numberOfItens." itens $period" ];     
         
         return [ "tag" => "div", "content" => $content ];
-    }
+    }*/
     
     private static function contractTypeNumberToString($number): string 
     {

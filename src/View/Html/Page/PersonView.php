@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Tool\ArrayTool;
 
 class PersonView {
     protected $content;
@@ -36,7 +36,7 @@ class PersonView {
     
     public function edit(array $data): array {
         $value = $data[0];
-        $id = PropertyValue::extractValue($value['identifier'], "id");
+        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $this->navbarPerson($id, $value['name'] ?? "ND");
         // FORM
         $this->content['main'][] = self::formPerson('edit', $value);
@@ -50,7 +50,7 @@ class PersonView {
     }
     
     private static function formPerson($case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array {
-        $id = isset($value) ? PropertyValue::extractValue($value['identifier'], 'id'): null;
+        $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], 'id')['value'] : null;
         $content[] = [ "tag" => "h6", "content" => ucfirst(_($case)) ];
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"id", "type" => "hidden", "value" => $id ] ] : null ;
         if ($tableHasPart) {

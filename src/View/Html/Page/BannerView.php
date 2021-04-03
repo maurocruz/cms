@@ -1,39 +1,29 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
+use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;
 
-class BannerView
-{
+class BannerView {
     use FormTrait;
     
-    public function getBannerByIdcontrato($data): array
-    {
-        $id = PropertyValue::extractValue($data['identifier'], "id");
-        
+    public function getBannerByIdcontrato($data): array {
+        $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         $content[] = [ "tag" => "h4", "content" => "Banner" ];
-
         if ($id) {
             $content[] = self::formBanner($data['idorder'], "edit", $data);
             // images
             $content[] = (new ImageObjectView())->getForm("banner", $id, $data['image']);
-            
         } else {
             $content[] = self::formBanner($data['idorder']);
-        } 
-        
+        }
         return [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
     }
     
-    private static function formBanner($idadvertising, $case = "add", $value = null): array
-    {
-        $content[] = $case == "edit" ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'],"id")) : null;
-
+    private static function formBanner($idadvertising, $case = "add", $value = null): array {
+        $content[] = $case == "edit" ? self::input("id", "hidden", ArrayTool::searchByValue($value['identifier'],"id")['value']) : null;
         $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => "advertising" ] ] : null;
         $content[] = $case == "add" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idadvertising ] ] : null;
-
         // banner_title
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(98% - 490px);" ], "content" => [
             [ "tag" => "legend", "content" => "Title" ],
@@ -75,12 +65,9 @@ class BannerView
         $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%" ], "content" => [
             [ "tag" => "legend", "content" => "style" ],
             [ "tag" => "input", "attributes" => [ "name" => "style", "type" => "text", "value" => $value['style'] ] ]
-        ] ];  
-        
+        ] ];
         $content[] = self::submitButtonSend();
-
         $content[] = $case == "edit" ? self::submitButtonDelete("/admim/banner/erase") : null;
-
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "action" => "/admin/banner/$case", "method" => "post" ], "content" => $content ];
     }
 }

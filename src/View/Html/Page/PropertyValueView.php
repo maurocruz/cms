@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
+use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;
 
 class PropertyValueView {
@@ -25,7 +25,7 @@ class PropertyValueView {
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
             
         } else {
-            $id = PropertyValue::extractValue($value['identifier'], 'id');
+            $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
 

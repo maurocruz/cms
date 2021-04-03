@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class LocalBusinessView {
     protected $content;
@@ -37,7 +37,7 @@ class LocalBusinessView {
     
     public function edit($data): array {
         $value = $data[0];
-        $id = PropertyValue::extractValue($value['identifier'], "id");
+        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $this->navbarLocalBussines();
         $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::formLocalBussiness("edit", $value) ]);
         // PLACE
@@ -56,7 +56,7 @@ class LocalBusinessView {
     }
 
     private static function formLocalBussiness($case = "new", $value = null): array {
-        $id = isset($value) ? PropertyValue::extractValue($value['identifier'], "id") : null;
+        $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $content[] = $case == "edit" ? self::input("id", "hidden", $id) : null;
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%" ]);

@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class TaxonView implements ViewInterface {
     private $content;
@@ -30,7 +30,7 @@ class TaxonView implements ViewInterface {
         $this->navbarTaxon($value['name']." (".$value['taxonRank'].")", 3);
         $this->content['main'][] = self::formTaxon('edit', $value);
         // images
-        $this->content['main'][] = self::divBoxExpanding("Images", "ImageObject", [ (new ImageObjectView())->getForm("taxon", PropertyValue::extractValue($value['identifier'], 'id'), $value['image'])]);
+        $this->content['main'][] = self::divBoxExpanding("Images", "ImageObject", [ (new ImageObjectView())->getForm("taxon", ArrayTool::searchByValue($value['identifier'], 'id')['value'], $value['image'])]);
         return $this->content;
     }
     
@@ -43,7 +43,7 @@ class TaxonView implements ViewInterface {
     private static function formTaxon($case = "new", $value = null): array {
         $content[] = [ "tag" => "h3", "content" => _("Taxon") ];
         // id
-        $content[] = $case == 'edit' ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'], 'id')) : null;
+        $content[] = $case == 'edit' ? self::input("id", "hidden", ArrayTool::searchByValue($value['identifier'], "id")['value']) : null;
         // name
         $content[] = self::fieldsetWithInput("Name", "name", $value['name'] ?? null, [ "style" => "width: calc(32% - 120px)" ]);
         // scientificNameAuthorship
@@ -55,7 +55,7 @@ class TaxonView implements ViewInterface {
         // parentTaxon
         if ($value) {
             $parentTaxon = $value['parentTaxon'];
-            $idParentTaxon = PropertyValue::extractValue($parentTaxon['identifier'], "id");
+            $idParentTaxon = ArrayTool::searchByValue($parentTaxon['identifier'], "id")['value'];
             $content[] = self::fieldsetWithSelect("Parent taxon", "parentTaxon", [ $idParentTaxon => $parentTaxon['name'] ], [], [ "style" => "width: 160px" ], [ "style" => "width: 160px", "id" => "parentTaxon" ]);
         }
         // url

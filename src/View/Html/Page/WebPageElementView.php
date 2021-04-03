@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class WebPageElementView implements ViewInterface {
     private $content;
@@ -31,7 +31,7 @@ class WebPageElementView implements ViewInterface {
     }
 
     public function edit(array $data): array {
-        $this->idwebPageElement = PropertyValue::extractValue($data['identifier'], "id");
+        $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         $this->navBarWebPageElement(_("Web page element"));
         $webPageEditHref = "/admin/webPage/edit/" . ($data['idwebPage'] ?? $data['webPage'] ?? null);
         $this->content['main'][] = [ "tag" => "p", "content" => _("Is part of: "). '<a href="'.$webPageEditHref.'">'.$webPageEditHref.'</a>' ];
@@ -56,7 +56,7 @@ class WebPageElementView implements ViewInterface {
         // WebPageElements hasPart
         if ($value) {
             foreach ($value as $valueWebPageElement) {
-                $this->idwebPageElement = PropertyValue::extractValue($valueWebPageElement['identifier'], "id");
+                $this->idwebPageElement = ArrayTool::searchByValue($valueWebPageElement['identifier'], "id")['value'];
                 $name = strip_tags(str_replace("<br>"," ",$valueWebPageElement['name']));
                 $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $name , "WebPageElement", [self::editForms($valueWebPageElement)]);
             }

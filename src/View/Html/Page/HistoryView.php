@@ -3,10 +3,9 @@ namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Tool\DateTime;
 
-class HistoryView
-{    
-    public function view($data): array
-    {
+class HistoryView {
+
+    public function view($data): array {
         $body = null;
         if (isset($data['message']) && $data['message'] == "No data founded") {
             $body[] = [ "tag" => "tr", "content" => [ 
@@ -28,7 +27,6 @@ class HistoryView
                 ]];
             }
         }
-        
         return [ "tag" => "div", "attributes" => [ "class" => "box"], "content" => [
             [ "tag" => "h4", "content" => _("History") ],
             [ "tag" => "table", "attributes" => [ "class" => "contrato-table--history box " ], "content" => [

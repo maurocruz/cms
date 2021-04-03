@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
+use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;
 
 class PostalAddressView {
@@ -15,7 +15,7 @@ class PostalAddressView {
         $content[] = $case == "new" ? self::input('tableHasPart', "hidden", $tableHasPart) : null;
         $content[] = $case == "new" ? self::input('idHasPart', "hidden", $idHasPart) : null;
         if ($case == "edit") {
-            $id = PropertyValue::extractValue($value['identifier'], 'id');
+            $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = self::input("id", "hidden", $id);
         }
         // streetAddress

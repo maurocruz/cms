@@ -37,7 +37,7 @@ class Api {
         if (App::getApiHost() == "localhost") {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
         } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-            return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ] ));
+            return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ] ), true);
         }
         return null;
     }

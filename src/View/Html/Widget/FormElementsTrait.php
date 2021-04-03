@@ -1,12 +1,10 @@
 <?php
-
 namespace Plinct\Cms\View\Html\Widget;
 
-use Plinct\Api\Type\PropertyValue;
+use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;
 
-trait FormElementsTrait
-{
+trait FormElementsTrait {
     use FormTrait;
 
     /**
@@ -18,15 +16,14 @@ trait FormElementsTrait
      * @param array|null $attributes
      * @return array
      */
-    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
-    {
+    public static function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array {
         $attributes2['class'] = "choose-type";
         $attributes2['data-property'] = $property;
         $attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
         $attributes2['data-like'] = $nameLike;
         $attributes2['data-currentType'] = $value['@type'] ?? null;
         $attributes2['data-currentName'] = $value['name'] ?? null;
-        $attributes2['data-currentId'] = isset($value['identifier']) ? PropertyValue::extractValue($value['identifier'], "id") : null;
+        $attributes2['data-currentId'] = isset($value['identifier']) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $widthAttr = "display: flex; min-height: 23px;";
         $attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
         unset($attributes['style']);
@@ -34,8 +31,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => $attributes3 ];
     }
 
-    protected static function datalist(string $id, array $array): string
-    {
+    protected static function datalist(string $id, array $array): string {
         $content = null;
         foreach ($array as $value) {
             $content .= "<option value='$value'>";
@@ -43,8 +39,7 @@ trait FormElementsTrait
         return "<datalist id='$id'>$content</datalist>";
     }
 
-    protected static function div($title, $type, $content): array
-    {
+    protected static function div($title, $type, $content): array {
         $contentOut[] = [ "tag" => "h4", "content" => _($title) ];
         foreach ($content as $value) {
             $contentOut[] = $value;
@@ -60,8 +55,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $contentOut ];
     }
 
-    protected static function divBox($title, $type, $content): array
-    {
+    protected static function divBox($title, $type, $content): array {
         $id = "$type-form-". mt_rand(111,999);
         $contentOut[] = [ "tag" => "h4", "content" => $title ];
         foreach ($content as $value) {
@@ -70,8 +64,7 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => $id, "class" => "box" ], "content" => $contentOut ];
     }
 
-    protected static function divBoxExpanding($title, $type, $content): array
-    {
+    protected static function divBoxExpanding($title, $type, $content): array {
         $id = "$type-form-". mt_rand(111,999);
         $contentOut[] = [ "tag" => "h4", "content" => $title, "attributes" => [ "class" => "button-dropdown button-dropdown-contracted", "onclick" => "expandBox(this,'$id');" ] ];
         foreach ($content as $value) {
@@ -80,11 +73,10 @@ trait FormElementsTrait
         return [ "tag" => "div", "attributes" => [ "id" => $id, "class" => "box box-expanding" ], "content" => $contentOut ];
     }
 
-    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
-    {
+    public static function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array {
         $table = lcfirst($tableIsPartOf);
         if ($value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $content[] = self::input("id", "hidden", $idHasPart);
             $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], [ "style" => "min-width: 320px; max-width: 600px; width: 100%;" ], "text", [ "disabled" ]);
             $content[] = self::input($propertyName, "hidden", "");
@@ -95,11 +87,10 @@ trait FormElementsTrait
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
     }
 
-    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array
-    {
+    public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array {
         if ($value) {
             foreach ($value as $person) {
-                $id = PropertyValue::extractValue($person['identifier'], "id");
+                $id = ArrayTool::searchByValue($person['identifier'], "id")['value'];
                 $table = lcfirst($tableIsPartOf);
                 $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
                 $content[] = self::input("idHasPart", "hidden", $idHasPart);
@@ -117,8 +108,7 @@ trait FormElementsTrait
         return $return;
     }
 
-    public static function listAll($data, $type, string $title = null, array $row_column = null): ?array
-    {
+    public static function listAll($data, $type, string $title = null, array $row_column = null): ?array {
         $caption = $title ? $title : "List of $type";
         $showText = sprintf(_("Showing %s from %s items."), count($data['itemListElement']), $data['numberOfItems']);
         if (isset($data['error'])) {
@@ -144,7 +134,7 @@ trait FormElementsTrait
             if (isset($data['numberOfItems']) || $data['numberOfItems'] !== 0) {
                 foreach ($itemListElement as $key => $valueItems) {
                     $item = $valueItems['item'];
-                    $rowItem[] = PropertyValue::extractValue($item['identifier'],"id");
+                    $rowItem[] = ArrayTool::searchByValue($item['identifier'],"id")['value'];
                     if (isset($item['name'])) {
                         $rowItem[] = $item['name'];
                     }
@@ -214,8 +204,7 @@ trait FormElementsTrait
         ]];
     }
 
-    protected static function errorInfo($data, $type): ?array
-    {
+    protected static function errorInfo($data, $type): ?array {
         if ($data['code'] == '42S02' || $data['code'] == '1146') {
             return [ "tag" => "div", "content" => [
                 [ "tag" => "p", "content" => _($data['message']) ],

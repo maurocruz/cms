@@ -62,7 +62,8 @@ class TemplateController extends TemplateView {
         // MOUNT ELEMENTS
         parent::simpleMain();
         // JS
-        $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js"></script>';
+        $this->html['content'][1]['content'][] = '<script>window.apiHost="'.App::getApiHost().'"; window.staticFolder="'.App::getStaticFolder().'";</script>';
+        $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
         // RETURN
         return "<!DOCTYPE html>" . Render::arrayToString($this->html);
     }

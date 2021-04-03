@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Tool\ArrayTool;
 
 class ContactPointView {
     use FormElementsTrait;
@@ -25,7 +25,7 @@ class ContactPointView {
             $content[] = _("new").": ";
             $content[] = self::input('idHasPart', "hidden", $idHasPart);
         } else {     
-            $id = PropertyValue::extractValue($value['identifier'],"id");
+            $id = ArrayTool::searchByValue($value['identifier'],"id")['value'];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
         // POSITION

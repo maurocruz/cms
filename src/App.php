@@ -68,9 +68,11 @@ class App {
     /**
      * SET STATIC FOLDER
      * @param string $STATIC_FOLDER
+     * @return App
      */
-    public static function setStaticFolder(string $STATIC_FOLDER): void {
+    public function setStaticFolder(string $STATIC_FOLDER): App {
         self::$STATIC_FOLDER = $STATIC_FOLDER;
+        return $this;
     }
 
     public function setLanguage($language): App {
@@ -83,9 +85,9 @@ class App {
     public function setTypesEnabled(array $types): App {
         self::$TypesEnabled = $types; return $this;
     }
-    public function defineStaticFilesFolder(string $folderPath): App {
+    /*public function defineStaticFilesFolder(string $folderPath): App {
         define('FOLDER_PATH', $folderPath); return $this;
-    }
+    }*/
     public function setImagesFolder($relativePath): App {
         self::$IMAGES_FOLDER = $_SERVER['DOCUMENT_ROOT'] . $relativePath; return $this;
     }
@@ -101,7 +103,7 @@ class App {
         self::$VERSION = $version;
     }
 
-    public static function getImagesFolder(): string {
+    public static function getImagesFolder(): ?string {
         return self::$IMAGES_FOLDER;
     }
     public static function getLanguage(): string {

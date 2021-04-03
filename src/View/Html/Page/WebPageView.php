@@ -1,10 +1,10 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Html\Widget\SitemapWidget;
+use Plinct\Tool\ArrayTool;
 
 class WebPageView extends AbstractView {
     protected $idwebPage;
@@ -40,7 +40,7 @@ class WebPageView extends AbstractView {
 
     public function edit(array $data): array {
         $value = $data[0];
-        $this->idwebPage = PropertyValue::extractValue($value['identifier'], "id");
+        $this->idwebPage = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // VIEW         
         $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
         // EDIT

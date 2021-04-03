@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class InvoiceView implements ViewInterface {
     private static $tableHasPart = null;
@@ -61,7 +61,7 @@ class InvoiceView implements ViewInterface {
         $case = $value ? "edit": "new";
         $content[] = self::$tableHasPart ? self::input("tableHasPart", "hidden", self::$tableHasPart) : null;
         $content[] = self::$idHasPart && $case == "new"  ? self::input("idHasPart", "hidden", self::$idHasPart) : null;
-        $content[] = $case == "edit" ? self::input("id", "hidden", PropertyValue::extractValue($value['identifier'], "id")) : null;
+        $content[] = $case == "edit" ? self::input("id", "hidden", ArrayTool::searchByValue($value['identifier'], "id")['value']) : null;
         if (!self::$tableHasPart) {
             // CUSTOMER
             $content[] = self::fieldset(self::chooseType("customer", "organization,person", $value['customer'] ?? null, "name", ["style" => "display: flex;"]), _("Customer"), ["style" => "width: 100%;"]);

@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class ArticleView implements ViewInterface {
     protected $content;
@@ -33,7 +33,7 @@ class ArticleView implements ViewInterface {
         if (empty($value)) {
             $this->content['main'][] = self::noContent();
         } else {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
             // author
             $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);

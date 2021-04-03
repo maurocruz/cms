@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\Html\Page;
 
 use Plinct\Cms\View\Html\Widget\FormElementsTrait;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
-use Plinct\Api\Type\PropertyValue;
+use Plinct\Tool\ArrayTool;
 
 class EventView {
     protected $content;
@@ -37,7 +37,7 @@ class EventView {
             $content[] = [ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => _("Event not found") ];            
         } else {
             $value = $data[0];
-            $idEvent = PropertyValue::extractValue($value['identifier'], 'id');
+            $idEvent = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = [ "tag" => "p", "content" => _("View on website"), "href" => "/eventos/". substr($value['startDate'], 0, 10)."/". urlencode($value['name']), "hrefAttributes" => [ "target" => "_blank" ] ];
             // event 
             $content[] = self::formEvent('edit', $value);
@@ -60,7 +60,7 @@ class EventView {
         $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
         $content[] = [ "tag"=>"h4", "content" => _("Event") ];
         if ($case == "edit") {
-            $ID = PropertyValue::extractValue($value['identifier'], 'id');
+            $ID = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ?? null ] ];
         }
         // title

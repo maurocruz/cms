@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\View\Html\Widget\ImageObjectWidget;
 use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Tool\ArrayTool;
 
 class ImageObjectView extends ImageObjectWidget implements ViewInterface {
     private $content;
@@ -34,7 +34,7 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
     }
 
     public function edit(array $data): array {
-        $id = PropertyValue::extractValue($data['identifier'], "id");
+        $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         $this->navBarImageObject(_("Image") . ": " . $data['contentUrl']);
         // edit image
         $this->content['main'][] = self::divBox(_("Image"), "ImageObject", [
