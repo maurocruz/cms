@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class InvoiceView implements ViewInterface {

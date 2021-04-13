@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\HtmlPiecesTrait;
-use Plinct\Cms\View\Html\Widget\SitemapWidget;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\HtmlPiecesTrait;
+use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
 
 class WebPageView extends AbstractView {

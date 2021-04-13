@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 
@@ -184,7 +184,7 @@ class OrderView implements ViewInterface {
         $this->navbarOrder();
         $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
         $content[] = self::selectPeriodo($data['numberOfItems'], "expired");
-        foreach ($data['itemListElement'] as $key => $value) {
+        foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
             $id = $item['idorder'];
             //var_dump($item);

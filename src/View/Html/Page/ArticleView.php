@@ -1,8 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class ArticleView implements ViewInterface {
@@ -96,6 +97,6 @@ class ArticleView implements ViewInterface {
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/article/erase") : null;
 
-        return [ "tag"=>"form", "attributes"=> [ "name" => "article-form--{$case}", "id" => 'article-form', "class"=>"formPadrao", "method"=>"post", "action" => "/admin/article/$case" ], "content" => $content ];
+        return [ "tag"=>"form", "attributes"=> [ "name" => "article-form--$case", "id" => 'article-form', "class"=>"formPadrao", "method"=>"post", "action" => "/admin/article/$case" ], "content" => $content ];
     }
 }

@@ -119,7 +119,7 @@ class App {
         return self::$VERSION;
     }
     public function run() {
-        $route = include __DIR__ . '/routes/routes.php';
+        $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
     }
 }

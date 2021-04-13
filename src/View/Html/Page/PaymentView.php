@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\Html\Page;
 
 use DateTime;
 use Exception;
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 
 class PaymentView {

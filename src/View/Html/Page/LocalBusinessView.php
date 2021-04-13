@@ -1,8 +1,11 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Types\Intangible\ContactPointView;
+use Plinct\Cms\View\Types\Intangible\PostalAddressView;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class LocalBusinessView {
@@ -25,7 +28,7 @@ class LocalBusinessView {
 
     public function index($data): array {
         $this->navbarLocalBussines();
-        $this->content['main'][] = self::listAll($data, "localBusiness", "LocalBusiness list", [ "dateModified" => "Date modified" ]);
+        $this->content['main'][] = self::listAll($data, "localBusiness", "LocalBusiness list", [ "additionalType" => "Additional type", "dateModified" => "Date modified" ]);
         return $this->content;
     }
     
@@ -61,7 +64,17 @@ class LocalBusinessView {
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%" ]);
         // additionalType
-        $content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'] ?? null, [ "style" => "width: 50%" ]);
+
+        /*$additionalTypes = SchemaorgData::getTypesIsSubClassOf("LocalBusiness");
+        foreach ($additionalTypes as $valueAddTypes) {
+            $datalist[] = [ "tag" => "option", "attributes" => [ "value" => $valueAddTypes ] ];
+        }
+        $content[] = [ "tag" => "fieldset", "attributes" =>  [ "style" => "width: 50%" ], "content" => [
+            [ "tag" => "legend", "content" => _("Additional type") ],
+            [ "tag" => "input", "attributes" => [ "name" => "additionalType", "type" => "text", "value" => $value['additionalType'] ?? null, "list" => "additionalType", "autocomplete" => "off" ] ],
+            [ "tag" => "datalist", "attributes" => [ "id" => "additionalType"], "content" => $datalist ]
+        ] ];*/
+        //$content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'] ?? null, [ "style" => "width: 50%" ]);
         // description
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null);
         // disambiguatingDescription

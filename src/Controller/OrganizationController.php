@@ -1,38 +1,59 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
 class OrganizationController implements ControllerInterface
 {
     public function index($params = null): array {
-        $paramsSet = [ "format" => "ItemList", "properties" => "update_time", "orderBy" => "update_time", "ordering" => "desc" ];
+        $paramsSet = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
         $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
         return Api::get("organization", $paramsGet);
     }
     
     public function edit(array $params): array {
-        $params = [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ];
-        return Api::get("organization", $params);
+        return Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
     }
     
     public function new($params = null): bool {
         return true;
     }
 
+    public function service(array $params): array {
+        $itemId = $params['item'] ?? null;
+        if ($itemId) {
+            $data = Api::get('service', [ "id" => $itemId, "properties" => "*,provider,offers" ]);
+        } else {
+            $data = $this->edit($params);
+            $data[0]['services'] = Api::get('service', ["format" => "ItemList", "properties" => "*", "provider" => $params['id']]);
+        }
+        return $data;
+    }
+
+    public function product(array $params): array {
+        $itemId = $params['item'] ?? null;
+        if ($itemId) {
+            $data = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers" ]);
+        } else {
+            $data = $this->edit($params);
+            $data[0]['products'] = Api::get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $params['id']]);
+        }
+        return $data;
+    }
+
     public function saveSitemap() {
         $dataSitemap = null;
-        $params = [ "properties" => "image,update_time", "orderBy" => "update_time desc" ];
+        $params = [ "properties" => "image,dateModified", "orderBy" => "dateModified desc" ];
         $data = Api::get("organization", $params);
         foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $dataSitemap[] = [
                 "loc" => App::$HOST . "/t/organization/$id",
-                "lastmod" => DateTime::formatISO8601($value['update_time']),
+                "lastmod" => DateTime::formatISO8601($value['dateModified']),
                 "image" => $value['image']
             ];
         }

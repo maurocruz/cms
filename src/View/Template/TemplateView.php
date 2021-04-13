@@ -54,7 +54,7 @@ class TemplateView extends TemplateAbstract {
     protected function navbar() {
         $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
-            foreach (App::getTypesEnabled() as $key => $value) {
+            foreach (App::getTypesEnabled() as $value) {
                 $data['list']['/admin/'.$value] = _(ucfirst($value));
             }
         }
@@ -81,7 +81,7 @@ class TemplateView extends TemplateAbstract {
             if ($auth['data'] == "User not exists") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry but user not exists!")]);
             if ($auth['data'] == "User exists") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Check your data")]);
         }
-        parent::append('main', file_get_contents(__DIR__ . '/../Html/Widget/signupForm.html'));
+        parent::append('main', file_get_contents(__DIR__ . '/../../../static/html/signupForm.html'));
     }
 
     /**
@@ -108,10 +108,14 @@ class TemplateView extends TemplateAbstract {
                     break;
             }
         }
-        parent::append("main", file_get_contents(__DIR__ . '/../Html/Widget/registerForm.html'));
+        parent::append("main", file_get_contents(__DIR__ . '/../../../static/html/registerForm.html'));
     }
 
     protected function footer() {
         parent::append("footer", [ "tag" => "p", "content" => "Copyright by Mauro Cruz" ]);
+    }
+
+    protected function noContent(): array {
+        return [ "tag" => "p", "content" => _("No content") ];
     }
 }

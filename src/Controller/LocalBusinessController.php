@@ -1,16 +1,16 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
 class LocalBusinessController implements ControllerInterface
 {
     public function index($params = null): array {
-        $params2 = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "dateModified" ];
+        $params2 = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "additionalType,dateModified" ];
         $params3 = $params ? array_merge($params2, $params) : $params2;
         return Api::get("localBusiness",$params3);
     }
@@ -28,7 +28,7 @@ class LocalBusinessController implements ControllerInterface
         $dataSitemap = null;
         $data = Api::get("localBusiness",[ "orderBy" => "dateModified desc", "properties" => "image,dateModified" ]);
         foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $dataSitemap[] = [
                 "loc" => App::$HOST . "/t/localBusiness/$id",
                 "lastmod" => DateTime::formatISO8601($value['dateModified']),

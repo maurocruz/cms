@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 
 class OrderItemView implements ViewInterface {
@@ -24,9 +24,9 @@ class OrderItemView implements ViewInterface {
 
     public static function getForm($value): array {
         $orderedItem = $value['orderedItem'];
-        $itemsLength = (int) 0;
-        $Quantities = (int) 0;
-        $subtotal = (int) 0;
+        $itemsLength = 0;
+        $Quantities = 0;
+        $subtotal = 0;
         $discount = $value['discount'];
         if (is_array($orderedItem)) {
             foreach ($orderedItem as $key => $valueOffer) {

@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Server;
 
+use Exception;
 use Plinct\Api\Auth\AuthController;
 use Plinct\Cms\App;
 use Plinct\Tool\Curl;
@@ -24,12 +25,23 @@ class Api {
     }
 
     public static function request($type, $action, $params) {
+        $remoteAccessApi = null;
         if (App::getApiHost() == "localhost") {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
             return (new $classname())->{$action}($params);
         } else {
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-            return json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true);
+            try {
+                $remoteAccessApi = json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true);
+                if (isset($remoteAccessApi['error'])) {
+                    throw new Exception($remoteAccessApi['error']['message']);
+                } else {
+                    return $remoteAccessApi;
+                }
+            } catch (Exception $e) {
+                var_dump($remoteAccessApi['error']);
+                die;
+            }
         }
     }
 

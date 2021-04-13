@@ -1,8 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Html\Page;
 
-use Plinct\Cms\View\Html\Widget\FormElementsTrait;
-use Plinct\Cms\View\Html\Widget\navbarTrait;
+use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class EventView {
@@ -94,6 +95,6 @@ class EventView {
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/event/erase") : null;
         // form
-        return [ "tag"=>"form", "attributes"=> [ "name" => "event-form--{$case}", "id" => 'event-form', "class"=>"box formPadrao", "enctype"=>"multipart/form-data", "method"=>"post", "action" => "/admin/event/$case" ], "content" => $content ];
+        return [ "tag"=>"form", "attributes"=> [ "name" => "event-form--$case", "id" => 'event-form', "class"=>"box formPadrao", "enctype"=>"multipart/form-data", "method"=>"post", "action" => "/admin/event/$case" ], "content" => $content ];
     }
 }

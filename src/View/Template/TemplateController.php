@@ -13,7 +13,7 @@ class TemplateController extends TemplateView {
     public function __construct() {
         parent::__construct();
         // TRANSLATE BY GETTEXT
-        Locale::translateByGettext(App::getLanguage(), "fwc", __DIR__."/../../Locale");
+        Locale::translateByGettext(App::getLanguage(), "app", __DIR__."/../../../Locale");
         // HEAD
         parent::head();
         // HEADER
@@ -38,16 +38,20 @@ class TemplateController extends TemplateView {
             $params['id'] = $id;
         }
         if($type) {
-            $controller = new Controller();
-            $data = $controller->getData($type, $action, $params);
+            // CONTROLLER DATA
+            $data = (new Controller())->getData($type, $action, $params);
+            // VIEW
             $view = (new View())->view($type, $action, $data);
+            // NAVBAR
             if (isset($view['navbar'])) {
                 foreach ($view['navbar'] as $value) {
                     parent::addNavBar($value);
                 }
             }
-            parent::append("main", $view['main']);
+            //MAIN
+            parent::append("main", $view['main'] ?? parent::noContent());
         } else {
+            // INDEX
             $content = (new IndexView())->view();
             parent::append("main", $content['main']);
         }
