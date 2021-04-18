@@ -5,7 +5,7 @@ use Plinct\Cms\App;
 use Plinct\Cms\Server\ImageObjectServer;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
-use Plinct\Tool\Image;
+use Plinct\Tool\Image\Image;
 
 class ImageObjectWidget {
     protected $tableHasPart;
@@ -112,7 +112,7 @@ class ImageObjectWidget {
         $contentSize = $value['contentSize'] ?? $image->getFileSize();
         $imageWidth = $value['width'] ?? $image->getWidth();
         $imageHeight = $value['height'] ?? $image->getHeight();
-        $imageType = $value['type'] ?? $image->getMimeType();
+        $imageType = $value['type'] ?? $image->getEncodingFormat();
         $content[] = [ "object" => "figure", "attributes" => [ "style" => "display: block;" ], "src" => $value['contentUrl'] ];
         // ID
         $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 80px;" ], "text", [ "disabled" ] );
@@ -142,7 +142,7 @@ class ImageObjectWidget {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idIsPartOf", "type" => "hidden", "value" => $ID ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ] ];
         // FIGURE
         $image = new Image($value['contentUrl']);
         $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
@@ -194,7 +194,7 @@ class ImageObjectWidget {
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/erase");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-$ID", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
     protected static function infoIsPartOf($id, $info): array {
@@ -216,7 +216,8 @@ class ImageObjectWidget {
     }
 
     protected function upload($tableHasPart = null, $idHasPart = null): array {
-        $content[] = [ "tag" => "h4", "content" => "Enviar imagem" ];
+        // TITLE
+        $content[] = [ "tag" => "h4", "content" => _("Upload image") ];
         $content[] = $tableHasPart ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => $tableHasPart, "type" => "hidden" ] ] : null;
         $content[] = $idHasPart ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $idHasPart, "type" => "hidden" ] ] : null;
         // image upload

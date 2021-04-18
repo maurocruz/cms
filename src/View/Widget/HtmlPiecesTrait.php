@@ -4,6 +4,8 @@ namespace Plinct\Cms\View\Widget;
 use Plinct\Tool\ArrayTool;
 
 trait HtmlPiecesTrait {
+    private static $BUTTON_EDIT = '<img src="/App/static/cms/images/edit4-yellow.svg" width="20" alt="edit">';
+    private static $BUTTON_DELETE = "/App/static/cms/images/delete4-red.svg";
 
     protected static function error($data, $type): array {
         if ($data['code'] == '1146') {
@@ -19,28 +21,27 @@ trait HtmlPiecesTrait {
     }
 
     public static function indexWithSubclass(string $owner, string $type, array $rowsPropeties_and_columnName, array $itemListElement): array {
-        $itemList = [];
-        $imageEdit = '<img src="/App/static/cms/images/edit3.svg" width="20" alt="edit">';
-        $imageDelete = '<img src="/App/static/cms/images/delete3.svg" width="20" alt="delete">';
+        $listItem = [];
         $uri = $_SERVER['REQUEST_URI'];
         // TABLE
         $table = new Table();
         // CAPTION
-        $caption = sprintf(_("List of %s from %s"), _($type), $owner);
-        $table->setCaption($caption);
+        $caption = sprintf(_("List of %s from %s"), lcfirst(_($type)).'s', $owner);
+        $table->addCaption($caption);
         // HEAD
-        array_unshift($rowsPropeties_and_columnName,_("Edit"));
-        array_push($rowsPropeties_and_columnName, _("Delete"));
-        $table->setRowsColumns($rowsPropeties_and_columnName);
+        $table->addHead(_("Edit"));
+        $table->addHead($rowsPropeties_and_columnName);
+        $table->addHead([ "delete" => _("Delete") ]);
         // BODY
         foreach ($itemListElement as $valueTbody) {
             $item = $valueTbody['item'];
             $id = ArrayTool::searchByValue($item['identifier'], 'id')['value'];
-            $valueTbody['item'][0] = "<a href='$uri&item=$id'>$imageEdit</a>";
-            $valueTbody['item'][1] = "<a href='$uri&item=$id&action=deleteItem' onclick=\"return confirm('Do you really want to delete this item?')\">$imageDelete</a>";
-            $itemList[] = $valueTbody;
+            $valueTbody['item'][0] = "<a href='$uri&item=$id'>".self::$BUTTON_EDIT."</a>";
+            $valueTbody['item']['id'] = $id;
+            $valueTbody['item']['delete'] = "<form method='post' action='/admin/$type/erase' style='background-color: transparent; text-align: center;'><input type='hidden' name='id' value='$id'><input type='hidden' name='redirect' value='referrer'/><input src='".self::$BUTTON_DELETE."' type='image' name='submit' style='width: 20px; ' alt='Delete' onclick=\"return confirm('Do you really want to delete this item?')\"/></form>";
+            $listItem[] = $valueTbody['item'];
         }
-        $table->setItemListElement($itemList);
+        $table->addBody($listItem);
         // READY
         return $table->ready();
     }

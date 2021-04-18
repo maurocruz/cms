@@ -1,10 +1,10 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Sitemap;
 
 class ImageObjectController implements ControllerInterface
@@ -32,7 +32,7 @@ class ImageObjectController implements ControllerInterface
         $params3 = array_merge($params2, $params);
         $data = Api::get("imageObject", $params3);
         $value = $data[0];
-        $id = PropertyValue::extractValue($value['identifier'], "id");
+        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $value['info'] = (new ImageObjectServer())->getImageHasPartOf($id);
         return $value;
     }
@@ -41,7 +41,7 @@ class ImageObjectController implements ControllerInterface
         $dataSitemap = null;
         $data = Api::get("imageObject", [ "properties" => "license", "orderBy" => "uploadDate" ]);
         foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $imageLoc = App::$HOST . str_replace(" ", "%20", $value['contentUrl']);
             $dataSitemap[] = [
                 "loc" => App::$HOST . "/t/imageObject/$id",

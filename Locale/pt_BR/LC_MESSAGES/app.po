@@ -21,7 +21,7 @@ msgid "Add new %s"
 msgstr "Adicionar novo %s"
 
 msgid "List of %s from %s"
-msgstr "List de %s de %s"
+msgstr "Lista de %s de %s"
 
 msgid "Edit %s"
 msgstr "Editar %s"
@@ -426,6 +426,18 @@ msgstr "Data de envio"
 msgid "License"
 msgstr "Licença"
 
+msgid "Upload image"
+msgstr "Enviar imagem"
+
+msgid "Upload images"
+msgstr "Enviar imagens"
+
+msgid "We recommend configuring the image folder!"
+msgstr "Recomendamos configurar a pasta de imagens!"
+
+msgid "Save to folder"
+msgstr "Salvar na pasta"
+
 #############################   INVOICE   #####################################
 
 msgid "Invoice"
@@ -634,6 +646,15 @@ msgstr "Duração elegível"
 
 msgid "Order"
 msgstr "Pedido"
+
+msgid "Orders"
+msgstr "Pedidos"
+
+msgid "order"
+msgstr "pedido"
+
+msgid "orders"
+msgstr "pedidos"
 
 msgid "Seller"
 msgstr "Vendedor"
