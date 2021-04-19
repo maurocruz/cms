@@ -54,8 +54,9 @@ class TemplateView extends TemplateAbstract {
     protected function navbar() {
         $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
-            foreach (App::getTypesEnabled() as $value) {
-                $data['list']['/admin/'.$value] = _(ucfirst($value));
+            foreach (App::getTypesEnabled() as $key => $value) {
+                $href = is_string($key) ? $key : "/admin/$value";
+                $data['list'][$href] = _(ucfirst($value));
             }
         }
         $data['attributes'] = ["class"=>"menu"];
