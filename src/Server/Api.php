@@ -32,7 +32,6 @@ class Api {
         } else {
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
             try {
-                //var_dump($action,$type, $params, $token);
                 $remoteAccessApi = json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true);
                 if (isset($remoteAccessApi['error'])) {
                     throw new Exception($remoteAccessApi['error']['message']);
