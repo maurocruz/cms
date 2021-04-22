@@ -21,6 +21,7 @@ class OfferView extends OfferWidget implements ViewInterface {
     }
 
     public function edit(array $data): array {
+        $this->setOfferedBy($data);
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         // NEW OFFER
@@ -56,44 +57,4 @@ class OfferView extends OfferWidget implements ViewInterface {
         }
         return $content;
     }
-
-    /*private static function formOffer($value = null): array {
-        $case = $value ? "edit" : "new";
-        if (isset(self::$tableHasPart)) {
-            $itemOffered = self::$idHasPart;
-            $itemOfferedType = self::$tableHasPart;
-            $content[] = self::input("tableHasPart", "hidden", $itemOfferedType);
-            //$content[] = self::input("idHasPart", "hidden", $itemOffered);
-            $content[] = self::input("itemOffered", "hidden", $itemOffered);
-            $content[] = self::input("itemOfferedType", "hidden", $itemOfferedType);
-        } else {
-            $content[] = self::fieldset(self::chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
-        }
-        if ($value) {
-            $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
-            $content[] = self::input("id", "hidden", $id);
-        }
-        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'], [ "style" => "width: 120px;" ], "number", [ "min" => 0, "step" => "any" ]);
-        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", [ "style" => "width: 102px;"], "text", [ "maxlength" => "2" ]);
-        $content[] = self::fieldsetWithSelect(_("Availability"), "availability", $value['availability'], [
-            "Discontinued" => _("Discontinued"),
-            "InStock" => _("In stock"),
-            "InStoreOnly" => _("In store only"),
-            "LimitedAvailability" => _("Limited availability"),
-            "OnlineOnly" => _("Online only"),
-            "OutOfStock" => _("Out of stock"),
-            "PreOrder" => _("Pre order"),
-            "PreSale" => _("Pre sale"),
-            "SoldOut" => _("Sould out")
-        ]);
-        // VALID THROUGH
-        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough'], [ "style" => "width: 150px;" ]);
-        // ELEGIBLE QUANTITY
-        $content[] = self::fieldsetWithInput(_("Elegible quantity"), "elegibleQuantity", $value['elegibleQuantity'], [ "style" => "width: 150px;" ]);
-        // ELEGIBLE DURATION
-        $content[] = self::fieldsetWithInput(_("Elegible duration"), "elegibleDuration", $value['elegibleDuration']);
-        $content[] = self::submitButtonSend();
-        $content[] = $value ? self::submitButtonDelete("/admin/offer/erase") : null;
-        return self::form("/admin/offer/$case", $content);
-    }*/
 }
