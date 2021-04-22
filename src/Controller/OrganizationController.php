@@ -29,18 +29,38 @@ class OrganizationController implements ControllerInterface
             $data = Api::get('service', [ "id" => $itemId, "properties" => "*,provider,offers" ]);
         } else {
             $data = $this->edit($params);
-            $data[0]['services'] = Api::get('service', ["format" => "ItemList", "properties" => "*", "provider" => $params['id']]);
+            $data[0]['services'] = Api::get('service', ["format" => "ItemList", "properties" => "*", "provider" => $params['id'], "orderBy" => "dateModified DESC" ]);
         }
         return $data;
     }
 
+    /**
+     *  PRODUCT IS PROPERTY OF
+     * @param array $params
+     * @return array
+     */
     public function product(array $params): array {
         $itemId = $params['item'] ?? null;
         if ($itemId) {
-            $data = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers" ]);
+            $data = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
         } else {
             $data = $this->edit($params);
             $data[0]['products'] = Api::get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $params['id']]);
+        }
+        return $data;
+    }
+
+    public function order(array $params): array {
+        $itemId = $params['item'] ?? null;
+        $id = $params['id'];
+        if ($itemId) {
+            $data = Api::get('order', [ "id" => $itemId, "properties" => "*,customer,orderedItem,partOfInvoice,history" ]);
+            $data[0]['orderedItem'] = Api::get("orderItem", [ "referencesOrder" => $itemId, "properties" => "*,orderedItem,offer" ]);
+            $data[0]['seller'] = Api::get("organization", [ "id" => $id, "properties" => "hasOfferCatalog" ])[0];
+            $data[0]['seller']['hasOfferCatalog'] = Api::get("offer", [ "format" => "ItemList", "offeredBy" => $id, "offeredByType" => "Organization", "properties" => "itemOffered", "availability" => "InStock", "where" => "`validThrough`>CURDATE()" ] );
+        } else {
+            $data = $this->edit($params);
+            $data[0]['orders'] = Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller", "seller" => $id, "sellerType" => "Organization"]);
         }
         return $data;
     }
