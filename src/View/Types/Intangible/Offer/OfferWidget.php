@@ -1,15 +1,9 @@
 <?php
 namespace Plinct\Cms\View\Types\Intangible\Offer;
 
-use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 
-abstract class OfferWidget {
-    protected $content = [];
-    protected $tableHasPart;
-    protected $idHasPart;
-
-    use FormElementsTrait;
+abstract class OfferWidget extends OfferAbstract {
 
     protected function formOffer($value = null): array {
         $case = $value ? "edit" : "new";
@@ -21,6 +15,8 @@ abstract class OfferWidget {
         } else {
             $content[] = self::fieldset(self::chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
         }
+        $content[] = self::input("offeredBy", "hidden", ArrayTool::searchByValue($this->offeredBy['identifier'], "id")['value']);
+        $content[] = self::input("offeredByType", "hidden", $this->offeredBy['@type']);
         if ($value) {
             $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = self::input("id", "hidden", $id);
