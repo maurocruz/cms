@@ -30,9 +30,9 @@ class TemplateController extends TemplateView {
     }
 
     public function getContent($request) {
-        $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
-        $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
         $id = $request->getAttribute('identifier') ?? $request->getQueryParams()['id'] ?? null;
+        $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
+        $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? ($id ? "edit" : "index");
         $params = $request->getQueryParams();
         if ($id) {
             $params['id'] = $id;
