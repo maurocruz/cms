@@ -2,10 +2,7 @@
 namespace Plinct\Cms\View\Types\Organization;
 
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
-use Plinct\Cms\View\Types\Product\ProductView;
-use Plinct\Cms\View\Types\Intangible\Service\ServiceView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
-use Plinct\Tool\ArrayTool;
 
 class OrganizationView extends OrganizationWidget {
     
@@ -46,43 +43,13 @@ class OrganizationView extends OrganizationWidget {
         return $this->content;
     }
 
-    public function service($data) {
-        $value = $this->setValues($data);
-        $action = filter_input(INPUT_GET, 'action');
-        // NAVBAR
-        $this->navbarService();
-        // SWICTH
-        if ($action == "new") {
-            $this->addContent('main', (new ServiceView())->new([ "provider" => $value ]));
-        } elseif ($value['@type'] == "Organization" && empty($value['services'])) {
-            $this->addContent('main', [ "tag" => "p", "content" => _("No services added") ]);
-        } elseif ($value['@type'] = "Service") {
-            parent::addContent('main', (new ServiceView())->edit($value));
-        } else {
-            parent::addContent('main', (new ServiceView())->index($value));
-        }
-        return $this->content;
+    public function service($data): array {
+        return $this->itemView("Service", $data);
     }
-
-    public function product($data) {
-        $value = $data[0];
-        $organizatiionIdentifier = $value['manufacturer']['identifier'] ?? $value['identifier'];
-        $productName = $value['@type'] == "Product" ? $value['name'] : null;
-        $this->id =  ArrayTool::searchByValue($organizatiionIdentifier, "id")['value'];
-        $this->name = $value['manufacturer']['name'] ?? $value['name'];
-        $action = filter_input(INPUT_GET, 'action');
-        // NAVBAR
-        $this->navbarProduct($productName);
-        // SWITCH
-        if ($action == "new") {
-            $this->addContent('main', (new ProductView())->new([ "manufacturer" => $value ]));
-        } elseif ($value['@type'] == "Organization" && empty($value['products'])) {
-            $this->addContent('main', [ "tag" => "p", "content" => _("No products added") ]);
-        } elseif ($value['@type'] == "Product") {
-            parent::addContent('main', (new ProductView())->editWithPropertyOf($value));
-        } else {
-            parent::addContent('main', (new ProductView())->indexWithPropertyOf($value));
-        }
-        return $this->content;
+    public function product($data): array {
+        return $this->itemView("Product", $data);
+    }
+    public function order($data): array {
+        return $this->itemView("Order", $data);
     }
 }
