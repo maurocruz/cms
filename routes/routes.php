@@ -5,6 +5,7 @@
 
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
+use Plinct\Cms\Server\Api;
 use Plinct\Cms\View\Template\TemplateController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -63,22 +64,16 @@ return function (Route $route) {
             //  EDIT
             if ($action == "edit" || $action == "put") {
                 $redirectLocation = (new Server())->edit($type, $params);
-                // sitemap
-                Sitemap::create($type);
             }
             // NEW
             elseif ($action == "new" || $action == "post" || $action == "add") {
                 // put data
                 $redirectLocation = (new Server())->new($type, $params);
-                // sitemap
-                Sitemap::create($type);
             }
             // DELETE
             elseif ($action == "delete" || $action == "erase") {
                 // delete data
                 $redirectLocation = (new Server())->erase($type, $params);
-                // sitemap
-                Sitemap::create($type);
             }
             // CREATE SQL TABLE
             elseif ($action == "createSqlTable") {
@@ -87,13 +82,14 @@ return function (Route $route) {
             }
             // SITEMAP
             elseif (($action == "sitemap")) {
-                $redirectLocation = $_SERVER['HTTP_REFERER'];
                 // sitemap
                 Sitemap::create($type, $params);
+                // redir
+                $redirectLocation = $_SERVER['HTTP_REFERER'];
             }
             // GENERIC
             else {
-                (new Server())->request($type, $action, $params);
+                Api::request($type, $action, $params);
                 $redirectLocation = $_SERVER['HTTP_REFERER'];
             }
             return $response->withHeader('Location', $redirectLocation)->withStatus(301);
