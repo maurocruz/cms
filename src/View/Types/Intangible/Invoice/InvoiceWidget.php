@@ -1,35 +1,36 @@
 <?php
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View\Types\Intangible\Invoice;
 
 use DateTime;
 use Exception;
+use Plinct\Cms\View\Types\Intangible\OrderItem\OrderItemView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
+use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
+use Plinct\Web\Element\Table;
 
-class PaymentView {
+abstract class InvoiceWidget {
+    protected $idorder;
+    protected static $tableHasPart = null;
+    protected static $idHasPart = null;
+    protected static $customer;
+    protected static $customerType;
+    protected static $provider;
+    protected static $providerType;
+    protected $content = [];
+    protected $totalInvoiceAmount = 0;
+    protected $totalPaidAmount = 0;
+    protected $totalPayableAmount = 0;
+    protected $totalPastDueAmount = 0;
+
+    use navbarTrait;
     private static $totalPaymentAmount;
 
     use FormElementsTrait;
 
-    public static function edit(array $data): array {
-        $idorder = $data['idorder'];
-        $lenght = $data['partOfInvoice'] ? count($data['partOfInvoice']): 0;
-        $content[] = self::formPayment($idorder, "new", null, $lenght+1 );
-        if ($lenght > 0) {
-            foreach ($data['partOfInvoice'] as $key => $value) {
-                $content[] = self::formPayment($idorder, 'edit', $value, $lenght - $key);
-            }
-            // balance
-            $dadosSaldo = self::saldoData($data['partOfInvoice']);
-            $content[] = self::balance($dadosSaldo);
-        }
-        return $content;
-    }
-    
-    private static function formPayment($idorder, $case = 'new', $value = null, $n = null): array {
+    protected function formInvoice($case = 'new', $value = null, $n = null): array {
         $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "order", "type" => "hidden"] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $idorder, "type" => "hidden"] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $this->idorder, "type" => "hidden"] ];
         if ($case == "edit") {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
         }
@@ -91,36 +92,38 @@ class PaymentView {
         }
     }
 
-    private static function balance($dadosSaldo): array {
-        $totalWithoutDiscount = OrderItemView::$totalWithoutDiscount;
-        $totalWithDiscount = OrderItemView::$totalWithDiscount;
-        if($totalWithDiscount != self::$totalPaymentAmount) {
-            $diffWithoutDiscount = self::$totalPaymentAmount - $totalWithoutDiscount;
-            $diffWithDiscount = self::$totalPaymentAmount - $totalWithDiscount;
-            $content[] = [ "tag" => "tr", "attributes" => [ "style" => "background-color: #e7e7e7; color: red;" ], "content" => [
-                [ "tag" => "td", "attributes" => [ "colspan" => "4" ], "content" => sprintf(_("Order total does not match invoice total. Differences: without discount %s; with discount %s"), number_format($diffWithoutDiscount,2,',','.'), number_format($diffWithDiscount,2,',','.')) ]
-            ]];
-        }
-        $content[] = [
-            [ "tag" => "tr", "attributes" => [ "style" => "background-color: #e7e7e7;" ], "content" => [
-                [ "tag" => "td", "attributes" => [ "style" => "color: blue;" ], "content" => number_format(self::$totalPaymentAmount,2,",",".") ],
-                [ "tag" => "td", "attributes" => [ "style" => "color: blue;" ], "content" => number_format($dadosSaldo['credito'],2,",",".") ],
-                [ "tag" => "td", "attributes" => [ "style" => "color: #333" ], "content" => number_format($dadosSaldo['debito'],2,",",".") ],
-                [ "tag" => "td", "attributes" => [ "style" => "color: red;" ], "content" => "(".number_format($dadosSaldo['atrasado'],2,",",".").")" ]
-            ] ]
-        ];
-        return [ "tag" => "table", "attributes" => [ "style" => "margin-top: 10px; text-align: center; font-weight: bold;" ], "content" => [
-            [ "tag" => "caption", "attributes" => [ "style" => "font-size: 1em;" ], "content" => _("Balance") ],
-            [ "tag" => "thead", "content" => [
-                [ "tag" => "tr", "content" => [
-                    [ "tag" => "th", "content" => _("Total order amount") ],
-                    [ "tag" => "th", "content" => _("Amounts paid") ],
-                    [ "tag" => "th", "content" => _("Amounts payable") ],
-                    [ "tag" => "th", "content" => _("Amounts past due") ]
-                ]]
-            ]],
-            [ "tag" => "tbody", "content" => $content ]
-        ]];
+    protected function balance(): array {
+        // SET VARS
+        $totalPaymentAmount = OrderItemView::getTotalBill();
+        $totalInvoiceAmount = $this->totalInvoiceAmount;
+        $totalPaidAmount = $this->totalPaidAmount;
+        $totalPayableAmount = $this->totalPayableAmount;
+        $totalPastDueAmount = $this->totalPastDueAmount;
+        $difference = $totalInvoiceAmount - $totalPaymentAmount;
+        $colorDiference = $difference < 0 ? "#fab5b5" : "inherit";
+        $colorPayable = $totalPayableAmount > 0 ? "#fafab5" : "inherit";
+        $colorPastDue = $totalPastDueAmount > 0 ? "#fab5b5" : "inherit";
+        // TABLE
+        $table = new Table();
+        // CAPTION
+        $table->caption(_("Balance"));
+        // HEADERS
+        $table->head(_("Total order amount") )
+            ->head(_("Total invoice amount"))
+            ->head(_("Difference"))
+            ->head(_("Amounts paid"))
+            ->head(_("Amounts payable"))
+            ->head(_("Amounts past due"));
+        // BODY
+        $table->bodyCell(number_format($totalPaymentAmount,2,',','.'), [ "style" => "text-align: center;" ])
+            ->bodyCell(number_format($totalInvoiceAmount,2,',','.'), [ "style" => "text-align: center;" ])
+            ->bodyCell(number_format($difference,2,',','.'), [ "style" => "text-align: center; color: $colorDiference" ])
+            ->bodyCell(number_format($totalPaidAmount,2,',','.'), [ "style" => "text-align: center;" ])
+            ->bodyCell(number_format($totalPayableAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPayable" ])
+            ->bodyCell(number_format($totalPastDueAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPastDue" ])
+            ->closeRow();
+        // READY
+        return $table->ready();
     }
 
     /**
@@ -128,7 +131,7 @@ class PaymentView {
      * @param $data
      * @return array
      */
-    private static function saldoData($data): array {
+    protected static function saldoData($data): array {
         $dadosSaldo = [];
         $totalPaymentAmount = 0;
         $dadosSaldo['credito'] = 0;
