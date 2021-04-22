@@ -2,6 +2,7 @@
 namespace Plinct\Cms\View\Widget;
 
 use Plinct\Tool\ArrayTool;
+use Plinct\Web\Element\Table;
 
 trait HtmlPiecesTrait {
     private static $BUTTON_EDIT = '<img src="/App/static/cms/images/edit4-yellow.svg" width="20" alt="edit">';
@@ -21,27 +22,37 @@ trait HtmlPiecesTrait {
     }
 
     public static function indexWithSubclass(string $owner, string $type, array $rowsPropeties_and_columnName, array $itemListElement): array {
-        $listItem = [];
+        $properties = [];
         $uri = $_SERVER['REQUEST_URI'];
         // TABLE
         $table = new Table();
         // CAPTION
-        $caption = sprintf(_("List of %s from %s"), lcfirst(_($type)).'s', $owner);
-        $table->addCaption($caption);
+        $table->caption(sprintf(_("List of %s from %s"), lcfirst(_($type)), $owner));
         // HEAD
-        $table->addHead(_("Edit"));
-        $table->addHead($rowsPropeties_and_columnName);
-        $table->addHead([ "delete" => _("Delete") ]);
+        $table->head(_("Edit"), [ "style" => "width: 50px;"]);
+        foreach ($rowsPropeties_and_columnName as $keyColumns => $valueColunmns) {
+            $properties[] = $keyColumns;
+            $label = is_string($valueColunmns) ? $valueColunmns : $valueColunmns[0];
+            $attributes = is_array($valueColunmns) ? $valueColunmns[1] : null;
+            $table->head($label, $attributes);
+        }
+        $table->head(_("Delete"), [ "style" => "width: 50px;"]);
         // BODY
         foreach ($itemListElement as $valueTbody) {
             $item = $valueTbody['item'];
+            // EDIT
             $id = ArrayTool::searchByValue($item['identifier'], 'id')['value'];
-            $valueTbody['item'][0] = "<a href='$uri&item=$id'>".self::$BUTTON_EDIT."</a>";
-            $valueTbody['item']['id'] = $id;
-            $valueTbody['item']['delete'] = "<form method='post' action='/admin/$type/erase' style='background-color: transparent; text-align: center;'><input type='hidden' name='id' value='$id'><input type='hidden' name='redirect' value='referrer'/><input src='".self::$BUTTON_DELETE."' type='image' name='submit' style='width: 20px; ' alt='Delete' onclick=\"return confirm('Do you really want to delete this item?')\"/></form>";
-            $listItem[] = $valueTbody['item'];
+            $table->bodyCell("<a href='$uri&item=$id'>".self::$BUTTON_EDIT."</a>", [ "style" => "text-align: center" ]);
+            // ROWS
+            foreach ($properties as $valueProperty) {
+                $content = is_array($item[$valueProperty]) ? $item[$valueProperty]['name'] : $item[$valueProperty];
+                $table->bodyCell($content);
+            }
+            // DELETE
+            $table->bodyCell("<form method='post' action='/admin/$type/erase' style='background-color: transparent; text-align: center;'><input type='hidden' name='id' value='$id'><input type='hidden' name='redirect' value='referrer'/><input src='".self::$BUTTON_DELETE."' type='image' name='submit' style='width: 20px; ' alt='Delete' onclick=\"return confirm('Do you really want to delete this item?')\"/></form>");
+            // CLOSE ROW
+            $table->closeRow();
         }
-        $table->addBody($listItem);
         // READY
         return $table->ready();
     }
