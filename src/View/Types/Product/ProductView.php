@@ -30,6 +30,10 @@ class ProductView extends ProductWidget implements ViewInterface {
         return $this->content;
     }
 
+    public function new($data = null): array {
+        return $this->content;
+    }
+
     public function edit(array $data): array {
         $value = $data[0];
         $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
@@ -41,7 +45,7 @@ class ProductView extends ProductWidget implements ViewInterface {
         return $this->content;
     }
 
-    public function new($data = null): array {
+    public function newWithPropertyOf($data = null): array {
         $this->content['main'][] = self::divBox(sprintf(_("Add new product for %s"), $data['manufacturer']['name']), "product", [ parent::formProduct("new", $data) ]);
         return $this->content;
     }
@@ -59,12 +63,13 @@ class ProductView extends ProductWidget implements ViewInterface {
     }
 
     public function editWithPropertyOf($value): array {
+        $idProduct = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // FORM EDIT PRODUCT
         $content[] = self::divBox2(_("Edit"), [ parent::formProduct("edit", $value) ]);
         // OFFERS
         $content[] = self::divBoxExpanding(_("Offer"), "offer", [ (new OfferView())->edit($value) ]);
         // IMAGES
-
+        $content[] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("product", $idProduct, $value['image']) ]);
         return $content;
     }
 }
