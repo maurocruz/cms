@@ -122,6 +122,15 @@ class App {
     public static function getVersion(): string {
         return self::$VERSION;
     }
+    public static function getUserId() {
+        return $_SESSION['userLogin']['uid'];
+    }
+    public static function getUserName() {
+        return $_SESSION['userLogin']['name'];
+    }
+    public static function userIsAdmin() {
+        return $_SESSION['userLogin']['admin'];
+    }
 
     /**
      * RUN APP
