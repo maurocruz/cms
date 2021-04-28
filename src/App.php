@@ -87,7 +87,7 @@ class App {
         self::$TypesEnabled = $types; return $this;
     }
     public function setImagesFolder($relativePath): App {
-        self::$IMAGES_FOLDER = $_SERVER['DOCUMENT_ROOT'] . $relativePath; return $this;
+        self::$IMAGES_FOLDER = $relativePath; return $this;
     }
     public function setImageMaxWigth(int $imageMaxWigth): void {
         self::$IMAGE_MAX_WIDTH = $imageMaxWigth;
