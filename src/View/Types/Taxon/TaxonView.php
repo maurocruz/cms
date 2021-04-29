@@ -1,6 +1,7 @@
 <?php
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View\Types\Taxon;
 
+use Plinct\Cms\View\Html\Page\ViewInterface;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
