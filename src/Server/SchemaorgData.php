@@ -7,6 +7,7 @@ class SchemaorgData {
     private static $SCHEMAORG_DATA_CLASS;
     private static $TYPE_SELECTED;
     private static $SEPARATOR;
+    private static $INCLUDE_TYPE;
     private $response = [];
 
     public function __construct() {
@@ -40,8 +41,9 @@ class SchemaorgData {
         return $response;
     }
 
-    public function getSchemaByTypeSelected($typeSelected, string $separator = " -> "): array {
+    public function getSchemaByTypeSelected($typeSelected, bool $includeType = true, string $separator = " -> "): array {
         self::$TYPE_SELECTED = $typeSelected;
+        self::$INCLUDE_TYPE = $includeType;
         self::$SEPARATOR = $separator;
         // FILTER ONLY TYPE IS CLASS
         self::filterOnlyTypeClass();
@@ -99,8 +101,10 @@ class SchemaorgData {
     }
 
     private function excludeType(string $string): ?string {
-        $class = "schema:Thing";
-        if ($string == $class) return null;
-        return str_replace($class.self::$SEPARATOR, "", $string);
+        if (self::$INCLUDE_TYPE === false) {
+            if ($string == "schema:" . self::$TYPE_SELECTED) return null;
+            return str_replace(self::$TYPE_SELECTED.self::$SEPARATOR,"",$string);
+        }
+        return $string;
     }
 }
