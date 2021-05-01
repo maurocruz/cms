@@ -217,15 +217,13 @@ trait FormElementsTrait {
         return null;
     }
 
-    protected static function additionalTypeInput($typeSelected, $case, $additionalTypeValue, $attributes = null): array {
+    protected static function additionalTypeInput($typeSelected, $case, $additionalTypeValue, $attributes = null, $includeType = true): array {
         $datalist = null;
-        $additionalTypes = (new SchemaorgData())->getSchemaByTypeSelected($typeSelected);
+        $additionalTypes = (new SchemaorgData())->getSchemaByTypeSelected($typeSelected,$includeType);
         // additionalType
         foreach ($additionalTypes as $valueAddTypes) {
             $datalist[] = [ "tag" => "option", "attributes" => [ "value" => $valueAddTypes ] ];
-            //$list[$valueAddTypes] = $valueAddTypes;
         }
-        //return self::fieldsetWithSelect(("Additional type"), "additionalType", $additionalTypeValue, $list, $attributes );
         return [ "tag" => "fieldset", "attributes" => $attributes, "content" => [
             [ "tag" => "legend", "content" => _("Additional type") ],
             [ "tag" => "input", "attributes" => [ "name" => "additionalType", "type" => "text", "value" => $additionalTypeValue, "list" => "additionalType", "autocomplete" => "off" ] ],
