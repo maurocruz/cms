@@ -10,13 +10,15 @@ use Plinct\Tool\Sitemap;
 class OrganizationController implements ControllerInterface
 {
     public function index($params = null): array {
-        $paramsSet = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
+        $paramsSet = [ "format" => "ItemList", "properties" => "additionalType,dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
         $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
         return Api::get("organization", $paramsGet);
     }
     
     public function edit(array $params): array {
-        return Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
+        $data = Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
+        $data[0]['additionalType'] = str_replace(","," -> ",$data[0]['additionalType']);
+        return $data;
     }
     
     public function new($params = null): bool {
