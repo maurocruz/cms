@@ -80,7 +80,7 @@ abstract class OrganizationWidget {
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%;" ]);
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Organization", $case, $value['additionalType'], [ "style" => "width: 50%" ]);
+        $content[] = self::additionalTypeInput("Organization", $case, $value['additionalType'], [ "style" => "width: 50%" ], false);
         // legal name
         $content[] = self::fieldsetWithInput(_("Legal Name"), "legalName", $value['legalName'] ?? null, [ "style" => "width: 50%;" ]);
         // tax id
