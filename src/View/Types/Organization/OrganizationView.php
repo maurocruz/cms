@@ -13,7 +13,7 @@ class OrganizationView extends OrganizationWidget {
         if (isset($data['errorInfo'])) {
             $this->content['main'][] = self::errorInfo($data['errorInfo'], "organization");
         } else {
-            $this->content['main'][] = self::listAll($data, "organization", _("List of organizations"), [ "dateModified" => "Date Modified" ]);
+            $this->content['main'][] = self::listAll($data, "organization", _("List of organizations"), [ "additionalType" => "Additional type", "dateModified" => "Date Modified" ]);
         }
         return $this->content;
     }
