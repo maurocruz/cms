@@ -15,13 +15,13 @@ class HtmlViewAbstract {
 
     public function __construct() {
         // language
-        $this->setLanguage($this->settings['language']);
+        $this->setLanguage();
         // set html
         $this->html = [ "tag" => "html", "attributes" => [ "lang" => $this->language ] ];
     }
     
-    private function setLanguage($language) {
-        $this->language = $language ?? (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
+    private function setLanguage() {
+        $this->language = (new Locale())->acceptFromHttp(filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE'));
     }
 
     protected function setSiteName($siteName) {
