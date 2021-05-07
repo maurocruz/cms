@@ -36,9 +36,9 @@ class ArticleView implements ViewInterface {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
             // author
-            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
+            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $data['author'])]);
             // images
-            $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
+            $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $data['image'])]);
         }
         return $this->content;
     }
