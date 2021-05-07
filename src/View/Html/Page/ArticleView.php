@@ -36,9 +36,9 @@ class ArticleView implements ViewInterface {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
             // author
-            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $data['author'])]);
+            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
             // images
-            $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $data['image'])]);
+            $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
         }
         return $this->content;
     }
@@ -50,11 +50,12 @@ class ArticleView implements ViewInterface {
     }
 
     static private function formArticle($case = "new", $value = null, $ID = null): array {
+        $publishied = $value['publishied'] ?? '0';
         $content[] = $case == "edit" ? self::input("id", "hidden", $ID) : null;
         // title
         $content[] = self::fieldsetWithInput(_("Title"), "headline", $value['headline'] ?? null, ["style" => "width: calc(100% - 60px);"]);
         // position
-        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? null, [ "style" => "width: 40px;" ], "number", [ "min" => "1" ]);
+        //$content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? null, [ "style" => "width: 40px;" ], "number", [ "min" => "1" ]);
         // article body
         $content[] = [ "tag" => "fieldset", "attributes" => ["style" => "width: 100%;"], "content" => [
             [ "tag" => "legend", "content" => _("Text") ],
@@ -80,18 +81,14 @@ class ArticleView implements ViewInterface {
         $content[] = [ "tag" => "fieldset", "attributes" => ["style" => "width: 110px;"], "content" => [
             [ "tag" =>"legend", "content" => _("Publishied") ],
             [ "tag" => "label", "content" => [
-                [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 1, isset($value['publishied']) && $value['publishied'] == 1 ? "checked" : null ] ],
+                [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 1, $publishied == 1 ? "checked" : null ] ],
                 " "._("Yes")
             ]],
             [ "tag" => "label", "content" => [
-                [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 0, isset($value['publishied']) && $value['publishied'] == 0 ? "checked" : null ] ],
+                [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 0, $publishied == 0 ? "checked" : null ] ],
                 " "._("No")
             ]]
         ]];
-        // autor
-       // $content[] = self::searchAndShow("author", "person", "name", $value['author']);
-        // publisher
-        //$content[] = self::searchAndShow("publisher", "organization", "name", $value['publisher']);
         // submit
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/article/erase") : null;
