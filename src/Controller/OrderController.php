@@ -65,7 +65,7 @@ class OrderController implements ControllerInterface
             $dataCustomer = PDOConnect::run("SELECT * FROM $table WHERE `$idName`=$id;");
             $value['customer'] = $dataCustomer[0] ?? null;
             // ORDERED ITEM
-            $dataOrderedItem = Api::get("orderItem", [ "orderItemNumber" => $value['idorder'] ]);
+            $dataOrderedItem = Api::get("orderItem", [ "referencesOrder" => $value['idorder'] ]);
             $value['orderedItem'] = $dataOrderedItem;
             $data2[] = $value;
         }
