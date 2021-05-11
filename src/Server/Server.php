@@ -5,11 +5,22 @@ class Server extends Api {
     private $tableHasPart;
 
     public function edit($type, $params) {
-        parent::put($type, $params);
+        $className = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($className)) {
+            $object = new $className();
+            if (method_exists($object,"edit")) {
+                return $object->edit($params);
+            }
+        }
+        Api::put($type, $params);
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
     public function new($type, $params): string {
+        $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($classTypeServer)) {
+            return (new $classTypeServer())->new($params);
+        }
         // API
         $data = parent::post($type, $params);
         // REDIRECT TO EDIT PAGE
@@ -37,7 +48,6 @@ class Server extends Api {
         unset($params['idHasPart']);
         unset($params['tableIsPartOf']);
         unset($params['idIsPartOf']);
-        return $params;
     }
     
     private function return(): string {
