@@ -9,7 +9,8 @@ use Slim\App as Slim;
  * @package Plinct\Cms
  */
 class App {
-    private static $IMAGES_FOLDER;
+    private static $IMAGES_FOLDER = "/public/images/";
+    private static $IMAGE_MAX_WIDTH = "1080";
     private $slim;
     private static $TITLE = null;
     private static $LANGUAGE;
@@ -85,11 +86,14 @@ class App {
     public function setTypesEnabled(array $types): App {
         self::$TypesEnabled = $types; return $this;
     }
-    /*public function defineStaticFilesFolder(string $folderPath): App {
-        define('FOLDER_PATH', $folderPath); return $this;
-    }*/
     public function setImagesFolder($relativePath): App {
-        self::$IMAGES_FOLDER = $_SERVER['DOCUMENT_ROOT'] . $relativePath; return $this;
+        self::$IMAGES_FOLDER = $relativePath; return $this;
+    }
+    public function setImageMaxWigth(int $imageMaxWigth): void {
+        self::$IMAGE_MAX_WIDTH = $imageMaxWigth;
+    }
+    public static function getImageMaxWigth(): int {
+        return self::$IMAGE_MAX_WIDTH;
     }
     public static function setVersion() {
         $version = "developer version";
