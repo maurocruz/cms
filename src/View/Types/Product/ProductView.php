@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Types\Product;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;

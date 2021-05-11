@@ -20,6 +20,9 @@ abstract class OrderItemWidget {
     use FormElementsTrait;
 
     protected function listOrderedItems($data): array {
+        $sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
+        $sellerType = $data['sellerType'];
+        //
         $orderedItems = $data['orderedItem'] ?? null;
         $numberOfItems = $orderedItems ? count($orderedItems) : null;
         $quantityTotal = 0;
@@ -39,14 +42,15 @@ abstract class OrderItemWidget {
             foreach ($orderedItems as $key => $value) {
                 $type = $value['orderedItem']['@type'];
                 $name = $value['orderedItem']['name'];
+                $idItem = ArrayTool::searchByValue($value['orderedItem']['identifier'],"id")['value'];
                 $orderQuantity = $value['orderQuantity'];
-                $price = $value['offer']['price'];
+                $price = $value['offer']['price'] ?? null;
                 $totalPrice = $price * $orderQuantity;
-                $priceCurrency = $value['offer']['priceCurrency'];
+                $priceCurrency = $value['offer']['priceCurrency'] ?? null;
                 // BODY CELLS
                 $table->bodyCell($key+1)
                     ->bodyCell($type, ["style" =>"text-align: center;"])
-                    ->bodyCell($name)
+                    ->bodyCell(sprintf('<a href="/admin/%s/%s?id=%s&item=%s">%s</a>',lcfirst($sellerType),lcfirst($type),$sellerId,$idItem,$name))
                     ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($price,2,',','.'), ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])

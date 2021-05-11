@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Types\Intangible\Offer;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 

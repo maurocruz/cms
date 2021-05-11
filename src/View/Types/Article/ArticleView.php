@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\View\Types\Article;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
@@ -54,9 +54,7 @@ class ArticleView implements ViewInterface {
     static private function formArticle($case = "new", $value = null, $ID = null): array {
         $content[] = $case == "edit" ? self::input("id", "hidden", $ID) : null;
         // title
-        $content[] = self::fieldsetWithInput(_("Title"), "headline", $value['headline'] ?? null, ["style" => "width: calc(100% - 60px);"]);
-        // position
-        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? null, [ "style" => "width: 40px;" ], "number", [ "min" => "1" ]);
+        $content[] = self::fieldsetWithInput(_("Title"), "headline", $value['headline'] ?? null, ["style" => "width: 100%;"]);
         // article body
         $content[] = [ "tag" => "fieldset", "attributes" => ["style" => "width: 100%;"], "content" => [
             [ "tag" => "legend", "content" => _("Text") ],

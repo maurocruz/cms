@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View\Types\Intangible;
 
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;

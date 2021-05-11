@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Types\Intangible\Order;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Types\Intangible\HistoryView;
 use Plinct\Cms\View\Types\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\View\Types\Intangible\OrderItem\OrderItemView;
@@ -49,10 +49,12 @@ class OrderView extends OrderWidget implements ViewInterface {
 
     public function indexWithPropertyOf($value): array {
         $rowsColumns = [
-            "seller" => _("Seller"),
+            "idorder" => [ "ID", [ "style" => "width: 50px;" ] ],
             "customer" => _("Customer"),
+            "seller" => _("Seller"),
+            "orderedItem" => _("Item ordered"),
             "orderStatus" => [ _("Order status"), [ "style" => "width: 140px;" ] ],
-            "dateCreated" => [ _("Date created"), [ "style" => "width: 140px;" ] ]
+            "orderDate" => [ _("Order date"), [ "style" => "width: 100px;" ] ]
         ];
         $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value['name'], "orders", $rowsColumns, $value['orders']['itemListElement']);
         return $this->content;

@@ -1,5 +1,7 @@
 <?php
-namespace Plinct\Cms\Server;
+namespace Plinct\Cms\Server\Type;
+
+use Plinct\Cms\Server\Api;
 
 class OrganizationServer {
 

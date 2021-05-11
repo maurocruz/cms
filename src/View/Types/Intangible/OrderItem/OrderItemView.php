@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Types\Intangible\OrderItem;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Tool\ArrayTool;
 
 class OrderItemView extends OrderItemWidget implements ViewInterface {

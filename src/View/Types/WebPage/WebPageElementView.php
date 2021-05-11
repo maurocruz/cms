@@ -1,7 +1,9 @@
 <?php
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View\Types\WebPage;
 
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Types\Intangible\PropertyValueView;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;

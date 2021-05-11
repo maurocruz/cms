@@ -1,7 +1,8 @@
 <?php
-namespace Plinct\Cms\Server;
+namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 
 class HistoryServer {
     private $tableHasPart;
@@ -21,7 +22,7 @@ class HistoryServer {
         $data = array_filter($data, function ($var) { return(!is_array($var));  });
         $diff = array_diff($params, $data);
         foreach ($diff as $key => $value) {
-            $text .= $key.": {$data[$key]} to $value; ";
+            $text .= $key.": $data[$key] to $value; ";
         }
         $this->summary = $text;
     }
@@ -30,7 +31,6 @@ class HistoryServer {
         $this->action = $action;
         $this->summary = $summary ?? $this->summary;
         $params = $this->getParams();
-        var_dump($params);
         return Api::post("history", $params);
     }
 

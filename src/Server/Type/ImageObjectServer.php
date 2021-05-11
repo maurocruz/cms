@@ -1,7 +1,8 @@
 <?php
-namespace Plinct\Cms\Server;
+namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\App;
+use Plinct\Cms\Server\Api;
 use Plinct\Tool\FileSystem\FileSystem;
 use Plinct\Tool\Image\Image;
 use Plinct\Tool\StringTool;
@@ -11,10 +12,23 @@ class ImageObjectServer {
     private static $KEYWORDS;
     private static $LIST_LOCATIONS;
 
-    /*public function __construct() {
-        $table_schema = PDOConnect::getDbname();
-        $this->tablesHasImageObject = PDOConnect::run("select table_name as tableName from information_schema.tables WHERE table_schema = '$table_schema' AND table_name LIKE '%_has_imageObject';");
-    }*/
+    public function new($params) {
+        // UPLOAD IMAGE
+        if ($type == "imageObject" && isset($_FILES['imageupload'])) {
+            if ($_FILES['imageupload']['size'][0] === 0) {
+                return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+            }
+            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $params['location']);
+            unset($params['location']);
+            foreach ($newParams as $valueNewParams) {
+                $params = array_merge($params, $valueNewParams);
+                if (!Api::post($type, $params)) {
+                    die("error!");
+                }
+            }
+        }
+        return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+    }
 
     public function getImageHasPartOf($idIsPartOf): ?array {
         /*foreach ($this->tablesHasImageObject as $value) {

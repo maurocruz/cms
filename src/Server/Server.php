@@ -5,7 +5,7 @@ class Server {
     private $tableHasPart;
 
     public function edit($type, $params) {
-        $classType = __NAMESPACE__."\\".ucfirst($type)."Server";
+        $classType = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
         if (class_exists($classType)) {
             return (new $classType())->edit($params);
         }
@@ -14,35 +14,21 @@ class Server {
     }
 
     public function new($type, $params): string {
-        // ORDER ITEM
-        if ($type == "orderItem") return OrderItemServer::new($params);
-        // UPLOAD IMAGE
-        if ($type == "imageObject" && isset($_FILES['imageupload'])) {
-            if ($_FILES['imageupload']['size'][0] === 0) {
-                return self::httpReferrer();
-            }
-            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $params['location']);
-            unset($params['location']);
-            foreach ($newParams as $valueNewParams) {
-                $params = array_merge($params, $valueNewParams);
-                if (!Api::post($type, $params)) {
-                    die("error!");
-                }
-            }
-            return self::httpReferrer();
-        } else {
-            // API
-            $data = Api::post($type, $params);
-            if ($type == "product") {
-                return self::httpReferrer();
-            }
-            // REDIRECT TO EDIT PAGE
-            if (isset($data['id']) && !isset($params['tableHasPart'])) {
-                return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
-            }
-            $this->unsetRelParams($params);
-            return $this->return();
+        $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($classTypeServer)) {
+            return (new $classTypeServer())->new($params);
         }
+        // API
+        $data = Api::post($type, $params);
+        if ($type == "product") {
+            return self::httpReferrer();
+        }
+        // REDIRECT TO EDIT PAGE
+        if (isset($data['id']) && !isset($params['tableHasPart'])) {
+            return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+        }
+        $this->unsetRelParams($params);
+        return $this->return();
     }
     
     public function erase($type, $params): string {

@@ -1,6 +1,5 @@
 <?php
-
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View;
 
 interface ViewInterface 
 {

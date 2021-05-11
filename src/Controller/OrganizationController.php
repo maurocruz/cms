@@ -25,6 +25,11 @@ class OrganizationController implements ControllerInterface
         return true;
     }
 
+    /**
+     * SERVICE IS PART OF
+     * @param array $params
+     * @return array
+     */
     public function service(array $params): array {
         $itemId = $params['item'] ?? null;
         if ($itemId) {
@@ -37,7 +42,7 @@ class OrganizationController implements ControllerInterface
     }
 
     /**
-     *  PRODUCT IS PROPERTY OF
+     *  PRODUCT IS PART OF
      * @param array $params
      * @return array
      */
@@ -62,7 +67,8 @@ class OrganizationController implements ControllerInterface
             $data[0]['seller']['hasOfferCatalog'] = Api::get("offer", [ "format" => "ItemList", "offeredBy" => $id, "offeredByType" => "Organization", "properties" => "itemOffered", "availability" => "InStock", "where" => "`validThrough`>CURDATE()" ] );
         } else {
             $data = $this->edit($params);
-            $data[0]['orders'] = Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller", "seller" => $id, "sellerType" => "Organization"]);
+            $dataAgo = date("Y-m-d", strtotime("-2 year", time()));
+            $data[0]['orders'] = Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller,orderedItem", "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc" ]);
         }
         return $data;
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\View\Types\Intangible\Service;
 
-use Plinct\Cms\View\Html\Page\ViewInterface;
+use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
@@ -31,8 +31,8 @@ class ServiceView extends ServiceWidget implements ViewInterface {
     public function indexWithPropertyOf(array $data): array {
         $columnRows = [
             "name" => _("Name"),
-            "category" => _("Category"),
-            "serviceType" => [ _("Service type"), [ "style" => "width: 200px;"] ],
+            "category" => [ _("Category"), [ "style" => "width: 200px;" ]],
+            "serviceType" => [ _("Service type"), [ "style" => "width: 300px;"] ],
             "dateModified" => [ _("Date modified"), [ "style" => "width: 150px;"] ]
         ];
         $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($data['name'], "service", $columnRows, $data['services']['itemListElement'] );
