@@ -4,7 +4,7 @@ namespace Plinct\Cms\Controller;
 use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
-use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Tool\Sitemap;
 
 class ImageObjectController implements ControllerInterface
