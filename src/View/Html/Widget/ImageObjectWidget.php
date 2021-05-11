@@ -2,9 +2,9 @@
 namespace Plinct\Cms\View\Html\Widget;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Tool\ArrayTool;
-use Plinct\Tool\Image;
+use Plinct\Tool\Image\Image;
 
 class ImageObjectWidget {
     protected $tableHasPart;
@@ -111,7 +111,7 @@ class ImageObjectWidget {
         $contentSize = $value['contentSize'] ?? $image->getFileSize();
         $imageWidth = $value['width'] ?? $image->getWidth();
         $imageHeight = $value['height'] ?? $image->getHeight();
-        $imageType = $value['type'] ?? $image->getMimeType();
+        $imageType = $value['type'] ?? $image->getEncodingFormat();
         $content[] = [ "object" => "figure", "attributes" => [ "style" => "display: block;" ], "src" => $value['contentUrl'] ];
         // ID
         $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 80px;" ], "text", [ "disabled" ] );
@@ -154,7 +154,7 @@ class ImageObjectWidget {
             "caption" => $caption
         ];
         // content url
-        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: 80%;" ], "text", [ "readonly" ]);
+        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 210px);" ], "text", [ "readonly" ]);
         // position
         $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
         // highlights
@@ -172,28 +172,16 @@ class ImageObjectWidget {
             [ "tag" => "legend", "content" => "Legenda" ],
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
-        if (isset($value['width'])) {
-            // width
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
-                [ "tag" => "legend", "content" => "Largura" ],
-                [ "tag" => "input", "attributes" => [ "name" => "width", "type" => "text", "value" => $value['width'] ] ]
-            ]];
-            // height
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
-                [ "tag" => "legend", "content" => "Altura" ],
-                [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $value['height'] ] ]
-            ]];
-            // href
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 480px); margin: 5px 0;" ], "content" => [
-                [ "tag" => "legend", "content" => "Link" ],
-                [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
-            ]];
-        }
-        //
+        // href
+        /*$content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 480px); margin: 5px 0;" ], "content" => [
+            [ "tag" => "legend", "content" => "Link" ],
+            [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
+        ]];*/
+        // SUBMIT
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/erase");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-{$ID}", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-$ID", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
     protected static function infoIsPartOf($id, $info): array {
