@@ -5,11 +5,10 @@ use Plinct\Api\Auth\AuthController;
 use Plinct\Cms\App;
 use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\Middleware\Authentication;
-use Plinct\Cms\View\Template\TemplateController;
+use Plinct\Cms\Template\TemplateController;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
-use Plinct\Cms\View\Html\HtmlView;
 
 return function (Route $route) {
     /**
@@ -57,7 +56,7 @@ return function (Route $route) {
     /**
      * REGISTER GET
      */
-    $route->get('/registrar', function (Request $request, Response $response) {
+    $route->get('/register', function (Request $request, Response $response) {
         $template = new TemplateController();
         $template->register();
         $response->getBody()->write($template->ready());
@@ -71,9 +70,9 @@ return function (Route $route) {
         $params['email'] = $request->getParsedBody()['email'];
         $params['password'] = $request->getParsedBody()['password'];
         $authentication = (new AuthController())->register($params);
-        $htmlView = new HtmlView();
-        $view = $htmlView->register($authentication);
-        $response->getBody()->write($view);
+        $template = new TemplateController();
+        $template->register($authentication);
+        $response->getBody()->write($template->ready());
         return $response;
     });
 };
