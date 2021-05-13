@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-KeywordsList: _;gettext\n"
 
-#. use fot update -> msgfmt plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.po --output-file=plinct/cms/src/View/locale/pt_BR/LC_MESSAGES/fwc.mo
+#. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinct.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinct.mo
 
 #################################  ACTIONS   ################################### 
 
@@ -332,6 +332,27 @@ msgstr "Estabelecimento Alimentar"
 
 msgid "Log out"
 msgstr "Sair"
+
+msgid "Log in"
+msgstr "Entrar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Developer version"
+msgstr "Versão de desenvolvimento"
+
+msgid "New user registration"
+msgstr "Novo registro de usuário"
+
+msgid "Repeat the password"
+msgstr "Repita a senha"
+
+msgid "Make new registration"
+msgstr "Fazer novo registro"
 
 msgid "Control Panel"
 msgstr "Painel de Controle"
@@ -1095,9 +1116,6 @@ msgstr "Seu registro foi um sucesso!"
 msgid "Registration not successful!"
 msgstr "Registro não efetuado!"
 
-msgid "Password must be a minimum of 8 characters"
-msgstr "A senha deve ter no mínimo 8 caracteres"
-
 msgid "Repeating the password doesn't work!"
 msgstr "A repetição da senha não confere!"
 
@@ -1109,3 +1127,33 @@ msgstr "Desculpe! Algo está errado!"
 
 msgid "Wait for confirmation from the administrator!"
 msgstr "Aguarde a confirmação do administrador!"
+
+msgid "The name must be longer than 4 characters"
+msgstr "O nome deve ter mais de 4 caracteres"
+
+msgid "Invalid email"
+msgstr "Email inválido"
+
+msgid "Password must be a minimum of 8 characters"
+msgstr "A senha deve ter no mínimo 8 caracteres"
+
+msgid "Password must contain at least one uppercase character"
+msgstr "A senha deve conter pelo menos um caractere maiúsculo"
+
+msgid "Password must contain at least one lowercase character"
+msgstr "A senha deve conter pelo menos um caractere minúsculo"
+
+msgid "Password must contain at least 1 number"
+msgstr "A senha deve conter pelo menos 1 número"
+
+msgid "Sorry but this email is invalid!"
+msgstr "Desculpe, mas este e-mail é inválido!"
+
+msgid "Sorry but user not exists!"
+msgstr "Desculpe, mas o usuário não existe!"
+
+msgid "Sorry. The user exists but is not authorized. Check your data."
+msgstr "Desculpe. O usuário existe, mas não está autorizado. Verifique seus dados."
+
+msgid "Sorry. The user exists but is not authorized. Contact administrator."
+msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."
