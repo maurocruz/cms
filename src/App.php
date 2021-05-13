@@ -19,6 +19,7 @@ class App {
     public static $HOST;
     private static $API_HOST = null;
     private static $API_SECRET_KEY;
+    private static $API_USER_EXPIRE = 60*60*24;
     private static $STATIC_FOLDER = "/App/static/cms";
 
     /**
@@ -56,6 +57,13 @@ class App {
      */
     public static function getApiSecretKey(): ?string {
         return self::$API_SECRET_KEY;
+    }
+
+    /**
+     * @return float|int
+     */
+    public static function getApiUserExpire() {
+        return self::$API_USER_EXPIRE;
     }
 
     /**
@@ -123,7 +131,7 @@ class App {
         return self::$VERSION;
     }
     public function run() {
-        $route = include __DIR__ . '/routes/routes.php';
+        $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
     }
 }
