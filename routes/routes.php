@@ -5,9 +5,9 @@
 
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
-use Plinct\Cms\View\Template\TemplateController;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Plinct\Cms\Template\TemplateController;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
 use Plinct\Cms\Server\Server;
 use Plinct\Cms\Server\Sitemap;
@@ -19,7 +19,7 @@ return function (Route $route) {
     $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args) {
         $filename = $args['filename'];
         $type = $args['type'];
-        $file = realpath(__DIR__ . "/../View/Html/assets/$type/$filename" .".".$type);
+        $file = realpath(__DIR__ . "/../static/$type/$filename" .".".$type);
         $script = file_get_contents($file);
         $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
         $newResponse = $response->withHeader("Content-type", $contentType);
@@ -52,7 +52,6 @@ return function (Route $route) {
          * ADMIN POST
          */
         $route->post('/{type}/{action}', function (Request $request, Response $response, $args) {
-            $data = null;
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();
