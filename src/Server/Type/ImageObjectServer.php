@@ -20,7 +20,7 @@ class ImageObjectServer {
     }
 
     public function new($params) {
-        // UPLOAD IMAGE
+        // IF UPLOAD IMAGE
         if (isset($_FILES['imageupload'])) {
             if ($_FILES['imageupload']['size'][0] === 0) {
                 return filter_input(INPUT_SERVER, 'HTTP_REFERER');
@@ -29,6 +29,18 @@ class ImageObjectServer {
             unset($params['location']);
             foreach ($newParams as $valueNewParams) {
                 $params = array_merge($params, $valueNewParams);
+                Api::post("imageObject", $params);
+            }
+        } else {
+            // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
+            $id = $params['id'];
+            if (is_array($id)) {
+                foreach($id as $value) {
+                    $newParams = $params;
+                    $newParams['id'] = $value;
+                    Api::post('imageObject', $newParams);
+                }
+            } else {
                 Api::post("imageObject", $params);
             }
         }
