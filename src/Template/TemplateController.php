@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Template;
+namespace Plinct\Cms\Template;
 
 use Plinct\Cms\App;
 use Plinct\Cms\Controller\Controller;
@@ -13,7 +13,7 @@ class TemplateController extends TemplateView {
     public function __construct() {
         parent::__construct();
         // TRANSLATE BY GETTEXT
-        Locale::translateByGettext(App::getLanguage(), "fwc", __DIR__."/../../Locale");
+        Locale::translateByGettext(App::getLanguage(), "plinct", __DIR__."/../../Locale");
         // HEAD
         parent::head();
         // HEADER

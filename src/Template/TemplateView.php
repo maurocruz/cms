@@ -1,10 +1,9 @@
 <?php
-namespace Plinct\Cms\View\Template;
+namespace Plinct\Cms\Template;
 
 use Plinct\Cms\App;
-use Plinct\Web\Template\TemplateAbstract;
 
-class TemplateView extends TemplateAbstract {
+class TemplateView extends TemplateWidget {
 
     protected function head() {
         parent::append("head", [
@@ -29,11 +28,11 @@ class TemplateView extends TemplateAbstract {
         ]);
         // LOG IN OUT
         if (!isset($_SESSION['userLogin'])) {
-            parent::append("header", [ "tag" => "p", "attributes" => [ "style" => "float: right;" ], "content" => '<a href="/admin/login">Entrar</a>' ]);
+            parent::append("header", [ "tag" => "p", "attributes" => [ "style" => "float: right;" ], "content" => '<a href="/admin/login">'._("Log in").'</a>' ]);
         } else {
             parent::append("header", [
                 "tag" => "p",
-                "content" => '<a href="/admin/logout">Sair</a>',
+                "content" => '<a href="/admin/logout">'._("Log out").'</a>',
                 "attributes" => [ "style" => "float: right;" ]
             ]);
         }
@@ -54,7 +53,7 @@ class TemplateView extends TemplateAbstract {
     protected function navbar() {
         $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
-            foreach (App::getTypesEnabled() as $key => $value) {
+            foreach (App::getTypesEnabled() as $value) {
                 $data['list']['/admin/'.$value] = _(ucfirst($value));
             }
         }
@@ -79,9 +78,10 @@ class TemplateView extends TemplateAbstract {
         if ($auth && $auth['status'] == "Access unauthorized") {
             if ($auth['data'] == "Invalid email") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry but this email is invalid!")]);
             if ($auth['data'] == "User not exists") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry but user not exists!")]);
-            if ($auth['data'] == "User exists") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Check your data")]);
+            if ($auth['data'] == "User exists") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Check your data.")]);
+            if ($auth['data'] == "User exists but not admin") parent::append('main', ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Contact administrator.")]);
         }
-        parent::append('main', file_get_contents(__DIR__ . '/../Html/Widget/signupForm.html'));
+        parent::append('main', parent::formLogin());
     }
 
     /**
@@ -92,23 +92,29 @@ class TemplateView extends TemplateAbstract {
         if ($warning) {
             switch ($warning) {
                 case "repeatPasswordNotWork":
-                    parent::append("footer", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Repeating the password doesn't work!")]);
+                    parent::append("main", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Repeating the password doesn't work!")]);
+                    parent::append("main", parent::formRegister());
                     break;
                 case "emailExists":
-                    parent::append("footer", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("This email already exists in our database!")]);
+                    parent::append("main", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("This email already exists in our database!")]);
+                    parent::append("main", parent::formRegister());
                     break;
                 case "userAdded":
-                    parent::append("footer", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Your registration was successful!") . "<br>" . _("Wait for confirmation from the administrator!")]);
+                    parent::append("main", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Your registration was successful!") . "<br>" . _("Wait for confirmation from the administrator!")]);
+                    parent::append("main", parent::formLogin());
                     break;
                 case "error":
-                    parent::append("footer", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Sorry! Something is wrong!")]);
+                    parent::append("main", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration not successful!") . "<br>" . _("Sorry! Something is wrong!")]);
+                    parent::append("main", parent::formRegister());
                     break;
                 default:
-                    parent::append("footer", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration error!") . "<br>" . _($warning)]);
+                    parent::append("main", ["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Registration error!") . "<br>" . _($warning)]);
+                    parent::append("main", parent::formRegister());
                     break;
             }
+        } else {
+            parent::append("main", parent::formRegister());
         }
-        parent::append("main", file_get_contents(__DIR__ . '/../Html/Widget/registerForm.html'));
     }
 
     protected function footer() {
