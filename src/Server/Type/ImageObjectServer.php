@@ -22,11 +22,12 @@ class ImageObjectServer {
     public function new($params) {
         // IF UPLOAD IMAGE
         if (isset($_FILES['imageupload'])) {
+            $location = $params['location'] == '' ? App::getImagesFolder() : $params['location'];
+            unset($params['location']);
             if ($_FILES['imageupload']['size'][0] === 0) {
                 return filter_input(INPUT_SERVER, 'HTTP_REFERER');
             }
-            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $params['location']);
-            unset($params['location']);
+            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $location);
             foreach ($newParams as $valueNewParams) {
                 $params = array_merge($params, $valueNewParams);
                 Api::post("imageObject", $params);
