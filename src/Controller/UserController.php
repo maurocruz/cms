@@ -28,9 +28,4 @@ class UserController implements ControllerInterface
                 return "user";
         }
     }
-
-    public function authentication($params): array {
-        $data = Api::login($params['email'], $params['password']);
-        return (array) $data;
-    }
 }
