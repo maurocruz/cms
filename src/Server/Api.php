@@ -37,12 +37,19 @@ class Api {
         if (App::getApiHost() == "localhost") {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
         } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-            return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ] ), true);
+            return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ]), true);
         }
         return null;
     }
 
-    public static function register() {
-
+    public static function register($params) {
+        unset($params['passwordRepeat']);
+        unset($params['submit']);
+        if (App::getApiHost() == "localhost") {
+            return (new AuthController())->register($params['name'], );
+        } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+            return json_decode((new Curl(App::getApiHost()))->post("register", $params), true);
+        }
+        return null;
     }
 }

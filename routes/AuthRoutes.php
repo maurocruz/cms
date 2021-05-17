@@ -1,13 +1,12 @@
 <?php
 
 use Firebase\JWT\JWT;
-use Plinct\Api\Auth\AuthController;
 use Plinct\Cms\App;
-use Plinct\Cms\Controller\UserController;
 use Plinct\Cms\Middleware\Authentication;
+use Plinct\Cms\Server\Api;
 use Plinct\Cms\Template\TemplateController;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route) {
@@ -37,14 +36,16 @@ return function (Route $route) {
      * POST LOGIN
      */
     $route->post('/login',  function (Request $request, Response $response) {
-        $auth = (new UserController())->authentication($request->getParsedBody());
+        $parseBody = $request->getParsedBody();
+        $auth = Api::login($parseBody['email'], $parseBody['password']);
         // AUTHORIZED
         if ($auth['status'] == "Access authorized") {
             $token = $auth['data'];
             $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
             if ($tokenDecode->admin) {
                 setcookie('API_TOKEN', $token, $tokenDecode->exp);
-                return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
+                $location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
+                return $response->withHeader("Location", $location)->withStatus(302);
             }
         }
         // UNAUTHORIZED
@@ -66,10 +67,7 @@ return function (Route $route) {
      * REGISTER POST
      */
     $route->post('/register', function (Request $request, Response $response) {
-        $params['name'] = $request->getParsedBody()['name'];
-        $params['email'] = $request->getParsedBody()['email'];
-        $params['password'] = $request->getParsedBody()['password'];
-        $authentication = (new AuthController())->register($params);
+        $authentication = Api::register($request->getParsedBody());
         $template = new TemplateController();
         $template->register($authentication);
         $response->getBody()->write($template->ready());
