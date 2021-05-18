@@ -20,7 +20,7 @@ class App {
     private static $API_HOST = null;
     private static $API_SECRET_KEY;
     private static $API_USER_EXPIRE = 60*60*24;
-    private static $STATIC_FOLDER = "/App/static/cms";
+    private static $STATIC_FOLDER = "/App/static/cms/";
 
     public function __construct(Slim $slim) {
         $this->slim = $slim;
@@ -29,7 +29,7 @@ class App {
         self::$LANGUAGE = Locale::getServerLanguage();
     }
     public function setApi(string $apiUrl, ?string $apiSecretKey = null): App {
-        self::$API_HOST = $apiUrl;
+        self::$API_HOST = $apiUrl == "localhost" ? self::$HOST . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
         return $this;
     }
@@ -94,7 +94,7 @@ class App {
     public static function getVersion(): string {
         return self::$VERSION;
     }
-    public function run() {
+    final public function run() {
         $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
     }
