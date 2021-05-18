@@ -24,7 +24,7 @@ class Api {
     }
 
     public static function request($type, $action, $params) {
-        if (App::getApiHost() == "localhost") {
+        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
             return (new $classname())->{$action}($params);
         } else {
@@ -34,7 +34,7 @@ class Api {
     }
 
     public static function login(string $email, string $password): ?array {
-        if (App::getApiHost() == "localhost") {
+        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
         } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
             return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ]), true);
@@ -45,8 +45,8 @@ class Api {
     public static function register($params) {
         unset($params['passwordRepeat']);
         unset($params['submit']);
-        if (App::getApiHost() == "localhost") {
-            return (new AuthController())->register($params['name'], );
+        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
+            return (new AuthController())->register($params);
         } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
             return json_decode((new Curl(App::getApiHost()))->post("register", $params), true);
         }
