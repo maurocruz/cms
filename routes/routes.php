@@ -64,21 +64,21 @@ return function (Route $route) {
             if ($action == "edit" || $action == "put") {
                 $data = (new Server())->edit($type, $params);
                 // sitemap
-                Sitemap::create($type);
+                Sitemap::create($type, $params);
             }
             // NEW
             elseif ($action == "new" || $action == "post" || $action == "add") {
                 // put data
                 $data = (new Server())->new($type, $params);
                 // sitemap
-                Sitemap::create($type);
+                Sitemap::create($type, $params);
             }
             // DELETE
             elseif ($action == "delete" || $action == "erase") {
                 // delete data
                 $data = (new Server())->erase($type, $params);
                 // sitemap
-                Sitemap::create($type);
+                Sitemap::create($type, $params);
             }
             // CREATE SQL TABLE
             elseif ($action == "createSqlTable") {
