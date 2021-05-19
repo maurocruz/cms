@@ -5,9 +5,12 @@ class Server {
     private $tableHasPart;
 
     public function edit($type, $params) {
-        $classType = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
-        if (class_exists($classType)) {
-            return (new $classType())->edit($params);
+        $className = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($className)) {
+            $object = new $className();
+            if (method_exists($object,"edit")) {
+                return $object->edit($params);
+            }
         }
         Api::put($type, $params);
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');

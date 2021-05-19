@@ -3,63 +3,51 @@ namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\PDO\PDOConnect;
 use Plinct\Tool\FileSystem\FileSystem;
 use Plinct\Tool\Image\Image;
 use Plinct\Tool\StringTool;
 
 class ImageObjectServer {
+    private $tablesHasImageObject;
     private static $KEYWORDS_LIST;
     private static $KEYWORDS;
     private static $LIST_LOCATIONS;
 
+    public function __construct() {
+        $table_schema = PDOConnect::getDbname();
+        $this->tablesHasImageObject = PDOConnect::run("select table_name as tableName from information_schema.tables WHERE table_schema = '$table_schema' AND table_name LIKE '%_has_imageObject';");
+    }
+
     public function new($params) {
-        // UPLOAD IMAGE
-        if ($type == "imageObject" && isset($_FILES['imageupload'])) {
+        // IF UPLOAD IMAGE
+        if (isset($_FILES['imageupload'])) {
+            $location = $params['location'] == '' ? App::getImagesFolder() : $params['location'];
+            unset($params['location']);
             if ($_FILES['imageupload']['size'][0] === 0) {
                 return filter_input(INPUT_SERVER, 'HTTP_REFERER');
             }
-            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $params['location']);
-            unset($params['location']);
+            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $location);
             foreach ($newParams as $valueNewParams) {
                 $params = array_merge($params, $valueNewParams);
-                if (!Api::post($type, $params)) {
-                    die("error!");
+                Api::post("imageObject", $params);
+            }
+        } else {
+            // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
+            $id = $params['id'];
+            if (is_array($id)) {
+                foreach($id as $value) {
+                    $newParams = $params;
+                    $newParams['id'] = $value;
+                    Api::post('imageObject', $newParams);
                 }
+            } else {
+                Api::post("imageObject", $params);
             }
         }
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
-    public function getImageHasPartOf($idIsPartOf): ?array {
-        /*foreach ($this->tablesHasImageObject as $value) {
-            $tableHasName = $value['tableName'];
-            $tableHasPart = strstr($value['tableName'], "_", true);
-            $query = "select * from $tableHasName, $tableHasPart WHERE `idimageObject`=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
-            $data = PDOConnect::run($query);
-            if (count($data) > 0) {
-                foreach ($data as $valueTableIspartOf) {
-                    $id = $valueTableIspartOf["id$tableHasPart"];
-                    $info[] = [ "tableHasPart" => $tableHasPart, "idHasPart" => $id, "values" => $valueTableIspartOf  ];
-                }
-            }
-        }*/
-        return null;
-    }
-
-    public static function listLocation($directory): array {
-        self::$LIST_LOCATIONS = self::$LIST_LOCATIONS ?? FileSystem::listDirectories($directory);
-        return self::$LIST_LOCATIONS;
-    }
-
-    public static function listKeywords(): array {
-        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "groupBy" => "keywords", "orderBy" => "keywords" ]);
-        if(self::$KEYWORDS === null) {
-            foreach (self::$KEYWORDS_LIST as $value) {
-                self::$KEYWORDS[] = $value['keywords'];
-            }
-        }
-        return self::$KEYWORDS;
-    }
 
     public static function uploadImages($imagesUploaded, $destination = ''): array {
         $destinationFolder = $destination == '' ? App::getImagesFolder() : $destination;
@@ -108,5 +96,37 @@ class ImageObjectServer {
         $newName = $prefix . md5(StringTool::removeAccentsAndSpaces($filename)) . "." . $extension;
         $destinationFolder = substr($destination, -1) == "/" ? $destination : $destination . DIRECTORY_SEPARATOR ;
         return $destinationFolder . $newName;
+    }
+
+    public function getImageHasPartOf($idIsPartOf): ?array {
+        $info = null;
+        foreach ($this->tablesHasImageObject as $value) {
+            $tableHasName = $value['tableName'];
+            $tableHasPart = strstr($value['tableName'], "_", true);
+            $query = "select * from $tableHasName, $tableHasPart WHERE idimageObject=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
+            $data = PDOConnect::run($query);
+            if (count($data) > 0) {
+                foreach ($data as $valueTableIspartOf) {
+                    $id = $valueTableIspartOf["id$tableHasPart"];
+                    $info[] = [ "tableHasPart" => $tableHasPart, "idHasPart" => $id, "values" => $valueTableIspartOf  ];
+                }
+            }
+        }
+        return $info;
+    }
+
+    public static function listLocation($directory) {
+        self::$LIST_LOCATIONS = self::$LIST_LOCATIONS ?? FileSystem::listDirectories($directory);
+        return self::$LIST_LOCATIONS;
+    }
+
+    public static function listKeywords(): array {
+        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "groupBy" => "keywords", "orderBy" => "keywords" ]);
+        if(self::$KEYWORDS === null) {
+            foreach (self::$KEYWORDS_LIST as $value) {
+                self::$KEYWORDS[] = $value['keywords'];
+            }
+        }
+        return self::$KEYWORDS;
     }
 }

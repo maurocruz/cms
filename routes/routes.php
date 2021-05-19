@@ -5,8 +5,7 @@
 
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
-use Plinct\Cms\Server\Api;
-use Plinct\Cms\View\Template\TemplateController;
+use Plinct\Cms\Template\TemplateController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -37,7 +36,7 @@ return function (Route $route) {
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
         /**
-         * GET
+         * DEFAULT
          */
         $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response) {
             $template = new TemplateController();
@@ -63,36 +62,41 @@ return function (Route $route) {
             unset($params['y']);
             //  EDIT
             if ($action == "edit" || $action == "put") {
-                $redirectLocation = (new Server())->edit($type, $params);
+                $data = (new Server())->edit($type, $params);
+                // sitemap
+                Sitemap::create($type, $params);
             }
             // NEW
             elseif ($action == "new" || $action == "post" || $action == "add") {
                 // put data
-                $redirectLocation = (new Server())->new($type, $params);
+                $data = (new Server())->new($type, $params);
+                // sitemap
+                Sitemap::create($type, $params);
             }
             // DELETE
             elseif ($action == "delete" || $action == "erase") {
                 // delete data
-                $redirectLocation = (new Server())->erase($type, $params);
+                $data = (new Server())->erase($type, $params);
+                // sitemap
+                Sitemap::create($type, $params);
             }
             // CREATE SQL TABLE
             elseif ($action == "createSqlTable") {
                 (new Server())->createSqlTable($type);
-                $redirectLocation = $_SERVER['HTTP_REFERER'];
+                $data = $_SERVER['HTTP_REFERER'];
             }
             // SITEMAP
             elseif (($action == "sitemap")) {
+                $data = $_SERVER['HTTP_REFERER'];
                 // sitemap
                 Sitemap::create($type, $params);
-                // redir
-                $redirectLocation = $_SERVER['HTTP_REFERER'];
             }
             // GENERIC
             else {
-                Api::request($type, $action, $params);
-                $redirectLocation = $_SERVER['HTTP_REFERER'];
+                (new Server())->request($type, $action, $params);
+                $data = $_SERVER['HTTP_REFERER'];
             }
-            return $response->withHeader('Location', $redirectLocation)->withStatus(301);
+            return $response->withHeader('Location', $data)->withStatus(301);
         })->addMiddleware(new Authentication());
     })->addMiddleware(new GatewayMiddleware());
 };

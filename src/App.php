@@ -19,63 +19,24 @@ class App {
     public static $HOST;
     private static $API_HOST = null;
     private static $API_SECRET_KEY;
-    private static $STATIC_FOLDER = "/App/static/cms";
+    private static $API_USER_EXPIRE = 60*60*24;
+    private static $STATIC_FOLDER = "/App/static/cms/";
 
-    /**
-     * App constructor.
-     * @param Slim $slim
-     */
     public function __construct(Slim $slim) {
         $this->slim = $slim;
         self::$HOST = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
         self::setVersion();
         self::$LANGUAGE = Locale::getServerLanguage();
     }
-
-    /**
-     * API SETTINGS
-     * @param string $apiUrl
-     * @param string|null $apiSecretKey
-     */
-    public function setApi(string $apiUrl, ?string $apiSecretKey = null) {
-        self::$API_HOST = $apiUrl;
+    public function setApi(string $apiUrl, ?string $apiSecretKey = null): App {
+        self::$API_HOST = $apiUrl == "localhost" ? self::$HOST . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
+        return $this;
     }
-
-    /**
-     * API HOST GETTING
-     * @return string|null
-     */
-    public static function getApiHost(): ?string {
-        return self::$API_HOST;
-    }
-
-    /**
-     * API SECRET KEY GETTING
-     * @return string
-     */
-    public static function getApiSecretKey(): ?string {
-        return self::$API_SECRET_KEY;
-    }
-
-    /**
-     * GET STATIC FOLDER
-     * @return string
-     */
-    public static function getStaticFolder(): string {
-        return self::$STATIC_FOLDER;
-    }
-
-    /**
-     * SET STATIC FOLDER
-     * @param string $STATIC_FOLDER
-     * @return App
-     */
     public function setStaticFolder(string $STATIC_FOLDER): App {
         self::$STATIC_FOLDER = $STATIC_FOLDER;
         return $this;
     }
-
     public function setLanguage($language): App {
         self::$LANGUAGE = $language;
         return $this;
@@ -92,9 +53,6 @@ class App {
     public function setImageMaxWigth(int $imageMaxWigth): void {
         self::$IMAGE_MAX_WIDTH = $imageMaxWigth;
     }
-    public static function getImageMaxWigth(): int {
-        return self::$IMAGE_MAX_WIDTH;
-    }
     public static function setVersion() {
         $version = "developer version";
         $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
@@ -106,7 +64,21 @@ class App {
         }
         self::$VERSION = $version;
     }
-
+    public static function getApiHost(): ?string {
+        return self::$API_HOST;
+    }
+    public static function getApiSecretKey(): ?string {
+        return self::$API_SECRET_KEY;
+    }
+    public static function getApiUserExpire() {
+        return self::$API_USER_EXPIRE;
+    }
+    public static function getStaticFolder(): string {
+        return self::$STATIC_FOLDER;
+    }
+    public static function getImageMaxWigth(): int {
+        return self::$IMAGE_MAX_WIDTH;
+    }
     public static function getImagesFolder(): ?string {
         return self::$IMAGES_FOLDER;
     }
@@ -122,29 +94,7 @@ class App {
     public static function getVersion(): string {
         return self::$VERSION;
     }
-    public static function getUserId() {
-        return $_SESSION['userLogin']['uid'];
-    }
-    public static function getUserName() {
-        return $_SESSION['userLogin']['name'];
-    }
-    public static function userIsAdmin() {
-        return $_SESSION['userLogin']['admin'];
-    }
-
-    /**
-     * RUN APP
-     * @return mixed
-     */
-    public function run() {
-        // SET IMAGES FOLDER
-        $imagePath = filter_input(INPUT_SERVER, "DOCUMENT_ROOT") . self::$IMAGES_FOLDER;
-        if (is_dir($imagePath) === false) {
-            $oldmask = umask(0);
-            mkdir($imagePath, 0777, true);
-            umask($oldmask);
-        }
-        // ENABLE ROUTES
+    final public function run() {
         $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
     }

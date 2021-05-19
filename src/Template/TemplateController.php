@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Template;
+namespace Plinct\Cms\Template;
 
 use Plinct\Cms\App;
 use Plinct\Cms\Controller\Controller;
@@ -13,7 +13,7 @@ class TemplateController extends TemplateView {
     public function __construct() {
         parent::__construct();
         // TRANSLATE BY GETTEXT
-        Locale::translateByGettext(App::getLanguage(), "app", __DIR__."/../../../Locale");
+        Locale::translateByGettext(App::getLanguage(), "plinct", __DIR__."/../../Locale");
         // HEAD
         parent::head();
         // HEADER
@@ -30,28 +30,24 @@ class TemplateController extends TemplateView {
     }
 
     public function getContent($request) {
-        $id = $request->getAttribute('identifier') ?? $request->getQueryParams()['id'] ?? null;
         $type = $request->getAttribute('type') ?? $request->getQueryParams()['type'] ?? null;
-        $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? ($id ? "edit" : "index");
+        $action = $request->getAttribute('action') ?? $request->getQueryParams()['action'] ?? "index";
+        $id = $request->getAttribute('identifier') ?? $request->getQueryParams()['id'] ?? null;
         $params = $request->getQueryParams();
         if ($id) {
             $params['id'] = $id;
         }
         if($type) {
-            // CONTROLLER DATA
-            $data = (new Controller())->getData($type, $action, $params);
-            // VIEW
+            $controller = new Controller();
+            $data = $controller->getData($type, $action, $params);
             $view = (new View())->view($type, $action, $data);
-            // NAVBAR
             if (isset($view['navbar'])) {
                 foreach ($view['navbar'] as $value) {
                     parent::addNavBar($value);
                 }
             }
-            //MAIN
-            parent::append("main", $view['main'] ?? parent::noContent());
+            parent::append("main", $view['main']);
         } else {
-            // INDEX
             $content = (new IndexView())->view();
             parent::append("main", $content['main']);
         }
@@ -66,7 +62,7 @@ class TemplateController extends TemplateView {
         // MOUNT ELEMENTS
         parent::simpleMain();
         // JS
-        $this->html['content'][1]['content'][] = '<script>window.apiHost="'.App::getApiHost().'"; window.staticFolder="'.App::getStaticFolder().'";</script>';
+        $this->html['content'][1]['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
         $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
         // RETURN
         return "<!DOCTYPE html>" . Render::arrayToString($this->html);

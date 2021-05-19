@@ -2,7 +2,7 @@
 namespace Plinct\Cms\Middleware;
 
 use Plinct\Cms\App;
-use Plinct\Cms\View\Template\TemplateController;
+use Plinct\Cms\Template\TemplateController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -18,7 +18,7 @@ class GatewayMiddleware implements MiddlewareInterface {
         $warning = null;
         // IF API IS NOT SETTING
         if (!App::getApiHost()) {
-            $warning[] = _("You need to set the API server!");
+            $warning[] = _("You need to set the API server on index.php. Insert cms->setApi(apiUrl, apiSecretKey)");
         }
         if ($warning) {
             $template = new TemplateController();

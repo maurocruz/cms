@@ -3,8 +3,7 @@ namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
-use Plinct\Cms\Server\ImageObjectServer;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Tool\Sitemap;
 
 class ImageObjectController implements ControllerInterface
