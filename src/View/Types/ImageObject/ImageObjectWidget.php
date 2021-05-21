@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\Types\ImageObject;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\ImageObjectServer;
+use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;
