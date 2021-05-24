@@ -32,7 +32,7 @@ class OrderView implements ViewInterface {
             // ordered items
             foreach ($data['itemListElement'] as $key => $value) {
                 $orderedItem = $value['item']['orderedItem'];
-                $name = $orderedItem[0]['orderedItem']['name'];
+                $name = $orderedItem[0]['orderedItem']['name'] ?? null;
                 $count = $orderedItem ? count($orderedItem) : '0';
                 $text = $count > 1 ? sprintf(_("<b>%s</b> more %s items"), $name, $count) : ($count == 1 ? $name : sprintf(_("%s items"), $count));
                 $data['itemListElement'][$key]['item']['orderedItem'] = $text;
@@ -184,7 +184,7 @@ class OrderView implements ViewInterface {
         $this->navbarOrder();
         $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
         $content[] = self::selectPeriodo($data['numberOfItems'], "expired");
-        foreach ($data['itemListElement'] as $key => $value) {
+        foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
             $id = $item['idorder'];
             //var_dump($item);
