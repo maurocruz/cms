@@ -94,6 +94,9 @@ class App {
     public static function getVersion(): string {
         return self::$VERSION;
     }
+    public static function getUserLoginId(): int {
+        return (int) $_SESSION['userLogin']['uid'];
+    }
     final public function run() {
         $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
