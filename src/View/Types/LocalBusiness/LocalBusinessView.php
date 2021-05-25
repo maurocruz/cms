@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Html\Page;
+namespace Plinct\Cms\View\Types\LocalBusiness;
 
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
