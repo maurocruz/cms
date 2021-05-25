@@ -1,9 +1,27 @@
 <?php
 namespace Plinct\Cms\Template;
 
+use Plinct\Cms\App;
 use Plinct\Web\Template\TemplateAbstract;
 
 class TemplateWidget extends TemplateAbstract {
+
+    protected function navbar() {
+        $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
+        if (App::getTypesEnabled()) {
+            foreach (App::getTypesEnabled() as $key => $value) {
+                $href = is_string($key) ? $key : "/admin/$value";
+                $data['list'][$href] = _(ucfirst($value));
+            }
+        }
+        $data['attributes'] = ["class"=>"menu"];
+        $this->addNavBar($data);
+    }
+
+    // ADD NAVBAR
+    public function addNavBar(array $data) {
+        parent::append("header", [ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null, "append" => $data['append'] ?? null ]);
+    }
 
     protected static function formLogin(): array {
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/login", "method" => "post", "class" => "form formPadrao" ], "content" => [

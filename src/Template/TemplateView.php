@@ -50,22 +50,6 @@ class TemplateView extends TemplateWidget {
         ],0);
     }
 
-    protected function navbar() {
-        $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
-        if (App::getTypesEnabled()) {
-            foreach (App::getTypesEnabled() as $value) {
-                $data['list']['/admin/'.$value] = _(ucfirst($value));
-            }
-        }
-        $data['attributes'] = ["class"=>"menu"];
-        $this->addNavBar($data);
-    }
-
-    // ADD NAVBAR
-    public function addNavBar(array $data) {
-        parent::append("header", [ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null, "append" => $data['append'] ?? null ]);
-    }
-
     public function warning($message) {
         parent::append('main',[ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
     }
