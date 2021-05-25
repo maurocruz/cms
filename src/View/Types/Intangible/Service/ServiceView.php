@@ -30,6 +30,7 @@ class ServiceView extends ServiceWidget implements ViewInterface {
 
     public function indexWithPropertyOf(array $data): array {
         $columnRows = [
+            "idservice" => [ "ID", [ "style" => "width: 30px;" ]],
             "name" => _("Name"),
             "category" => [ _("Category"), [ "style" => "width: 200px;" ]],
             "serviceType" => [ _("Service type"), [ "style" => "width: 300px;"] ],
