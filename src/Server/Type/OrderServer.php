@@ -7,6 +7,8 @@ use Plinct\Cms\Server\Api;
 class OrderServer {
 
     public function new($params): string {
+        $seller = $params['seller'];
+        $sellerType = $params['sellerType'];
         // insert new order
         $data = Api::post('order', $params);
         $id = $data['id'];
@@ -20,6 +22,6 @@ class OrderServer {
             "user" => App::getUserLoginId()
         ];
         Api::post('history', $historyParams);
-        return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $id;
+        return "/admin/" . lcfirst($sellerType) . "/order?id=$seller&item=$id";
     }
 }
