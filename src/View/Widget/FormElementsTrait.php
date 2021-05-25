@@ -230,4 +230,8 @@ trait FormElementsTrait {
             [ "tag" => "datalist", "attributes" => [ "id" => "additionalType"], "content" => $datalist ]
         ] ];
     }
+
+    protected static function searchInNavbar($itemType, $searchBy = 'name', $params = null): array {
+        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => lcfirst($itemType), "data-searchBy" => $searchBy, "data-params" => $params ] ];
+    }
 }
