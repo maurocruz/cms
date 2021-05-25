@@ -25,8 +25,14 @@ class Api {
     }
 
     public static function request($type, $action, $params) {
+        // if api host equals cms app host
         if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+            $data = (new $classname())->{$action}($params);
+            if (isset($data['error'])) {
+                var_dump($data);
+                die();
+            }
             return (new $classname())->{$action}($params);
         } else {
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
