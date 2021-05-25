@@ -33,7 +33,7 @@ class Api {
                 var_dump($data);
                 die();
             }
-            return (new $classname())->{$action}($params);
+            return $data;
         } else {
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
             try {
