@@ -29,7 +29,7 @@ class ContactPointView {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
         // POSITION
-        $content[] = self::fieldsetWithInput("#", "position", $value['position'] ?? null, [ "style" => "width: 50px;" ], "number", [ "min" => "1"]);
+        $content[] = self::fieldsetWithInput("#", "position", $value['position'] ?? $key, [ "style" => "width: 50px;" ], "number", [ "min" => "1"]);
         // NAME
         $content[] = self::fieldsetWithInput(_("Contact name"), "name", $value['name'] ?? null,[ "style" => "width: 120px;" ]);
         // CONTACT TYPE
