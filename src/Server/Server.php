@@ -7,7 +7,10 @@ class Server {
     public function new($type, $params): string {
         $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
         if (class_exists($classTypeServer)) {
-            return (new $classTypeServer())->new($params);
+            $objectType = new $classTypeServer();
+            if (method_exists($objectType,'new')) {
+                return $objectType->new($params);
+            }
         }
         // API
         $data = Api::post($type, $params);
