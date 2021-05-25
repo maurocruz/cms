@@ -60,13 +60,10 @@ abstract class OrganizationWidget {
     protected function navbarItem($itemType) {
         // navbar organization
         $this->navbarEdit();
-        // navbar subclass
-        $dataSearchfor = $itemType == "Order" ? "customer" : "name";
         $this->addContent('navbar', self::navbar(
             _($itemType),
             [ "?id=$this->id" => _("List all"), "?id=$this->id&action=new" => sprintf(_("Add new %s"), _(lcfirst($itemType))) ],
-            4,
-            [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => lcfirst($itemType), "data-searchfor" => $dataSearchfor ] ]
+            4
         ));
         // navbar item subclass
         if ($this->nameItem) {
