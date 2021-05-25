@@ -55,7 +55,8 @@ abstract class OrderWidget {
         // DISCOUNT
         $content[] = $case == "edit" ? self::fieldsetWithInput(_("Discount"), "discount", $value['discount'] ?? null) : null;
         // TAGS
-        //$content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'] ?? null, [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'] ?? null, [ "style" => "width: 100%;" ]);
+        // SUBMIT
         $submitAttributes = $case == "edit" ? [ "onclick" => "return setHistory(this.parentNode);" ] : null;
         $content[] = self::submitButtonSend($submitAttributes);
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/order/erase") : null;
