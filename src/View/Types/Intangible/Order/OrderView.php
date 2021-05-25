@@ -56,7 +56,10 @@ class OrderView extends OrderWidget implements ViewInterface {
             "orderStatus" => [ _("Order status"), [ "style" => "width: 140px;" ] ],
             "orderDate" => [ _("Order date"), [ "style" => "width: 100px;" ] ]
         ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value['name'], "orders", $rowsColumns, $value['orders']['itemListElement']);
+        // search
+        $this->content['main'][] = self::search("","customerName");
+        // table
+        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value['name'], "order", $rowsColumns, $value['orders']['itemListElement']);
         return $this->content;
     }
 
