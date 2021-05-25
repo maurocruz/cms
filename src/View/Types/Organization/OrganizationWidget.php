@@ -58,8 +58,17 @@ abstract class OrganizationWidget {
     }
 
     protected function navbarItem($itemType) {
+        // navbar organization
         $this->navbarEdit();
-        $this->addContent('navbar', self::navbar(_($itemType), [ "?id=$this->id" => _("List all"), "?id=$this->id&action=new" => sprintf(_("Add new %s"), _(lcfirst($itemType))) ], 4));
+        // navbar subclass
+        $dataSearchfor = $itemType == "Order" ? "customer" : "name";
+        $this->addContent('navbar', self::navbar(
+            _($itemType),
+            [ "?id=$this->id" => _("List all"), "?id=$this->id&action=new" => sprintf(_("Add new %s"), _(lcfirst($itemType))) ],
+            4,
+            [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => lcfirst($itemType), "data-searchfor" => $dataSearchfor ] ]
+        ));
+        // navbar item subclass
         if ($this->nameItem) {
             $this->addContent('navbar', self::navbar($this->nameItem, [], 5));
         }
@@ -71,7 +80,7 @@ abstract class OrganizationWidget {
      * @param null $value
      * @return array
      */
-    protected function formOrganization($case = 'new', $value = null): array {
+    protected function formOrganization(string $case = 'new', $value = null): array {
         $content[] = [ "tag" => "h3", "content" => $value['name'] ?? null ];
         if ($case == "edit") {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
