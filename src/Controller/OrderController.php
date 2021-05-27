@@ -3,47 +3,25 @@ namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Server\Api;
 use Plinct\PDO\PDOConnect;
-use Plinct\Api\Type\Order;
+use Plinct\Tool\ArrayTool;
 
-class OrderController implements ControllerInterface
-{
-    public function index($params = null): array {
-        $nameLike = $params['search'] ?? null;
-        $orderBy = $params['orderBy'] ?? null;
-        $ordering = $params['ordering'] ?? null;
-        $params2 = [ "format" => "ItemList", "properties" => "*,seller,customer,orderedItem", "orderBy" => "orderStatus='orderProcessing' DESC, orderDate DESC", "limit" => "50", "count" => "all" ];
-        if ($orderBy && $orderBy != "orderedItem") {
-            $params2['orderBy'] = "$orderBy $ordering";
+class OrderController {
+
+    public function indexWithPartOf($customerName, $id): array {
+        $dataAgo = date("Y-m-d", strtotime("-2 year", time()));
+        if ($customerName) {
+            return self::byCustomerName($customerName, $id, $dataAgo);
+        } else {
+            return Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller,orderedItem", "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"]);
         }
-        if($nameLike) {
-            return (new Order())->search($params2, $nameLike);
-        }
-        return Api::get("order", $params2);
     }
 
-    public function edit(array $params): array {
-        $params2 = [ "id" => $params['id'], "properties" => "*,customer,seller,orderedItem,partOfInvoice,history" ];
-        $data = Api::get("order", $params2);
-        // banner
-        if ($data[0]['tipo'] == '4') {
-            $idorder = $data[0]['idorder'];
-            $paramsBanner = [ "where" => "`idorder`=$idorder" ];
-            $bannerData = Api::get("banner",$paramsBanner);
-            $data['banner'] = $bannerData[0] ?? null;
-        }
+    public function editWithPartOf($itemId, $id) {
+        $data = Api::get('order', [ "id" => $itemId, "properties" => "*,customer,orderedItem,partOfInvoice,history" ]);
+        $data[0]['orderedItem'] = Api::get("orderItem", [ "referencesOrder" => $itemId, "properties" => "*,orderedItem,offer" ]);
+        $data[0]['seller'] = Api::get("organization", [ "id" => $id, "properties" => "hasOfferCatalog" ])[0];
+        $data[0]['seller']['hasOfferCatalog'] = Api::get("offer", [ "format" => "ItemList", "offeredBy" => $id, "offeredByType" => "Organization", "properties" => "itemOffered", "availability" => "InStock", "where" => "`validThrough`>CURDATE()" ] );
         return $data;
-    }
-
-    public function new($params = null): ?array {
-        $data = [];
-        $item = $params['orderedItem'] ?? null;
-        if ($item) {
-            $itemType = $params['orderedItemType'];
-            $orderedItem = Api::get($itemType, ["id" => $item, "properties" => "*,offers,provider"]);
-            $data['orderedItem'] = $orderedItem[0];
-            return $data;
-        }
-        return null;
     }
 
     public function payment(): array {
@@ -72,8 +50,7 @@ class OrderController implements ControllerInterface
         return $data2;
     }
 
-    public function expired(): array
-    {
+    public function expired(): array {
         $dateLimit = self::translatePeriod(filter_input(INPUT_GET, 'period'));
         $params = [ "format" => "ItemList", "properties" => "*,customer,orderedItem", "orderStatus" => "orderProcessing", "orderBy" => "paymentDueDate asc" ];
         if($dateLimit) {
@@ -82,8 +59,7 @@ class OrderController implements ControllerInterface
         return Api::get("order",$params);
     }
 
-    static private function translatePeriod($get)
-    {
+    static private function translatePeriod($get) {
         switch ($get) {
             case "past":
                 return date("Y-m-d");
@@ -91,6 +67,27 @@ class OrderController implements ControllerInterface
                 return date('Y-m-t');
             default:
                 return null;
+        }
+    }
+
+    private static function byCustomerName($customerName, $id, $dataAgo): array {
+        $dataOrganization = Api::get('organization', [ "nameLike" => $customerName ]);
+        $dataPerson = Api::get('person', [ "nameLike" => $customerName ]);
+        $dataLocalBusiness = Api::get('localBusiness', [ "nameLike" => $customerName ]);
+        $array = array_merge($dataOrganization,$dataPerson,$dataLocalBusiness);
+        if (!empty($array)) {
+            foreach ($array as $valueCustomer) {
+                $customerId = ArrayTool::searchByValue($valueCustomer['identifier'], 'id', 'value');
+                $customerType = $valueCustomer['@type'];
+                $newParams = ["properties" => "*,customer,seller,orderedItem", "customer" => $customerId, "customerType" => $customerType, "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"];
+                $dataCustomer = Api::get('order', $newParams);
+                if (!empty($dataCustomer)) {
+                    $dataOrder[] = ["item" => $dataCustomer[0]];
+                }
+            }
+            return [ "numberOfItems" => count($dataOrder), "itemListElement" => $dataOrder ];
+        } else {
+            return [ "numberOfItems" => '0', "itemListElement" => null ];
         }
     }
 }
