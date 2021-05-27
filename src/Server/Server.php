@@ -26,11 +26,11 @@ class Server {
     }
 
     public function edit($type, $params) {
-        $className = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
-        if (class_exists($className)) {
-            $object = new $className();
-            if (method_exists($object,"edit")) {
-                return $object->edit($params);
+        $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($classTypeServer)) {
+            $objectType = new $classTypeServer();
+            if (method_exists($objectType,"edit")) {
+                return $objectType->edit($params);
             }
         }
         Api::put($type, $params);
@@ -38,6 +38,13 @@ class Server {
     }
     
     public function erase($type, $params): string {
+        $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+        if (class_exists($classTypeServer)) {
+            $objectType = new $classTypeServer();
+            if (method_exists($objectType,"erase")) {
+                return $objectType->erase($params);
+            }
+        }
         // API ACTION
         $response = Api::delete($type, [ "id" => $params['id'] ]);
         // RESPONSE REDIRECT
