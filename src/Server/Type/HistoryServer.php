@@ -11,30 +11,55 @@ class HistoryServer {
     private $summary;
     private $userId;
 
+    /**
+     * HistoryServer constructor.
+     * @param $tableHasPart
+     * @param $idHasPart
+     */
     public function __construct($tableHasPart, $idHasPart) {
         $this->tableHasPart = $tableHasPart;
         $this->idHasPart = $idHasPart;
-        $this->userId = App::getUserId();
+        $this->userId = App::getUserLoginId();
     }
 
-    public function setSumaryByDifference(array $params, array $data) {
+    /**
+     * @param mixed $summary
+     */
+    public function setSummary($summary): void {
+        $this->summary = $summary;
+    }
+
+    /**
+     * @param array $params
+     * @param array $data
+     */
+    public function setSummaryByDifference(array $params, array $data) {
+        $dataOld = $data[0] ?? $data;
         $text = '';
-        $data = array_filter($data, function ($var) { return(!is_array($var));  });
-        $diff = array_diff($params, $data);
+        $dataFiltered = array_filter($dataOld, function ($var) { return(!is_array($var));  });
+        $diff = array_diff($params, $dataFiltered);
         foreach ($diff as $key => $value) {
-            $text .= $key.": $data[$key] to $value; ";
+            $text .= $key.": $dataFiltered[$key] to $value; ";
         }
         $this->summary = $text;
     }
 
+    /**
+     * @param $action
+     * @param null $summary
+     * @return mixed
+     */
     public function register($action, $summary = null) {
         $this->action = $action;
         $this->summary = $summary ?? $this->summary;
-        $params = $this->getParams();
+        $params = $this->setParams();
         return Api::post("history", $params);
     }
 
-    private function getParams(): array {
+    /**
+     * @return array
+     */
+    private function setParams(): array {
         $params['tableHasPart'] = $this->tableHasPart;
         $params['idHasPart'] = $this->idHasPart;
         $params['action'] = $this->action;
