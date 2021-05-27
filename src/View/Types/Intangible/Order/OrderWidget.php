@@ -10,18 +10,22 @@ abstract class OrderWidget {
     protected $content = [];
     protected static $idOrder;
     protected static $total;
+    protected $typeHasPart;
+    protected $idHasPart;
 
     use FormElementsTrait;
+    use navbarTrait;
 
-    protected function navbarOrder($title = null, $list = null, $level = 2) {
-        $title = $title ?? _("Order");
-        $list = $list ?? [
-                "/admin/order" => _("List all"),
-                "/admin/order/new" => _("Add new"),
-                "/admin/order/payment" => ucfirst(_("payments")),
-                "/admin/order/expired" => ucfirst(_("Due dates"))
-            ];
-        $this->content['navbar'][] = navbarTrait::navbar($title, $list, $level);
+    protected function navbarOrder($value): array {
+        $this->typeHasPart = lcfirst($value['@type']);
+        $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
+        $list =  [
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart" => _("List all"),
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => _("Add new"),
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment" => ucfirst(_("payments")),
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired" => ucfirst(_("Due dates"))
+        ];
+        return self::navbar(_("Order"), $list, 4);
     }
 
     protected function formOrder($case = "new", $value = null, $orderedItem = null): array {
@@ -57,12 +61,10 @@ abstract class OrderWidget {
         // TAGS
         $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'] ?? null, [ "style" => "width: 100%;" ]);
         // SUBMIT
-        $submitAttributes = $case == "edit" ? [ "onclick" => "return setHistory(this.parentNode);" ] : null;
-        $content[] = self::submitButtonSend($submitAttributes);
+        $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/order/erase") : null;
         return self::form("/admin/order/$case", $content);
     }
-
 
     protected static function getOrderedItems($orderedItem): string {
         if (empty($orderedItem)) {
@@ -74,21 +76,23 @@ abstract class OrderWidget {
         }
     }
 
-    protected static function selectPeriodo($numberOfItens, $section): array {
-        $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/order/$section", "method" => "get" ], "content" => [
+    protected function selectPeriodo($numberOfItens, $section): array {
+        $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/$this->typeHasPart/order", "method" => "get" ], "content" => [
+            [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $this->idHasPart ]],
+            [ "tag" => "input", "attributes" => [ "name" => "action", "type" => "hidden", "value" => $section ]],
             [ "tag" => "select", "attributes" => [ "onchange" => "submit();", "name" => "period" ], "content" => [
-                [ "tag" => "option", "attributes" => [ "value" => "" ], "content" => "Selecionar por período" ],
-                [ "tag" => "option", "attributes" => [ "value" => "past" ], "content" => "Até hoje" ],
-                [ "tag" => "option", "attributes" => [ "value" => "current_month" ], "content" => "Até o fim do mês corrente" ],
-                [ "tag" => "option", "attributes" => [ "value" => "all" ], "content" => "Todos" ]
+                [ "tag" => "option", "attributes" => [ "value" => "" ], "content" => _("Select by period") ],
+                [ "tag" => "option", "attributes" => [ "value" => "past" ], "content" => _("Until today") ],
+                [ "tag" => "option", "attributes" => [ "value" => "current_month" ], "content" => _("Until the end of the current month") ],
+                [ "tag" => "option", "attributes" => [ "value" => "all" ], "content" => _("View all") ]
             ] ]
         ] ];
         switch (filter_input(INPUT_GET, 'period')) {
             case "current_month":
-                $period = "até o mês corrente - <b>".DateTime::translateMonth(date('m'))." ".date('Y')."</b>";
+                $period = _("Until the end of the current month") . " - <b>".DateTime::translateMonth(date('m'))." ".date('Y')."</b>";
                 break;
             case "past":
-                $period = "até hoje - <b>".DateTime::formatDate();
+                $period = _("Until today") . " - <b>".DateTime::formatDate();
                 break;
             default :
                 $period = null;
