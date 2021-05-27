@@ -62,25 +62,23 @@ class OrganizationController implements ControllerInterface
         $itemId = $params['item'] ?? null;
         $id = $params['id'];
         $customerName = $params['customerName'] ?? null;
+        $action = filter_input(INPUT_GET, 'action');
         // ITEM
-        if ($itemId) {
-            $data = Api::get('order', [ "id" => $itemId, "properties" => "*,customer,orderedItem,partOfInvoice,history" ]);
-            $data[0]['orderedItem'] = Api::get("orderItem", [ "referencesOrder" => $itemId, "properties" => "*,orderedItem,offer" ]);
-            $data[0]['seller'] = Api::get("organization", [ "id" => $id, "properties" => "hasOfferCatalog" ])[0];
-            $data[0]['seller']['hasOfferCatalog'] = Api::get("offer", [ "format" => "ItemList", "offeredBy" => $id, "offeredByType" => "Organization", "properties" => "itemOffered", "availability" => "InStock", "where" => "`validThrough`>CURDATE()" ] );
-        }
-        // LIST
-        else {
+        if ($itemId):
+            $data = (new OrderController())->editWithPartOf($itemId, $id);
+        // PAYMENT
+        elseif($action == "payment"):
             $data = $this->edit($params);
-            $dataAgo = date("Y-m-d", strtotime("-2 year", time()));
-            if ($customerName) {
-                $data[0]['orders'] = self::byCustomerName($customerName, $id, $dataAgo);
-
-            } else {
-                $data[0]['orders'] = Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller,orderedItem", "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"]);
-            }
-        }
-        // RESPONSE
+            $data[0]['orders'] = (new OrderController())->payment();
+        // EXPIRED
+        elseif($action == "expired"):
+            $data = $this->edit($params);
+            $data[0]['orders'] = (new OrderController())->expired();
+        // LIST
+        else:
+            $data = $this->edit($params);
+            $data[0]['orders'] = (new OrderController())->indexWithPartOf($customerName, $id);
+        endif;
         return $data;
     }
 
@@ -97,26 +95,5 @@ class OrganizationController implements ControllerInterface
             ];
         }
         (new Sitemap("sitemap-organization.xml"))->saveSitemap($dataSitemap);
-    }
-
-    private static function byCustomerName($customerName, $id, $dataAgo): array {
-        $dataOrganization = Api::get('organization', [ "nameLike" => $customerName ]);
-        $dataPerson = Api::get('person', [ "nameLike" => $customerName ]);
-        $dataLocalBusiness = Api::get('localBusiness', [ "nameLike" => $customerName ]);
-        $array = array_merge($dataOrganization,$dataPerson,$dataLocalBusiness);
-        if (!empty($array)) {
-            foreach ($array as $valueCustomer) {
-                $customerId = ArrayTool::searchByValue($valueCustomer['identifier'], 'id', 'value');
-                $customerType = $valueCustomer['@type'];
-                $newParams = ["properties" => "*,customer,seller,orderedItem", "customer" => $customerId, "customerType" => $customerType, "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"];
-                $dataCustomer = Api::get('order', $newParams);
-                if (!empty($dataCustomer)) {
-                    $dataOrder[] = ["item" => $dataCustomer[0]];
-                }
-            }
-            return [ "numberOfItems" => count($dataOrder), "itemListElement" => $dataOrder ];
-        } else {
-            return [ "numberOfItems" => '0', "itemListElement" => null ];
-        }
     }
 }
