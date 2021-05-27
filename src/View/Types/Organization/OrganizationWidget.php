@@ -18,8 +18,7 @@ abstract class OrganizationWidget {
     use navbarTrait;
     use FormElementsTrait;
 
-    protected function setValues(array $data): array {
-        $value = $data[0];
+    protected function setValues(array $value): array {
         // ID
         $this->id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // NAME
@@ -57,20 +56,6 @@ abstract class OrganizationWidget {
         $this->addContent('navbar', self::navbar($this->name, $subMenus, 3));
     }
 
-    protected function navbarItem($itemType) {
-        // navbar organization
-        $this->navbarEdit();
-        $this->addContent('navbar', self::navbar(
-            _($itemType),
-            [ "?id=$this->id" => _("List all"), "?id=$this->id&action=new" => sprintf(_("Add new %s"), _(lcfirst($itemType))) ],
-            4
-        ));
-        // navbar item subclass
-        if ($this->nameItem) {
-            $this->addContent('navbar', self::navbar($this->nameItem, [], 5));
-        }
-    }
-
     /**
      * FORM EDIT AND NEW
      * @param string $case
@@ -86,7 +71,7 @@ abstract class OrganizationWidget {
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%;" ]);
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Organization", $case, $value['additionalType'], [ "style" => "width: 50%" ], false);
+        $content[] = self::additionalTypeInput("Organization", $case, $value['additionalType'] ?? null, [ "style" => "width: 50%" ], false);
         // legal name
         $content[] = self::fieldsetWithInput(_("Legal Name"), "legalName", $value['legalName'] ?? null, [ "style" => "width: 50%;" ]);
         // tax id
@@ -127,24 +112,24 @@ abstract class OrganizationWidget {
             $this->addContent('main', self::noContent("No item detected"));
             return $this->content;
         }
-        // CONTINUE SET PROPERTIES
-        $owner = $action !== "new" ? ($value[$itemProperty] ?? null) : null;
-        $this->id = $owner ? ArrayTool::searchByValue($owner['identifier'], "id")['value'] : ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        $this->name = $owner ? $owner['name'] : $value['name'];
-        $this->idItem = $owner ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
-        $this->nameItem = $owner ? ($value['name'] ?? null) : null;
-        // NAVBAR
-        $this->navbarItem($itemType);
-        // SWITCH
+        // NEW
         if ($action == "new") {
-            $this->addContent('main', $itemView->newWithPropertyOf([ $itemProperty => $value ]));
-        } elseif ($value['@type'] == "Organization" && empty($value[$itemText])) {
-            $this->addContent('main', [ "tag" => "p", "content" => _("No $itemText added") ]);
-        } elseif ($value['@type'] == $itemType) {
-            $this->addContent('main', $itemView->editWithPropertyOf($value));
-        } else {
-            $this->addContent('main', $itemView->indexWithPropertyOf($value));
+            $itemResponse = $itemView->newWithPartOf([ $itemProperty => $value ]);
         }
+        // NO CONTENT
+        elseif ($value['@type'] == "Organization" && empty($value[$itemText])) {
+            $this->addContent('main', [ "tag" => "p", "content" => _("No $itemText added") ]);
+        }
+        // EDIT
+        elseif ($value['@type'] == $itemType) {
+            $itemResponse = $itemView->editWithPartOf($value);
+        }
+        // INDEX
+        else {
+            $itemResponse = $itemView->indexWithPartOf($value);
+        }
+        $this->content['navbar'] = isset($itemResponse['navbar']) ? array_merge($this->content['navbar'], $itemResponse['navbar']) : $this->content['navbar'];
+        $this->content['main'] = $itemResponse['main'];
         // RESPONSE
         return $this->content;
     }
