@@ -20,6 +20,7 @@ abstract class OrderItemWidget {
     use FormElementsTrait;
 
     protected function listOrderedItems($data): array {
+        $idHasPart = ArrayTool::searchByValue($data['identifier'],"id","value");
         $sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
         $sellerType = $data['sellerType'];
         //
@@ -54,7 +55,7 @@ abstract class OrderItemWidget {
                     ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($price,2,',','.'), ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-                    ->bodyCell(self::deleteButton($value['idorderItem']))
+                    ->bodyCell(self::deleteButton($value['idorderItem'],$idHasPart,$name))
                     ->closeRow();
                 $quantityTotal += $orderQuantity;
                 $totalBill += $totalPrice;
@@ -114,10 +115,12 @@ abstract class OrderItemWidget {
         return self::form("/admin/orderItem/new", $content);
     }
 
-    private static function deleteButton($idorderItem): array {
+    private static function deleteButton($idorderItem, $idHasPart,$name): array {
         return [ "tag" => "form", "attributes" => [ "style" => "background-color: inherit; text-align: center;", "method" => "post" ], "content" => [
                 self::input("tableHasPart","hidden","order"),
+                self::input("idHasPart","hidden",$idHasPart),
                 self::input("id","hidden", $idorderItem),
+                self::input("orderItemName","hidden", $name),
                 self::submitButtonDelete("/admin/orderItem/erase", [ "style" => "width: 25px;"])
             ]];
     }
