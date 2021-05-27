@@ -21,15 +21,20 @@ trait HtmlPiecesTrait {
         }
     }
 
-    public static function indexWithSubclass(string $owner, string $type, array $rowsPropeties_and_columnName, array $itemListElement = null): array {
+    public static function indexWithSubclass(array $value, string $type, array $rowsPropeties_and_columnName, array $itemListElement = null): array {
+        $name = $value['name'];
+        $tableHasPart = lcfirst($value['@type']);
         $properties = [];
-        $uri = $_SERVER['REQUEST_URI'];
+        $parseUrl = parse_url($_SERVER['REQUEST_URI']);
+        $path = $parseUrl['path'];
+        parse_str($parseUrl['query'], $queryArray);
+        $id = $queryArray['id'];
         $rows = is_array($itemListElement) ? count($itemListElement) : 0;
         $columns = count($rowsPropeties_and_columnName) + 2;
         // TABLE
         $table = new Table();
         // CAPTION
-        $table->caption(sprintf(_("List of %s from %s (%s)"), lcfirst(_($type)), $owner, $rows));
+        $table->caption(sprintf(_("List of %s from %s (%s)"), lcfirst(_($type)), $name, $rows));
         // HEAD
         $table->head(_("Edit"), [ "style" => "width: 50px;"]);
         foreach ($rowsPropeties_and_columnName as $keyColumns => $valueColunmns) {
@@ -47,14 +52,14 @@ trait HtmlPiecesTrait {
             foreach ($itemListElement as $valueTbody) {
                 $item = $valueTbody['item'];
                 // EDIT
-                $id = ArrayTool::searchByValue($item['identifier'], 'id')['value'];
-                $table->bodyCell("<a href='$uri&item=$id'>" . self::$BUTTON_EDIT . "</a>", ["style" => "text-align: center"]);
+                $idItem = ArrayTool::searchByValue($item['identifier'], 'id')['value'];
+                $table->bodyCell("<a href='$path?id=$id&item=$idItem'>" . self::$BUTTON_EDIT . "</a>", ["style" => "text-align: center"]);
                 // ROWS
                 foreach ($properties as $valueProperty) {
                     $table->bodyCell(self::getContentBodyCell($item, $valueProperty));
                 }
                 // DELETE
-                $table->bodyCell("<form method='post' action='/admin/$type/erase' style='background-color: transparent; text-align: center;'><input type='hidden' name='id' value='$id'><input type='hidden' name='tableHasPart' value=$type/><input src='" . self::$BUTTON_DELETE . "' type='image' name='submit' style='width: 20px; ' alt='Delete' onclick=\"return confirm('Do you really want to delete this item?')\"/></form>");
+                $table->bodyCell("<form method='post' action='/admin/$type/erase' style='background-color: transparent; text-align: center;'><input type='hidden' name='id' value='$id'><input type='hidden' name='tableHasPart' value='$tableHasPart'/><input src='" . self::$BUTTON_DELETE . "' type='image' name='submit' style='width: 20px; ' alt='Delete' onclick=\"return confirm('Do you really want to delete this item?')\"/></form>");
                 // CLOSE ROW
                 $table->closeRow();
             }
