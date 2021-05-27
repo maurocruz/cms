@@ -3,9 +3,10 @@ namespace Plinct\Cms\View\Types\Organization;
 
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Types\Intangible\Order\OrderView;
 
 class OrganizationView extends OrganizationWidget {
-    
+
     public function index(array $data): array {
         // NAVBAR
         parent::navbarIndex();
@@ -27,7 +28,7 @@ class OrganizationView extends OrganizationWidget {
     }
 
     public function edit(array $data): array {
-        $value = parent::setValues($data);
+        $value = parent::setValues($data[0]);
         // NAVBAR
         parent::navbarEdit();
         // organization
@@ -44,12 +45,49 @@ class OrganizationView extends OrganizationWidget {
     }
 
     public function service($data): array {
+        parent::setValues($data[0]);
+        // NAVBAR
+        parent::navbarEdit();
         return $this->itemView("Service", $data);
     }
     public function product($data): array {
+        parent::setValues($data[0]);
+        // NAVBAR
+        parent::navbarEdit();
         return $this->itemView("Product", $data);
     }
+
+    /**
+     * ORDER
+     * @param $data
+     * @return array
+     */
     public function order($data): array {
+        // NAVBAR ORGANIZATION
+        if ($data[0]['@type'] == "Organization") {
+            parent::setValues($data[0]);
+        } else {
+            parent::setValues($data[0]['seller']);
+        }
+        parent::navbarEdit();
+        // VARS
+        $action = filter_input(INPUT_GET, 'action');
+        // PAYMENT
+        if ($action == "payment") {
+            $itemResponse = (new OrderView())->payment($data[0]);
+            $this->content['navbar'] = array_merge($this->content['navbar'], $itemResponse['navbar']);
+            $this->content['main'] = $itemResponse['main'];
+            return $this->content;
+        }
+        // EXPIRE
+        if ($action == "expired") {
+            $itemResponse = (new OrderView())->expired($data[0]);
+            $this->content['navbar'] = array_merge($this->content['navbar'], $itemResponse['navbar']);
+            $this->content['main'] = $itemResponse['main'];
+            return $this->content;
+        }
+
+        // RESPONSE
         return $this->itemView("Order", $data);
     }
 }
