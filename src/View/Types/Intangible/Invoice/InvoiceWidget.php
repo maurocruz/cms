@@ -29,8 +29,11 @@ abstract class InvoiceWidget {
     use FormElementsTrait;
 
     protected function formInvoice($case = 'new', $value = null, $n = null): array {
+        // VARS
         $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
+        // HIDDEN
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $this->idorder, "type" => "hidden"] ];
+        $content[] = self::input("tableHasPart", "hidden", $this->idorder);
         if ($case == "edit") {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
         }
