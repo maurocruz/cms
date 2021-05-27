@@ -28,7 +28,7 @@ class ServiceView extends ServiceWidget implements ViewInterface {
         return $this->content;
     }
 
-    public function indexWithPropertyOf(array $data): array {
+    public function indexWithPartOf(array $data): array {
         $columnRows = [
             "idservice" => [ "ID", [ "style" => "width: 30px;" ]],
             "name" => _("Name"),
@@ -36,16 +36,16 @@ class ServiceView extends ServiceWidget implements ViewInterface {
             "serviceType" => [ _("Service type"), [ "style" => "width: 300px;"] ],
             "dateModified" => [ _("Date modified"), [ "style" => "width: 150px;"] ]
         ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($data['name'], "service", $columnRows, $data['services']['itemListElement'] );
+        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($data, "service", $columnRows, $data['services']['itemListElement'] );
         return $this->content;
     }
 
-    public function newWithPropertyOf($data = null): array {
+    public function newWithPartOf($data = null): array {
         $this->content['main'][] = self::divBox2(sprintf(_("Add new %s from %s"), _("service"), $data['provider']['name']), [ parent::serviceForm("new", $data) ]);
         return $this->content;
     }
 
-    public function editWithPropertyOf(array $data): array {
+    public function editWithPartOf(array $data): array {
         if (empty($data)) {
             $this->content['main'][] = self::noContent();
         } else {
