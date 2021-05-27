@@ -45,12 +45,12 @@ class ProductView extends ProductWidget implements ViewInterface {
         return $this->content;
     }
 
-    public function newWithPropertyOf($data = null): array {
+    public function newWithPartOf($data = null): array {
         $this->content['main'][] = self::divBox(sprintf(_("Add new product for %s"), $data['manufacturer']['name']), "product", [ parent::formProduct("new", $data) ]);
         return $this->content;
     }
 
-    public function indexWithPropertyOf($value) {
+    public function indexWithPartOf($value) {
         $rowsColumns = [
             "name" => _("Name"),
             "category" => _("Category"),
@@ -58,11 +58,11 @@ class ProductView extends ProductWidget implements ViewInterface {
             "dateCreated" => _("Date created"),
             "dateModified" => _("Date modified")
         ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value['name'], "products", $rowsColumns, $value['products']['itemListElement']);
+        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value, "products", $rowsColumns, $value['products']['itemListElement']);
         return $this->content;
     }
 
-    public function editWithPropertyOf($value): array {
+    public function editWithPartOf($value): array {
         $idProduct = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // FORM EDIT PRODUCT
         $content[] = self::divBox2(_("Edit"), [ parent::formProduct("edit", $value) ]);
