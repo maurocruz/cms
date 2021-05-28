@@ -23,6 +23,7 @@ abstract class OrderItemWidget {
         $idHasPart = ArrayTool::searchByValue($data['identifier'],"id","value");
         $sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
         $sellerType = $data['sellerType'];
+        $discount = $data['discount'];
         //
         $orderedItems = $data['orderedItem'] ?? null;
         $numberOfItems = $orderedItems ? count($orderedItems) : null;
@@ -58,7 +59,7 @@ abstract class OrderItemWidget {
                     ->bodyCell(self::deleteButton($value['idorderItem'],$idHasPart,$name))
                     ->closeRow();
                 $quantityTotal += $orderQuantity;
-                $totalBill += $totalPrice;
+                $totalBill += $totalPrice - $discount;
             }
             self::$TOTAL_BILL = $totalBill;
         } else {
@@ -68,7 +69,8 @@ abstract class OrderItemWidget {
         $table->foot(sprintf(_("%s Items"), "$numberOfItems"), [ "colspan" => "2" ])
             ->foot()
             ->foot($quantityTotal)
-            ->foot(number_format(self::$TOTAL_BILL,2,',','.'), [ "colspan" => "2", "style" => "text-align: right;" ])
+            ->foot(sprintf(_("Discount: %s"), number_format($discount,2,',','.')))
+            ->foot(number_format(self::$TOTAL_BILL,2,',','.'), [ "style" => "text-align: right;" ])
             ->foot();
         return $table->ready();
     }
