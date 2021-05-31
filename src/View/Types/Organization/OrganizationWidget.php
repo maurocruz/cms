@@ -78,6 +78,8 @@ abstract class OrganizationWidget {
         $content[] = self::fieldsetWithInput(_("Tax Id"), "taxId", $value['taxId'] ?? null, [ "style" => "width: 50%;" ]);
         // description
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null, 100 );
+        // disambiguatingDescription
+        $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'] ?? null);
         // url
         $content[] = self::fieldsetWithInput("Url", "url", $value['url'] ?? null, [ "style" => "width: 50%;" ]);
         //submit
