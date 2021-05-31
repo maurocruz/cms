@@ -6,6 +6,7 @@ use Plinct\Cms\View\Types\Intangible\PostalAddressView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
+use Plinct\Web\Widget\OpenStreetMap;
 
 class PlaceView {
     private $content;
@@ -69,10 +70,10 @@ class PlaceView {
             // name
             $content[] = self::fieldsetWithInput(_("Place"), "name", $value['name'] ?? null, ["style" => "width: 50%;"]);
             // ADDITIONAL TYPE
-            $content[] = self::additionalTypeInput('Place', $case, $value['additionalType'], ["style" => "width: 50%;"]);
+            $content[] = self::additionalTypeInput('Place', $case, $value['additionalType'] ?? null, ["style" => "width: 50%;"]);
             // Geo
-            $content[] = self::fieldsetWithInput(_("Latitude"), "latitude", $value['latitude'] ?? null, ["style" => "width: 225px;"]);
-            $content[] = self::fieldsetWithInput(_("Longitude"), "longitude", $value['longitude'] ?? null, ["style" => "width: 225px;"]);
+            $content[] = self::fieldsetWithInput(_("Latitude"), "latitude", $latitude ?? null, ["style" => "width: 225px;"]);
+            $content[] = self::fieldsetWithInput(_("Longitude"), "longitude", $longitude ?? null, ["style" => "width: 225px;"]);
             // elevation
             $content[] = self::fieldsetWithInput(_("Elevation (meters)"), "elevation", $value['elevation'] ?? null, ["style" => "width: 200px;"]);
             // description
@@ -84,6 +85,12 @@ class PlaceView {
             if ($case == "edit") {
                 $action = $tableHasPart ? "/admin/place/deleteRelationship" : "/admin/place/erase";
                 $content[] = self::submitButtonDelete($action);
+            }
+            // map
+            if (isset($value['latitude']) && isset($value['longitude'])) {
+                $latitude = $value['latitude'];
+                $longitude = $value['longitude'];
+                $content[] = (new OpenStreetMap($latitude, $longitude))->attributes(['width' => '100%', "height" => "300px"])->embedInIframe();
             }
         }
         return  [ "tag" => "form", "attributes" => [ "id" => "form-place-$case", "name" => "place-form-".$case, "class" => "formPadrao", "method" => "post", "action" => "/admin/place/".$case ], "content" => $content ];
