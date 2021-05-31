@@ -37,14 +37,14 @@ class ContactPointView {
         // TELEPHONE
         $content[] = self::fieldsetWithInput(_("Telephone"), "telephone", $value['telephone'] ?? null, [ "style" => "width: 140px;" ]);
         // WHATSAPP
-        $whatsapp = isset($value['whatsapp']) && $value['whatsapp'] === '1' ? "checked" : null;
+        $whatsapp = $value['whatsapp'] ?? null;
         $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => "Whatsapp" ],
             [ "tag" => "label", "content" => [                
-                [ "tag" => "input", "attributes" => [ "name" => "whatsapp", "type" => "radio", "value" => '1', $whatsapp ] ], " Sim"
+                [ "tag" => "input", "attributes" => [ "name" => "whatsapp", "type" => "radio", "value" => '1', $whatsapp == '1' ? "checked" : null ] ], " Sim "
             ]],
             [ "tag" => "label", "content" => [                
-                [ "tag" => "input", "attributes" => [ "name" => "whatsapp", "type" => "radio", "value" => '0', $whatsapp ] ], " Não"
+                [ "tag" => "input", "attributes" => [ "name" => "whatsapp", "type" => "radio", "value" => '0', $whatsapp != '1' ? "checked" : null ] ], " Não "
             ]]
         ]];
         // EMAIL
