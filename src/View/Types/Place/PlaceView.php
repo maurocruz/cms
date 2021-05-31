@@ -61,6 +61,8 @@ class PlaceView {
     }
     
     private function formPlace($tableHasPart, $idHasPart, $case = "new", $value = null): array {
+        $latitude = $value['latitude'];
+        $longitude = $value['longitude'];
         $content[] = $tableHasPart ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ]] : null;        
         $content[] = $idHasPart ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ]] :  null;
         $content[] = $case == "edit" ? ["tag" => "input", "attributes" => ["name" => "id", "type" => "hidden", "value" => $this->placeId]]: null;
@@ -88,8 +90,6 @@ class PlaceView {
             }
             // map
             if (isset($value['latitude']) && isset($value['longitude'])) {
-                $latitude = $value['latitude'];
-                $longitude = $value['longitude'];
                 $content[] = (new OpenStreetMap($latitude, $longitude))->attributes(['width' => '100%', "height" => "300px"])->embedInIframe();
             }
         }
