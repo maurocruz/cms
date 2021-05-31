@@ -173,7 +173,8 @@ class ImageObjectWidget {
             [ "tag" => "legend", "content" => "Legenda" ],
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
-        if (isset($value['width'])) {
+        // image, height and href for use in web page element
+        if (isset($value['width']) && $this->tableHasPart === "webPageElement") {
             // width
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Largura" ],
