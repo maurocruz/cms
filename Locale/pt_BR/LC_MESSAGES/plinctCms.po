@@ -1,7 +1,6 @@
 msgid ""
 msgstr ""
-
-"Project-Id-Version: plinct\n"
+"Project-Id-Version: fwc\n"
 "POT-Creation-Date: 2020-01-18 17:37-0300\n"
 "PO-Revision-Date: 2020-01-21 10:34-0300\n"
 "Last-Translator: Mauro Cruz <maurocruz@pirenopolis.tur.br>\n"
@@ -10,9 +9,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-KeywordsList: _;gettext\n"
 
-#. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/app.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/app.mo
+#. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
 msgid "Category"
 msgstr "Categoria"
@@ -28,6 +30,9 @@ msgstr "Editar %s"
 
 msgid "Add new %s from %s"
 msgstr "Adicionar novo %s de %s"
+
+msgid "Properties"
+msgstr "Propriedades"
 
 #################################  ACTIONS   ################################### 
 
@@ -346,6 +351,27 @@ msgstr "Estabelecimento Alimentar"
 msgid "Log out"
 msgstr "Sair"
 
+msgid "Log in"
+msgstr "Entrar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Developer version"
+msgstr "Versão de desenvolvimento"
+
+msgid "New user registration"
+msgstr "Novo registro de usuário"
+
+msgid "Repeat the password"
+msgstr "Repita a senha"
+
+msgid "Make new registration"
+msgstr "Fazer novo registro"
+
 msgid "Control Panel"
 msgstr "Painel de Controle"
 
@@ -426,17 +452,17 @@ msgstr "Data de envio"
 msgid "License"
 msgstr "Licença"
 
-msgid "Upload image"
-msgstr "Enviar imagem"
-
-msgid "Upload images"
-msgstr "Enviar imagens"
-
-msgid "We recommend configuring the image folder!"
-msgstr "Recomendamos configurar a pasta de imagens!"
-
 msgid "Save to folder"
 msgstr "Salvar na pasta"
+
+msgid "Delete record and file"
+msgstr "Excluir registro e arquivo"
+
+msgid "Upload images"
+msgstr "Subir imagens"
+
+msgid "Select images"
+msgstr "Selecione imagens"
 
 #############################   INVOICE   #####################################
 
@@ -530,9 +556,6 @@ msgid "Editing Local Business"
 msgstr "Editando negócio local"
 
 msgid "Disambiguating Description"
-msgstr "Descrição de desambiguação"
-
-msgid "Disambiguating description"
 msgstr "Descrição de desambiguação"
 
 msgid "Has offer catalog"
@@ -646,15 +669,6 @@ msgstr "Duração elegível"
 
 msgid "Order"
 msgstr "Pedido"
-
-msgid "Orders"
-msgstr "Pedidos"
-
-msgid "order"
-msgstr "pedido"
-
-msgid "orders"
-msgstr "pedidos"
 
 msgid "Seller"
 msgstr "Vendedor"
@@ -1132,9 +1146,6 @@ msgstr "Seu registro foi um sucesso!"
 msgid "Registration not successful!"
 msgstr "Registro não efetuado!"
 
-msgid "Password must be a minimum of 8 characters"
-msgstr "A senha deve ter no mínimo 8 caracteres"
-
 msgid "Repeating the password doesn't work!"
 msgstr "A repetição da senha não confere!"
 
@@ -1146,3 +1157,33 @@ msgstr "Desculpe! Algo está errado!"
 
 msgid "Wait for confirmation from the administrator!"
 msgstr "Aguarde a confirmação do administrador!"
+
+msgid "The name must be longer than 4 characters"
+msgstr "O nome deve ter mais de 4 caracteres"
+
+msgid "Invalid email"
+msgstr "Email inválido"
+
+msgid "Password must be a minimum of 8 characters"
+msgstr "A senha deve ter no mínimo 8 caracteres"
+
+msgid "Password must contain at least one uppercase character"
+msgstr "A senha deve conter pelo menos um caractere maiúsculo"
+
+msgid "Password must contain at least one lowercase character"
+msgstr "A senha deve conter pelo menos um caractere minúsculo"
+
+msgid "Password must contain at least 1 number"
+msgstr "A senha deve conter pelo menos 1 número"
+
+msgid "Sorry but this email is invalid!"
+msgstr "Desculpe, mas este e-mail é inválido!"
+
+msgid "Sorry but user not exists!"
+msgstr "Desculpe, mas o usuário não existe!"
+
+msgid "Sorry. The user exists but is not authorized. Check your data."
+msgstr "Desculpe. O usuário existe, mas não está autorizado. Verifique seus dados."
+
+msgid "Sorry. The user exists but is not authorized. Contact administrator."
+msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."
