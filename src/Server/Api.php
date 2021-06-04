@@ -25,6 +25,7 @@ class Api {
     }
 
     public static function request($type, $action, $params) {
+        $remoteAccessApi = null;
         // if api host equals cms app host
         if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
