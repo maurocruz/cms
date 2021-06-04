@@ -28,16 +28,19 @@ class ImageObjectController implements ControllerInterface
     }
 
     public function edit(array $params): array {
+        $value = [];
         $params2 = [ "properties" => "*,author" ];
         $params3 = array_merge($params2, $params);
         $data = Api::get("imageObject", $params3);
-        $value = $data[0];
-        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        $value['info'] = (new ImageObjectServer())->getImageHasPartOf($id);
+        if (isset($data[0])) {
+            $value = $data[0];
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+            $value['info'] = (new ImageObjectServer())->getImageHasPartOf($id);
+        }
         return $value;
     }
 
-    public function saveSitemap($params = null) {
+    public function saveSitemap() {
         $dataSitemap = null;
         $data = Api::get("imageObject", [ "properties" => "license", "orderBy" => "uploadDate" ]);
         foreach ($data as $value) {
