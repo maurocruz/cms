@@ -34,16 +34,22 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
     }
 
     public function edit(array $data): array {
-        $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-        $this->navBarImageObject(_("Image") . ": " . $data['contentUrl']);
-        // edit image
-        $this->content['main'][] = self::divBox(_("Image"), "ImageObject", [
-            self::formImageObjectEdit($data),
-            self::infoIsPartOf($id, $data['info'])
+        if (!empty($data)) {
+            $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+            $contentUrl = $data['contentUrl'];
+            $this->navBarImageObject(_("Image") . ": $contentUrl");
+            // edit image
+            $this->content['main'][] = self::divBox(_("Image"), "ImageObject", [
+                self::formImageObjectEdit($data),
+                self::infoIsPartOf($data)
             ]);
-        // author
-        $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [ self::relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author']) ]);
-        $this->content['main'][] = self::arrowBack();
+            // author
+            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author'])]);
+            $this->content['main'][] = self::arrowBack();
+        } else {
+            $this->navBarImageObject(_("Image not founded!"));
+            $this->content['main'][] = parent::noContent(_("Item not founded"));
+        }
         return $this->content;
     }
 
@@ -63,8 +69,6 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
         $content[] = self::upload($tableHasPart, $idHasPart);
         // save with a database image 
         $content[] = self::addImagesFromDatabase();
-        // save with a server image
-        $content[] = self::addImagesFromServer();
         return $content;
     }
 
@@ -73,13 +77,5 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
         $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
-    }
-    
-    protected function addImagesFromServer($idwebPage = null): array {
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
-        $content[] = $idwebPage ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $idwebPage ] ] : null;
-        $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromserver" ] ];
-        return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/insertHasPartFromServer", "name" => "images-selectedFromServer", "id" => "images-selectedFromServer-".$this->idHasPart, "class" => "formPadrao box", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 }
