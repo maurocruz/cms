@@ -1,12 +1,15 @@
 <?php
 namespace Plinct\Cms\Server\Type;
 
+use FilesystemIterator;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
 use Plinct\PDO\PDOConnect;
 use Plinct\Tool\FileSystem\FileSystem;
 use Plinct\Tool\Image\Image;
 use Plinct\Tool\StringTool;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class ImageObjectServer {
     private $tablesHasImageObject;
@@ -20,17 +23,17 @@ class ImageObjectServer {
     }
 
     public function new($params) {
+        $responseDataBase = null;
         // IF UPLOAD IMAGE
         if (isset($_FILES['imageupload'])) {
             $location = $params['location'] == '' ? App::getImagesFolder() : $params['location'];
             unset($params['location']);
-            if ($_FILES['imageupload']['size'][0] === 0) {
-                return filter_input(INPUT_SERVER, 'HTTP_REFERER');
-            }
-            $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $location);
-            foreach ($newParams as $valueNewParams) {
-                $params = array_merge($params, $valueNewParams);
-                Api::post("imageObject", $params);
+            if ($_FILES['imageupload']['size'][0] !== 0) {
+                $newParams = ImageObjectServer::uploadImages($_FILES['imageupload'], $location);
+                foreach ($newParams as $valueNewParams) {
+                    $params = array_merge($params, $valueNewParams);
+                    $responseDataBase[] = Api::post("imageObject", $params);
+                }
             }
         } else {
             // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
@@ -39,15 +42,72 @@ class ImageObjectServer {
                 foreach($id as $value) {
                     $newParams = $params;
                     $newParams['id'] = $value;
-                    Api::post('imageObject', $newParams);
+                    $responseDataBase[] = Api::post('imageObject', $newParams);
                 }
             } else {
-                Api::post("imageObject", $params);
+                $responseDataBase[] = Api::post("imageObject", $params);
             }
         }
-        return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+        if (isset($params['tableHasPart'])) {
+            return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+        } else {
+            if (count($responseDataBase) == 1) {
+                return "/admin/imageObject/edit/".$responseDataBase[0]['id'];
+            } else {
+                return "/admin/imageObject/keywords/".$params['keywords'];
+            }
+        }
     }
 
+    public function erase($params) {
+        $n = 0;
+        // ERASE TABLE RELATIONSHOP ONLY
+        if (isset($params['tableHasPart']) && isset($params['idHasPart']) && isset($params['tableIsPartOf']) && isset($params['idIsPartOf'])) {
+            Api::delete('imageObject', $params);
+            return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+        }
+        // DELETE REGISTER AND UNLINK IMAGE
+        else {
+            // delete register
+            Api::delete('imageObject', [ "id" => $params['id'] ]);
+            // unlink image
+            $imageFile =  $_SERVER['DOCUMENT_ROOT'] . parse_url($params['contentUrl'])['path'];
+            if (file_exists($imageFile)) {
+                $n = $this->deleteFiles($imageFile);
+            }
+            // RESPONSE
+            return $n == 0 ? dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'))."/keywords/".$params['keywords'];
+        }
+    }
+
+    /**
+     * @param $imageFile
+     * @return int
+     */
+    private function deleteFiles($imageFile): int {
+        $n = 0;
+        $pathinfo = pathinfo($imageFile);
+        $dirname = $pathinfo['dirname'];
+        $filename = $pathinfo['filename'];
+        $directory = new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS);
+        $iterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $file) {
+            // UNLINK FILE
+            if ($file->isFile() && strstr($file->getFileName(),$filename)) {
+                unlink($file);
+            }
+            // COUNT THE IMAGES ON FOLDER PARENT
+            if ($iterator->getDepth() === 0) {
+                $n += $file->isFile() ? 1 : 0;
+            }
+        }
+        // REMOVE DIR IF EMPTY
+        if ($n == 0) {
+            rmdir($dirname."/thumbs");
+            rmdir($dirname);
+        }
+        return $n;
+    }
 
     public static function uploadImages($imagesUploaded, $destination = ''): array {
         $destinationFolder = $destination == '' ? App::getImagesFolder() : $destination;
