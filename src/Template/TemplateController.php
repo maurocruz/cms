@@ -13,7 +13,7 @@ class TemplateController extends TemplateView {
     public function __construct() {
         parent::__construct();
         // TRANSLATE BY GETTEXT
-        Locale::translateByGettext(App::getLanguage(), "plinct", __DIR__."/../../Locale");
+        Locale::translateByGettext(App::getLanguage(), "plinctCms", __DIR__."/../../Locale");
         // HEAD
         parent::head();
         // HEADER
