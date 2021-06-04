@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Types\WebPage;
+namespace Plinct\Cms\View\Types\WebPageElement;
 
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
@@ -36,7 +36,7 @@ class WebPageElementView implements ViewInterface {
     public function edit(array $data): array {
         $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         $this->navBarWebPageElement(_("Web page element"));
-        $webPageEditHref = "/admin/webPage/edit/" . ($data['idwebPage'] ?? $data['webPage'] ?? null);
+        $webPageEditHref = "/admin/webPage/edit/".$data['isPartOf'];
         $this->content['main'][] = [ "tag" => "p", "content" => _("Is part of: "). '<a href="'.$webPageEditHref.'">'.$webPageEditHref.'</a>' ];
         $this->content['main'][] = self::divBox(_("Web page element"), "WebPageElement", [ self::editForms($data) ] );
         return $this->content;
