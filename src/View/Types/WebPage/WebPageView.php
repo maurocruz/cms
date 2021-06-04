@@ -3,6 +3,7 @@ namespace Plinct\Cms\View\Types\WebPage;
 
 use Plinct\Cms\View\AbstractView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
+use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Widget\SitemapWidget;
