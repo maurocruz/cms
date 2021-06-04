@@ -81,29 +81,6 @@ class ImageObjectWidget {
         return $content;
     }
 
-    protected function formImageObject($value, $isPartOf = null, $info = null): array {
-        $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        if (isset($value['potentialAction'])) {
-            foreach ($value['potentialAction'] as $valueAction) {
-                $potentialAction[$valueAction['name']] = $valueAction['result'];
-            }
-        }
-        // WEB PAGE
-        $content[] = isset($isPartOf) && $isPartOf['@type'] == "WebPage" ? [ "tag" => "input", "attributes" => [ "name" => "idwebPage", "type" => "hidden", "value" => $isPartOf['identifier'] ] ] : null;
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ] ];
-        // FIGURE
-        $content[] = [ "object" => "figure", "attributes" => [ "style" => "max-width: 200px; float: left; margin-right: 10px;" ], "src" => $value['contentUrl'], "width" => 200, "href" => "/admin/imageObject/edit/$ID" ];
-        // ID
-        $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 60px;" ], "text", [ "readonly"] );
-        $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 300px);" ], "text", [ "readonly"] );
-        // group
-        $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", $value['keywords'], [ "style" => "width: calc(100% - 315px);" ]);
-        $content[] = self::submitButtonSend();
-        $content[] = $info ? null  : self::submitButtonDelete("/admin/imageObject/delete");
-        // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
-    }
-
     protected static function formImageObjectEdit($value): array {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = self::input("id", "hidden", $ID);
@@ -117,7 +94,7 @@ class ImageObjectWidget {
         // ID
         $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 80px;" ], "text", [ "disabled" ] );
         // url
-        $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 80px);" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 80px);" ], "text", [ "readonly"] );
         // content size
         $content[] = self::fieldsetWithInput(_("Content size") . " (bytes)", "contentSize", $contentSize, [ "style" => "width: 180px;" ], "text", [ "readonly"] );
         // width
@@ -142,6 +119,8 @@ class ImageObjectWidget {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idIsPartOf", "type" => "hidden", "value" => $ID ] ];
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableIsPartOf", "type" => "hidden", "value" => "imageObject" ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ] ];
         // FIGURE
         $image = new Image($value['contentUrl']);
@@ -155,11 +134,11 @@ class ImageObjectWidget {
             "caption" => $caption
         ];
         // content url
-        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: 80%;" ], "text", [ "readonly" ]);
+        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 210px)" ], "text", [ "readonly" ]);
         // position
         $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
         // highlights
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 125px; margin: 5px 0;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 142px; margin: 5px 0;" ], "content" => [
             [ "tag" => "legend", "content" => _("Representative of page") ],
             [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
                 [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 1, ($value['representativeOfPage'] == 1 ? "checked" : null) ] ], _("Yes")
@@ -169,21 +148,23 @@ class ImageObjectWidget {
             ] ]
         ]];
         // caption
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 435px); margin: 5px 0;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 432px); margin: 5px 0;" ], "content" => [
             [ "tag" => "legend", "content" => "Legenda" ],
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
         // image, height and href for use in web page element
         if (isset($value['width']) && $this->tableHasPart === "webPageElement") {
             // width
+            $width = isset($value['width']) && $value['width'] != '0.00' ? $value['width'] : null;
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Largura" ],
-                [ "tag" => "input", "attributes" => [ "name" => "width", "type" => "text", "value" => $value['width'] ] ]
+                [ "tag" => "input", "attributes" => [ "name" => "width", "type" => "text", "value" => $width ] ]
             ]];
             // height
+            $height = isset($value['height']) && $value['height'] != '0.00' ? $value['height'] : null;
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
                 [ "tag" => "legend", "content" => "Altura" ],
-                [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $value['height'] ] ]
+                [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $height ] ]
             ]];
             // href
             $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 480px); margin: 5px 0;" ], "content" => [
@@ -198,7 +179,11 @@ class ImageObjectWidget {
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-$ID", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
-    protected static function infoIsPartOf($id, $info): array {
+    protected static function infoIsPartOf($data): array {
+        $id = ArrayTool::searchByValue($data['identifier'],"id","value");
+        $contentUrl = $data['contentUrl'];
+        $keywords = $data['keywords'];
+        $info = $data['info'];
         if ($info) {
             $list = null;
             foreach ($info as $value) {
@@ -211,18 +196,26 @@ class ImageObjectWidget {
             $content[] = "<dl><dt>Is Part Of:</dt>$list</dl>";
         } else {
             $content[] = self::input("id", "hidden", $id);
-            $content[] = "<p style='color: yellow;'>". _("This item is not part of any other.") . "</p><button style='cursor: pointer;'>! "._("Delete the record without deleting the file")." !</button>";
+            $content[] = self::input("contentUrl", "hidden", $contentUrl);
+            $content[] = self::input("keywords", "hidden", $keywords);
+            $content[] = "<p style='color: yellow;'>". _("This item is not part of any other.") . "</p>";
+            // button delete
+            $content[] = sprintf(
+                '<button style="cursor: pointer" onclick="return confirm(\'%s\');">%s</button>',
+                _("Are you sure you want to delete this item?"),
+                "! "._("Delete record and file")." !"
+            );
         }
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao box", "style" => "overflow: hidden;", "name" => "form-images-edit", "action" => "/admin/imageObject/erase", "method" => "post" ], "content" => $content ];
     }
 
     protected function upload($tableHasPart = null, $idHasPart = null): array {
         // TITLE
-        $content[] = [ "tag" => "h4", "content" => _("Upload image") ];
+        $content[] = [ "tag" => "h4", "content" => _("Upload images") ];
         $content[] = $tableHasPart ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => $tableHasPart, "type" => "hidden" ] ] : null;
         $content[] = $idHasPart ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $idHasPart, "type" => "hidden" ] ] : null;
         // image upload
-        $content[] =self::fieldsetWithInput(_("Upload images"), "imageupload[]", null, null, "file", [ "multiple"]);
+        $content[] =self::fieldsetWithInput(_("Select images"), "imageupload[]", null, null, "file", [ "multiple"]);
         // location
         $content[] = self::fieldsetWithInput(_("Save to folder"), "location", null, [ "style" => "width: 30%;" ], "text", [ "list" => "listLocations", "autocomplete" => "off"]);
         $datalist = ImageObjectServer::listLocation(App::getImagesFolder());
