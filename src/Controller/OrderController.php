@@ -19,7 +19,7 @@ class OrderController {
     public function editWithPartOf($itemId, $id) {
         $data = Api::get('order', [ "id" => $itemId, "properties" => "*,customer,orderedItem,partOfInvoice,history" ]);
         $data[0]['orderedItem'] = Api::get("orderItem", [ "referencesOrder" => $itemId, "properties" => "*,orderedItem,offer" ]);
-        $data[0]['seller'] = Api::get("organization", [ "id" => $id, "properties" => "hasOfferCatalog" ])[0];
+        $data[0]['seller'] = Api::get("organization", [ "id" => $id, "properties" => "name,hasOfferCatalog" ])[0];
         $data[0]['seller']['hasOfferCatalog'] = Api::get("offer", [ "format" => "ItemList", "offeredBy" => $id, "offeredByType" => "Organization", "properties" => "itemOffered", "availability" => "InStock", "where" => "`validThrough`>CURDATE()" ] );
         return $data;
     }
@@ -71,7 +71,8 @@ class OrderController {
     }
 
     private static function byCustomerName($customerName, $id, $dataAgo): array {
-        $dataOrganization = Api::get('organization', [ "nameLike" => $customerName ]);
+        $dataOrder = null;
+        $dataOrganization = Api::get('organization', [ "properties" => "name", "nameLike" => $customerName ]);
         $dataPerson = Api::get('person', [ "nameLike" => $customerName ]);
         $dataLocalBusiness = Api::get('localBusiness', [ "nameLike" => $customerName ]);
         $array = array_merge($dataOrganization,$dataPerson,$dataLocalBusiness);
