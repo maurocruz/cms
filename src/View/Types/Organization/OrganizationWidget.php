@@ -80,6 +80,8 @@ abstract class OrganizationWidget {
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null, 100 );
         // disambiguatingDescription
         $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'] ?? null);
+        // has offer catalog
+        $content[] = self::fieldsetWithInput(_("Has offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null, [ "style" => "width: 100%;" ]);
         // url
         $content[] = self::fieldsetWithInput("Url", "url", $value['url'] ?? null, [ "style" => "width: 50%;" ]);
         //submit
@@ -92,6 +94,7 @@ abstract class OrganizationWidget {
 
     protected function itemView(string $itemType, $data): array {
         $itemProperty = null;
+        $itemResponse = null;
         $itemView = null;
         $value = $data[0];
         $action = filter_input(INPUT_GET, 'action');
