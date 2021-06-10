@@ -11,37 +11,12 @@ class SchemaorgData {
     private $response = [];
 
     public function __construct() {
-        self::$SCHEMAORG_DATA = json_decode(file_get_contents(__DIR__.'/../../static/json/schemaorg.jsonld'), true);
+        $file = file_get_contents('https://schema.org/version/latest/schemaorg-current-https.jsonld') ?? file_get_contents(__DIR__.'/../../static/json/schemaorg.jsonld');
+        self::$SCHEMAORG_DATA = json_decode($file, true);
         self::$SCHEMAORG_DATA_GRAPH = self::$SCHEMAORG_DATA['@graph'];
     }
 
-    public static function searchById($id): array {
-        foreach (self::$SCHEMAORG_DATA_GRAPH as $value ) {
-            if ($value['@id'] == $id) return $value;
-        }
-        return [];
-    }
-
-    public static function searchBySubClassOf($id): array {
-        $response = [];
-        foreach (self::$SCHEMAORG_DATA_CLASS as $value ) {
-            $subClassOf = $value['rdfs:subClassOf'] ?? null;
-            if (isset($subClassOf['@id'])) {
-                if ($subClassOf['@id'] == $id) {
-                    $response[] = $value;
-                }
-            } elseif (is_array($subClassOf)) {
-                foreach ($subClassOf as $valueSubClass) {
-                    if ($valueSubClass['@id'] == $id) {
-                        $response[] = $value;
-                    }
-                }
-            }
-        }
-        return $response;
-    }
-
-    public function getSchemaByTypeSelected($typeSelected, bool $includeType = true, string $separator = " -> "): array {
+    public function getSchemaByTypeSelected($typeSelected, bool $includeType = true, string $separator = ","): array {
         self::$TYPE_SELECTED = $typeSelected;
         self::$INCLUDE_TYPE = $includeType;
         self::$SEPARATOR = $separator;
@@ -71,17 +46,43 @@ class SchemaorgData {
             }
         }
     }
-
     private function selectSubClassOf($class) {
+        $endClass = null;
         foreach (self::searchBySubClassOf($class) as $valueSubClassOf) {
             if ($this->endItem() == $class) {
-                $class = end($this->response);
+                $endClass = end($this->response);
             }
-            $this->response[] = $class . self::$SEPARATOR . $valueSubClassOf['@id'];
+            $this->response[] = $endClass . self::$SEPARATOR . $valueSubClassOf['@id'];
             if (!empty(self::searchBySubClassOf($valueSubClassOf['@id']))) {
                 $this->selectSubClassOf($valueSubClassOf['@id']);
             }
         }
+    }
+
+    public static function searchBySubClassOf($id): array {
+        $response = [];
+        foreach (self::$SCHEMAORG_DATA_CLASS as $value ) {
+            $subClassOf = $value['rdfs:subClassOf'] ?? null;
+            if (isset($subClassOf['@id'])) {
+                if ($subClassOf['@id'] == $id) {
+                    $response[] = $value;
+                }
+            } elseif (is_array($subClassOf)) {
+                foreach ($subClassOf as $valueSubClass) {
+                    if ($valueSubClass['@id'] == $id) {
+                        $response[] = $value;
+                    }
+                }
+            }
+        }
+        return $response;
+    }
+
+    public static function searchById($id): array {
+        foreach (self::$SCHEMAORG_DATA_GRAPH as $value ) {
+            if ($value['@id'] == $id) return $value;
+        }
+        return [];
     }
 
     private function endItem() {

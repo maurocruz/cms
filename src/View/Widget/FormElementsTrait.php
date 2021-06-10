@@ -219,16 +219,33 @@ trait FormElementsTrait {
 
     protected static function additionalTypeInput($typeSelected, $case, $additionalTypeValue, $attributes = null, $includeType = true): array {
         $datalist = null;
+        $newAdditionalTypes = null;
         $additionalTypes = (new SchemaorgData())->getSchemaByTypeSelected($typeSelected,$includeType);
+        // translate additional types
+        foreach ($additionalTypes as $value) {
+            $newAdditionalTypes[] = self::translateAdditionalTypes($value);
+        }
         // additionalType
-        foreach ($additionalTypes as $valueAddTypes) {
+        foreach ($newAdditionalTypes as $valueAddTypes) {
             $datalist[] = [ "tag" => "option", "attributes" => [ "value" => $valueAddTypes ] ];
         }
         return [ "tag" => "fieldset", "attributes" => $attributes, "content" => [
             [ "tag" => "legend", "content" => _("Additional type") ],
-            [ "tag" => "input", "attributes" => [ "name" => "additionalType", "type" => "text", "value" => $additionalTypeValue, "list" => "additionalType", "autocomplete" => "off" ] ],
+            [ "tag" => "input", "attributes" => [ "name" => "additionalType", "type" => "text", "value" => self::translateAdditionalTypes($additionalTypeValue), "list" => "additionalType", "autocomplete" => "off" ] ],
             [ "tag" => "datalist", "attributes" => [ "id" => "additionalType"], "content" => $datalist ]
         ] ];
+    }
+
+    private static function translateAdditionalTypes($additionalTypes): ?string {
+        if ($additionalTypes) {
+            $newArray = null;
+            $explode = explode(",", $additionalTypes);
+            foreach ($explode as $valueItem) {
+                $newArray[] = _($valueItem);
+            }
+            return implode(" -> ", $newArray);
+        }
+        return null;
     }
 
     protected static function searchInNavbar($itemType, $searchBy = 'name', $params = null): array {

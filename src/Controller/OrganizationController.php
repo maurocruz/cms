@@ -16,9 +16,7 @@ class OrganizationController implements ControllerInterface
     }
     
     public function edit(array $params): array {
-        $data = Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
-        $data[0]['additionalType'] = str_replace(","," -> ",$data[0]['additionalType']);
-        return $data;
+        return Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
     }
     
     public function new($params = null): bool {
