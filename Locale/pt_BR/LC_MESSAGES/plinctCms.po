@@ -34,6 +34,81 @@ msgstr "Adicionar novo %s de %s"
 msgid "Properties"
 msgstr "Propriedades"
 
+msgid "PerformingGroup"
+msgstr "Grupo artístico"
+
+msgid "MusicGroup"
+msgstr "Banda musical"
+
+msgid "TheaterGroup"
+msgstr "Trupe de teatro"
+
+msgid "DanceGroup"
+msgstr "Companhia de dança"
+
+msgid "EducationalOrganization"
+msgstr "instituto de educação"
+
+msgid "EducationalCollegeOrUniversity"
+msgstr "Faculdade ou universidade"
+
+msgid "EducationalSchool"
+msgstr "Escola (básico)"
+
+msgid "EducationalHighSchool"
+msgstr "Colégio (ensino médio)"
+
+msgid "EducationalElementarySchool"
+msgstr "Escola (fundamental)"
+
+msgid "EducationalPreschool"
+msgstr "Pré-escola"
+
+msgid "EducationalMiddleSchool"
+msgstr "Escola (ensino médio)"
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "ResearchProject"
+msgstr "Projeto de pesquisa"
+
+msgid "FundingAgency"
+msgstr "Agência de financiamento"
+
+msgid "EmploymentAgency"
+msgstr "Agência de emprego"
+
+msgid "DryCleaningOrLaundry"
+msgstr "Lavanderia"
+
+msgid "ProfessionalService"
+msgstr "Serviço profissional"
+
+msgid "SelfStorage"
+msgstr "Auto armazenamento"
+
+msgid "EmergencyService"
+msgstr "Serviço de emergência"
+
+msgid "PoliceStation"
+msgstr "Delegacia de polícia"
+
+msgid "FireStation"
+msgstr "Corpo de bombeiros"
+
+msgid "MedicalBusiness"
+msgstr "Serviços médicos"
+
+msgid "Pharmacy"
+msgstr "Farmácia"
+
+msgid "Optician"
+msgstr "Ótica"
+
+msgid "LodgingBusiness"
+msgstr "Hospedagem"
+
 #################################  ACTIONS   ################################### 
 
 msgid "Action"
