@@ -28,19 +28,25 @@ class OrganizationView extends OrganizationWidget {
     }
 
     public function edit(array $data): array {
-        $value = parent::setValues($data[0]);
-        // NAVBAR
-        parent::navbarEdit();
-        // organization
-        $this->content['main'][] = self::divBox2(sprintf(_("Edit %s"), _("organization")), [ self::formOrganization('edit', $value) ]);
-        // location
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("organization", $this->id, "location", "place", $value['location']) ]);
-        // contact point
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm('organization', $this->id, $value['contactPoint']) ]);
-        // member
-        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("organization", $this->id, "person", $value['member']) ]);
-        // image
-        $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("organization", $this->id, $value['image']) ]);
+        if (empty($data)) {
+            // NAVBAR
+            parent::navbarIndex();
+            $this->content['main'][] = parent::noContent(_("No item founded!"));
+        } else {
+            $value = parent::setValues($data[0]);
+            // NAVBAR
+            parent::navbarEdit();
+            // organization
+            $this->content['main'][] = self::divBox2(sprintf(_("Edit %s"), _("organization")), [self::formOrganization('edit', $value)]);
+            // location
+            $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [self::relationshipOneToOne("organization", $this->id, "location", "place", $value['location'])]);
+            // contact point
+            $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('organization', $this->id, $value['contactPoint'])]);
+            // member
+            $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [self::relationshipOneToMany("organization", $this->id, "person", $value['member'])]);
+            // image
+            $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [(new ImageObjectView())->getForm("organization", $this->id, $value['image'])]);
+        }
         return $this->content;
     }
 
