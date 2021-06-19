@@ -1,0 +1,24 @@
+@use 'formPadrao';
+
+// Dispositivos extra small (telefones em modo retrato, com menos de 576px)
+@media (min-width: 575.98px) {
+  .form-propertyValue {
+    display: flex;
+    align-items: center;
+    fieldset { width: calc(50% - 50px); }
+  }
+}
+// Dispositivos small (telefones em modo paisagem, com menos de 768px)
+@media (max-width: 767.98px) {
+
+}
+
+// Dispositivos médios (tablets com menos de 992px)
+@media (max-width: 991.98px) {
+
+}
+
+// Dispositivos large (desktops com menos de 1200px)
+@media (max-width: 1199.98px) {
+
+}

@@ -16,8 +16,13 @@ class ImageObjectController implements ControllerInterface
     }
 
     public function keywords($params): array {
-        $keywords = urldecode($params['id']);
-        $params2 = [ "format" => "ItemList", "keywords" => $keywords, "limit" => "none", "orderBy" => "uploadDate desc, keywords" ];
+        $keywords = isset($params['id']) ? urldecode($params['id']) : null;
+        $params2 = [ "format" => "ItemList", "limit" => "none", "orderBy" => "uploadDate desc, keywords" ];
+        if($keywords) {
+            $params2['keywords'] = $keywords;
+        } else {
+            $params2['where'] = 'keywords is null';
+        }
         $data['list'] = Api::get("imageObject", $params2);
         $data['paramsUrl'] = $params;
         return $data;

@@ -1,0 +1,52 @@
+/* COMPONENT _ form padrao
+======================================================= */
+.formPadrao {
+  background-color: inherit;
+}
+.formPadrao fieldset {
+  background-color: inherit;
+  border: 0;
+}
+.formPadrao legend {
+  background-color: #2a2a2a;
+  border-radius: 0;
+  font-weight: normal;
+}
+.formPadrao button[type=submit] {
+  display: inline-block;
+  overflow: hidden;
+  height: 50px;
+  width: 50px;
+  margin-left: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+.formPadrao button[type=submit] .material-icons {
+  font-size: 50px;
+}
+.formPadrao .button-submit-send .material-icons {
+  color: #40d377;
+}
+.formPadrao .button-submit-send .material-icons:hover {
+  color: #84f7ba;
+}
+.formPadrao .button-submit-delete .material-icons {
+  color: #ee0000;
+}
+.formPadrao .button-submit-delete .material-icons:hover {
+  color: #ff5555;
+}
+
+@media (min-width: 575.98px) {
+  .form-propertyValue {
+    display: flex;
+    align-items: center;
+  }
+  .form-propertyValue fieldset {
+    width: calc(50% - 50px);
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -12,8 +12,6 @@ abstract class OrganizationWidget {
     protected $content = [];
     protected $id;
     protected $name;
-    protected $idItem;
-    protected $nameItem;
 
     use navbarTrait;
     use FormElementsTrait;

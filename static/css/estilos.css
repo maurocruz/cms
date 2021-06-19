@@ -118,7 +118,8 @@ a.white { color: white; }
 .box { margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
 .box h1 { margin: 0; font-size: 1.4em; }
 /*.box form{ display: block; }*/
-.box form fieldset { display: inline; margin-right: 0; }
+.box form fieldset { display: block; margin-right: 0; }
+.box form fieldset textarea{ display: block; min-height: 80px;}
 .posts-box { max-height: 110px; overflow: hidden; }
 .box-expanding { max-height: 1rem; overflow: hidden; }
 .box-expanding--text { font-weight: normal; font-size: 0.85rem; }

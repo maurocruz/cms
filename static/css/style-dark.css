@@ -45,9 +45,21 @@ tbody tr:nth-child(even) {
 
 .box { background-color: #3a3a3a; }
 
-.formPadrao { background-color: inherit; }
+/*.formPadrao { background-color: inherit; }
 .formPadrao fieldset { background-color: inherit; border: 0; }
 .formPadrao legend { background-color: #2a2a2a; border-radius: 0; font-weight: normal; }
+.formPadrao button[type=submit] {
+    display: inline-block; overflow: hidden;
+    height: 50px; width: 50px; margin-left: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+}
+.formPadrao button[type=submit] .material-icons{
+    font-size:  50px;
+}*/
+
 
 .form-inline legend { background-color: #2a2a2a; border-radius: 0; font-weight: normal; }
 
@@ -67,6 +79,22 @@ tbody tr:nth-child(even) {
 .form-back-red input { background-color: #fab5b5 !important; }
 .form-back-green input { background-color: #b5fafa !important; }
 .form-back-yellow input { background-color: #fafab5 !important; }
+
+.form-submit-button {
+    overflow: hidden; height: 50px; width: 50px; display: inline-block; margin-left: 5px; vertical-align: middle; cursor: pointer;
+    background-color: transparent;
+    border: 0;
+}
+.form-submit-button-send .material-icons{ font-size: 50px; color: #40d377; }
+.form-submit-button-send .material-icons:hover{ color: #84f7ba; }
+.form-submit-button-delete .material-icons{ font-size: 50px; color: #ee0000; }
+.form-submit-button-delete .material-icons:hover{ color: #ff5555; }
+
+/* table-itemlist */
+.table-itemlist tbody tr td:nth-child(1) { text-align: center; }
+.table-itemlist-button { margin: 0 auto; }
+.table-itemlist-button-edit .material-icons{ font-size: 16px; }
+
 
 .xdebug-error { font-size: 16px; }
 .xdebug-error tr td span{ display: none; }

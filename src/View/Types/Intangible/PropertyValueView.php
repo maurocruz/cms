@@ -19,30 +19,30 @@ class PropertyValueView {
     }
     
     protected function formPropertyValue($tableHasPart, $idHasPart, $case = "new", $value = null): array {
+        $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
         if ($case == "new") {
             $contentForm[] = "Novo: ";
-            $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
             
         } else {
             $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $contentForm[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
-
-        $contentForm[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 15%;" ], "content" => [
+        // NAME
+        $contentForm[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Nome" ],
                 [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ?? null ] ]
-            ]];        
+            ]];
+        // VALUE
         $contentForm[] = [ 
-            "tag" => "fieldset", "attributes" => [ "style" => "width: 50%;" ], "content" => [
+            "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Valor" ],
                 [ "tag" => "input", "attributes" => [ "name" => "value", "type" => "text", "value" => $value['value'] ?? null ] ]
             ]];
-        
+        // SUBMIT BUTTONS
         $contentForm[] = self::submitButtonSend();
-        
         $contentForm[] = $case == "edit" ? self::submitButtonDelete("/admin/propertyValue/erase") : null;
-                
-        return [ "tag" => "form", "attributes" => [ "id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "action" => "/admin/PropertyValue/$case", "class" => "formPadrao", "method" => "post" ], "content" => $contentForm ];
+        // RESPONSE
+        return [ "tag" => "form", "attributes" => [ "id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "action" => "/admin/PropertyValue/$case", "class" => "formPadrao form-propertyValue", "method" => "post" ], "content" => $contentForm ];
     }
 }
