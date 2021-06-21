@@ -52,7 +52,7 @@ class WebPageElementView implements ViewInterface {
         return $content;
     }
 
-    public function getForm(string $idHasPart, array $value): array {
+    public function getForm(string $idHasPart, $value): array {
         $this->idwebPage = $idHasPart;
         // add new WebPagElement
         $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::formWebPageElement() ]);
