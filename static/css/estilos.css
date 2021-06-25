@@ -110,16 +110,9 @@ a.white { color: white; }
 ============================================================================= */
 .list-folder { list-style: none; display: flex; flex-wrap: wrap; }
 .list-folder li { display: inline-block; margin: 5px; }
-.list-folder-figure { line-height: normal; background-image: url('/App/static/cms/images/folder_120w.png'); padding: 17px 5px 0; background-repeat: no-repeat; width: 110px; }
+.list-folder-figure { line-height: normal; background-image: url('https://plinct.com.br/App/static/cms/images/folder_120w.png'); padding: 17px 5px 0; background-repeat: no-repeat; width: 110px; }
 .list-folder-figure img { width: 110px; height: 75px; border-radius: 5px; margin-bottom: 3px; }
 
-/* COMPONENT _ box
-============================================================================= */
-.box { margin-bottom: 1px; border: 1px gray solid; background-color: #E0F9FF; padding: 8px; border-radius: 3px; }
-.box h1 { margin: 0; font-size: 1.4em; }
-/*.box form{ display: block; }*/
-.box form fieldset { display: block; margin-right: 0; }
-.box form fieldset textarea{ display: block; min-height: 80px;}
 .posts-box { max-height: 110px; overflow: hidden; }
 .box-expanding { max-height: 1rem; overflow: hidden; }
 .box-expanding--text { font-weight: normal; font-size: 0.85rem; }

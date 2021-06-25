@@ -3,15 +3,15 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Server\Api;
-use Plinct\PDO\PDOConnect;
 
 class TripController implements ControllerInterface {
 
     public function index($params = null): array {
         $provider = $params['provider'] ?? null;
         $data = Api::get('organization',['id'=>$provider,'properties'=>'name']);
-        $data[0]['trip'] = Api::get('trip',['format'=>'ItemList','provider'=>$provider,'properties'=>'name,dateModified','orderBy'=>'dateModified']);
-        return $data[0];
+        $value = $data[0];
+        $value['trip'] = Api::get('trip',['format'=>'ItemList','provider'=>$provider,'properties'=>'name,dateModified,identifier','orderBy'=>'dateModified desc']);
+        return $value;
     }
 
     public function edit(array $params): array {

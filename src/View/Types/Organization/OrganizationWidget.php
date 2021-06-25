@@ -67,27 +67,27 @@ abstract class OrganizationWidget {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
         }
         // name
-        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%;" ]);
+        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null);
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Organization", $case, $value['additionalType'] ?? null, [ "style" => "width: 50%" ], false);
+        $content[] = self::additionalTypeInput("Organization", $value['additionalType'] ?? null, null, false);
         // legal name
-        $content[] = self::fieldsetWithInput(_("Legal Name"), "legalName", $value['legalName'] ?? null, [ "style" => "width: 50%;" ]);
+        $content[] = self::fieldsetWithInput(_("Legal Name"), "legalName", $value['legalName'] ?? null);
         // tax id
-        $content[] = self::fieldsetWithInput(_("Tax Id"), "taxId", $value['taxId'] ?? null, [ "style" => "width: 50%;" ]);
+        $content[] = self::fieldsetWithInput(_("Tax Id"), "taxId", $value['taxId'] ?? null);
         // description
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null, 100 );
         // disambiguatingDescription
         $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'] ?? null);
         // has offer catalog
-        $content[] = self::fieldsetWithInput(_("Has offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null, [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldsetWithInput(_("Has offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null);
         // url
-        $content[] = self::fieldsetWithInput("Url", "url", $value['url'] ?? null, [ "style" => "width: 50%;" ]);
+        $content[] = self::fieldsetWithInput("Url", "url", $value['url'] ?? null);
         //submit
         $content[] = self::submitButtonSend();
         if ($case == "edit") {
             $content[] = self::submitButtonDelete('/admin/organization/delete');
         }
-        return [ "tag" => "form", "attributes" => [ "name" => "form-organization", "id" => "form-organization", "class" => "formPadrao", "action" => "/admin/organization/$case", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "name" => "form-organization", "id" => "form-organization", "class" => "formPadrao form-organization", "action" => "/admin/organization/$case", "method" => "post" ], "content" => $content ];
     }
 
     protected function itemView(string $itemType, $data): array {

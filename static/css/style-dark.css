@@ -43,22 +43,6 @@ tbody tr:nth-child(even) {
     background-color: #676767;
 }
 
-.box { background-color: #3a3a3a; }
-
-/*.formPadrao { background-color: inherit; }
-.formPadrao fieldset { background-color: inherit; border: 0; }
-.formPadrao legend { background-color: #2a2a2a; border-radius: 0; font-weight: normal; }
-.formPadrao button[type=submit] {
-    display: inline-block; overflow: hidden;
-    height: 50px; width: 50px; margin-left: 5px;
-    vertical-align: middle;
-    cursor: pointer;
-    background-color: transparent;
-    border: 0;
-}
-.formPadrao button[type=submit] .material-icons{
-    font-size:  50px;
-}*/
 
 
 .form-inline legend { background-color: #2a2a2a; border-radius: 0; font-weight: normal; }

@@ -70,14 +70,14 @@ class PlaceView {
             $content[] = [ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => "place" ] ];
         } else {
             // name
-            $content[] = self::fieldsetWithInput(_("Place"), "name", $value['name'] ?? null, ["style" => "width: 50%;"]);
+            $content[] = self::fieldsetWithInput(_("Place"), "name", $value['name'] ?? null);
             // ADDITIONAL TYPE
-            $content[] = self::additionalTypeInput('Place', $case, $value['additionalType'] ?? null, ["style" => "width: 50%;"]);
+            $content[] = self::additionalTypeInput('Place', $value['additionalType'] ?? null);
             // Geo
-            $content[] = self::fieldsetWithInput(_("Latitude"), "latitude", $latitude ?? null, ["style" => "width: 225px;"]);
-            $content[] = self::fieldsetWithInput(_("Longitude"), "longitude", $longitude ?? null, ["style" => "width: 225px;"]);
+            $content[] = self::fieldsetWithInput(_("Latitude"), "latitude", $latitude ?? null);
+            $content[] = self::fieldsetWithInput(_("Longitude"), "longitude", $longitude ?? null);
             // elevation
-            $content[] = self::fieldsetWithInput(_("Elevation (meters)"), "elevation", $value['elevation'] ?? null, ["style" => "width: 200px;"]);
+            $content[] = self::fieldsetWithInput(_("Elevation (meters)"), "elevation", $value['elevation'] ?? null);
             // description
             $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null, 100);
             // disambiguating description
@@ -90,9 +90,9 @@ class PlaceView {
             }
             // map
             if (isset($value['latitude']) && isset($value['longitude'])) {
-                $content[] = (new OpenStreetMap($latitude, $longitude))->attributes(['width' => '100%', "height" => "300px"])->embedInIframe();
+                $content[] = (new OpenStreetMap($latitude, $longitude))->attributes(['class'=>'form-place-map','width' => '100%', "height" => "300px"])->embedInIframe();
             }
         }
-        return  [ "tag" => "form", "attributes" => [ "id" => "form-place-$case", "name" => "place-form-".$case, "class" => "formPadrao", "method" => "post", "action" => "/admin/place/".$case ], "content" => $content ];
+        return  [ "tag" => "form", "attributes" => [ "id" => "form-place-$case", "name" => "place-form-".$case, "class" => "formPadrao form-place", "method" => "post", "action" => "/admin/place/".$case ], "content" => $content ];
     }
 }

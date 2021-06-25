@@ -22,7 +22,7 @@ abstract class ProductWidget {
         // CATEGORY
         $content[] = self::fieldsetWithInput(_("Category"), "category", $value['category'] ?? null, [ "style" => "width: 50%;"] );
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Thing", $case, $value['additionalType'] ?? null, [ "style" => "width: 50%;"] );
+        $content[] = self::additionalTypeInput("Thing", $value['additionalType'] ?? null, ["style" => "width: 50%;"]);
         // DESCRIPTION
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null);
         // DISAMBIGUATING DESCRIPTION

@@ -22,7 +22,8 @@ class TripView extends TripWidget implements ViewInterface {
     }
 
     public function new($data = null): array {
-        $provider = $data['provider'] ?? null;
+        $this->idprovider =$data[0]['identifier']['value'];
+        $this->content['main'][] = self::divBox2(sprintf(_("New %s"),'trip'), parent::formTrip());
         // RESPONSE
         return $this->content;
     }
@@ -37,7 +38,7 @@ class TripView extends TripWidget implements ViewInterface {
         // TRIP FORM
         $this->content['main'][] = self::divBox2(sprintf(_("Edit %s"),'trip'), parent::formTrip($value));
         // PART OF TRIP
-        $this->content['main'][] = self::divBoxExpanding(_("Sub trips"), "Trip", [self::relationshipOneToMany("tripHasPart", $this->idtrip, "tripIsPartOf", $value['subTrip'])]);
+        $this->content['main'][] = self::divBoxExpanding(_("Sub trips"), "Trip", [self::relationshipOneToMany("trip", $this->idtrip, "trip", $value['subTrip'])]);
         // PROPERTY VALUES
         $this->content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("trip", $this->idtrip, $value['identifier']) ]);
         // images

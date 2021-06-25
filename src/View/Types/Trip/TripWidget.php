@@ -4,9 +4,7 @@ namespace Plinct\Cms\View\Types\Trip;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
-use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Form;
-use Plinct\Web\Widget\FormTrait;
 
 class TripWidget {
     protected $content = [];
@@ -27,7 +25,8 @@ class TripWidget {
             "/admin/trip?provider=$this->idprovider"=>sprintf(_("View all %s"), _("trips")),
             "/admin/trip/new?provider=$this->idprovider"=>sprintf(_("Add new %s"), _("trip"))
         ];
-        $this->content['navbar'][] = self::navbar(sprintf(_("Trips of %s"), $this->providerName), $tripMenu, 3);
+        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "trip", "data-searchfor" => "name" ] ];
+        $this->content['navbar'][] = self::navbar(sprintf(_("Trips of %s"), $this->providerName), $tripMenu, 3, $search);
         // TRIP
         if($title) {
             $this->content['navbar'][] = self::navbar($title, [], 4);
@@ -42,22 +41,36 @@ class TripWidget {
     }
 
     protected function formTrip($value = null): array {
-        //var_dump($value);
+        $name = $value['name'] ?? null;
+        $description = $value['description'] ?? null;
+        $disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
+        $arrivalDate = $value['arrivalDate'] ?? null;
+        $arrivalTime = $value['arrivalTime'] ?? null;
+        $departureDate = $value['departureDate'] ?? null;
+        $departureTime = $value['departureTime'] ?? null;
         $case = $value ? 'edit': 'new';
         // FORM
         $form = new Form();
-        $form->action("admin/trip/$case")->method('post')->attributes(['class'=>'formPadrao']);
+        $form->action("/admin/trip/$case")->method('post')->attributes(['class'=>'formPadrao form-trip']);
+        $form->input('provider', $this->idprovider, 'hidden');
         // HIDDENS
         if ($value) {
-            $form->input('id',$this->idtrip,'hidden');
-            $form->input('provider',$this->idprovider,'hidden');
+            $form->input('id', $this->idtrip, 'hidden');
         }
         // NAME
-        $form->fieldsetWithInput('name',$value['name'],_('Name'));
+        $form->fieldsetWithInput('name', $name, _('Name'));
         // DESCRIPTION
-        $form->fieldsetWithTextarea('description',$value['description'],_('Description'));
+        $form->fieldsetWithTextarea('description', $description, _('Description'));
         // DISAMBIGUATING DESCRIPTION
-        $form->fieldsetWithTextarea('disambiguatingDescription',$value['disambiguatingDescription'],_('Disambiguating description'));
+        $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Disambiguating description'));
+        // ARRIVAL DATE
+        $form->fieldsetWithInput('arrivalDate',$arrivalDate, _("Arrival date"), 'date');
+        // ARRIVAL TIME
+        $form->fieldsetWithInput('arrivalTime', $arrivalTime, _("Arrival time"), 'time');
+        // DEPARTURE DATE
+        $form->fieldsetWithInput('arrivalDate', $departureDate, _("Departure date"), 'date');
+        // DEPARTURE TIME
+        $form->fieldsetWithInput('departureTime', $departureTime, _("Departure time"), 'time');
         // SUBMIT BUTTONS
         $form->submitButtonSend(['class'=>'button-submit-send']);
         if ($value) $form->submitButtonDelete('/admin/trip/erase',['class'=>'button-submit-delete']);

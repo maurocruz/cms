@@ -112,7 +112,7 @@ class ImageObjectWidget {
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/delete");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject-edit", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
     protected function formIsPartOf($value): array {
@@ -127,18 +127,18 @@ class ImageObjectWidget {
         $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
         $content[] = [
             "object" => "figure",
-            "attributes" => [ "class" => "figure-caption-black", "style" => "max-width: 200px; float: left; margin-right: 10px;" ],
+            "attributes" => [ "class" => "figure-caption-black" ],
             "src" => $image->getSrc(),
             "width" => 200,
             "href" => "/admin/imageObject/edit/$ID",
             "caption" => $caption
         ];
         // content url
-        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 210px)" ], "text", [ "readonly" ]);
+        $content[] = self::fieldsetWithInput(_("Content url"), "contentUrl", $value['contentUrl'], null, "text", [ "readonly" ]);
         // position
-        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, [ "style" => "width: 80px;" ], "number", [ "min" => "1" ]);
+        $content[] = self::fieldsetWithInput(_("Position"), "position", $value['position'] ?? 1, null, "number", [ "min" => "1" ]);
         // highlights
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 142px; margin: 5px 0;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => _("Representative of page") ],
             [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
                 [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 1, ($value['representativeOfPage'] == 1 ? "checked" : null) ] ], _("Yes")
@@ -148,7 +148,7 @@ class ImageObjectWidget {
             ] ]
         ]];
         // caption
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 432px); margin: 5px 0;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" => "legend", "content" => "Legenda" ],
             [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
         ]];
@@ -156,18 +156,18 @@ class ImageObjectWidget {
         if (isset($value['width']) && $this->tableHasPart === "webPageElement") {
             // width
             $width = isset($value['width']) && $value['width'] != '0.00' ? $value['width'] : null;
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
+            $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Largura" ],
                 [ "tag" => "input", "attributes" => [ "name" => "width", "type" => "text", "value" => $width ] ]
             ]];
             // height
             $height = isset($value['height']) && $value['height'] != '0.00' ? $value['height'] : null;
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 80px; margin: 5px 0;" ], "content" => [
+            $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Altura" ],
                 [ "tag" => "input", "attributes" => [ "name" => "height", "type" => "text", "value" => $height ] ]
             ]];
             // href
-            $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: calc(100% - 480px); margin: 5px 0;" ], "content" => [
+            $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Link" ],
                 [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
             ]];
@@ -176,7 +176,7 @@ class ImageObjectWidget {
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/erase");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "style" => "overflow: hidden; display: inline;", "id" => "form-images-edit-$ID", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$ID", "name" => "form-imageObject-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
     protected static function infoIsPartOf($data): array {
@@ -217,13 +217,13 @@ class ImageObjectWidget {
         // image upload
         $content[] =self::fieldsetWithInput(_("Select images"), "imageupload[]", null, null, "file", [ "multiple"]);
         // location
-        $content[] = self::fieldsetWithInput(_("Save to folder"), "location", null, [ "style" => "width: 30%;" ], "text", [ "list" => "listLocations", "autocomplete" => "off"]);
+        $content[] = self::fieldsetWithInput(_("Save to folder"), "location", null, null, "text", [ "list" => "listLocations", "autocomplete" => "off"]);
         $datalist = ImageObjectServer::listLocation(App::getImagesFolder());
         $content[] = $datalist ? self::datalist("listLocations", $datalist) : null;
         // keywords
-        $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", null, [ "style" => "width: 10%;" ], "text", [ "list" => "keywords", "autocomplete" => "off" ] );
+        $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", null, null, "text", [ "list" => "keywords", "autocomplete" => "off" ] );
         $content[] = self::datalist("keywords", ImageObjectServer::listKeywords());
         $content[] = self::submitButtonSend();
-        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idHasPart, "action" => '/admin/imageObject/new', "class" => "box formPadrao", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idHasPart, "action" => '/admin/imageObject/new', "class" => "box formPadrao form-imageObject-upload", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 }

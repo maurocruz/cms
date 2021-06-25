@@ -81,24 +81,24 @@ trait FormElementsTrait {
         if ($value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $content[] = self::input("id", "hidden", $idHasPart);
-            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], [ "style" => "min-width: 320px; max-width: 600px; width: 100%;" ], "text", [ "disabled" ]);
+            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], null, "text", [ "disabled" ]);
             $content[] = self::input($propertyName, "hidden", "");
             $content[] = self::submitButtonDelete("/admin/$tableHasPart/edit");
         } else {
             $content[] = [ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => $table, "data-propertyName" => $propertyName, "data-idHasPart" => $idHasPart ] ];
         }
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-relationship", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
     }
 
     public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array {
         if ($value) {
-            foreach ($value as $person) {
-                $id = ArrayTool::searchByValue($person['identifier'], "id")['value'];
+            foreach ($value as $item) {
+                $id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
                 $table = lcfirst($tableIsPartOf);
                 $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
                 $content[] = self::input("idHasPart", "hidden", $idHasPart);
                 $content[] = self::input("idIsPartOf", "hidden", $id);
-                $content[] = self::fieldsetWithInput(_($person['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "name", $person['name'], ["style" => "min-width: 320px; max-width: 600px; width: 100%;"], "text", ["disabled"]);
+                $content[] = self::fieldsetWithInput(_($item['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "name", $item['name'], null, "text", ["disabled"]);
                 $content[] = self::submitButtonDelete("/admin/$table/erase");
                 $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao", "method" => "post", "action" => "/admin/$table/edit"], "content" => $content];
                 unset($content);
@@ -107,7 +107,7 @@ trait FormElementsTrait {
         $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
         $content[] = self::input("idHasPart", "hidden", $idHasPart);
         $content[] = [ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => lcfirst($tableIsPartOf), "data-idHasPart" => $idHasPart  ] ];
-        $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao", "method" => "post", "action" => "/admin/" . lcfirst($tableIsPartOf) . "/new"], "content" => $content];
+        $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao form-relationship", "method" => "post", "action" => "/admin/" . lcfirst($tableIsPartOf) . "/new"], "content" => $content];
         return $return;
     }
 
@@ -123,7 +123,7 @@ trait FormElementsTrait {
         return null;
     }
 
-    protected static function additionalTypeInput($typeSelected, $case, $additionalTypeValue, $attributes = null, $includeType = true): array {
+    protected static function additionalTypeInput($typeSelected, $additionalTypeValue, $attributes = null, $includeType = true): array {
         $datalist = null;
         $newAdditionalTypes = null;
         $additionalTypes = (new SchemaorgData())->getSchemaByTypeSelected($typeSelected,$includeType);
@@ -152,9 +152,5 @@ trait FormElementsTrait {
             return implode(" -> ", $newArray);
         }
         return null;
-    }
-
-    protected static function searchInNavbar($itemType, $searchBy = 'name', $params = null): array {
-        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => lcfirst($itemType), "data-searchBy" => $searchBy, "data-params" => $params ] ];
     }
 }
