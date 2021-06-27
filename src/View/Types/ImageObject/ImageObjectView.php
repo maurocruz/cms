@@ -54,7 +54,8 @@ class ImageObjectView extends ImageObjectWidget implements ViewInterface {
     }
 
     public function keywords($data): array {
-        $this->navBarImageObject(_("Keyword") . ": " . $data['paramsUrl']['id']);
+        $keywordName = $data['paramsUrl']['id'] ?? _("Undefined");
+        $this->navBarImageObject(_("Keyword") . ": " . $keywordName);
         $this->content['main'][] = parent::imagesList($data['list']);
         $this->content['main'][] = self::arrowBack();
         return $this->content;

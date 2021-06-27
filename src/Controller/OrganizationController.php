@@ -7,8 +7,8 @@ use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
-class OrganizationController implements ControllerInterface
-{
+class OrganizationController implements ControllerInterface {
+
     public function index($params = null): array {
         $paramsSet = [ "format" => "ItemList", "properties" => "name,additionalType,dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
         $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;

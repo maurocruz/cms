@@ -6,6 +6,8 @@ use Plinct\Tool\ArrayTool;
 use Plinct\Web\Widget\FormTrait;
 
 trait FormElementsTrait {
+
+    use HtmlPiecesTrait;
     use FormTrait;
 
     /**
@@ -79,24 +81,24 @@ trait FormElementsTrait {
         if ($value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $content[] = self::input("id", "hidden", $idHasPart);
-            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], [ "style" => "min-width: 320px; max-width: 600px; width: 100%;" ], "text", [ "disabled" ]);
+            $content[] = self::fieldsetWithInput(_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "name", $value['name'], null, "text", [ "disabled" ]);
             $content[] = self::input($propertyName, "hidden", "");
             $content[] = self::submitButtonDelete("/admin/$tableHasPart/edit");
         } else {
             $content[] = [ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => $table, "data-propertyName" => $propertyName, "data-idHasPart" => $idHasPart ] ];
         }
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-relationship", "method" => "post", "action" => "/admin/$tableHasPart/edit" ], "content" => $content ];
     }
 
     public static function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array {
         if ($value) {
-            foreach ($value as $person) {
-                $id = ArrayTool::searchByValue($person['identifier'], "id")['value'];
+            foreach ($value as $item) {
+                $id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
                 $table = lcfirst($tableIsPartOf);
                 $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
                 $content[] = self::input("idHasPart", "hidden", $idHasPart);
                 $content[] = self::input("idIsPartOf", "hidden", $id);
-                $content[] = self::fieldsetWithInput(_($person['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "name", $person['name'], ["style" => "min-width: 320px; max-width: 600px; width: 100%;"], "text", ["disabled"]);
+                $content[] = self::fieldsetWithInput(_($item['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "name", $item['name'], null, "text", ["disabled"]);
                 $content[] = self::submitButtonDelete("/admin/$table/erase");
                 $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao", "method" => "post", "action" => "/admin/$table/edit"], "content" => $content];
                 unset($content);
@@ -105,104 +107,8 @@ trait FormElementsTrait {
         $content[] = self::input("tableHasPart", "hidden", $tableHasPart);
         $content[] = self::input("idHasPart", "hidden", $idHasPart);
         $content[] = [ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => lcfirst($tableIsPartOf), "data-idHasPart" => $idHasPart  ] ];
-        $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao", "method" => "post", "action" => "/admin/" . lcfirst($tableIsPartOf) . "/new"], "content" => $content];
+        $return[] = ["tag" => "form", "attributes" => ["class" => "formPadrao form-relationship", "method" => "post", "action" => "/admin/" . lcfirst($tableIsPartOf) . "/new"], "content" => $content];
         return $return;
-    }
-
-    public static function listAll($data, $type, string $title = null, array $row_column = null): ?array {
-        $caption = $title ?? "List of $type";
-        $showText = sprintf(_("Showing %s from %s items."), count($data['itemListElement']), $data['numberOfItems']);
-        if (isset($data['error'])) {
-            return self::errorInfo($data['error'], $type);
-        } else {
-            $itemListElement = $data['itemListElement'];
-            $content[] = [ "tag" => "h2", "content" => _($caption) ];
-            $content[] = [ "tag" => "p", "content" => $showText ];
-            // columns
-            $columns[] = [ "label" => "Action", "property" => "action", "attributes" => [ "style" => "width: 40px;"] ];
-            $columns[] = [ "label" => "ID", "property" => "id$type", "attributes" => [ "style" => "width: 40px;"] ];
-            if (isset($itemListElement[0]['item']['name'])) {
-                $columns[] = ["label" => "Name", "property" => "name"];
-            }
-            if ($row_column) {
-                foreach ($row_column as $keyCR => $valueCR) {
-                    $columns[] = [ "label" => $valueCR, "property" => $keyCR ];
-                    $valueAddRows[] = $keyCR;
-                }
-            }
-            // rows
-            $rows = [];
-            if (isset($data['numberOfItems']) || $data['numberOfItems'] !== 0) {
-                foreach ($itemListElement as $valueItems) {
-                    $item = $valueItems['item'];
-                    $rowItem[] = ArrayTool::searchByValue($item['identifier'],"id")['value'];
-                    if (isset($item['name'])) {
-                        $rowItem[] = $item['name'];
-                    }
-                    if (isset($valueAddRows)) {
-                        foreach ($valueAddRows as $valueR) {
-                            $property = strstr($valueR,":",true) != false ? strstr($valueR,":",true) : $valueR;
-                            $index = substr(strstr($valueR,":"),1) != false ? substr(strstr($valueR,":"),1) : "name";
-                            if (is_string($item[$property])) {
-                                $rowItem[] = $item[$property];
-                            } elseif (isset($item[$property]) && is_array($item[$property])) {
-                                $rowItem[] = $item[$property][$index] ?? ($item[$property] ?? null);
-                            } else {
-                                $rowItem[] = "No content";
-                            }
-                        }
-                    }
-                    $rows[] = $rowItem;
-                    unset($rowItem);
-                }
-            }
-            $content[] = self::tableItemList($type, $columns, $rows);
-            return [ "tag" => "div", "content" => $content ];
-        }
-    }
-
-    protected static function tableItemList(string $type, array $columns, array $rows): array {
-        $ordering = filter_input(INPUT_GET, 'ordering');
-        $orderingQuery = !$ordering || $ordering === "desc" ? "asc" : "desc";
-        $th = null;
-        $td = null;
-        $list = null;
-        // LABEL COLUMNS
-        foreach ($columns as $valueColumns) {
-            $property = $valueColumns['property'];
-            $label = $valueColumns['label'];
-            //$content = $valueColumns['label'] != "Action" ? '<a href="?orderBy='.$valueColumns['property'].'&ordering='.$orderingQuery.'">'._($valueColumns['label']).'</a>' :$valueColumns['label'];
-            $content = $valueColumns['label'] != "Action" ? sprintf('<a href="?orderBy=%s&ordering=%s">%s</a>', $property, $orderingQuery, _($label)) : _($label);
-            $th[] = [ "tag" => "th", "attributes" => $valueColumns['attributes'] ?? null, "content" => $content ];
-        }
-        if (count($rows) == 0) { // NO ITENS FOUNDED
-            $list[] = [ "tag" => "tr", "content" => [
-                [ "tag" => "td", "attributes" => [ "colspan" => count($columns), "style" => "text-align: center; font-weight: bold; font-size: 120%;" ], "content" => _("No items founded!") ]
-            ]];
-        } else {
-            foreach ($rows as $valueRows) {
-                // actions
-                $td[] = [ "tag" => "td", "content" => '<a href="/admin/'.$type.'/edit/'.$valueRows[0].'">'._("Edit").'</a>' ];
-                foreach ($valueRows as $valueItens ) {
-                    if ($valueItens !== '' && !isset($valueItens['rowText'])) {
-                        $contentTd = _($valueItens);
-                    } elseif(isset($valueItens['rowText']) && $valueItens['rowText'] !== ''){
-                        $contentTd = _($valueItens['rowText']);
-                    } else {
-                        $contentTd = $valueItens;
-                    }
-                    $td[] = [ "tag" => "td", "content" => $contentTd ];
-                }
-                $list[] = [ "tag" => "tr", "content" => $td ];
-                unset($td);
-            }
-        }
-        return [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
-            [ "tag" => "thead", "content" => [
-                [ "tag" => "tr", "content" => $th ]
-            ]],
-            [ "tag" => "tbody", "content" => $list ]
-        ]];
     }
 
     protected static function errorInfo($data, $type): ?array {
@@ -217,7 +123,7 @@ trait FormElementsTrait {
         return null;
     }
 
-    protected static function additionalTypeInput($typeSelected, $case, $additionalTypeValue, $attributes = null, $includeType = true): array {
+    protected static function additionalTypeInput($typeSelected, $additionalTypeValue, $attributes = null, $includeType = true): array {
         $datalist = null;
         $newAdditionalTypes = null;
         $additionalTypes = (new SchemaorgData())->getSchemaByTypeSelected($typeSelected,$includeType);
@@ -246,9 +152,5 @@ trait FormElementsTrait {
             return implode(" -> ", $newArray);
         }
         return null;
-    }
-
-    protected static function searchInNavbar($itemType, $searchBy = 'name', $params = null): array {
-        return [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => lcfirst($itemType), "data-searchBy" => $searchBy, "data-params" => $params ] ];
     }
 }

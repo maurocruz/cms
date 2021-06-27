@@ -92,7 +92,6 @@ class OrganizationView extends OrganizationWidget {
             $this->content['main'] = $itemResponse['main'];
             return $this->content;
         }
-
         // RESPONSE
         return $this->itemView("Order", $data);
     }

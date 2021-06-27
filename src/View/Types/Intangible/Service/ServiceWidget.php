@@ -20,7 +20,7 @@ abstract class ServiceWidget {
         // CATEGORY
         $content[] = self::fieldsetWithInput(_("Category"), "category", $value['category'] ?? null, [ "style" => "width: 50%;"] );
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Service", $case, $value['additionalType'] ?? null,[ "style" => "width: 50%; "] );
+        $content[] = self::additionalTypeInput("Service", $value['additionalType'] ?? null, ["style" => "width: 50%; "]);
         // SERVICE TYPE
         $content[] = self::fieldsetWithInput(_("Service type"), "serviceType", $value['serviceType'] ?? null, [ "style" => "width: 50%; "]);
         // DESCRIPTION

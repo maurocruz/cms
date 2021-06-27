@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -23,12 +23,12 @@ class PlaceController implements ControllerInterface
         return Api::get("place", $params);
     }
 
-    public function saveSitemap($params = null) {
+    public function saveSitemap() {
         $dataSitemap = null;
         $params = [ "orderBy" => "dateModified desc", "properties" => "*,image" ];
         $data =  Api::get("place", $params);
         foreach ($data as $value) {
-            $id = PropertyValue::extractValue($value['identifier'], "id");
+            $id = ArrayTool::searchByValue($value['identifier'], "id",'value');
             $dataSitemap[] = [
                 "loc" => App::$HOST . "/t/place/$id",
                 "lastmod" => DateTime::formatISO8601($value['dateModified']),
