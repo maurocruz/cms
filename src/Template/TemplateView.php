@@ -10,11 +10,11 @@ class TemplateView extends TemplateWidget {
             [ "tag" => "meta", "attributes" => [ "charset" => "UTF-8" ] ],
             [ "tag" => "meta", "attributes" => [ "name" => "viewport", "content" => "width=device-width" ] ],
             [ "tag" => "link", "attributes" => [ "rel" => "shortcut icon", "href" => "/portal/public/images/icons/favicon.ico", "type" => "image/x-icon" ] ],
+            [ "tag" => "link", "attributes" => [ "href" => "https://fonts.googleapis.com/icon?family=Material+Icons",'rel'=>'stylesheet' ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/reset", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/estilos", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/style-dark", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/style", "type" => "text/css", "rel" => "stylesheet" ] ],
-            [ "tag" => "link", "attributes" => [ "href" => "https://fonts.googleapis.com/icon?family=Material+Icons",'rel'=>'stylesheet' ] ],
             [ "tag" => "script", "attributes" => [ "src" => "/admin/assets/js/scripts" ] ]
         ]);
     }
@@ -40,7 +40,7 @@ class TemplateView extends TemplateWidget {
         }
     }
 
-    protected function setTitle($title = null) {
+    protected function setTitle() {
         parent::append("head", [ "tag" => "title", "content" => _("Painel CMS [ ".App::getTitle()." ]") ]);
     }
 

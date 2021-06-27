@@ -1,5 +1,7 @@
+@use 'elements';
 @use 'shared';
 @use 'formPadrao';
+@use 'image-grid';
 
 // Dispositivos extra small (telefones em modo retrato, com menos de 576px)
 @media (min-width: 576px) {
@@ -48,6 +50,24 @@
     fieldset:nth-of-type(6) { width: 25%; }
     fieldset:nth-of-type(7) { width: 25%; }
   }
+  // CONTACT POINT
+  .form-contactPoint {
+    fieldset:nth-of-type(1) { width: 60px; }
+    fieldset:nth-of-type(2) { width: calc(100% - 60px); }
+    fieldset:nth-of-type(7) { width: 100%; }
+  }
+  // IMAGE OBJECT
+  .form-imageObject {
+    fieldset:nth-of-type(1) { width: 60px; }
+    fieldset:nth-of-type(2) { width: calc(100% - 60px); }
+    fieldset:nth-of-type(3) { width: 33.3%; }
+    fieldset:nth-of-type(4) { width: 33.3%; }
+    fieldset:nth-of-type(5) { width: 33.3%; }
+    fieldset:nth-of-type(6) { width: 33.3%; }
+    fieldset:nth-of-type(7) { width: 33.3%; }
+    fieldset:nth-of-type(8) { width: 33.3%; }
+    fieldset:nth-of-type(9) { width: 100%; }
+  }
 }
 // Dispositivos small (telefones em modo paisagem, com menos de 768px)
 @media (min-width: 768px) {
@@ -68,6 +88,15 @@
     fieldset:nth-of-type(6) { width: 25%; }
     fieldset:nth-of-type(7) { width: 25%; }
   }
+  // CONTACT POINT
+  .form-contactPoint {
+    fieldset:nth-of-type(2) { width: calc(66.6% - 60px); }
+    fieldset:nth-of-type(3) { width: 33.3%; }
+    fieldset:nth-of-type(4) { width: calc(50% - 58px); }
+    fieldset:nth-of-type(5) { width: 115px; }
+    fieldset:nth-of-type(6) { width: calc(50% - 58px); }
+    fieldset:nth-of-type(7) { width: 100%; }
+  }
 }
 
 // Dispositivos médios (tablets com menos de 992px)
@@ -76,6 +105,25 @@
     fieldset:nth-of-type(1) { width: calc(33.3% - 20px); }
     fieldset:nth-of-type(2) { width: calc(33.3% - 20px); }
     fieldset:nth-of-type(3) { width: calc(33.3% - 20px); }
+  }
+  // CONTACT POINT
+  .form-contactPoint {
+    fieldset:nth-of-type(2) { width: calc(40% - 60px); }
+    fieldset:nth-of-type(3) { width: 20%; }
+    fieldset:nth-of-type(4) { width: calc(34% - 58px); }
+    fieldset:nth-of-type(5) { width: 115px; }
+    fieldset:nth-of-type(6) { width: 50%; }
+    fieldset:nth-of-type(7) { width: 50%; }
+  }
+  // IMAGE OBJECT
+  .form-imageObject {
+    fieldset:nth-of-type(3) { width: 16.66%; }
+    fieldset:nth-of-type(4) { width: 16.66%; }
+    fieldset:nth-of-type(5) { width: 16.66%; }
+    fieldset:nth-of-type(6) { width: 16.66%; }
+    fieldset:nth-of-type(7) { width: 16.66%; }
+    fieldset:nth-of-type(8) { width: 16.66%; }
+    fieldset:nth-of-type(9) { width: 100%; }
   }
 }
 
@@ -87,5 +135,14 @@
     fieldset:nth-of-type(3) { width: 15%; }
     fieldset:nth-of-type(4) { width: 15%; }
     fieldset:nth-of-type(5) { width: 15%; }
+  }
+  // CONTACT POINT
+  .form-contactPoint {
+    fieldset:nth-of-type(2) { width: calc(35% - 60px); }
+    fieldset:nth-of-type(3) { width: 15%; }
+    fieldset:nth-of-type(4) { width: calc(20% - 58px); }
+    fieldset:nth-of-type(5) { width: 110px; }
+    fieldset:nth-of-type(6) { width: 25%; }
+    fieldset:nth-of-type(7) { width: calc(100% - 120px); }
   }
 }

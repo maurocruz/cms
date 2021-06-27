@@ -90,29 +90,29 @@ class ImageObjectWidget {
         $imageWidth = $value['width'] ?? $image->getWidth();
         $imageHeight = $value['height'] ?? $image->getHeight();
         $imageType = $value['type'] ?? $image->getEncodingFormat();
-        $content[] = [ "object" => "figure", "attributes" => [ "style" => "display: block;" ], "src" => $value['contentUrl'] ];
+        $content[] = [ "object" => "figure", "src" => $value['contentUrl'] ];
         // ID
-        $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, [ "style" => "width: 80px;" ], "text", [ "disabled" ] );
+        $content[] = self::fieldsetWithInput(_("Id"), "idimageObject", $ID, null, "text", [ "disabled" ] );
         // url
-        $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], [ "style" => "width: calc(100% - 80px);" ], "text", [ "readonly"] );
+        $content[] = self::fieldsetWithInput(_("Url"), "contentUrl", $value['contentUrl'], null, "text", [ "readonly"] );
         // content size
-        $content[] = self::fieldsetWithInput(_("Content size") . " (bytes)", "contentSize", $contentSize, [ "style" => "width: 180px;" ], "text", [ "readonly"] );
+        $content[] = self::fieldsetWithInput(_("Content size") . " (bytes)", "contentSize", $contentSize, null, "text", [ "readonly"] );
         // width
-        $content[] = self::fieldsetWithInput(_("Image width") . " (px)", "width", $imageWidth, [ "style" => "width: 160px;" ], "text", [ "readonly"] );
+        $content[] = self::fieldsetWithInput(_("Image width") . " (px)", "width", $imageWidth, null, "text", [ "readonly"] );
         // height
-        $content[] = self::fieldsetWithInput(_("Image height") . " (px)", "height", $imageHeight, [ "style" => "width: 140px;" ], "text", [ "readonly"] );
+        $content[] = self::fieldsetWithInput(_("Image height") . " (px)", "height", $imageHeight, null, "text", [ "readonly"] );
         // encodingFormat
-        $content[] = self::fieldsetWithInput(_("Encoding format"), "encodingFormat", $imageType, [ "style" => "width: 150px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Encoding format"), "encodingFormat", $imageType, null, "text", [ "disabled"] );
         // uploadDate
-        $content[] = self::fieldsetWithInput(_("Upload date"), "uploadDate", $value['uploadDate'], [ "style" => "width: 140px;" ], "text", [ "disabled"] );
+        $content[] = self::fieldsetWithInput(_("Upload date"), "uploadDate", $value['uploadDate'], null, "text", [ "disabled"] );
         // license
-        $content[] = self::fieldsetWithInput(_("License"), "license", $value['license'], [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldsetWithInput(_("License"), "license", $value['license']);
         // group
-        $content[] = self::fieldsetWithInput(_("Keywords")." [<a href='/admin/imageObject/keywords/".$value['keywords']."'>"._("edit")."</a>]", "keywords", $value['keywords'], [ "style" => "width: calc(100% - 315px);" ]);
+        $content[] = self::fieldsetWithInput(_("Keywords")." [<a href='/admin/imageObject/keywords/".$value['keywords']."'>"._("edit")."</a>]", "keywords", $value['keywords']);
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/delete");
         // form
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject-edit", "style" => "overflow: hidden; display: inline;", "name" => "form-images-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject", "name" => "form-imageObject", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
     protected function formIsPartOf($value): array {

@@ -7,6 +7,9 @@
     background-color: inherit;
     border: 0;
     position: relative;
+    box-sizing: border-box;
+    padding: 3px;
+    margin: 0 0 3px 0;
     textarea {
       width: 100%;
     }
@@ -14,7 +17,19 @@
       background-color: #2a2a2a;
       border-radius: 0;
       font-weight: normal;
+      width: 100%;
+      color: white;
+      padding: 4px 5px;
+      box-sizing: border-box;
+      font-size: 12px;
+      a { color: #E0F9FF; }
     }
+  }
+  input {
+    padding: 3px;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
   }
   button[type=submit] {
     display: inline-block; overflow: hidden;
@@ -23,9 +38,6 @@
     cursor: pointer;
     background-color: transparent;
     border: 0;
-    .material-icons {
-      font-size: 40px;
-    }
   }
   .add-existent {
     width: 100%;
@@ -49,5 +61,12 @@
   }
   .button-submit-delete .material-icons:hover {
     color: #ff5555;
+  }
+}
+
+.form-imageObject {
+  figure {
+    width: 100%;
+    text-align: center;
   }
 }

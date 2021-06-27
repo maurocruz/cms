@@ -69,9 +69,9 @@ tbody tr:nth-child(even) {
     background-color: transparent;
     border: 0;
 }
-.form-submit-button-send .material-icons{ font-size: 50px; color: #40d377; }
+.form-submit-button-send .material-icons{ color: #40d377; }
 .form-submit-button-send .material-icons:hover{ color: #84f7ba; }
-.form-submit-button-delete .material-icons{ font-size: 50px; color: #ee0000; }
+.form-submit-button-delete .material-icons{ color: #ee0000; }
 .form-submit-button-delete .material-icons:hover{ color: #ff5555; }
 
 /* table-itemlist */

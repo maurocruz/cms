@@ -1,3 +1,115 @@
+/* ELEMENTS
+============================================================================= */
+html, body {
+  height: 100%;
+}
+
+body {
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #d0e2f5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 5px;
+}
+
+hr {
+  margin: 15px 0;
+}
+
+h1 {
+  font-size: 32px;
+  margin: 10px;
+}
+
+h2 {
+  font-size: 24px;
+  margin: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  margin: 0 0 5px;
+  line-height: 1em;
+}
+
+h4 {
+  font-size: 14px;
+  margin: 0 0 10px;
+  line-height: 1em;
+}
+
+h5 {
+  font-size: 14px;
+  margin: 0 0 5px;
+  line-height: 1em;
+}
+
+div {
+  display: block;
+}
+
+ul {
+  padding-left: 40px;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 20px;
+}
+
+/* ELEMENT _ table
+============================================================================= */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  color: #003366;
+  background-color: #E0F9FF;
+  margin: 15px 0;
+}
+
+table caption {
+  text-align: left;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+table th {
+  background: #336699;
+  color: white;
+  font-weight: bold;
+  padding: 2px;
+  border: 1px #D0E2F5 solid;
+  font-size: 0.85em;
+}
+
+table th a {
+  color: white;
+}
+
+table td {
+  border: 1px #336699 solid;
+  padding: 2px 6px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2faff;
+}
+
 /* COMPONENT _ box
 ============================================================================= */
 .box {
@@ -21,6 +133,56 @@
   min-height: 80px;
 }
 
+/* COMPONENT _ material icons
+====================================================================== */
+.material-icons {
+  font-size: 40px;
+}
+
+/* COMPONENT _ navbar-search
+====================================================================== */
+.navbar-search {
+  margin: 0 5px;
+  position: relative;
+}
+
+.navbar-search .material-icons {
+  font-size: 25px;
+}
+
+.navbar-search-form button {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  border-width: 1px;
+}
+
+.navbar-search-form-input {
+  height: 20px;
+  border-width: 3px;
+}
+
+.navbar-search-form-image {
+  height: 25px;
+  vertical-align: middle;
+}
+
+/* COMPONENT _ figure caption black
+===================================================================== */
+.figure-caption-black {
+  line-height: 0 !important;
+}
+.figure-caption-black figcaption {
+  line-height: normal;
+  background-color: black;
+  padding: 3px;
+  margin: 0;
+}
+.figure-caption-black figcaption a {
+  text-decoration: none;
+  color: white;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -33,6 +195,9 @@
   background-color: inherit;
   border: 0;
   position: relative;
+  box-sizing: border-box;
+  padding: 3px;
+  margin: 0 0 3px 0;
 }
 .formPadrao fieldset textarea {
   width: 100%;
@@ -41,6 +206,20 @@
   background-color: #2a2a2a;
   border-radius: 0;
   font-weight: normal;
+  width: 100%;
+  color: white;
+  padding: 4px 5px;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.formPadrao fieldset legend a {
+  color: #E0F9FF;
+}
+.formPadrao input {
+  padding: 3px;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
 }
 .formPadrao button[type=submit] {
   display: inline-block;
@@ -52,9 +231,6 @@
   cursor: pointer;
   background-color: transparent;
   border: 0;
-}
-.formPadrao button[type=submit] .material-icons {
-  font-size: 40px;
 }
 .formPadrao .add-existent {
   width: 100%;
@@ -78,6 +254,55 @@
 }
 .formPadrao .button-submit-delete .material-icons:hover {
   color: #ff5555;
+}
+
+.form-imageObject figure {
+  width: 100%;
+  text-align: center;
+}
+
+/* IMAGES GRID _ admin-images-grid
+============================================================================ */
+.imagesfromdatabase {
+  width: 100%;
+}
+
+.admin-images-grid {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 5px;
+}
+.admin-images-grid a {
+  text-decoration: none;
+}
+.admin-images-grid .admin-images-grid-figure {
+  position: relative;
+}
+.admin-images-grid .admin-images-grid-figure img {
+  width: 100%;
+}
+.admin-images-grid .admin-images-grid-figure figcaption {
+  background-color: black;
+  line-height: normal;
+}
+.admin-images-grid .admin-image-grid-buttons {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+}
+.admin-images-grid .admin-image-grid-buttons p {
+  width: calc(100% - 75px);
+}
+.admin-images-grid .admin-image-grid-buttons input[type=checkbox] {
+  width: 18px;
+}
+.admin-images-grid .admin-image-grid-buttons button {
+  width: 40px;
+  height: 40px;
+}
+.admin-images-grid .admin-image-grid-buttons button .material-icons {
+  font-size: 30px;
 }
 
 @media (min-width: 576px) {
@@ -157,6 +382,44 @@
   .form-trip fieldset:nth-of-type(7) {
     width: 25%;
   }
+
+  .form-contactPoint fieldset:nth-of-type(1) {
+    width: 60px;
+  }
+  .form-contactPoint fieldset:nth-of-type(2) {
+    width: calc(100% - 60px);
+  }
+  .form-contactPoint fieldset:nth-of-type(7) {
+    width: 100%;
+  }
+
+  .form-imageObject fieldset:nth-of-type(1) {
+    width: 60px;
+  }
+  .form-imageObject fieldset:nth-of-type(2) {
+    width: calc(100% - 60px);
+  }
+  .form-imageObject fieldset:nth-of-type(3) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(4) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(5) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(6) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(7) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(8) {
+    width: 33.3%;
+  }
+  .form-imageObject fieldset:nth-of-type(9) {
+    width: 100%;
+  }
 }
 @media (min-width: 768px) {
   .form-postalAddress fieldset:nth-of-type(1) {
@@ -191,6 +454,25 @@
   .form-trip fieldset:nth-of-type(7) {
     width: 25%;
   }
+
+  .form-contactPoint fieldset:nth-of-type(2) {
+    width: calc(66.6% - 60px);
+  }
+  .form-contactPoint fieldset:nth-of-type(3) {
+    width: 33.3%;
+  }
+  .form-contactPoint fieldset:nth-of-type(4) {
+    width: calc(50% - 58px);
+  }
+  .form-contactPoint fieldset:nth-of-type(5) {
+    width: 115px;
+  }
+  .form-contactPoint fieldset:nth-of-type(6) {
+    width: calc(50% - 58px);
+  }
+  .form-contactPoint fieldset:nth-of-type(7) {
+    width: 100%;
+  }
 }
 @media (min-width: 992px) {
   .form-imageObject-upload fieldset:nth-of-type(1) {
@@ -201,6 +483,47 @@
   }
   .form-imageObject-upload fieldset:nth-of-type(3) {
     width: calc(33.3% - 20px);
+  }
+
+  .form-contactPoint fieldset:nth-of-type(2) {
+    width: calc(40% - 60px);
+  }
+  .form-contactPoint fieldset:nth-of-type(3) {
+    width: 20%;
+  }
+  .form-contactPoint fieldset:nth-of-type(4) {
+    width: calc(34% - 58px);
+  }
+  .form-contactPoint fieldset:nth-of-type(5) {
+    width: 115px;
+  }
+  .form-contactPoint fieldset:nth-of-type(6) {
+    width: 50%;
+  }
+  .form-contactPoint fieldset:nth-of-type(7) {
+    width: 50%;
+  }
+
+  .form-imageObject fieldset:nth-of-type(3) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(4) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(5) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(6) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(7) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(8) {
+    width: 16.66%;
+  }
+  .form-imageObject fieldset:nth-of-type(9) {
+    width: 100%;
   }
 }
 @media (min-width: 1200px) {
@@ -218,6 +541,25 @@
   }
   .form-postalAddress fieldset:nth-of-type(5) {
     width: 15%;
+  }
+
+  .form-contactPoint fieldset:nth-of-type(2) {
+    width: calc(35% - 60px);
+  }
+  .form-contactPoint fieldset:nth-of-type(3) {
+    width: 15%;
+  }
+  .form-contactPoint fieldset:nth-of-type(4) {
+    width: calc(20% - 58px);
+  }
+  .form-contactPoint fieldset:nth-of-type(5) {
+    width: 110px;
+  }
+  .form-contactPoint fieldset:nth-of-type(6) {
+    width: 25%;
+  }
+  .form-contactPoint fieldset:nth-of-type(7) {
+    width: calc(100% - 120px);
   }
 }
 

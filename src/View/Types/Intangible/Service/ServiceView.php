@@ -50,7 +50,7 @@ class ServiceView extends ServiceWidget implements ViewInterface {
             $this->content['main'][] = self::noContent();
         } else {
             // EDIT SERVICE
-            $this->content['main'][] = self::divBox(_("Edit"), "service", [ self::serviceForm("edit", $data) ]);
+            $this->content['main'][] = self::divBox(sprintf("%s %s",_("Edit"),_("service")), "service", [ self::serviceForm("edit", $data) ]);
             // OFFER
             $this->content['main'][] = self::divBoxExpanding(_("Offer"), "offer", [ (new OfferView())->edit($data) ]);
         }

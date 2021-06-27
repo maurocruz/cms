@@ -17,10 +17,9 @@ abstract class OrganizationWidget {
     use FormElementsTrait;
 
     protected function setValues(array $value): array {
-        // ID
-        $this->id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        // NAME
-        $this->name = $value['name'];
+        $organization = $value['@type'] == 'Organization' ? $value : $value['provider'];
+        $this->id = ArrayTool::searchByValue($organization['identifier'], "id",'value');
+        $this->name = $organization['name'];
         return $value;
     }
 
