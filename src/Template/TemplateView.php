@@ -13,8 +13,8 @@ class TemplateView extends TemplateWidget {
             [ "tag" => "link", "attributes" => [ "href" => "https://fonts.googleapis.com/icon?family=Material+Icons",'rel'=>'stylesheet' ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/reset", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/estilos", "type" => "text/css", "rel" => "stylesheet" ] ],
-            [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/style-dark", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/style", "type" => "text/css", "rel" => "stylesheet" ] ],
+            [ "tag" => "link", "attributes" => [ "href" => "/admin/assets/css/style-dark", "type" => "text/css", "rel" => "stylesheet" ] ],
             [ "tag" => "script", "attributes" => [ "src" => "/admin/assets/js/scripts" ] ]
         ]);
     }
