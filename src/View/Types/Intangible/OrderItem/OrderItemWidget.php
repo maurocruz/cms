@@ -30,7 +30,7 @@ abstract class OrderItemWidget {
         $quantityTotal = 0;
         $totalBill = 0;
         // TABLE
-        $table = new Table();
+        $table = new Table(['class'=>'table-orderedItems']);
         // HEADERS
         $table->head(_("#"), ["style" =>"width: 30px;"])
             ->head(_("Type"), ["style" =>"width: 75px;"])

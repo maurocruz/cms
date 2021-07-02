@@ -53,3 +53,12 @@
     }
   }
 }
+
+/* SHARED
+======================================================================== */
+.caption_float_right { display: inline; }
+.caption_float_right img { vertical-align: bottom; margin-right: 3px; }
+.caption_float_right figcaption { display: inline; }
+.red { font-weight: bold; color: red; }
+a.white { color: white; }
+.button { margin: 5px; padding: 5px; border: 1px rgba(0,0,0,0.5) solid; border-radius: 8px; display: inline-block; background-color: rgba(255,255,255,0.5); text-decoration: none; color: #222; cursor: pointer; }

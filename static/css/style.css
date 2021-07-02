@@ -77,13 +77,11 @@ table {
   background-color: #E0F9FF;
   margin: 15px 0;
 }
-
 table caption {
   text-align: left;
   font-weight: bold;
   font-size: 1em;
 }
-
 table th {
   background: #336699;
   color: white;
@@ -92,22 +90,108 @@ table th {
   border: 1px #D0E2F5 solid;
   font-size: 0.85em;
 }
-
 table th a {
   color: white;
 }
-
 table td {
   border: 1px #336699 solid;
   padding: 2px 6px;
 }
-
-tbody tr:nth-child(odd) {
+table tr:nth-child(odd) {
   background-color: rgba(0, 0, 0, 0.05);
 }
-
-tbody tr:nth-child(even) {
+table tbody tr:nth-child(even) {
   background-color: #f2faff;
+}
+table .form-submit-button-delete {
+  height: 25px;
+  margin: 0;
+}
+table .form-submit-button-delete .material-icons {
+  font-size: 25px;
+}
+
+/* WRAPPER
+======================================================================== */
+.wrapper {
+  min-width: 990px;
+}
+
+/* HEADER
+============================================================================= */
+.header {
+  background: white;
+  overflow: hidden;
+}
+
+.container {
+  padding-bottom: 30px;
+}
+
+.main {
+  padding: 5px 10px;
+  max-width: 1520px;
+  margin: 0 auto;
+  min-height: 400px;
+}
+
+/* MENU
+======================================================================== */
+.menu {
+  background: #3399CC;
+  padding-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.menu h1 {
+  margin: 5px;
+  font-size: 0.9em;
+}
+.menu a {
+  height: 22px;
+  border-width: 1px 1px 0 1px;
+  border-color: white;
+  border-style: solid;
+  margin-left: 5px;
+  padding: 5px 5px 0 5px;
+  background: #336699;
+  color: #99ccFF;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+.menu a :hover {
+  color: #336666;
+}
+
+.menu2 {
+  background-color: #21C0F5;
+  padding-left: 15px;
+}
+
+.menu3 {
+  background-color: #6AD9F7;
+  padding-left: 30px;
+}
+
+.menu4 {
+  background-color: #C1E7F8;
+  padding-left: 45px;
+}
+
+.menu5 {
+  background-color: #d4ecf7;
+  padding-left: 60px;
+}
+
+/* FOOTER
+============================================================================= */
+.footer {
+  background-color: #336699;
+  overflow: hidden;
+  padding: 15px 3px;
+  color: #99ccFF;
 }
 
 /* COMPONENT _ box
@@ -183,6 +267,42 @@ tbody tr:nth-child(even) {
   color: white;
 }
 
+/* SHARED
+======================================================================== */
+.caption_float_right {
+  display: inline;
+}
+
+.caption_float_right img {
+  vertical-align: bottom;
+  margin-right: 3px;
+}
+
+.caption_float_right figcaption {
+  display: inline;
+}
+
+.red {
+  font-weight: bold;
+  color: red;
+}
+
+a.white {
+  color: white;
+}
+
+.button {
+  margin: 5px;
+  padding: 5px;
+  border: 1px rgba(0, 0, 0, 0.5) solid;
+  border-radius: 8px;
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  color: #222;
+  cursor: pointer;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -190,6 +310,11 @@ tbody tr:nth-child(even) {
 }
 .formPadrao h1, .formPadrao h2, .formPadrao h3, .formPadrao h4, .formPadrao h5, .formPadrao h6 {
   width: 100%;
+}
+.formPadrao cite {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: bold;
 }
 .formPadrao fieldset {
   background-color: inherit;
@@ -221,6 +346,35 @@ tbody tr:nth-child(even) {
   box-sizing: border-box;
   border: none;
 }
+.formPadrao input[type=radio] {
+  width: auto;
+  vertical-align: middle;
+}
+.formPadrao input[type=checkbox] {
+  display: inline;
+  width: inherit;
+}
+.formPadrao input[type=image] {
+  display: inline;
+  width: inherit;
+  padding: 0;
+  vertical-align: text-bottom;
+}
+.formPadrao input[type=submit] {
+  border: 1px #333 solid;
+  border-radius: 6px;
+}
+.formPadrao textarea {
+  border: 1px #336699 solid;
+  overflow: auto;
+  margin: 0;
+  width: calc(100% - 3px);
+}
+.formPadrao select {
+  border: 1px #336699 solid;
+  height: 20px;
+  padding: 0;
+}
 .formPadrao button[type=submit] {
   display: inline-block;
   overflow: hidden;
@@ -232,13 +386,26 @@ tbody tr:nth-child(even) {
   background-color: transparent;
   border: 0;
 }
+.formPadrao label {
+  margin: 0;
+}
 .formPadrao .add-existent {
   width: 100%;
+}
+.formPadrao .text-box-white {
+  background-color: white;
+  border: 1px #336699 solid;
+  min-height: 20px;
+  padding: 8px 10px;
+  display: inline-block;
 }
 .formPadrao .labelradio {
   width: 50%;
   display: inline-block;
   text-align: center;
+}
+.formPadrao .labelradio * {
+  white-space: nowrap;
 }
 .formPadrao .labelradio input[type=radio] {
   margin-right: 3px;
@@ -256,9 +423,127 @@ tbody tr:nth-child(even) {
   color: #ff5555;
 }
 
+/* FORM TABLE
+======================================================= */
+.form-table {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-table cite {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: bold;
+}
+.form-table fieldset {
+  padding: 0;
+  border: none;
+  position: relative;
+  width: 50%;
+}
+.form-table fieldset legend {
+  background-color: #336699;
+  color: white;
+  padding: 3px 6px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 0.85em;
+  box-sizing: border-box;
+}
+.form-table fieldset select {
+  width: 100%;
+}
+.form-table input {
+  padding: 2px;
+  border: 1px solid gray;
+  box-sizing: border-box;
+  min-height: 26px;
+}
+.form-table input[type=number] {
+  text-align: right;
+}
+.form-table input[type=submit] {
+  padding: 0 6px;
+  border: 2px outset buttonface;
+  margin: 1px 3px;
+  background-color: buttonface;
+}
+.form-table select {
+  padding: 2px;
+  border: 1px solid gray;
+  box-sizing: border-box;
+  min-height: 26px;
+}
+.form-table .form-submit-button {
+  width: 25px;
+  height: 25px;
+  align-self: flex-end;
+}
+.form-table .form-submit-button .material-icons {
+  font-size: 25px;
+}
+
+.form-table-title {
+  font-size: 18px;
+}
+
+.form-back-red input {
+  background-color: rgba(255, 30, 0, 0.5) !important;
+}
+
+.form-back-green input {
+  background-color: rgba(70, 255, 0, 0.3) !important;
+}
+
+.form-back-yellow input {
+  background-color: rgba(255, 255, 0, 0.4) !important;
+}
+
+.form-back-gray input {
+  background-color: rgba(20, 20, 20, 0.2);
+}
+
+.form-back-white input {
+  background-color: white !important;
+}
+
+/* IMAGE OBJECT FORM
+======================================================= */
 .form-imageObject figure {
   width: 100%;
   text-align: center;
+}
+
+/* ORDER FORM
+====================================================== */
+.form-order fieldset:nth-of-type(3) {
+  max-width: 160px;
+}
+.form-order fieldset:nth-of-type(4) {
+  max-width: 160px;
+}
+.form-order fieldset:nth-of-type(5) {
+  max-width: 160px;
+}
+.form-order fieldset:nth-of-type(6) {
+  max-width: 160px;
+}
+
+/* INVOICE
+====================================================== */
+.form-invoice span {
+  display: inline-block;
+  width: 18px;
+  font-size: 18px;
+  align-self: flex-end;
+}
+.form-invoice input {
+  width: 100%;
+}
+.form-invoice fieldset:nth-of-type(1) {
+  width: calc(100% - 18px);
+}
+.form-invoice fieldset:nth-of-type(4) {
+  width: calc(100% - 67px);
 }
 
 /* IMAGES GRID _ admin-images-grid
@@ -419,6 +704,27 @@ tbody tr:nth-child(even) {
   }
   .form-imageObject fieldset:nth-of-type(9) {
     width: 100%;
+  }
+
+  .form-order fieldset:nth-of-type(3) {
+    width: calc(50% - 80px);
+  }
+  .form-order fieldset:nth-of-type(5) {
+    width: calc(50% - 80px);
+  }
+
+  .form-invoice fieldset:nth-of-type(1) {
+    width: calc(100% - 452px);
+    max-width: 120px;
+  }
+  .form-invoice fieldset:nth-of-type(2) {
+    width: 120px;
+  }
+  .form-invoice fieldset:nth-of-type(3) {
+    width: 120px;
+  }
+  .form-invoice fieldset:nth-of-type(4) {
+    width: 130px;
   }
 }
 @media (min-width: 768px) {

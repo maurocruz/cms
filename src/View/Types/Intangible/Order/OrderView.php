@@ -153,7 +153,7 @@ class OrderView extends OrderWidget {
         // SELECT BY PERIOD
         $content[] = self::selectPeriodo($orders['numberOfItems'], "expired");
         // TABLE
-        $content[] = HtmlPiecesTrait::indexWithSubclass($value['name'], "order", $rowColunms, $orders['itemListElement']);
+        $content[] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowColunms, $orders['itemListElement']);
         // PRINT
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
         // WRAPPER

@@ -4,32 +4,6 @@
  * Styles for website admin
 */
 
-
-/* STRUCTURE
-======================================================================== */
-.wrapper{ min-width: 990px; }
-
-/* HEADER
-============================================================================= */
-.header{ background: white; }
-
-.container { padding-bottom: 30px; }
-.main { padding: 5px 10px; max-width: 1520px; margin: 0 auto; min-height: 400px; }
-.aside {  }
-
-/* FOOTER
-============================================================================= */
-.footer { background-color: #336699; overflow: hidden; padding: 15px 3px; color: #99ccFF; }
-
-/* SHARED
-======================================================================== */
-.caption_float_right { display: inline; }
-.caption_float_right img { vertical-align: bottom; margin-right: 3px; }
-.caption_float_right figcaption { display: inline; }
-.red { font-weight: bold; color: red; }
-a.white { color: white; }
-.button { margin: 5px; padding: 5px; border: 1px rgba(0,0,0,0.5) solid; border-radius: 8px; display: inline-block; background-color: rgba(255,255,255,0.5); text-decoration: none; color: #222; cursor: pointer; }
-
 /* form
 ============================================================================= */
 .form { max-width: 450px; margin: 0 auto; padding: 10px; border: 1px gray solid; }
@@ -44,17 +18,6 @@ a.white { color: white; }
 .searchForm { display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 0 7px 0 #ccc; background-color: white; margin: 5px 0; padding: 4px; width: 320px; }
 .searchForm input[type=text] { border: 0; padding: 3px; vertical-align: middle; width: 293px; }
 .searchForm input[type=image] { height: 20px; }
-
-/* COMPONENT STRUCTURE _ menu
-======================================================================== */
-.menu { background: #3399CC;  padding-top: 5px; display: flex; }
-.menu h1 { margin: 5px; font-size:.9em;}
-.menu a { height: 22px; border-width: 1px 1px 0 1px; border-color: white; border-style: solid; margin-left: 5px; padding: 5px 5px 0 5px; background: #336699; color: #99ccFF; text-decoration: none; font-weight: bold; font-size: .8em; }
-.menu a:hover { color: #336666; }
-.menu2 { background-color: #21C0F5; padding-left: 15px; }
-.menu3 { background-color: #6AD9F7; padding-left: 30px; }
-.menu4 { background-color: #C1E7F8; padding-left: 45px; }
-.menu5 { background-color: #d4ecf7; padding-left: 60px; }
 
 
 /* COMPONENT _ list-popup
@@ -122,27 +85,6 @@ a.white { color: white; }
 .resumo th{ background-color: #336699; border-radius: 10px 10px 0 0; color: white; font-weight: bold; height: 30px; }
 .resumo td{ padding: 10px; border: #336699 1px solid; }
 
-/* COMPONENT _ form-table
-======================================================================== */
-.form-table {  }
-.form-table-title { font-size: 18px; }
-.form-table cite { font-size: 32px; font-style: normal; font-weight: bold; }
-.form-table fieldset { display: inline-block; padding: 0; border: none; position: relative; }
-.form-table fieldset legend { background-color: #336699; color: white; padding: 3px 6px; width: 85%; font-weight: bold; border-top-right-radius: 10px; }
-.form-table input { padding: 2px; border: 1px solid gray; box-sizing: border-box; min-height: 30px; }
-.form-table select { padding: 2px; border: 1px solid gray; box-sizing: border-box; }
-
-.form-back-red input { background-color: rgba(255,30,0,0.5) !important; }
-.form-back-green input { background-color: rgba(70,255,0,0.3) !important; }
-.form-back-yellow input { background-color: rgba(255,255,0,0.4) !important; }
-.form-back-gray input { background-color: rgba(20,20,20,0.2); }
-.form-back-white input { background-color: rgba(255,255,255,1) !important; }
-
-.form-table input[type=submit] { padding: 0 6px; border: 2px outset buttonface; margin: 1px 3px; background-color: buttonface; }
-
-/*.table-form { margin: 15px 0; }
-.table-form caption { font-size: 14px; }*/
-
 
 /* COMPONENT _ menu
 =======================================================================*/
@@ -160,30 +102,6 @@ a.menulink{ position: relative; color: white; font-weight: bold; margin: 10px; f
 .menu-inline{ float:left; display:inline; margin-top: 15px; margin-left: 5px; margin-right: 5px; }
 .forminline input{ float:left; margin:0; padding:0; }
 
-/* COMPONENT _ formPadrao
-=========================================================================== */
-.formPadrao cite { font-size: 32px; font-style: normal; font-weight: bold; }
-/*.formPadrao fieldset {
-    position: relative;
-    display: inline;
-    background: white;
-    border: 1px #336699 solid; box-sizing: border-box; padding: 3px; margin: 0 0 3px 0; vertical-align: middle;
-}
-.formPadrao legend { display: table-caption; width: 100%; background-color: #336699; color: white; padding: 4px 5px; box-sizing: border-box; font-weight: bold;
-    border-radius: 7px 7px 0 0; font-size: 12px; }
-.formPadrao legend a { color: #E0F9FF; }
-.formPadrao input { position: relative;
-    min-height: 20px; padding: 3px; overflow: hidden; width: 100%; box-sizing: border-box; border: none; }*/
-.formPadrao input[type=radio] { width: auto; vertical-align: middle; }
-.formPadrao input[type=checkbox] { display: inline; width: inherit;}
-.formPadrao input[type=image] { display: inline; width: inherit; padding: 0; vertical-align: text-bottom; }
-.formPadrao input[type=submit] { border: 1px #333 solid; border-radius: 6px; }
-.formPadrao label { margin: 0; }
-.formPadrao .labelradio * { white-space: nowrap; }
-.formPadrao textarea { border: 1px #336699 solid; overflow: auto; margin: 0; width: calc(100% - 3px); }
-.formPadrao select { border: 1px #336699 solid; height: 20px; padding: 0; }
-/*.formPadrao figure { display: inline-block; line-height: normal; vertical-align: bottom; }*/
-.formPadrao .text-box-white { background-color: white; border: 1px #336699 solid; min-height: 20px; padding: 8px 10px; display: inline-block; }
 .submitButton { min-height: 0 !important; cursor: pointer; width: 100%; }
 
 /* COMPONENT _ form-inline

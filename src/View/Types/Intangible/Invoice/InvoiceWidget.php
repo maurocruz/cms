@@ -39,25 +39,25 @@ abstract class InvoiceWidget {
         }
         // #
         $p = $case == "new" ? "+" : $n;
-        $content[] = "<span style=\"display: inline-block; width: 30px;\">".$p.".</span>";
+        $content[] = "<span>".$p."</span>";
         // TOTAL PAYMENT DUE
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 135px; display: inline-block;"], "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Invoice amount") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'] ?? null, "type" => "number", "step" => "0.01", "min" => "0.01", "style" => "text-align: right; width: inherit;" ]]
+        $content[] = [ "tag" => "fieldset", "content" => [
+            $case == "new" ? [ "tag" => "legend", "content" => _("Value") ] : null,
+            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'] ?? null, "type" => "number", "step" => "0.01", "min" => "0.01" ]]
         ]];
         // Payment due date
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 145px; display: inline-block;"], "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Payment due date") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'] ?? null, "type" => "date", "style" => "width: inherit;" ]]
+        $content[] = [ "tag" => "fieldset", "content" => [
+            $case == "new" ? [ "tag" => "legend", "content" => _("Due date") ] : null,
+            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'] ?? null, "type" => "date" ]]
         ]];
         // PAYMENT DATE
         $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Payment date") ] : null,
-            self::input('paymentDate','date',$value['paymentDate'] ?? null, [ "style" => "width: 145px;"])
+            $case == "new" ? [ "tag" => "legend", "content" => _("Payment") ] : null,
+            self::input('paymentDate','date',$value['paymentDate'] ?? null)
         ]];
         // PAYMENT STATUS
         $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Payment status") ] : null,
+            $case == "new" ? [ "tag" => "legend", "content" => _("Status") ] : null,
             self::select("paymentStatus", $value['paymentStatus'] ?? null, [
                 "PaymentDue" => _("Payment due"),
                 "PaymentComplete" => _("Payment complete"),
@@ -67,9 +67,9 @@ abstract class InvoiceWidget {
             ])
         ]];
         // submit
-        $content[] = self::submitButtonSend([ "style" => "height: 30px; background-color: transparent !important; padding: 0 5px; border: 0;"]);
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase", [ "style" => "height: 30px; background-color: transparent !important; padding: 0; border: 0;"]) : null;
-        return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
+        $content[] = self::submitButtonSend();
+        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase") : null;
+        return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
     }
     
     static private function classStyle($value): string {

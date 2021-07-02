@@ -40,7 +40,7 @@ abstract class OrderWidget {
         // SELLER
         $content[] = self::fieldset(self::chooseType("seller", "organization,person", $value['seller'] ?? null), _("Seller"), [ "style" => "width: 100%;" ]);
         // CUSTOMER
-        $content[] = self::fieldset(self::chooseType("customer", "organization,person", $value['customer'] ?? null), _("Customer"), [ "style" => "width: 100%;" ]);
+        $content[] = self::fieldset(self::chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"), [ "style" => "width: 100%;" ]);
         // ORDER DATE
         $content[] = self::fieldsetWithInput(_("Order date"), "orderDate", isset($value['orderDate']) ? substr($value['orderDate'],0,10) : date("Y-m-d"), [], "date");
         // ORDER STATUS
@@ -57,13 +57,13 @@ abstract class OrderWidget {
         // PAYMENT DUE DATE
         $content[] = self::fieldsetWithInput(_("Payment due date"), "paymentDueDate", isset($value['paymentDueDate']) ? substr($value['paymentDueDate'],0,10) : null, [], "date");
         // DISCOUNT
-        $content[] = $case == "edit" ? self::fieldsetWithInput(_("Discount"), "discount", $value['discount'] ?? null) : null;
+        $content[] = self::fieldsetWithInput(_("Discount"), "discount", $value['discount'] ?? null);
         // TAGS
         $content[] = self::fieldsetWithInput(_("Tags"), "tags", $value['tags'] ?? null, [ "style" => "width: 100%;" ]);
         // SUBMIT
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/order/erase") : null;
-        return self::form("/admin/order/$case", $content);
+        return self::form("/admin/order/$case", $content, ['class'=>'formPadrao form-order']);
     }
 
     protected static function getOrderedItems($orderedItem): string {
