@@ -676,7 +676,7 @@ msgid "price valid until"
 msgstr "Preço válido até"
 
 msgid "Price currency"
-msgstr "Moeda corrente"
+msgstr "Moeda"
 
 msgid "Valid through"
 msgstr "Válido até"
@@ -730,10 +730,10 @@ msgid "SouldOut"
 msgstr "Vendido"
 
 msgid "Elegible quantity"
-msgstr "Quantidade elegível"
+msgstr "Quantidade"
 
 msgid "Elegible duration"
-msgstr "Duração elegível"
+msgstr "Duração"
 
 ################################   ORDER   #######################################
 
