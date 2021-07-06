@@ -8,8 +8,6 @@ abstract class OfferWidget extends OfferAbstract {
     protected function formOffer($value = null): array {
         $case = $value ? "edit" : "new";
         if ($this->tableHasPart && $this->idHasPart) {
-            //$content[] = $case == "new" ? self::input("idHasPart", "hidden", $this->idHasPart) : null;
-            //$content[] = $case == "new" ? self::input("tableHasPart", "hidden", $this->tableHasPart) : null;
             $content[] = self::input("itemOffered", "hidden", $this->idHasPart);
             $content[] = self::input("itemOfferedType", "hidden", $this->tableHasPart);
         } else {
@@ -21,8 +19,8 @@ abstract class OfferWidget extends OfferAbstract {
             $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = self::input("id", "hidden", $id);
         }
-        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'] ?? null, [ "style" => "width: 120px;" ], "number", [ "min" => 0, "step" => "any" ]);
-        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", [ "style" => "width: 102px;"], "text", [ "maxlength" => "2" ]);
+        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'] ?? null, null, "number", [ "min" => 0, "step" => "any" ]);
+        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", null, "text", [ "maxlength" => "2" ]);
         $content[] = self::fieldsetWithSelect(_("Availability"), "availability", $value['availability'] ?? null, [
             "Discontinued" => _("Discontinued"),
             "InStock" => _("In stock"),
@@ -35,13 +33,14 @@ abstract class OfferWidget extends OfferAbstract {
             "SoldOut" => _("Sould out")
         ]);
         // VALID THROUGH
-        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough'] ?? null, [ "style" => "width: 150px;" ]);
+        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough'] ?? null);
         // ELEGIBLE QUANTITY
-        $content[] = self::fieldsetWithInput(_("Elegible quantity"), "elegibleQuantity", $value['elegibleQuantity'] ?? null, [ "style" => "width: 150px;" ]);
+        $content[] = self::fieldsetWithInput(_("Elegible quantity"), "elegibleQuantity", $value['elegibleQuantity'] ?? null);
         // ELEGIBLE DURATION
         $content[] = self::fieldsetWithInput(_("Elegible duration"), "elegibleDuration", $value['elegibleDuration'] ?? null);
+        // SUBMIT
         $content[] = self::submitButtonSend();
         $content[] = $value ? self::submitButtonDelete("/admin/offer/erase") : null;
-        return self::form("/admin/offer/$case", $content);
+        return self::form("/admin/offer/$case", $content,['class'=>'formPadrao form-offer']);
     }
 }

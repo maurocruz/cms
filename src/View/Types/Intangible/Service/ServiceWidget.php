@@ -6,23 +6,25 @@ use Plinct\Tool\ArrayTool;
 
 abstract class ServiceWidget {
     protected $content;
+    protected $tableHasPart;
+    protected $idHasPart;
 
     use FormElementsTrait;
 
     protected function serviceForm($case = "new", $value = null): array {
         // PROVIDER
-        $content[] = $case == "new" ? self::input("provider", "hidden", ArrayTool::searchByValue($value['provider']['identifier'], "id")['value']) : null;
-        //$content[] = self::fieldset( self::chooseType("provider","organization,person", $value['provider'] ?? null, "name", [ "style" => "display: flex;"]), _("Provider"), [ "style" => "width: 100%" ]);
+        $content[] = self::input("provider", "hidden", $this->idHasPart);
+        $content[] = self::input("providerType", "hidden", $this->tableHasPart);
         // ID
         $content[] = $case == "edit" ? self::input("id", "hidden", ArrayTool::searchByValue($value['identifier'], "id")['value']) : null;
         // NAME
-        $content[] = self::fieldsetWithInput(_("name"), "name", $value['name'] ?? null, [ "style" => "width: 50%; "]);
+        $content[] = self::fieldsetWithInput(_("name"), "name", $value['name'] ?? null);
         // CATEGORY
-        $content[] = self::fieldsetWithInput(_("Category"), "category", $value['category'] ?? null, [ "style" => "width: 50%;"] );
+        $content[] = self::fieldsetWithInput(_("Category"), "category", $value['category'] ?? null );
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Service", $value['additionalType'] ?? null, ["style" => "width: 50%; "]);
+        $content[] = self::additionalTypeInput("Service", $value['additionalType'] ?? null);
         // SERVICE TYPE
-        $content[] = self::fieldsetWithInput(_("Service type"), "serviceType", $value['serviceType'] ?? null, [ "style" => "width: 50%; "]);
+        $content[] = self::fieldsetWithInput(_("Service type"), "serviceType", $value['serviceType'] ?? null);
         // DESCRIPTION
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null);
         // DISAMBIGUATING DESCRIPTION
@@ -30,9 +32,9 @@ abstract class ServiceWidget {
         // TERMS OF SERVICE
         $content[] = self::fieldsetWithTextarea(_("Terms of service"), "termsOfService", $value['termsOfService'] ?? null);
         // created time
-        $content[] =  $case == "edit" ? self::fieldsetWithInput(_("Date created"), "dateCreated", $value['dateCreated'] ?? null, [ "style" => "width: 200px;"], "text", [ "disabled" ] ) : null;
+        $content[] =  $case == "edit" ? self::fieldsetWithInput(_("Date created"), "dateCreated", $value['dateCreated'] ?? null, null, "text", [ "disabled" ] ) : null;
         // update time
-        $content[] =  $case == "edit" ? self::fieldsetWithInput(_("Date modified"), "dateModified", $value['dateModified'] ?? null, [ "style" => "width: 200px;"], "text", [ "disabled" ] ) : null;
+        $content[] =  $case == "edit" ? self::fieldsetWithInput(_("Date modified"), "dateModified", $value['dateModified'] ?? null, null, "text", [ "disabled" ] ) : null;
         // SUBMIT BUTTONS
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/service/erase") : null;
