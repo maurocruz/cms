@@ -5,6 +5,7 @@ use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
+use Plinct\Tool\StringTool;
 
 abstract class OrderWidget {
     protected $content = [];
@@ -101,5 +102,28 @@ abstract class OrderWidget {
         $content[] = [ "tag" => "p", "content" => sprintf(_("Showing %s items %s"), $numberOfItens, $period) ];
 
         return [ "tag" => "div", "content" => $content ];
+    }
+
+    protected function periodoParagraph($period): string {
+        $uri = StringTool::removeDuplicateQueryStrings('period');
+        // text
+        switch ($period) {
+            case 'last2years': $text = 'last 2 years'; break;
+            case 'last5years': $text = 'last 5 years'; break;
+            default: $text = 'all'; break;
+        }
+
+        $string = "<p class='period-paragraph'>" . sprintf(_('Showing %s'), $text);
+        if ($period != 'last2years') {
+            $string .= " <a href='$uri&period=last2years'>" . sprintf(_("Show last %s year"),'2') . "</a>";
+        }
+        if ($period != 'last5years') {
+            $string .= " <a href='$uri&period=last5years'>" . sprintf(_("Show last %s year"),'5') . "</a>";
+        }
+        if($period != 'all') {
+            $string .= " <a href='$uri&period=all'>" . _("Show all") . "</a>";
+        }
+        $string .= "</p>";
+        return $string;
     }
 }
