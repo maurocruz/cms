@@ -8,12 +8,25 @@ use Plinct\Tool\ArrayTool;
 class OrderController {
 
     public function indexWithPartOf($customerName, $id): array {
-        $dataAgo = date("Y-m-d", strtotime("-2 year", time()));
+        $period = filter_input(INPUT_GET, 'period') ?? '-5 year';
+        if($period == 'all') $period = "all";
+        if($period == 'last2years') $period = "-2 year";
+        if($period == 'last5years') $period = "-5 year";
+        $dataAgo = date("Y-m-d", strtotime($period, time()));
         if ($customerName) {
-            return self::byCustomerName($customerName, $id, $dataAgo);
+            $data = self::byCustomerName($customerName, $id, $dataAgo);
         } else {
-            return Api::get('order', ["format" => "ItemList", "properties" => "*,customer,seller,orderedItem", "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"]);
+            $data = Api::get('order', [
+                "format" => "ItemList",
+                "properties" => "*,customer,seller,orderedItem",
+                "seller" => $id,
+                "sellerType" => "Organization",
+                "where" => "orderdate>'$dataAgo'",
+                "orderBy" => "orderDate desc"
+            ]);
         }
+        $data['itemListOrder'] = $period;
+        return $data;
     }
 
     public function editWithPartOf($itemId, $id) {
@@ -80,10 +93,20 @@ class OrderController {
             foreach ($array as $valueCustomer) {
                 $customerId = ArrayTool::searchByValue($valueCustomer['identifier'], 'id', 'value');
                 $customerType = $valueCustomer['@type'];
-                $newParams = ["properties" => "*,customer,seller,orderedItem", "customer" => $customerId, "customerType" => $customerType, "seller" => $id, "sellerType" => "Organization", "where" => "orderdate>'$dataAgo'", "orderBy" => "orderDate desc"];
+                $newParams = [
+                    "properties" => "*,customer,seller,orderedItem",
+                    "customer" => $customerId,
+                    "customerType" => $customerType,
+                    "seller" => $id,
+                    "sellerType" => "Organization",
+                    "where" => "orderdate>'$dataAgo'",
+                    "orderBy" => "orderDate desc"
+                ];
                 $dataCustomer = Api::get('order', $newParams);
                 if (!empty($dataCustomer)) {
-                    $dataOrder[] = ["item" => $dataCustomer[0]];
+                    foreach ($dataCustomer as $item) {
+                        $dataOrder[] = ["item" => $item];
+                    }
                 }
             }
             return [ "numberOfItems" => count($dataOrder), "itemListElement" => $dataOrder ];
