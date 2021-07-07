@@ -16,7 +16,7 @@ body {
 }
 
 p {
-  margin: 5px;
+  margin: 5px 0;
 }
 
 hr {
@@ -166,22 +166,18 @@ table .form-submit-button-delete .material-icons {
 
 .menu2 {
   background-color: #21C0F5;
-  padding-left: 15px;
 }
 
 .menu3 {
   background-color: #6AD9F7;
-  padding-left: 30px;
 }
 
 .menu4 {
   background-color: #C1E7F8;
-  padding-left: 45px;
 }
 
 .menu5 {
   background-color: #d4ecf7;
-  padding-left: 60px;
 }
 
 /* FOOTER
@@ -515,17 +511,28 @@ a.white {
 
 /* ORDER FORM
 ====================================================== */
+.form-order {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-order .choose-type-select {
+  max-width: 160px;
+}
 .form-order fieldset:nth-of-type(3) {
   max-width: 160px;
+  width: 50%;
 }
 .form-order fieldset:nth-of-type(4) {
   max-width: 160px;
+  width: 50%;
 }
 .form-order fieldset:nth-of-type(5) {
   max-width: 160px;
+  width: 50%;
 }
 .form-order fieldset:nth-of-type(6) {
   max-width: 160px;
+  width: 50%;
 }
 
 /* INVOICE
@@ -601,6 +608,22 @@ a.white {
 }
 
 @media (min-width: 576px) {
+  .menu2 {
+    padding-left: 6px;
+  }
+
+  .menu3 {
+    padding-left: 12px;
+  }
+
+  .menu4 {
+    padding-left: 18px;
+  }
+
+  .menu5 {
+    padding-left: 24px;
+  }
+
   .form-postalAddress fieldset:nth-of-type(1) {
     width: 100%;
   }

@@ -6,6 +6,10 @@
 
 // Dispositivos extra small (telefones em modo retrato, com menos de 576px)
 @media (min-width: 576px) {
+  .menu2 { padding-left: 6px; }
+  .menu3 { padding-left: 12px; }
+  .menu4 { padding-left: 18px; }
+  .menu5 { padding-left: 24px; }
   %fieldset1column { width: 100%; }
   %fieldset2column { width: 50%; }
   %fieldset3column { width: 33.3%; }
