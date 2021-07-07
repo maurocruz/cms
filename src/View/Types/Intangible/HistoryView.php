@@ -20,7 +20,7 @@ class HistoryView {
                 $table->bodyCell(DateTime::formatDateTime($value['datetime']))
                     ->bodyCell($value['action'])
                     ->bodyCell(stripslashes($value['summary']))
-                    ->bodyCell($value['user']['name'])
+                    ->bodyCell($value['user']['name'] ?? _("Undefined"))
                     ->closeRow();
             }
         } else {
