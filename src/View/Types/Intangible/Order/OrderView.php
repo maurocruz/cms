@@ -11,9 +11,14 @@ use Plinct\Tool\DateTime;
 class OrderView extends OrderWidget {
 
     public function indexWithPartOf($value): array {
+        $orders = $value['orders'];
         // NAVBAR
         $this->content['navbar'][] = parent::navbarOrder($value);
-        // TABLE COLUMNS
+        // SEARCH
+        $this->content['main'][] = self::search("","customerName", filter_input(INPUT_GET,'customerName'));
+        // PERIOD
+        $this->content['main'][] = parent::periodoParagraph($orders['itemListOrder']);
+        // TABLE
         $rowsColumns = [
             "idorder" => [ "ID", [ "style" => "width: 50px;" ] ],
             "customer" => _("Customer"),
@@ -22,10 +27,7 @@ class OrderView extends OrderWidget {
             "orderStatus" => [ _("Order status"), [ "style" => "width: 140px;" ] ],
             "orderDate" => [ _("Order date"), [ "style" => "width: 100px;" ] ]
         ];
-        // search
-        $this->content['main'][] = self::search("","customerName");
-        // table
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowsColumns, $value['orders']['itemListElement']);
+        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowsColumns, $orders['itemListElement']);
         return $this->content;
     }
 
