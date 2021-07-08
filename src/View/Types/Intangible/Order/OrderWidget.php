@@ -108,11 +108,10 @@ abstract class OrderWidget {
         $uri = StringTool::removeDuplicateQueryStrings('period');
         // text
         switch ($period) {
-            case 'last2years': $text = 'last 2 years'; break;
-            case 'last5years': $text = 'last 5 years'; break;
-            default: $text = 'all'; break;
+            case '-2 year': $text = 'last 2 years'; break;
+            case 'all': $text = 'all'; break;
+            default: $text = 'last 5 years'; break;
         }
-
         $string = "<p class='period-paragraph'>" . sprintf(_('Showing %s'), $text);
         if ($period != 'last2years') {
             $string .= " <a href='$uri&period=last2years'>" . sprintf(_("Show last %s year"),'2') . "</a>";
