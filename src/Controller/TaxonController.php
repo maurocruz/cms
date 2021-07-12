@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
-use Plinct\Api\Type\PropertyValue;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Api;
+use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
@@ -25,12 +25,11 @@ class TaxonController implements ControllerInterface
     }
 
     public function saveSitemap() {
-        $dataSitemap = null;
         $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image" ];
         $data = Api::get("taxon", $params);
         // for type pages
         foreach ($data as $valueForType) {
-            $id = PropertyValue::extractValue($valueForType['identifier'], 'id');
+            $id = ArrayTool::searchByValue($valueForType['identifier'],'id','value');
             $lastmod = DateTime::formatISO8601($valueForType['dateModified']);
             $dataForType[] = [
                 "loc" => App::$HOST . "/t/taxon/$id",
