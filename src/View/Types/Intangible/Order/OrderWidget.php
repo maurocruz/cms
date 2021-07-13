@@ -67,16 +67,6 @@ abstract class OrderWidget {
         return self::form("/admin/order/$case", $content, ['class'=>'formPadrao form-order']);
     }
 
-    protected static function getOrderedItems($orderedItem): string {
-        if (empty($orderedItem)) {
-            return _("Unidentified");
-        } else {
-            $quantityItems = count($orderedItem);
-            $firstItemName = $orderedItem[0]['orderedItem']['name'];
-            return $firstItemName . ($quantityItems >1 ? sprintf(_(" more % items."), $quantityItems-1) : null);
-        }
-    }
-
     protected function selectPeriodo($numberOfItens, $section): array {
         $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/$this->typeHasPart/order", "method" => "get" ], "content" => [
             [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $this->idHasPart ]],

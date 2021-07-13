@@ -81,22 +81,21 @@ class OrderView extends OrderWidget {
         $content[] = parent::selectPeriodo(count($value['orders']), "payment");
         $total = 0;
         foreach ($value['orders'] as $key => $value) {
+            //var_dump($value);
             $idorder = $value['idorder'];
             $href = "/admin/$this->typeHasPart/order?id=$this->idHasPart&item=$idorder";
             $orderStatus = _($value['orderStatus']);
             $paymentDueDate = DateTime::formatDate($value['paymentDueDate']);
             $totalPaymentDue = number_format($value['totalPaymentDue'],2,",",".");
-            $customerName = $value['customer']['name'];
-            $invoiceInstallment = $value['numberOfTheInstallments']." / ".$value['totalOfInstallments'];
-            $orderedItem = $value['orderedItem'];
+            $customerName = $value['customerName'];
             $tbody[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => sprintf('<a href="%s">%s</a>', $href, _("Edit")) ],
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $idorder],
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $paymentDueDate],
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $totalPaymentDue ],
                 [ "tag" => "td", "content" => $customerName ],
-                [ "tag" => "td", "content" => $invoiceInstallment ],
-                [ "tag" => "td", "content" => self::getOrderedItems($orderedItem) ],
+                [ "tag" => "td", "content" => $value['installments'] ],
+                [ "tag" => "td", "content" => $value['orderedItems'] ],
                 [ "tag" => "td", "content" => $orderStatus ]
             ]];
             $total += $value['totalPaymentDue'];
