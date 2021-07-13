@@ -67,7 +67,7 @@ class OrganizationController implements ControllerInterface {
         // PAYMENT
         elseif($action == "payment"):
             $data = $this->edit($params);
-            $data[0]['orders'] = (new OrderController())->payment();
+            $data[0]['orders'] = (new OrderController())->payment($id);
         // EXPIRED
         elseif($action == "expired"):
             $data = $this->edit($params);
