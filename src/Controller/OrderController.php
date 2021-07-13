@@ -2,7 +2,6 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Server\Api;
-use Plinct\PDO\PDOConnect;
 use Plinct\Tool\ArrayTool;
 
 class OrderController {
@@ -37,30 +36,44 @@ class OrderController {
         return $data;
     }
 
-    public function payment(): array {
-        $data2 = [];
+    public function payment($seller): array {
+        $itemList = [];
         $date = self::translatePeriod(filter_input(INPUT_GET, 'period'));
-        $query = "select `order`.idorder, `order`.orderStatus, `invoice`.paymentDueDate, `invoice`.totalPaymentDue, `order`.customer, `order`.customerType, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder) as totalOfInstallments, (SELECT COUNT(*) FROM `invoice` WHERE `invoice`.referencesOrder=`order`.idorder AND invoice.paymentDate is not null AND invoice.paymentDate!='0000-00-00')+1 as numberOfTheInstallments";
-        $query .= " FROM `invoice`, `order`";
-        $query .= " WHERE (invoice.paymentDate is null OR invoice.paymentDate='0000-00-00')";
-        $query .= " AND `order`.idorder= `invoice`.referencesOrder AND `order`.orderStatus!='OrderCancelled' AND `order`.orderStatus!='OrderDelivered'";
-        $query .= $date ? " AND invoice.paymentDueDate <= '$date'" : null;
-        $query .= " ORDER BY `invoice`.paymentDueDate";
-        $query .= ";";
-        $data =  PDOConnect::run($query);
-        foreach ($data as $value) {
-            $id = $value['customer'];
-            $table = lcfirst($value['customerType']);
-            $idName = "id".$table;
-            // CUSTOMER
-            $dataCustomer = PDOConnect::run("SELECT * FROM $table WHERE `$idName`=$id;");
-            $value['customer'] = $dataCustomer[0] ?? null;
+        $where = "(orderStatus='orderProcessing' OR orderStatus='orderSuspended')";
+        $dataOrder = Api::get('order',['properties'=> '*,partOfInvoice,orderedItem,customer', 'where'=>$where, 'seller'=>$seller]);
+        // ORDER
+        foreach ($dataOrder as $itemOrder) {
             // ORDERED ITEM
-            $dataOrderedItem = Api::get("orderItem", [ "referencesOrder" => $value['idorder'] ]);
-            $value['orderedItem'] = $dataOrderedItem;
-            $data2[] = $value;
+            if ($itemOrder['orderedItem']) {
+                foreach ($itemOrder['orderedItem'] as $valueOrederedItem) {
+                    $orderedItemsArray[] = $valueOrederedItem['orderedItem']['name'];
+                }
+                $orderedItems = implode(', ', $orderedItemsArray);
+                unset($orderedItemsArray);
+            }
+            // INVOICES
+            if ($itemOrder['partOfInvoice']) {
+                foreach ($itemOrder['partOfInvoice'] as $key => $valueInvoice) {
+                    // installments var
+                    $numberOfInvoices = count($itemOrder['partOfInvoice']);
+                    $installments = $numberOfInvoices - $key . '/' . $numberOfInvoices;
+                    // condition if payment due and period
+                    if ($valueInvoice['paymentDate'] == '0000-00-00' && (!$date || $valueInvoice['paymentDueDate'] <= $date)) {
+                        $itemList[] = [
+                            'idorder' => $itemOrder['idorder'],
+                            'paymentDueDate' => $valueInvoice['paymentDueDate'],
+                            'totalPaymentDue' => $valueInvoice['totalPaymentDue'],
+                            'customerName' => $itemOrder['customer']['name'],
+                            'installments' => $installments,
+                            'orderedItems' => $orderedItems,
+                            'orderStatus' => $itemOrder['orderStatus']
+                        ];
+
+                    }
+                }
+            }
         }
-        return $data2;
+        return !empty($itemList) ? ArrayTool::sortByName($itemList,'paymentDueDate') : $itemList;
     }
 
     public function expired(): array {
