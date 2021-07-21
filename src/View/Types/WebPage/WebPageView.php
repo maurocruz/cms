@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\View\Types\WebPage;
 
-use Plinct\Cms\View\AbstractView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
 use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
@@ -9,8 +8,8 @@ use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
 
-class WebPageView extends AbstractView {
-    protected $idwebPage;
+class WebPageView extends WebPageWidget {
+    private $content;
 
     use FormElementsTrait;
     use HtmlPiecesTrait;
@@ -43,49 +42,42 @@ class WebPageView extends AbstractView {
 
     public function edit(array $data): array {
         $value = $data[0];
-        $this->idwebPage = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+        // VARS
+        parent::$idwebSite = ArrayTool::searchByValue($value['isPartOf']['identifier'],'id','value');
+        parent::$idwebPage = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // VIEW         
         $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
         // EDIT
-        $content['main'][] = self::formWebPage("edit", $value);
+        $content['main'][] = self::formWebPage($value);
         // ATTRIBUTES
-        $content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", $this->idwebPage, $value['identifier']) ]);
+        $content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", parent::$idwebPage, $value['identifier']) ]);
         // BOX
         $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
         // WEB ELEMENTS
-        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm($this->idwebPage, $value['hasPart']) ]);
+        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm(parent::$idwebPage, $value['hasPart']) ]);
         return $this->content;
+    }
+
+    public static function editWithIsPartOf(array $data): array {
+        // VARS
+        parent::$idwebSite = ArrayTool::searchByValue($data['isPartOf']['identifier'],'id','value');
+        parent::$idwebPage = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+        // FORM EDIT and PROPERTIES
+        $response[] = self::divBox2(_("Edit web page"), [
+            self::editWebPage($data),
+            self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", parent::$idwebPage, $data['identifier']) ])
+        ]);
+        // WEB ELEMENTS
+        $response[] = self::divBoxExpanding(_("Web page elements"), "WebPage", [ (new WebPageElementView())->getForm(parent::$idwebPage, $data['hasPart']) ]);
+        // RESPONSE
+        return $response;
     }
 
     public function sitemap($sitemaps): array {
         // TITLE
-        parent::addMain(self::simpleTag("h2",_("Sitemaps")));
+        $this->content['main'][] = self::simpleTag("h2",_("Sitemaps"));
         // INDEX
-        parent::addMain((new SitemapWidget())->index($sitemaps));
+        $this->content['main'][] = (new SitemapWidget())->index($sitemaps);
         return $this->content;
-    }
-
-    private function formWebPage($case = "new", $value = null): array {
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
-        // title
-        $content[] = self::fieldsetWithInput("Título", "name", $value['name'] ?? null , [ "style" => "width: 50%;"]);
-        // url
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 50%"], "content" => [
-                [ "tag" => "legend", "content" => "Url" ],
-                [ "tag" => "input", "attributes" => [ "name" => "url", "type" => "text", "value" => $value['url'] ?? null ] ]
-            ]];
-        // description
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%;"], "content" => [
-                [ "tag" => "legend", "content" => "Descrição (não usar html)" ],
-                [ "tag" => "textarea", "attributes" => [ "style" => "height: auto; width: 100%;", "name" => "description" ], "content" => $value['description'] ?? null  ]
-            ]];
-        // alternativeHeadline
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 400px"], "content" => [
-                [ "tag" => "legend", "content" => "alternativeHeadline" ],
-                [ "tag" => "input", "attributes" => [ "name" => "alternativeHeadline", "type" => "text", "value" => $value['alternativeHeadline'] ?? null  ] ]
-            ]];
-        $content[] = self::submitButtonSend();
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPage/erase") : null;
-        return [ "tag" => "form", "attributes" => [ "id" => "form-pages--edit", "name" => "form-pages--edit", "action" => "/admin/webPage/$case", "class" => "formPadrao", "method" => "post" ], "content" => $content ];
     }
 }

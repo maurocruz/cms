@@ -2,10 +2,9 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Server\Api;
-use Plinct\Tool\ArrayTool;
 
-class WebPageElementController implements ControllerInterface
-{
+class WebPageElementController implements ControllerInterface {
+
     public function index($params = null): array {
         return [];
     }
@@ -25,8 +24,6 @@ class WebPageElementController implements ControllerInterface
         $id = $params['id'] ?? null;
         $data = Api::get("webPageElement", ["id" => $id, "properties" => "isPartOf"]);
         if (!empty($data)) {
-            $idwebPage = ArrayTool::searchByValue($data[0]['isPartOf']['identifier'], "id", "value");
-            Api::put("webPage", ["id" => $idwebPage]);
             (new WebPageController())->saveSitemap();
         }
     }

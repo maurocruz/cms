@@ -1,0 +1,68 @@
+
+/* ELEMENT _ table
+============================================================================= */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  color: #003366;
+  background-color: #E0F9FF;
+  margin: 15px 0;
+
+  caption {
+    text-align: left;
+    font-weight: bold;
+    font-size: 1em;
+    h1 {
+      font-size: 1.4em;
+      margin: 1em 0;
+      color: #eecc77;
+    }
+  }
+
+  th {
+    background: #336699;
+    color: white;
+    font-weight: bold;
+    padding: 2px;
+    border: 1px #D0E2F5 solid;
+    font-size: 0.85em;
+
+    a {
+      color: white;
+    }
+  }
+
+  td {
+    border: 1px #336699 solid;
+    padding: 2px 6px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f2faff;
+  }
+
+  .form-submit-button-delete {
+    height: 20px;
+    margin: 0;
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+  .table-delete-button {
+    background-color: transparent;
+    text-align: center;
+  }
+}
+
+.table-webPages {
+  td:first-child, td:last-child { text-align: center; width: 35px;  }
+  td:nth-of-type(2) { width: 40px; }
+}

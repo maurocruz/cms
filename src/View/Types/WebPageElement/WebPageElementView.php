@@ -73,21 +73,21 @@ class WebPageElementView implements ViewInterface {
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ] : null;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "isPartOf", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 93%;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Título" ],
                 [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ?? null ] ]
             ]];
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 6%;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Posição" ],
                 [ "tag" => "input", "attributes" => [ "name" => "position", "type" => "text", "value" => $value['position'] ?? null ] ]
             ]];
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%;" ], "content" => [
+        $content[] = [ "tag" => "fieldset", "content" => [
                 [ "tag" => "legend", "content" => "Conteúdo (usar HTML)" ],
                 [ "tag" => "textarea", "attributes" => [ "id" => "textareaPost-$id", "style" => "width: 100%;", "name" => "text" ], "content" => $value['text'] ?? null ]
             ]];            
         $content[] = [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textareaPost-$id',100);", "style" => "width: 96%; display: block;" ], "content" => "Expandir textarea em 100px" ];
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPageElement/erase") : null;
-        return [ "tag" => "form", "attributes" => [ "name" => "form-webPageElement--$case", "id" => "form-webPageElement-$case-$id", "action" => "/admin/webPageElement/$case", "class" => "formPadrao", "method" => "post" ], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "name" => "form-webPageElement--$case", "id" => "form-webPageElement-$case-$id", "action" => "/admin/webPageElement/$case", "class" => "formPadrao form-webPageElement", "method" => "post" ], "content" => $content ];
     }
 }

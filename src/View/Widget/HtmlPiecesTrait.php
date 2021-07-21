@@ -21,6 +21,8 @@ trait HtmlPiecesTrait {
         }
     }
 
+
+    // DEPRECATED
     public static function indexWithSubclass(array $value, string $type, array $rowsPropeties_and_columnName, array $itemListElement = null): array {
         $name = $value['name'];
         $tableHasPart = lcfirst($value['@type']);
@@ -86,6 +88,7 @@ trait HtmlPiecesTrait {
         return null;
     }
 
+    // DEPRECATED
     /**
      * TABLE OF ITEM LISTING ON INDEX PAGES
      * @param $data

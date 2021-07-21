@@ -84,4 +84,10 @@ class Server {
             return self::requestUri();
         }
     }
+
+    public function request($type, $action, $params): string {
+        Api::request($type,$action,$params);
+        return self::httpReferrer();
+    }
+
 }
