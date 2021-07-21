@@ -14,7 +14,7 @@ class WebPageController implements ControllerInterface
     }
     
     public function edit(array $params): array {
-        $params2 = array_merge($params, [ "properties" => "alternativeHeadline,hasPart" ]);
+        $params2 = array_merge($params, [ "properties" => "*,hasPart" ]);
         return Api::get("webPage", $params2);
     }
     

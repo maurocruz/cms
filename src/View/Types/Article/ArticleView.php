@@ -30,17 +30,22 @@ class ArticleView implements ViewInterface {
     }
 
     public function edit(array $data): array {
-        $value = $data[0];
-        $this->navbarArticle($value['headline'] ?? null);
-        if (empty($value)) {
-            $this->content['main'][] = self::noContent();
+        if (!empty($data)) {
+            $value = $data[0];
+            $this->navbarArticle($value['headline'] ?? null);
+            if (empty($value)) {
+                $this->content['main'][] = self::noContent();
+            } else {
+                $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+                $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
+                // author
+                $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
+                // images
+                $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
+            }
         } else {
-            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-            $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
-            // author
-            $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
-            // images
-            $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
+            $this->navbarArticle();
+            $this->content['main'][] = self::noContent("No articles were found!",['class'=>'warning']);
         }
         return $this->content;
     }

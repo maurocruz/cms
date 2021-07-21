@@ -16,6 +16,7 @@ class Sitemap
     }
 
     public function getSitemaps($dir = null): array {
+        $sitemaps = null;
         $root = $dir ?? $_SERVER['DOCUMENT_ROOT'];
         $handleRoot = opendir($root);
         while (false !== ($filename = readdir($handleRoot))) {

@@ -127,6 +127,9 @@ msgstr "Não há módulos habilitados!"
 msgid "Place"
 msgstr "Local"
 
+msgid "View all %s"
+msgstr "Ver todos %s"
+
 ############################   ADVERTISING   ###################################
 
 msgid "Advertisings"
@@ -211,6 +214,9 @@ msgstr "Publicado"
 
 msgid "Articles and news"
 msgstr "Artigos e notícias"
+
+msgid "No articles were found!"
+msgstr "Nenhum artigo foi encontrado!"
 
 #############################   CONTACT POINT   ################################
 
@@ -311,6 +317,9 @@ msgstr "Mostrando %s itens ordenados por data de vencimento"
 
 msgid "Showing %s from %s items."
 msgstr "Mostrando %s de %s itens."
+
+msgid "Showing %s items in %s order"
+msgstr "Mostrandeo %s itens em %s ordem"
 
 msgid "Date created"
 msgstr "Data de criação"
@@ -1278,3 +1287,29 @@ msgstr "Desculpe. O usuário existe, mas não está autorizado. Verifique seus d
 
 msgid "Sorry. The user exists but is not authorized. Contact administrator."
 msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."
+
+############################   WEBSITE   #################################################
+
+msgid "View web pages"
+msgstr "Ver página web"
+
+msgid "Add new web page"
+msgstr "Adicionar nova página web"
+
+msgid "New web page"
+msgstr "Nova página web"
+
+msgid "List of web pages"
+msgstr" Lista de páginas web"
+
+msgid "View website"
+msgstr "Veja website"
+
+msgid "Alternative headline"
+msgstr "Título alternativo"
+
+msgid "Edit web page"
+msgstr "Editar página web"
+
+msgid "Web page elements"
+msgstr "Elementos da página web"
