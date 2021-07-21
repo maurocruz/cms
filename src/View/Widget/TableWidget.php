@@ -19,18 +19,21 @@ class TableWidget {
         return $this;
     }
 
-    public function setData(array $data): TableWidget {
+    public function setData(array $data = null): TableWidget {
         if (isset($data['itemListElement'])) {
             $this->rows = $data['itemListElement'];
             $numberOfItems = $data['numberOfItems'];
             $itemListOrder =  $data['itemListOrder'];
-        } else {
+        } elseif ($data) {
             $this->rows = $data;
             $numberOfItems = count($data);
-            $itemListOrder = "Undefined";
+            $itemListOrder = "undefined";
+        } else {
+            $numberOfItems = 0;
+            $itemListOrder = "undefined";
         }
         // number of items
-        $this->caption .= "<p>".sprintf(_("Showing %s items in %s order"), $numberOfItems, $itemListOrder)."</p>";
+        $this->caption .= "<p>".sprintf(_("Showing %s items in %s order"), $numberOfItems, _($itemListOrder))."</p>";
         return $this;
     }
 
