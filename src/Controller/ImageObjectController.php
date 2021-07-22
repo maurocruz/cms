@@ -10,7 +10,7 @@ use Plinct\Tool\Sitemap;
 class ImageObjectController implements ControllerInterface
 {
     public function index($params = null): array {
-        $params2 = [ "format" => "ItemList", "groupBy" => "keywords", "orderBy" => "keywords" ];
+        $params2 = [ "format" => "ItemList", "groupBy" => "keywords", "orderBy" => "keywords",'fields'=>'distinct(keywords)' ];
         $params3 = $params ? array_merge($params2, $params) : $params2;
         return Api::get("imageObject", $params3);
     }

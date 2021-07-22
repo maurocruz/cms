@@ -181,7 +181,7 @@ class ImageObjectServer {
     }
 
     public static function listKeywords(): array {
-        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "groupBy" => "keywords", "orderBy" => "keywords" ]);
+        self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "groupBy" => "keywords", "orderBy" => "keywords",'fields'=>'distinct(keywords)' ]);
         if(self::$KEYWORDS === null) {
             foreach (self::$KEYWORDS_LIST as $value) {
                 self::$KEYWORDS[] = $value['keywords'];
