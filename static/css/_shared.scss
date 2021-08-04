@@ -40,8 +40,7 @@
 
 /* COMPONENT _ figure caption black
 ===================================================================== */
-.figure-caption-black {
-  line-height: 0 !important;
+@mixin figure-caption-black {
   figcaption {
     line-height: normal;
     background-color: black;
@@ -52,6 +51,12 @@
       color: white;
     }
   }
+  @media (min-width: 576px) {
+    float: left; margin-right: 5px;
+  }
+}
+.figure-caption-black {
+  @include figure-caption-black;
 }
 
 /* SHARED

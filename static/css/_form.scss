@@ -1,3 +1,5 @@
+@use 'shared';
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -141,6 +143,14 @@
   .button-submit-delete .material-icons:hover {
     color: #ff5555;
   }
+
+  @media (min-width: 576px) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    h3 { width: 100%; }
+    fieldset { width: 50%; }
+  }
 }
 
 /* FORM TABLE
@@ -215,25 +225,122 @@
 .form-back-gray input { background-color: rgba(20,20,20,0.2); }
 .form-back-white input { background-color: rgba(255,255,255,1) !important; }
 
-/* IMAGE OBJECT FORM
+/* CONTACT POINT
+======================================================= */
+.form-contactPoint {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-child(n) { width: 100%; }
+  fieldset:nth-of-type(1) { width: 60px; }
+  fieldset:nth-of-type(2) { width: calc(100% - 60px); }
+
+  @media (min-width: 576px) {
+    fieldset:nth-child(n) { width: 50%; }
+    fieldset:nth-of-type(1) { width: 60px; }
+    fieldset:nth-of-type(2) { width: calc(50% - 30px); }
+    fieldset:nth-of-type(3) { width: calc(50% - 30px); }
+    fieldset:nth-of-type(4) { width: calc(100% - 110px); }
+    fieldset:nth-of-type(5) { width: 110px; }
+  }
+
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(1) { width: 60px; }
+    fieldset:nth-of-type(2) { width: 160px; }
+    fieldset:nth-of-type(3) { width: 160px; }
+    fieldset:nth-of-type(4) { width: calc(100% - 490px); }
+    fieldset:nth-of-type(5) { width: 110px; }
+  }
+  @media (min-width: 1024px) {
+    fieldset:nth-of-type(1) { width: 55px; }
+    fieldset:nth-of-type(2) { width: 125px; }
+    fieldset:nth-of-type(3) { width: 100px; }
+    fieldset:nth-of-type(4) { width: calc(100% - 855px); }
+    fieldset:nth-of-type(5) { width: 110px; }
+    fieldset:nth-of-type(6) { width: 185px; }
+    fieldset:nth-of-type(7) { width: 170px; }
+
+  }
+}
+
+/* IMAGE OBJECT
 ======================================================= */
 .form-imageObject {
   figure {
     width: 100%;
     text-align: center;
   }
+
+  @media (min-width: 576px) {
+    fieldset:nth-of-type(1) { width: 60px; }
+    fieldset:nth-of-type(2) { width: calc(100% - 60px); }
+    fieldset:nth-of-type(3) { width: 33.3%; }
+    fieldset:nth-of-type(4) { width: 33.3%; }
+    fieldset:nth-of-type(5) { width: 33.3%; }
+    fieldset:nth-of-type(6) { width: 33.3%; }
+    fieldset:nth-of-type(7) { width: 33.3%; }
+    fieldset:nth-of-type(8) { width: 33.3%; }
+    fieldset:nth-of-type(9) { width: 100%; }
+  }
+
+  @media (min-width: 992px) {
+    fieldset:nth-of-type(3) { width: 16.66%; }
+    fieldset:nth-of-type(4) { width: 16.66%; }
+    fieldset:nth-of-type(5) { width: 16.66%; }
+    fieldset:nth-of-type(6) { width: 16.66%; }
+    fieldset:nth-of-type(7) { width: 16.66%; }
+    fieldset:nth-of-type(8) { width: 16.66%; }
+    fieldset:nth-of-type(9) { width: 100%; }
+  }
 }
 
-/* ORDER FORM
-====================================================== */
-.form-order {
-  display: flex;
-  flex-wrap: wrap;
-  .choose-type-select { max-width: 160px; }
-  fieldset:nth-of-type(3) { max-width: 160px; width: 50%; }
-  fieldset:nth-of-type(4) { max-width: 160px; width: 50%; }
-  fieldset:nth-of-type(5) { max-width: 160px; width: 50%; }
-  fieldset:nth-of-type(6) { max-width: 160px; width: 50%; }
+.form-imageObject-upload {
+  input {
+    height: 26px;
+  }
+
+  fieldset:nth-of-type(2) {
+    display: flex;
+    label { width: 100px; align-self: center; }
+    input { width: calc(100% - 100px); }
+  }
+
+  @media (min-width: 576px) {
+    fieldset { width: 100%; }
+  }
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    fieldset:nth-of-type(1) {
+      width: 300px;
+    }
+    fieldset:nth-of-type(2) {
+      width: calc(100% - 300px);
+    }
+  }
+
+  @media (min-width: 992px) {
+    fieldset:nth-child(n) { width: calc(33.33% - 20px); }
+  }
+}
+
+.form-imageObject-edit {
+  figure {
+    text-align: center;
+    @include shared.figure-caption-black;
+  }
+  fieldset:nth-of-type(2) { width: 60px; display: inline-block; }
+  fieldset:nth-of-type(3) { width: 145px; display: inline-block; }
+
+  @media (min-width: 576px) {
+    display: block;
+    fieldset:nth-of-type(1) { width: calc(100% - 205px); }
+    fieldset:nth-of-type(4) { width: calc(100% - 205px); display: inline-block; }
+  }
+
+  @media (min-width: 992px) {
+    fieldset:nth-of-type(4) { width: calc(100% - 410px); display: inline-block; }
+  }
 }
 
 /* INVOICE
@@ -252,7 +359,46 @@
   fieldset:nth-of-type(4) { width: calc(100% - 67px); }
 }
 
-/* FORM OFFER
+/* ORDER FORM
+====================================================== */
+.form-order {
+  display: flex;
+  flex-wrap: wrap;
+  .choose-type-select { max-width: 160px; }
+  fieldset:nth-of-type(3) { max-width: 160px; width: 50%; }
+  fieldset:nth-of-type(4) { max-width: 160px; width: 50%; }
+  fieldset:nth-of-type(5) { max-width: 160px; width: 50%; }
+  fieldset:nth-of-type(6) { max-width: 160px; width: 50%; }
+}
+
+/* PERSON
+======================================================= */
+.form-person {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-child(n) { width: 50%; }
+  fieldset:nth-child(4) { width: 100%; }
+  fieldset:nth-child(9) { width: 100%; }
+
+  @media (min-width: 576px) {
+    fieldset:nth-child(n) { width: 50%; }
+  }
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(n) { width: 33.33%; }
+    fieldset:nth-of-type(7) { width: 50%; }
+    fieldset:nth-of-type(8) { width: 50%; }
+  }
+  @media (min-width: 992px) {
+    fieldset:nth-child(n) { width: 25%; }
+  }
+  @media (min-width: 1024px) {
+    fieldset:nth-child(n) { width: 20%; }
+    fieldset:nth-of-type(8) { width: 40%; }
+  }
+}
+
+
+/* OFFER
 ====================================================== */
 .form-offer {
   display: flex;
@@ -268,7 +414,7 @@
   }
 }
 
-/* FORM WEBSITE
+/* WEBSITE
 ====================================================== */
 .form-webSite {
   @media (min-width: 576px) {
@@ -276,14 +422,14 @@
   }
 }
 
-/* FORM WEB PAGE
+/* WEB PAGE
 ====================================================== */
 .form-webPage {
   fieldset:nth-of-type(3) { width: 100%; }
   fieldset:nth-of-type(4) { width: 100%; }
 }
 
-/* FORM WEB PAGE ELEMENT
+/* WEB PAGE ELEMENT
 ====================================================== */
 .form-webPageElement {
   display: flex;
