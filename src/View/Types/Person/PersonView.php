@@ -38,23 +38,27 @@ class PersonView {
     }
     
     public function edit(array $data): array {
-        $value = $data[0];
-        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        $this->navbarPerson($id, $value['name'] ?? "ND");
-        // FORM
-        $this->content['main'][] = self::formPerson('edit', $value);
-        // CONTACT POINT
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm('person', $id, $value['contactPoint']) ]);
-        // ADDRESS
-        $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [ (new PostalAddressView())->getForm("person", $id, $value['address']) ]);
-        // IMAGE
-        $this->content['main'][] = self::divBoxExpanding(_("Image"), "ImageObject", [ (new ImageObjectView())->getForm("Person",$id,$value['image']) ]);
+        if (!empty($data)) {
+            $value = $data[0];
+            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+            $this->navbarPerson($id, $value['name'] ?? "ND");
+            // FORM
+            $this->content['main'][] = self::divBox2(_("Edit person"), [ self::formPerson('edit', $value) ]);
+            // CONTACT POINT
+            $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('person', $id, $value['contactPoint'])]);
+            // ADDRESS
+            $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [(new PostalAddressView())->getForm("person", $id, $value['address'])]);
+            // IMAGE
+            $this->content['main'][] = self::divBoxExpanding(_("Image"), "ImageObject", [(new ImageObjectView())->getForm("Person", $id, $value['image'])]);
+        } else {
+            $this->navbarPerson();
+            $this->content['main'][] = self::noContent(_("Person is not exists!"));
+        }
         return $this->content;
     }
     
     private static function formPerson($case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array {
         $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], 'id')['value'] : null;
-        $content[] = [ "tag" => "h6", "content" => ucfirst(_($case)) ];
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"id", "type" => "hidden", "value" => $id ] ] : null ;
         if ($tableHasPart) {
             $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableHasPart", "type" => "hidden", "value"=>$tableHasPart ] ] ;
@@ -63,7 +67,7 @@ class PersonView {
         // GIVEN NAME
         $attributes = [ "name"=>"givenName", "type" => "text", "value" => $value['givenName'] ?? "" ];
         $attr = $case !== "edit" ? array_merge($attributes, [ "data-idselect" => "gv".($id ?? $case), "onKeyUp" => "selectItemFormBd(this,'person');", "autocomplete" => "off" ]) : $attributes;
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "min-width: 380px;" ], "content" => [ 
+        $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" =>"legend", "content" => _("Given name") ],
             [ "tag" => "input", "attributes" => $attr ] 
         ]];
@@ -98,7 +102,7 @@ class PersonView {
             [ "tag" => "input", "attributes" => [ "name"=>"gender", "type" => "text", "value"=>$value['gender'] ?? null ] ]
         ]];
         // has occupation
-        $content[] = [ "tag" => "fieldset", "attributes" => [ "style" => "width: 400px;" ], "content" => [ 
+        $content[] = [ "tag" => "fieldset", "content" => [
             [ "tag" =>"legend", "content" => _("Has occupation") ],
             [ "tag" => "input", "attributes" => [ "name"=>"hasOccupation", "type" => "text", "value" => $value['hasOccupation'] ?? null ] ]
         ]];
@@ -108,6 +112,6 @@ class PersonView {
         if ($case !== "add") {
             $content[] = self::submitButtonDelete("/admin/person/erase");
         }
-        return [ "tag" => "form", "attributes" => [ "class" => "form-inline box", "action" => "/admin/person/$case", "method" => "post"], "content" => $content ];
+        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-person", "action" => "/admin/person/$case", "method" => "post"], "content" => $content ];
     }
 }
