@@ -1,11 +1,14 @@
 <?php
 namespace Plinct\Cms\View\Types\ImageObject;
 
+use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;
+use Plinct\Web\Element\Element;
+use Plinct\Web\Element\Form;
 
 class ImageObjectWidget {
     protected $tableHasPart;
@@ -62,15 +65,17 @@ class ImageObjectWidget {
         $content[] = [ "tag" => "div", "attributes" => [ "class" => "admin-images-grid" ], "content" => $containerImages ];
         return [ "tag" => "div", "content" => $content ];
     }
+
     /**
      *
      * @param array $data
      * @return array
+     * @throws Exception
      */
     protected function editWithPartOf(array $data): array {
         $content = null;
         if (empty($data)) {
-            $content[] = [ "tag" => "p", "content" => "Não há imagens!", "attributes" => [ "class" => "aviso"] ];
+            $content[] = [ "tag" => "p", "content" => _("Images not found!"), "attributes" => [ "class" => "warning"] ];
         } else {
             foreach ($data as $valueEdit) {
                 $content[] = self::simpleTag("div", [
@@ -81,6 +86,9 @@ class ImageObjectWidget {
         return $content;
     }
 
+    /**
+     * @throws Exception
+     */
     protected static function formImageObjectEdit($value): array {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = self::input("id", "hidden", $ID);
@@ -115,6 +123,9 @@ class ImageObjectWidget {
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject", "name" => "form-imageObject", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
+    /**
+     * @throws Exception
+     */
     protected function formIsPartOf($value): array {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
@@ -127,7 +138,7 @@ class ImageObjectWidget {
         $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
         $content[] = [
             "object" => "figure",
-            "attributes" => [ "class" => "figure-caption-black" ],
+            "attributes"=>['class'=>'form-imageObject-edit-figure'],
             "src" => $image->getSrc(),
             "width" => 200,
             "href" => "/admin/imageObject/edit/$ID",
@@ -209,21 +220,62 @@ class ImageObjectWidget {
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao box", "style" => "overflow: hidden;", "name" => "form-images-edit", "action" => "/admin/imageObject/erase", "method" => "post" ], "content" => $content ];
     }
 
+    /**
+     * FORM UPLOAD IMAGES
+     * @param null $tableHasPart
+     * @param null $idHasPart
+     * @return array
+     */
     protected function upload($tableHasPart = null, $idHasPart = null): array {
+        $form = new Form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
+        $form->action('/admin/imageObject/new')->method('post');
         // TITLE
-        $content[] = [ "tag" => "h4", "content" => _("Upload images") ];
-        $content[] = $tableHasPart ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => $tableHasPart, "type" => "hidden" ] ] : null;
-        $content[] = $idHasPart ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $idHasPart, "type" => "hidden" ] ] : null;
-        // image upload
-        $content[] =self::fieldsetWithInput(_("Select images"), "imageupload[]", null, null, "file", [ "multiple"]);
-        // location
-        $content[] = self::fieldsetWithInput(_("Save to folder"), "location", null, null, "text", [ "list" => "listLocations", "autocomplete" => "off"]);
-        $datalist = ImageObjectServer::listLocation(App::getImagesFolder());
-        $content[] = $datalist ? self::datalist("listLocations", $datalist) : null;
-        // keywords
-        $content[] = self::fieldsetWithInput(_("Keywords"), "keywords", null, null, "text", [ "list" => "keywords", "autocomplete" => "off" ] );
-        $content[] = self::datalist("keywords", ImageObjectServer::listKeywords());
-        $content[] = self::submitButtonSend();
-        return [ "tag" => "form", "attributes" => [ "name" => "form-images-upload", "id" => "form-images-uploadImage-".$this->idHasPart, "action" => '/admin/imageObject/new', "class" => "box formPadrao form-imageObject-upload", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
+        $form->content("<h4>"._("Upload images")."</h4>");
+        // HIDDENS
+        if ($tableHasPart && $idHasPart) {
+            $form->input('tableHasPart',$tableHasPart,'hidden');
+            $form->input('idHasPart',$idHasPart,'hidden');
+        }
+        // IMAGE UPLOAD
+        $form->fieldsetWithInput('imageupload[]', null, _("Select images"),'file',null,['multiple']);
+        // LOCATION
+        $form->content(self::locationsOnUpload());
+        // KEYWORDS
+        $form->content(self::keywordsOnUpload());
+        // SUBMIT BUTTON
+        $form->submitButtonSend(['class'=>'form-submit-button form-submit-button-send']);
+        // RESPONSE
+        return $form->ready();
+    }
+
+    private static function locationsOnUpload(): array {
+        $imageDir = App::getImagesFolder();
+        $datalist = ImageObjectServer::listLocation($imageDir, true);
+        // FIELDSET
+        $fieldset = new Element('fieldset');
+        // legend
+        $fieldset->content("<legend>"._("Save to folder")."</legend>");
+        // label
+        $fieldset->content("<label>$imageDir</label>");
+        // input
+        $fieldset->content("<input name='location' type='text' list='listlocations' autocomplete='off'/>");
+        // data list
+        $fieldset->content(self::datalist('listlocations',$datalist));
+        // response
+        return $fieldset->ready();
+    }
+
+    private static function keywordsOnUpload(): array {
+        $listKeywords = ImageObjectServer::listKeywords();
+        // FIELDSET
+        $fieldset = new Element('fieldset');
+        // LEGEND
+        $fieldset->content("<legend>"._("Keywords")."</legend>");
+        // INPUT
+        $fieldset->content('<input name="keywords" type="text" value="" list="keywords" autocomplete="off">');
+        // DATA LIST
+        $fieldset->content(self::datalist('keywords',$listKeywords));
+        // RESPONSE
+        return $fieldset->ready();
     }
 }
