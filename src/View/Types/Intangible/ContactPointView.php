@@ -22,8 +22,8 @@ class ContactPointView {
     static private function formContactPoint($tableHasPart, $idHasPart, $case = 'new', $value = null, $key = null): array {
         $content[] = self::input('tableHasPart', "hidden", $tableHasPart);
         if ($case === "new") {
-            $content[] = "<h4>"._("new").": </h4>";
             $content[] = self::input('idHasPart', "hidden", $idHasPart);
+            $content[] = "<h4>"._("new").": </h4>";
         } else {     
             $id = ArrayTool::searchByValue($value['identifier'],"id")['value'];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $id ] ];
