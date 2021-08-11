@@ -19,7 +19,7 @@ class App {
     public static $HOST;
     private static $API_HOST = null;
     private static $API_SECRET_KEY;
-    private static $API_USER_EXPIRE = 60*60*24;
+    private static $API_USER_EXPIRE = 60*60*24*7;
     private static $STATIC_FOLDER = "/App/static/cms/";
 
     public function __construct(Slim $slim) {
