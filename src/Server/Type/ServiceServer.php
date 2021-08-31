@@ -1,10 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\Server\Api;
 
-class ServiceServer {
-
+class ServiceServer
+{
+    /**
+     * @param $params
+     * @return string
+     */
     public function new($params): string {
         $tableHasPart = $params['providerType'];
         $idHasPart = $params['provider'];
@@ -12,5 +19,4 @@ class ServiceServer {
         $item = $data['id'];
         return "/admin/$tableHasPart/service?id=$idHasPart&item=$item";
     }
-
 }

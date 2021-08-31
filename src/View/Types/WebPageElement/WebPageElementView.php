@@ -1,6 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\WebPageElement;
 
+use Exception;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
 use Plinct\Cms\View\ViewInterface;
@@ -8,32 +12,70 @@ use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-class WebPageElementView implements ViewInterface {
-    private $content;
-    protected $idwebPage;
-    protected $idwebPageElement;
-    
+class WebPageElementView implements ViewInterface
+{
+    /**
+     * @var array
+     */
+    private array $content;
+    /**
+     * @var int
+     */
+    protected int $idwebPage;
+    /**
+     * @var int
+     */
+    protected int $idwebPageElement;
+
     use FormElementsTrait;
     use navbarTrait;
 
-    private function navBarWebPageElement($title) {
+    /**
+     * @param $type
+     * @param $methodName
+     * @param $data
+     */
+    public function view($type, $methodName, $data)
+    {
+        // TODO: Implement view() method.
+    }
+
+    /**
+     * @param $title
+     */
+    private function navBarWebPageElement($title)
+    {
         if ($title) {
             $this->content['navbar'][] = self::navbar($title);
         }
     }
 
-    public function index(array $data): array {
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function index(array $data): array
+    {
         $this->navBarWebPageElement(_("Web page element"));
         return $this->content;
     }
 
-    public function new($data = null): array {
+    /**
+     * @param null $data
+     * @return array
+     */
+    public function new($data = null): array
+    {
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
         $content[] = self::formWebPageElement();
         return [ "tag" => "div", "attributes" => [ "id" => "box-WebPageElement-add", "class" => "box box-expanding" ], "content" => $content ];
     }
 
-    public function edit(array $data): array {
+    /**
+     * @throws Exception
+     */
+    public function edit(array $data): array
+    {
         $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];
         $this->navBarWebPageElement(_("Web page element"));
         $webPageEditHref = "/admin/webPage/edit/".$data['isPartOf'];
@@ -42,7 +84,11 @@ class WebPageElementView implements ViewInterface {
         return $this->content;
     }
 
-    public function editForms(array $value): array {
+    /**
+     * @throws Exception
+     */
+    public function editForms(array $value): array
+    {
         // content
         $content[] = self::formWebPageElement("edit", $value);
         // attributes
@@ -52,14 +98,20 @@ class WebPageElementView implements ViewInterface {
         return $content;
     }
 
-    public function getForm(string $idHasPart, $value): array {
+    /**
+     * @throws Exception
+     */
+    public function getForm(int $idHasPart, $value): array
+    {
         $this->idwebPage = $idHasPart;
+
         // add new WebPagElement
         $content[] = self::divBoxExpanding(_("Add new"), "WebPageElement", [ self::formWebPageElement() ]);
+
         // WebPageElements hasPart
         if ($value) {
             foreach ($value as $valueWebPageElement) {
-                $this->idwebPageElement = ArrayTool::searchByValue($valueWebPageElement['identifier'], "id")['value'];
+                $this->idwebPageElement = (int)ArrayTool::searchByValue($valueWebPageElement['identifier'], "id")['value'];
                 $name = strip_tags(str_replace("<br>"," ",$valueWebPageElement['name']));
                 $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $name , "WebPageElement", [self::editForms($valueWebPageElement)]);
             }
@@ -67,7 +119,13 @@ class WebPageElementView implements ViewInterface {
         return $content;
     }
 
-    private function formWebPageElement($case = "new", $value = null): array {
+    /**
+     * @param string $case
+     * @param null $value
+     * @return array
+     */
+    private function formWebPageElement(string $case = "new", $value = null): array
+    {
         $id = $this->idwebPageElement ?? $this->idwebPage;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ] : null;

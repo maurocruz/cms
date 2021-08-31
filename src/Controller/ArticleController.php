@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\App;
@@ -8,13 +11,23 @@ use Plinct\Tool\Sitemap;
 
 class ArticleController implements ControllerInterface
 {
-    public function index($params = null): array {
+    /**
+     * @param null $params
+     * @return array
+     */
+    public function index($params = null): array
+    {
         $params2 = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "dateModified desc, datePublished desc" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
         return Api::get("article", $params3);
     }
 
-    public function edit(array $params): array {
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function edit(array $params): array
+    {
         $params2 = [ "properties" => "*,image,author" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
         return Api::get("article", $params3);

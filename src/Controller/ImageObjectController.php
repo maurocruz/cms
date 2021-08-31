@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\App;
@@ -9,13 +12,19 @@ use Plinct\Tool\Sitemap;
 
 class ImageObjectController implements ControllerInterface
 {
-    public function index($params = null): array {
-        $params2 = [ "format" => "ItemList", "groupBy" => "keywords", "orderBy" => "keywords",'fields'=>'distinct(keywords)' ];
+    /**
+     * @param null $params
+     * @return array
+     */
+    public function index($params = null): array
+    {
+        $params2 = [ "format" => "ItemList", "groupBy" => "keywords", "orderBy" => "keywords",'fields'=>'distinct(keywords),contentUrl' ];
         $params3 = $params ? array_merge($params2, $params) : $params2;
         return Api::get("imageObject", $params3);
     }
 
-    public function keywords($params): array {
+    public function keywords($params): array
+    {
         $keywords = isset($params['id']) ? urldecode($params['id']) : null;
         $params2 = [ "format" => "ItemList", "limit" => "none", "orderBy" => "uploadDate desc, keywords" ];
         if($keywords) {

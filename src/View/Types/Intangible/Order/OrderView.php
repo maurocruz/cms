@@ -1,19 +1,29 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Order;
 
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\Intangible\HistoryView;
 use Plinct\Cms\View\Types\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\View\Types\Intangible\OrderItem\OrderItemView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 
-class OrderView extends OrderWidget {
-
-    public function indexWithPartOf($value): array {
+class OrderView extends OrderWidget
+{
+    /**
+     * @param $value
+     * @return array
+     */
+    public function indexWithPartOf($value): array
+    {
         $orders = $value['orders'];
         // NAVBAR
-        $this->content['navbar'][] = parent::navbarOrder($value);
+        parent::navbarOrder($value);
         // SEARCH
         $this->content['main'][] = self::search("","customerName", filter_input(INPUT_GET,'customerName'));
         // PERIOD
@@ -31,18 +41,28 @@ class OrderView extends OrderWidget {
         return $this->content;
     }
 
-    public function newWithPartOf($data = null): array {
+    /**
+     * @param null $data
+     * @return array
+     */
+    public function newWithPartOf($data = null): array
+    {
         $value = $data['seller'];
         // NAVBAR
-        $this->content['navbar'][] = parent::navbarOrder($value);
+        parent::navbarOrder($value);
         // FORM NEW
         $this->content['main'][] = self::divBox2(sprintf(_("Add new %s from %s"), _("order"), $value['name']), [ self::formOrder("new", $data) ]);
         return $this->content;
     }
 
-    public function editWithPartOf(array $data): array {
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function editWithPartOf(array $data): array
+    {
         // NAVBAR
-        $this->content['navbar'][] = parent::navbarOrder($data['seller']);
+        parent::navbarOrder($data['seller']);
         if (empty($data)) {
             $this->content['main'][] = self::noContent();
         } else {
@@ -62,19 +82,21 @@ class OrderView extends OrderWidget {
     /**
      * PAYMENT INVOICES
      * @param $value
-     * @return array
      */
-    public function payment($value): array {
+    public function payment($value)
+    {
         // NAVBAR
-        $this->content['navbar'][] = parent::navbarOrder($value);
-        $this->content['navbar'][] = self::navbar(_("Payments"),[
-            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => _("View all"),
+        parent::navbarOrder($value);
+        View::navbar(_("Payments"),[
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => Fragment::icon()->home(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
             "javascript: print();" => _("Print out")
         ],5);
+
         // VARS
         $key = 0;
+
         // TITLE
         $content[] = [ "tag" => "h3", "content" => ucfirst(_("payments")) ];
         // SELECT PERIOD
@@ -86,7 +108,7 @@ class OrderView extends OrderWidget {
             $href = "/admin/$this->typeHasPart/order?id=$this->idHasPart&item=$idorder";
             $orderStatus = _($value['orderStatus']);
             $paymentDueDate = DateTime::formatDate($value['paymentDueDate']);
-            $totalPaymentDue = number_format($value['totalPaymentDue'],2,",",".");
+            $totalPaymentDue = number_format((float)$value['totalPaymentDue'],2,",",".");
             $customerName = $value['customerName'];
             $tbody[] = [ "tag" => "tr", "content" => [
                 [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => sprintf('<a href="%s">%s</a>', $href, _("Edit")) ],
@@ -126,16 +148,19 @@ class OrderView extends OrderWidget {
             [ "tag" => "tbody", "content" => $tbody ]
         ] ];
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
-        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
-        return $this->content;
+
+        View::main([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
     }
 
-
-    public function expired($value): array {
+    /**
+     * @param $value
+     */
+    public function expired($value)
+    {
         // NAVBAR
-        $this->content['navbar'][] = parent::navbarOrder($value);
-        $this->content['navbar'][] = self::navbar(_("Expired"),[
-            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => _("View all"),
+        parent::navbarOrder($value);
+        View::navbar(_("Expired"),[
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => Fragment::icon()->home(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
             "javascript: print();" => _("Print out")
@@ -158,8 +183,6 @@ class OrderView extends OrderWidget {
         // PRINT
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
         // WRAPPER
-        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
-        // RESPONSE
-        return $this->content;
+        View::main([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
     }
 }

@@ -128,19 +128,25 @@
     }
   }
 
-  .button-submit-send .material-icons {
-    color: #40d377;
+  .form-submit-button {
+    overflow: hidden;
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
   }
 
-  .button-submit-send .material-icons:hover {
-    color: #84f7ba;
-  }
+  .form-submit-button-send{ color: #40d377; }
+  
+  .form-submit-button-send:hover { color: #84f7ba; }
 
-  .button-submit-delete .material-icons {
-    color: #ee0000;
-  }
+  .form-submit-button-delete { color: #cc0000; }
 
-  .button-submit-delete .material-icons:hover {
+  .form-submit-button-delete:hover {
     color: #ff5555;
   }
 
@@ -327,19 +333,25 @@
 .form-imageObject-edit {
   figure {
     text-align: center;
+    max-width: 200px;
     @include shared.figure-caption-black;
   }
   fieldset:nth-of-type(2) { width: 60px; display: inline-block; }
   fieldset:nth-of-type(3) { width: 145px; display: inline-block; }
+  fieldset:nth-of-type(4) { width: calc(50% - 103px); display: inline-block; }
+  fieldset:nth-of-type(5) { width: calc(50% - 102px);  display: inline-block; }
+  fieldset:nth-of-type(7) { width: 100%; }
 
   @media (min-width: 576px) {
     display: block;
     fieldset:nth-of-type(1) { width: calc(100% - 205px); }
-    fieldset:nth-of-type(4) { width: calc(100% - 205px); display: inline-block; }
+    fieldset:nth-of-type(6) { width: calc(100% - 205px); display: inline-block; }
   }
 
-  @media (min-width: 992px) {
-    fieldset:nth-of-type(4) { width: calc(100% - 410px); display: inline-block; }
+  @media (min-width: 674px) {
+    fieldset:nth-of-type(4) { width: calc(50% - 205px); display: inline-block; }
+    fieldset:nth-of-type(5) { width: calc(50% - 205px);  display: inline-block; }
+    fieldset:nth-of-type(7) { width: calc(100% - 205px); display: inline-block; }
   }
 }
 
@@ -357,6 +369,22 @@
   }
   fieldset:nth-of-type(1) { width: calc(100% - 18px); }
   fieldset:nth-of-type(4) { width: calc(100% - 67px); }
+}
+
+/* OFFER
+====================================================== */
+.form-offer {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset {
+    width: 50%;
+  }
+  @media (min-width: 576px) {
+
+  }
+  @media (min-width: 768px) {
+
+  }
 }
 
 /* ORDER FORM
@@ -397,20 +425,35 @@
   }
 }
 
-
-/* OFFER
-====================================================== */
-.form-offer {
+/* PRODUCT
+======================================================= */
+.form-product {
   display: flex;
   flex-wrap: wrap;
-  fieldset {
-    width: 50%;
-  }
-  @media (min-width: 576px) {
+  fieldset:nth-of-type(3) { width: 100%; }
+  fieldset:nth-of-type(4) { width: 100%; }
+}
 
+/* SERVICE
+====================================================== */
+.form-service {
+
+  @media (min-width: 576px) {
+    fieldset:nth-of-type(n) {
+      width: 100%;
+    }
+    fieldset:nth-of-type(1) {
+      width: 50%;
+    }
+    fieldset:nth-of-type(2) {
+      width: 50%;
+    }
   }
   @media (min-width: 768px) {
-
+  }
+  @media (min-width: 992px) {
+  }
+  @media (min-width: 1024px) {
   }
 }
 

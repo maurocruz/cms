@@ -1,92 +1,113 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\LocalBusiness;
 
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
 use Plinct\Cms\View\Types\Intangible\PostalAddressView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-class LocalBusinessView {
+class LocalBusinessView
+{
     protected $content;
     public $localBusinessId = null;
     public $localBusinessName;
 
-    use navbarTrait;
     use FormElementsTrait;
-    
-    public function navbarLocalBussines() {
-        $title = _("Locals business");
-        $list = [ "/admin/localBusiness" => _("View all"), "/admin/localBusiness/new" => _("Add new") ];
-        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "localBusiness", "data-searchfor" => "name" ] ];
-        $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
-        if ($this->localBusinessId) {
-            $this->content['navbar'][] = self::navbar($this->localBusinessName, [], 3);
-        } 
+
+    /**
+     *
+     */
+    public function navbarLocalBussines(string $title = null)
+    {
+        View::navbar(_("Locals business"), [
+            "/admin/localBusiness" => Fragment::icon()->home(),
+            "/admin/localBusiness/new" => Fragment::icon()->plus()
+        ], 2, ['table'=>'locaBusiness']);
+
+        if ($title) View::navbar($title, [], 3);
     }
 
-    public function index($data): array {
+    /**
+     * @param $data
+     */
+    public function index($data)
+    {
         $this->navbarLocalBussines();
-        $this->content['main'][] = self::listAll($data, "localBusiness", "LocalBusiness list", [ "additionalType" => "Additional type", "dateModified" => "Date modified" ]);
-        return $this->content;
+
+        $listTable = Fragment::listTable();
+        $listTable->caption(sprintf(_("List of %s"), "Local business"));
+        $listTable->labels(_('Name'), _("Additional type"), _("Date modified"));
+        $listTable->rows($data['itemListElement'],['name','additionalType','dateModified']);
+        $listTable->setEditButton("/admin/localBusiness?id=");
+        View::main($listTable->ready());
     }
-    
-    public function new(): array {
+
+    /**
+     *
+     */
+    public function new()
+    {
         $this->navbarLocalBussines();
-        $this->content['main'][] = self::divBox(_("Localbusiness"), "LocalBusiness", [ self::formLocalBussiness() ]);
-        return $this->content;
+        View::main(self::divBox(_("Localbusiness"), "LocalBusiness", [ self::formLocalBussiness() ]));
     }
-    
-    public function edit($data): array {
+
+    /**
+     * @throws Exception
+     */
+    public function edit($data)
+    {
         $value = $data[0];
-        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        $this->navbarLocalBussines();
-        $this->content['main'][] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::formLocalBussiness("edit", $value) ]);
+        $id = (int)ArrayTool::searchByValue($value['identifier'], "id",'value');
+
+        $this->navbarLocalBussines($value['name']);
+
+        $content[] = self::divBox(_("LocalBusiness"), "LocalBusiness", [ self::formLocalBussiness("edit", $value) ]);
         // PLACE
-        $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']) ]);
+        $content[] = self::divBoxExpanding(_("Place"), "Place", [ self::relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']) ]);
         // CONTACT POINT
-        $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm("localBusiness", $id, $value['contactPoint']) ]);
+        $content[] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [ (new ContactPointView())->getForm("localBusiness", $id, $value['contactPoint']) ]);
         // ADDRESS
-        $this->content['main'][] = self::divBoxExpanding(_("Address"), "PostalAddress", [ (new PostalAddressView())->getForm("localBusiness", $id, $value['address']) ]);
+        $content[] = self::divBoxExpanding(_("Address"), "PostalAddress", [ (new PostalAddressView())->getForm("localBusiness", $id, $value['address']) ]);
         // ORGANIZATION
-        $this->content['main'][] = self::divBoxExpanding(_("Organization"), "Organization", [ self::relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']) ]);
+        $content[] = self::divBoxExpanding(_("Organization"), "Organization", [ self::relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']) ]);
         // PERSON
-        $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("localBusiness", $id, "person", $value['member']) ]);
+        $content[] = self::divBoxExpanding(_("Persons"), "Person", [ self::relationshipOneToMany("localBusiness", $id, "person", $value['member']) ]);
         // IMAGE
-        $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $id, $value['image']) ]);
-        return $this->content;
+        $content[] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("localBusiness", $id, $value['image']) ]);
+
+        View::main($content);
     }
 
-    private static function formLocalBussiness($case = "new", $value = null): array {
+    /**
+     * @param string $case
+     * @param null $value
+     * @return array
+     */
+    private static function formLocalBussiness(string $case = "new", $value = null): array
+    {
         $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         $content[] = $case == "edit" ? self::input("id", "hidden", $id) : null;
         // name
-        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null, [ "style" => "width: 50%" ]);
-        // additionalType
-
-        /*$additionalTypes = SchemaorgData::getTypesIsSubClassOf("LocalBusiness");
-        foreach ($additionalTypes as $valueAddTypes) {
-            $datalist[] = [ "tag" => "option", "attributes" => [ "value" => $valueAddTypes ] ];
-        }
-        $content[] = [ "tag" => "fieldset", "attributes" =>  [ "style" => "width: 50%" ], "content" => [
-            [ "tag" => "legend", "content" => _("Additional type") ],
-            [ "tag" => "input", "attributes" => [ "name" => "additionalType", "type" => "text", "value" => $value['additionalType'] ?? null, "list" => "additionalType", "autocomplete" => "off" ] ],
-            [ "tag" => "datalist", "attributes" => [ "id" => "additionalType"], "content" => $datalist ]
-        ] ];*/
-        //$content[] = self::fieldsetWithInput(_("Additional type"), "additionalType", $value['additionalType'] ?? null, [ "style" => "width: 50%" ]);
+        $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null);
         // description
         $content[] = self::fieldsetWithTextarea(_("Description"), "description", $value['description'] ?? null);
         // disambiguatingDescription
         $content[] = self::fieldsetWithTextarea(_("Disambiguating description"), "disambiguatingDescription", $value['disambiguatingDescription'] ?? null);
         // hasOfferCatalog
-        $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null, [ "style" => "width: calc(100% - 400px);" ]);
+        $content[] = self::fieldsetWithInput( _("Offer catalog"), "hasOfferCatalog", $value['hasOfferCatalog'] ?? null);
         // dateCreated
-        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'] ?? null, [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
+        $content[] = $case == "edit" ? self::fieldsetWithInput( _("Date created"), "dateCreated", $value['dateCreated'] ?? null, null, "datetime", [ "disabled" ]) : null;
         // dateModified
-        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'] ?? null, [ "style" => "width: 200px" ], "datetime", [ "disabled" ]) : null;
+        $content[] = $case == "edit" ?  self::fieldsetWithInput( _("Date modified"), "dateModified", $value['dateModified'] ?? null, null, "datetime", [ "disabled" ]) : null;
         // url
-        $content[] = self::fieldsetWithInput( "url", "url", $value['url'] ?? null, [ "style" => "width: 50%" ]);
+        $content[] = self::fieldsetWithInput( "url", "url", $value['url'] ?? null);
         $content[] = self::submitButtonSend();
         if ($case == "edit") {
             $content[] = self::submitButtonDelete("/admin/localBusiness/erase");

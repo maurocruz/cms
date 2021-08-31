@@ -1,44 +1,60 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Event;
 
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-class EventView {
-    protected $content;
-    
+class EventView
+{
     use FormElementsTrait;
-    use navbarTrait;
-    
-    protected function navbarEvent() {
-        $title = _("Events");
-        $list = [ "/admin/event" => _("View all"), "/admin/event/new" => _("Add new") ];
-        $level = 3;
-        $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "event", "data-searchfor" => "name" ] ];
-        $this->content['navbar'][] = self::navbar($title, $list, $level, $appendNavbar);
+
+    /**
+     *
+     */
+    protected function navbarEvent()
+    {
+        View::navbar(_("Events"), [
+            "/admin/event" => Fragment::icon()->home(),
+            "/admin/event/new" => Fragment::icon()->plus()
+        ], 3, ["table"=>"event"]);
     }
-    
-    public function index(array $data): array {
+
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
         $this->navbarEvent();
-        $this->content['main'][] = self::listAll($data, "event", _("List of events"), [ "startDate" => _("Date") ]);
-        return $this->content;
+        View::main(self::listAll($data, "event", _("List of events"), [ "startDate" => _("Date") ]));
     }
-        
-    public function new(): array {
+
+    /**
+     *
+     */
+    public function new()
+    {
         $this->navbarEvent();
-        $this->content['main'][] = self::div(_("Add new"), "event", [ self::formEvent() ]);
-        return $this->content;
+        View::main(self::div(_("Add new"), "event", [ self::formEvent() ]));
     }
-        
-    public function edit(array $data): array {
+
+    /**
+     * @throws Exception
+     */
+    public function edit(array $data)
+    {
         $this->navbarEvent();
         if (!$data) {
             $content[] = [ "tag" => "p", "attributes" => [ "class" => "aviso" ], "content" => _("Event not found") ];            
         } else {
             $value = $data[0];
-            $idEvent = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
+            $idEvent = (int)ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = [ "tag" => "p", "content" => _("View on website"), "href" => "/eventos/". substr($value['startDate'], 0, 10)."/". urlencode($value['name']), "hrefAttributes" => [ "target" => "_blank" ] ];
             // event 
             $content[] = self::formEvent('edit', $value);
@@ -47,19 +63,25 @@ class EventView {
             // images
             $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("event", $idEvent, $value['image']) ]);
         }
-        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "events" ], "content" => $content ];
-        return $this->content;
+        View::main([ "tag" => "div", "attributes" => [ "class" => "events" ], "content" => $content ]);
     }
 
-    /*
-     * Formulário de edição dos dados do evento
+    /**
+     *  Formulário de edição dos dados do evento
+     * @param string $case
+     * @param null $value
+     * @return array
      */
-    private static function formEvent($case = 'new', $value = null): array {
+    private static function formEvent(string $case = 'new', $value = null): array
+    {
         $startDate = isset($value) ? strstr($value['startDate'], " ", true) : null;
         $startTime = isset($value) ? substr(strstr($value['startDate'], " "), 1) : null;
         $endDate = isset($value) ? strstr($value['endDate'], " ", true) : null;
         $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
+        $description = isset($value['description']) ? stripslashes($value['description']) : null;
+
         $content[] = [ "tag"=>"h4", "content" => _("Event") ];
+
         if ($case == "edit") {
             $ID = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $ID ?? null ] ];
@@ -89,8 +111,10 @@ class EventView {
             [ "tag" => "legend", "content" => _("End time") ],
             [ "tag" => "input", "attributes" => [ "name"=>"endTime", "type" => "time", "value" => $endTime ] ] 
         ]];
-        // description
-        $content[] = self::fieldsetWithTextarea(_("Description"), "description", stripslashes($value['description'] ?? null));
+
+        // DESCRIPTION
+        $content[] = self::fieldsetWithTextarea(_("Description"), "description", $description);
+
         // submit
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/event/erase") : null;

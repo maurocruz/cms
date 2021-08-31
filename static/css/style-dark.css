@@ -61,21 +61,8 @@ table tbody tr:nth-child(even) {
 .form-back-green input { background-color: #b5fafa !important; }
 .form-back-yellow input { background-color: #fafab5 !important; }
 
-.form-submit-button {
-    overflow: hidden; height: 50px; width: 50px; display: inline-block; margin-left: 5px; vertical-align: middle; cursor: pointer;
-    background-color: transparent;
-    border: 0;
-}
-.form-submit-button-send .material-icons{ color: #40d377; }
-.form-submit-button-send .material-icons:hover{ color: #84f7ba; }
-.form-submit-button-delete .material-icons{ color: #cc0000; }
-.form-submit-button-delete .material-icons:hover{ color: #ff5555; }
 
 /* table-itemlist */
 .table-itemlist tbody tr td:nth-child(1) { text-align: center; }
 .table-itemlist-button { margin: 0 auto; }
 .table-itemlist-button-edit .material-icons{ font-size: 16px; }
-
-
-.xdebug-error { font-size: 16px; }
-.xdebug-error tr td span{ display: none; }

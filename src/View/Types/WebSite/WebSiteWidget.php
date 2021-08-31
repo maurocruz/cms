@@ -1,8 +1,11 @@
 <?php
 namespace Plinct\Cms\View\Types\WebSite;
 
+use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\Fragment\IconFragment;
+use Plinct\Cms\View\Structure\Header\HeaderView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Cms\View\Widget\TableWidget;
 use Plinct\Web\Element\Form;
 
@@ -11,24 +14,20 @@ class WebSiteWidget {
     protected $idwebSite;
     protected $idwebPage;
 
-    //use HtmlPiecesTrait;
     use FormElementsTrait;
 
-    protected function navbarWebSite($title = null) {
-        $list = [
-            '/admin/webSite'=>sprintf(_("View all %s"),"WebSite"),
-            '/admin/webSite/new'=>sprintf(_("Add new %s"),"WebSite")
-        ];
-        $append = navbarTrait::searchPopupList('webSite');
-        $this->content['navbar'][] = navbarTrait::navbar(_("WebSite"),$list,2,$append);
-        if ($title) {
-            $list2 = [
+    protected function navbarWebSite($title = null)
+    {
+        View::navbar(_("WebSite"),[
+            '/admin/webSite'=> Fragment::icon()->home(),
+            '/admin/webSite/new'=> Fragment::icon()->plus()
+        ], 2, ['table'=>'webSite']);
+
+        if ($title) View::navbar(_($title), [
                 "/admin/webSite/edit/$this->idwebSite"=>_("View website"),
                 "/admin/webSite/webPage?id=$this->idwebSite"=>_("List of web pages"),
                 "/admin/webSite/webPage?id=$this->idwebSite&action=new"=>_("Add new web page")
-            ];
-            $this->content['navbar'][] = navbarTrait::navbar(_($title),$list2,3);
-        }
+            ], 3);
     }
 
     protected function listAllWebPages(array $data): array {

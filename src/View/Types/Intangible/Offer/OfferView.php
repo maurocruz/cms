@@ -1,50 +1,80 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Offer;
 
-use Plinct\Cms\View\ViewInterface;
-use Plinct\Cms\View\Widget\navbarTrait;
+use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\View;
 use Plinct\Tool\ArrayTool;
 
-class OfferView extends OfferWidget implements ViewInterface {
-
-    private function navbarOffer() {
-        $this->content['navbar'][] = navbarTrait::navbar(_("Offer"), [
-            "/admin/offer" => _("List all"),
-            "/admin/offer/new" => _("Add new")
+class OfferView extends OfferWidget
+{
+    /**
+     *
+     */
+    private function navbarOffer()
+    {
+        View::navbar(_("Offer"), [
+            "/admin/offer" => Fragment::icon()->home(),
+            "/admin/offer/new" => Fragment::icon()->plus()
         ]);
     }
 
-    public function index(array $data): array {
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
         $this->navbarOffer();
-        $this->content['main'][] = self::listAll($data, "offer", null, [ "price" => _("Price"), "validThrough" => _("Valid through"), "itemOffered:name" => _("Item offered"), "itemOfferedType" => _("Item offered type") ]);
-        return $this->content;
+
+        View::main(self::listAll($data, "offer", null, [ "price" => _("Price"), "validThrough" => _("Valid through"), "itemOffered:name" => _("Item offered"), "itemOfferedType" => _("Item offered type") ]));
     }
 
-    public function edit(array $data): array {
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function editWithPartOf(array $data): array
+    {
         $this->setOfferedBy($data);
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+
         // NEW OFFER
-        $this->content['main'][] = self::divBoxExpanding(sprintf(_("Add new %s"), _("offer")), "offer", [ parent::formOffer() ]);
+        $content[] = Fragment::box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer());
+
         if ($data['offers'] === null) {
-            $this->content['main'][] = self::noContent("No offers found");
+            $content[] = Fragment::miscellaneous()->message(_("No offers found"));
+
         } else {
             foreach ($data['offers'] as $key => $value) {
                 $number = $key + 1;
-                $this->content['main'][] = self::divBox(_("Offer")." #$number", "offer", [self::formOffer($value)]);
+                $content[] = Fragment::box()->simpleBox(self::formOffer($value), _("Offer")." #$number");
             }
         }
-        return $this->content;
+
+        return $content;
     }
 
-    public function new($data = null): array {
+    /**
+     * @param null $data
+     */
+    public function new($data = null)
+    {
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-        $this->content['main'][] = self::divBoxExpanding(sprintf(_("Add new %s"), _("offer")), "offer", [ parent::formOffer() ]);
-        return $this->content;
+        View::main(self::divBoxExpanding(sprintf(_("Add new %s"), _("offer")), "offer", [ parent::formOffer() ]));
     }
 
-    public function getForm($tableHasPart, $idHasPart, $data): array {
+    /**
+     * @param $tableHasPart
+     * @param $idHasPart
+     * @param $data
+     * @return array
+     */
+    public function getForm($tableHasPart, $idHasPart, $data): array
+    {
         $content = null;
         $this->tableHasPart = $tableHasPart;
         $this->idHasPart = $idHasPart;

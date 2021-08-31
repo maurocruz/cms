@@ -1,98 +1,139 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Organization;
 
+use Exception;
+use Plinct\Cms\View\Structure\Main\MainView;
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\Order\OrderView;
+use Plinct\Cms\View\Types\Product\ProductView;
+use Plinct\Cms\View\Types\TypeViewInterface;
+use Plinct\Cms\View\View;
 
-class OrganizationView extends OrganizationWidget {
-
-    public function index(array $data): array {
+class OrganizationView extends OrganizationAbstract implements TypeViewInterface
+{
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
         // NAVBAR
         parent::navbarIndex();
         //
         if (isset($data['errorInfo'])) {
-            $this->content['main'][] = self::errorInfo($data['errorInfo'], "organization");
+            View::main(self::errorInfo($data['errorInfo'], "organization"));
         } else {
-            $this->content['main'][] = self::listAll($data, "organization", _("List of organizations"), [ "additionalType" => "Additional type", "dateModified" => "Date Modified" ]);
+            View::main(self::listAll($data, "organization", _("List of organizations"), [ "additionalType" => "Additional type", "dateModified" => "Date Modified" ]));
         }
-        return $this->content;
     }
-    
-    public function new(): array {
+
+    /**
+     * @param null $data
+     */
+    public function new($data = null)
+    {
         // NAVBAR
         parent::navbarNew();
         //
-        $this->content['main'][] = self::divBox(_("Add organization"), "Organization", [ self::formOrganization() ]);
-        return $this->content;
+        View::main(self::divBox(_("Add organization"), "Organization", [ self::formOrganization() ]));
     }
 
-    public function edit(array $data): array {
+    /**
+     * @param array $data
+     * @throws Exception
+     */
+    public function edit(array $data)
+    {
         if (empty($data)) {
             // NAVBAR
             parent::navbarIndex();
-            $this->content['main'][] = parent::noContent(_("No item founded!"));
+            MainView::content(parent::noContent(_("No item founded!")));
         } else {
             $value = parent::setValues($data[0]);
             // NAVBAR
             parent::navbarEdit();
             // organization
-            $this->content['main'][] = self::divBox2(sprintf(_("Edit %s"), _("organization")), [self::formOrganization('edit', $value)]);
+            View::main(self::divBox2(sprintf(_("Edit %s"), _("organization")), [self::formOrganization('edit', $value)]));
             // location
-            $this->content['main'][] = self::divBoxExpanding(_("Place"), "Place", [self::relationshipOneToOne("organization", $this->id, "location", "place", $value['location'])]);
+            View::main(self::divBoxExpanding(_("Place"), "Place", [self::relationshipOneToOne("organization", $this->id, "location", "place", $value['location'])]));
             // contact point
-            $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('organization', $this->id, $value['contactPoint'])]);
+            View::main(self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('organization', $this->id, $value['contactPoint'])]));
             // member
-            $this->content['main'][] = self::divBoxExpanding(_("Persons"), "Person", [self::relationshipOneToMany("organization", $this->id, "person", $value['member'])]);
+            View::main(self::divBoxExpanding(_("Persons"), "Person", [self::relationshipOneToMany("organization", $this->id, "person", $value['member'])]));
             // image
-            $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [(new ImageObjectView())->getForm("organization", $this->id, $value['image'])]);
+            View::main(self::divBoxExpanding(_("Images"), "ImageObject", [(new ImageObjectView())->getForm("organization", $this->id, $value['image'])]));
         }
-        return $this->content;
     }
 
-    public function service($data): array {
+    /**
+     * @throws Exception
+     */
+    public function service($data): array
+    {
         parent::setValues($data[0]);
         // NAVBAR
         parent::navbarEdit();
+
         return $this->itemView("Service", $data);
     }
-    public function product($data): array {
-        parent::setValues($data[0]);
+
+    /**
+     * @param $value
+     * @throws Exception
+     */
+    public function product($value)
+    {
+        $action = $value['action'] ?? null;
+
+        parent::setValues($value);
+
         // NAVBAR
         parent::navbarEdit();
-        return $this->itemView("Product", $data);
+
+        // MAIN
+        $product = new ProductView();
+        if ($action == 'new') {
+            $product->newWithPartOf($value);
+        } elseif($action == 'edit') {
+            $product->editWithPartOf($value);
+        } else {
+            $product->indexWithPartOf($value);
+        }
     }
 
     /**
      * ORDER
      * @param $data
-     * @return array
+     * @throws Exception
      */
-    public function order($data): array {
+    public function order($data)
+    {
+        // VARS
+        $action = filter_input(INPUT_GET, 'action');
+
         // NAVBAR ORGANIZATION
         if ($data[0]['@type'] == "Organization") {
             parent::setValues($data[0]);
         } else {
             parent::setValues($data[0]['seller']);
         }
+
+        // NAVBAR
         parent::navbarEdit();
-        // VARS
-        $action = filter_input(INPUT_GET, 'action');
-        // PAYMENT
+
+        // MAIN
+        $order = new OrderView();
         if ($action == "payment") {
-            $itemResponse = (new OrderView())->payment($data[0]);
-            $this->content['navbar'] = array_merge($this->content['navbar'], $itemResponse['navbar']);
-            $this->content['main'] = $itemResponse['main'];
-            return $this->content;
+            $order->payment($data[0]);
         }
-        // EXPIRE
-        if ($action == "expired") {
-            $itemResponse = (new OrderView())->expired($data[0]);
-            $this->content['navbar'] = array_merge($this->content['navbar'], $itemResponse['navbar']);
-            $this->content['main'] = $itemResponse['main'];
-            return $this->content;
+        elseif ($action == "expired") {
+            $order->expired($data[0]);
+        } else {
+            $response = $this->itemView("Order", $data);
+            View::main($response['main']);
         }
-        // RESPONSE
-        return $this->itemView("Order", $data);
     }
 }

@@ -1,11 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View;
 
 interface ViewInterface 
 {
-    public function index(array $data): array;
-
-    public function new($data = null): array;
-
-    public function edit(array $data): array;
+    /**
+     * @param $type
+     * @param $methodName
+     * @param $data
+     * @return mixed
+     */
+    public function view($type, $methodName, $data);
 }

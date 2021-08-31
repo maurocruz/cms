@@ -634,7 +634,7 @@ msgstr "Adiciona novo negócio local"
 msgid "Editing Local Business"
 msgstr "Editando negócio local"
 
-msgid "Disambiguating Description"
+msgid "Disambiguating description"
 msgstr "Descrição de desambiguação"
 
 msgid "Has offer catalog"
@@ -697,10 +697,10 @@ msgid "Discontinued"
 msgstr "Interrompido"
 
 msgid "In stock"
-msgstr "Em estoque"
+msgstr "Disponível"
 
 msgid "InStock"
-msgstr "Em estoque"
+msgstr "Disponível"
 
 msgid "In store only"
 msgstr "Somente na loja"
@@ -721,10 +721,10 @@ msgid "OnlineOnly"
 msgstr "Somente online"
 
 msgid "Out of stock"
-msgstr "Sem estoque"
+msgstr "Indisponível"
 
 msgid "OutOfStock"
-msgstr "Sem estoque"
+msgstr "Indisponível"
 
 msgid "Pre sale"
 msgstr "Pré venda"

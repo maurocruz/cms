@@ -1,29 +1,45 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Template;
 
 use Plinct\Cms\App;
-use Plinct\Web\Template\TemplateAbstract;
+use Plinct\Cms\View\Structure\Header\HeaderView;
 
-class TemplateWidget extends TemplateAbstract {
+abstract class TemplateWidget extends TemplateAbstract
+{
+    /**
+     * @return array
+     */
+    protected function navbarList(): array
+    {
+        $data = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
 
-    protected function navbar() {
-        $data['list'] = [ "/admin" => _("Home"), "/admin/user" => _("Users") ];
         if (App::getTypesEnabled()) {
             foreach (App::getTypesEnabled() as $key => $value) {
                 $href = is_string($key) ? $key : "/admin/$value";
-                $data['list'][$href] = _(ucfirst($value));
+                $data[$href] = _(ucfirst($value));
             }
         }
-        $data['attributes'] = ["class"=>"menu"];
-        $this->addNavBar($data);
+
+        return $data;
     }
 
-    // ADD NAVBAR
-    public function addNavBar(array $data) {
-        parent::append("header", [ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null, "append" => $data['append'] ?? null ]);
+    /**
+     * @param array $data
+     */
+    public function addNavBar(array $data)
+    {
+        $header = new HeaderView();
+        $header->content([ "object"=>"navbar", "attributes" => $data['attributes'], "content" => $data['list'], "title" => $data['title'] ?? null, "append" => $data['append'] ?? null ]);
     }
 
-    protected static function formLogin(): array {
+    /**
+     * @return array
+     */
+    protected static function formLogin(): array
+    {
         return [ "tag" => "form", "attributes" => [ "action" => "/admin/login", "method" => "post", "class" => "form formPadrao" ], "content" => [
             [ "tag" => "h3", "content" => _("Log in") ],
             [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%;" ], "content" => [
@@ -39,7 +55,11 @@ class TemplateWidget extends TemplateAbstract {
         ] ];
     }
 
-    protected static function formRegister(): array {
+    /**
+     * @return array
+     */
+    protected static function formRegister(): array
+    {
         return [ "tag" => "form", "attributes" => [ "id" => "register-form", "action" => "/admin/register", "method" => "post", "class" => "form formPadrao", "onsubmit" => "return checkRegisterForm(this);" ], "content" => [
             [ "tag" => "h3", "content" => _("New user registration") ],
             [ "tag" => "fieldset", "attributes" => [ "style" => "width: 100%;" ], "content" => [
@@ -61,5 +81,4 @@ class TemplateWidget extends TemplateAbstract {
             [ "tag" => "input", "attributes" => [ "name" => "submit", "type" => "submit", "value" => _("Send") ] ]
         ]];
     }
-
 }

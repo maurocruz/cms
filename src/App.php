@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms;
 
 use Plinct\Tool\Locale;
@@ -8,52 +11,160 @@ use Slim\App as Slim;
  * Class App
  * @package Plinct\Cms
  */
-class App {
-    private static $IMAGES_FOLDER = "/public/images/";
-    private static $IMAGE_MAX_WIDTH = "1080";
-    private $slim;
-    private static $TITLE = null;
-    private static $LANGUAGE;
-    public static $TypesEnabled = [];
-    private static $VERSION;
-    public static $HOST;
-    private static $API_HOST = null;
-    private static $API_SECRET_KEY;
+class App
+{
+    /**
+     * @var string
+     */
+    private static string $IMAGES_FOLDER = "/public/images/";
+    /**
+     * @var string
+     */
+    private static $IMAGE_MAX_WIDTH = 1080;
+    /**
+     * @var Slim
+     */
+    private Slim $slim;
+    /**
+     * @var string|null
+     */
+    private static ?string $TITLE = null;
+    /**
+     * @var string
+     */
+    private static string $LANGUAGE;
+    /**
+     * @var array
+     */
+    public static array $TypesEnabled = [];
+    /**
+     * @var string
+     */
+    private static string $VERSION;
+    /**
+     * @var string
+     */
+    public static string $HOST;
+    /**
+     * @var string|null
+     */
+    private static ?string $API_HOST = null;
+    /**
+     * @var string|null
+     */
+    private static ?string $API_SECRET_KEY;
+    /**
+     * @var float|int
+     */
     private static $API_USER_EXPIRE = 60*60*24*7;
-    private static $STATIC_FOLDER = "/App/static/cms/";
+    /**
+     * @var string
+     */
+    private static string $STATIC_FOLDER = "/App/static/cms/";
+    /**
+     * @var
+     */
+    private static $soloineUrl;
 
-    public function __construct(Slim $slim) {
+    /**
+     * @param Slim $slim
+     */
+    public function __construct(Slim $slim)
+    {
         $this->slim = $slim;
         self::$HOST = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
         self::setVersion();
         self::$LANGUAGE = Locale::getServerLanguage();
     }
-    public function setApi(string $apiUrl, ?string $apiSecretKey = null): App {
+
+    /**
+     * @param string $apiUrl
+     * @param string|null $apiSecretKey
+     * @return $this
+     */
+    public function setApi(string $apiUrl, ?string $apiSecretKey = null): App
+    {
         self::$API_HOST = $apiUrl == "localhost" ? self::$HOST . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
         return $this;
     }
-    public function setStaticFolder(string $STATIC_FOLDER): App {
+
+    /**
+     * @param mixed $soloineUrl
+     */
+    public function setSoloineUrl($soloineUrl): void
+    {
+        self::$soloineUrl = $soloineUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getSoloineUrl()
+    {
+        return self::$soloineUrl;
+    }
+
+    /**
+     * @param string $STATIC_FOLDER
+     * @return $this
+     */
+    public function setStaticFolder(string $STATIC_FOLDER): App
+    {
         self::$STATIC_FOLDER = $STATIC_FOLDER;
         return $this;
     }
-    public function setLanguage($language): App {
+
+    /**
+     * @param $language
+     * @return $this
+     */
+    public function setLanguage($language): App
+    {
         self::$LANGUAGE = $language;
         return $this;
     }
-    public function setTitle($title): App {
+
+    /**
+     * @param $title
+     * @return $this
+     */
+    public function setTitle($title): App
+    {
         self::$TITLE = $title; return $this;
     }
-    public function setTypesEnabled(array $types): App {
+
+    /**
+     * @param array $types
+     * @return $this
+     */
+    public function setTypesEnabled(array $types): App
+    {
         self::$TypesEnabled = $types; return $this;
     }
-    public function setImagesFolder($relativePath): App {
+
+    /**
+     * @param $relativePath
+     * @return $this
+     */
+    public function setImagesFolder($relativePath): App
+    {
         self::$IMAGES_FOLDER = $relativePath; return $this;
     }
-    public function setImageMaxWigth(int $imageMaxWigth): void {
+
+    /**
+     * @param int $imageMaxWigth
+     */
+    public function setImageMaxWigth(int $imageMaxWigth): void
+    {
         self::$IMAGE_MAX_WIDTH = $imageMaxWigth;
     }
-    public static function setVersion() {
+
+    /**
+     *
+     */
+    public static function setVersion()
+    {
         $version = "developer version";
         $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
         $packages = json_decode(file_get_contents($installedFile));
@@ -64,40 +175,100 @@ class App {
         }
         self::$VERSION = $version;
     }
-    public static function getApiHost(): ?string {
+
+    /**
+     * @return string|null
+     */
+    public static function getApiHost(): ?string
+    {
         return self::$API_HOST;
     }
-    public static function getApiSecretKey(): ?string {
+
+    /**
+     * @return string|null
+     */
+    public static function getApiSecretKey(): ?string
+    {
         return self::$API_SECRET_KEY;
     }
-    public static function getApiUserExpire() {
+
+    /**
+     * @return float|int
+     */
+    public static function getApiUserExpire()
+    {
         return self::$API_USER_EXPIRE;
     }
-    public static function getStaticFolder(): string {
+
+    /**
+     * @return string
+     */
+    public static function getStaticFolder(): string
+    {
         return self::$STATIC_FOLDER;
     }
-    public static function getImageMaxWigth(): int {
+
+    /**
+     * @return int
+     */
+    public static function getImageMaxWigth(): int
+    {
         return self::$IMAGE_MAX_WIDTH;
     }
-    public static function getImagesFolder(): ?string {
+
+    /**
+     * @return string|null
+     */
+    public static function getImagesFolder(): ?string
+    {
         return self::$IMAGES_FOLDER;
     }
-    public static function getLanguage(): string {
+
+    /**
+     * @return string
+     */
+    public static function getLanguage(): string
+    {
         return self::$LANGUAGE;
     }
-    public static function getTitle(): ?string {
+
+    /**
+     * @return string|null
+     */
+    public static function getTitle(): ?string
+    {
         return self::$TITLE;
     }
-    public static function getTypesEnabled(): array {
+
+    /**
+     * @return array
+     */
+    public static function getTypesEnabled(): array
+    {
         return self::$TypesEnabled;
     }
-    public static function getVersion(): string {
+
+    /**
+     * @return string
+     */
+    public static function getVersion(): string
+    {
         return self::$VERSION;
     }
-    public static function getUserLoginId(): int {
+
+    /**
+     * @return int
+     */
+    public static function getUserLoginId(): int
+    {
         return (int) $_SESSION['userLogin']['uid'];
     }
-    final public function run() {
+
+    /**
+     * @return mixed
+     */
+    final public function run()
+    {
         $route = include __DIR__ . '/../routes/routes.php';
         return $route($this->slim);
     }

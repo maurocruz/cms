@@ -1,13 +1,18 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Order;
 
+use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\StringTool;
 
-abstract class OrderWidget {
+abstract class OrderWidget
+{
     protected $content = [];
     protected static $idOrder;
     protected static $total;
@@ -15,21 +20,31 @@ abstract class OrderWidget {
     protected $idHasPart;
 
     use FormElementsTrait;
-    use navbarTrait;
 
-    protected function navbarOrder($value): array {
+    /**
+     * @param $value
+     */
+    protected function navbarOrder($value)
+    {
         $this->typeHasPart = lcfirst($value['@type']);
         $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
         $list =  [
-            "/admin/$this->typeHasPart/order?id=$this->idHasPart" => _("List all"),
-            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => _("Add new"),
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart" => Fragment::icon()->home(),
+            "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => Fragment::icon()->plus(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment" => ucfirst(_("payments")),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired" => ucfirst(_("Due dates"))
         ];
-        return self::navbar(_("Order"), $list, 4);
+        View::navbar(_("Order"), $list, 4);
     }
 
-    protected function formOrder($case = "new", $value = null, $orderedItem = null): array {
+    /**
+     * @param string $case
+     * @param null $value
+     * @param null $orderedItem
+     * @return array
+     */
+    protected function formOrder(string $case = "new", $value = null, $orderedItem = null): array
+    {
         $content[] = $case == "edit" ? self::input("id", "hidden", self::$idOrder) : null;
         if ($orderedItem) {
             $orderedItemId = ArrayTool::searchByValue($orderedItem['identifier'], "id")['value'];
@@ -67,7 +82,13 @@ abstract class OrderWidget {
         return self::form("/admin/order/$case", $content, ['class'=>'formPadrao form-order']);
     }
 
-    protected function selectPeriodo($numberOfItens, $section): array {
+    /**
+     * @param $numberOfItens
+     * @param $section
+     * @return array
+     */
+    protected function selectPeriodo($numberOfItens, $section): array
+    {
         $content[] = [ "tag" => "form", "attributes" => [ "class" => "noprint", "action" => "/admin/$this->typeHasPart/order", "method" => "get" ], "content" => [
             [ "tag" => "input", "attributes" => [ "name" => "id", "type" => "hidden", "value" => $this->idHasPart ]],
             [ "tag" => "input", "attributes" => [ "name" => "action", "type" => "hidden", "value" => $section ]],

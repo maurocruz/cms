@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\ImageObject;
 
 use Exception;
@@ -10,59 +13,85 @@ use Plinct\Tool\Image\Image;
 use Plinct\Web\Element\Element;
 use Plinct\Web\Element\Form;
 
-class ImageObjectWidget {
-    protected $tableHasPart;
-    protected $idHasPart;
+class ImageObjectWidget
+{
+    /**
+     * @var string
+     */
+    protected string $tableHasPart;
+    /**
+     * @var int
+     */
+    protected int $idHasPart;
 
     use FormElementsTrait;
 
-    protected function keywordsList($data): array {
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function keywordsList($data): array
+    {
         $list = null;
         $numberOfItems = $data['numberOfItems'];
+
         $content[] = [ "tag" => "p", "content" => sprintf(_("Listing %s groups"), $numberOfItems ) ];
+
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
-            $list[] = [ "tag" => "li", "content" => [
-                [ "object" => "figure",
-                    "attributes" => [ "class" => "list-folder-figure" ],
-                    "src" => $item['contentUrl'],
-                    "caption" => $item['keywords'],
-                    "width" => 110,
-                    "height" => 0.68,
-                    "href" => "/admin/imageObject/keywords/".urlencode($item['keywords'])
-                ]
-            ]];
+            $keywords = $item['keywords'];
+            $src = $item['contentUrl'];
+            $href = "/admin/imageObject/keywords/".urlencode($keywords);
+            $list[] = "<li class='imageObject-index' data-keywords='$keywords' data-contentUrl='$src'>
+                <figure class='list-folder-figure' id='$keywords'>
+                    <a href='$href'><img src='$src' alt='$keywords'></a>
+                    <figcaption><a href='$href'>$keywords</a></figcaption>
+                </figure>
+            </li>";
         }
-        $content[] = [ "tag" => "ul", "attributes" => [ "class" => "list-folder" ], "content" => $list ];
+
+        $content[] = [ "tag" => "ul", "attributes" => ['id'=>'imageObject-listAll', "class" => "list-folder" ], "content" => $list ];
+
         return [ "tag" => "div", "content" => $content ];
     }
 
-    protected function imagesList($data): array {
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function imagesList($data): array
+    {
         $containerImages = null;
         $content[] = [ "tag" => "p", "content" => sprintf(_("Show %s items!"), $data['numberOfItems']) ];
         $imageServer = new ImageObjectServer();
+
         foreach ($data['itemListElement'] as $value) {
             $item = $value['item'];
-            // is part of
+            // vars
             $id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
-            $info = $imageServer->getImageHasPartOf($id);
+            $href = "/admin/imageObject/edit/$id";
+            $src = $item['contentUrl'];
+
+            // span;
             $filename = $_SERVER['DOCUMENT_ROOT'].$item['contentUrl'];
             list($width, $height) = file_exists($filename) ? getimagesize($_SERVER['DOCUMENT_ROOT'].$item['contentUrl']) : null;
             $factor = 11;
             $span = $width ? ceil(($height/$width)*$factor)+3 : $factor+3;
+
+            // caption
+            $info = $imageServer->getImageHasPartOf($id);
             $n = $info ? "<b style='color: red'>".count($info)."</b>" : "<b style='color: green'>0</b>";
             $caption = "<p>".$width."x".$height."px. ".sprintf(_("Is part of %s items"), $n) . "</p>";
-            $containerImages[] = [
-                "object" => "figure",
-                "attributes" => [ "class" => "admin-images-grid-figure", "style" => "grid-row-end: span $span" ],
-                "src" => $item['contentUrl'],
-                "width" => 200,
-                "caption" => $caption,
-                "href" => "/admin/imageObject/edit/$id",
-                "imgAttributes" => [ "title" => $item['contentUrl'] ]
-            ];
+
+            //element html
+            $containerImages[] = "<figure class='admin-images-grid-figure' style='grid-row-end: span $span'>
+                <a href='$href'><img src='$src' alt=''></a>
+                <figcaption><a href='$href'>$caption</a></figcaption>
+            </figure>";
         }
+
         $content[] = [ "tag" => "div", "attributes" => [ "class" => "admin-images-grid" ], "content" => $containerImages ];
+
         return [ "tag" => "div", "content" => $content ];
     }
 
@@ -72,10 +101,13 @@ class ImageObjectWidget {
      * @return array
      * @throws Exception
      */
-    protected function editWithPartOf(array $data): array {
+    protected function editWithPartOf(array $data): array
+    {
         $content = null;
+
         if (empty($data)) {
             $content[] = [ "tag" => "p", "content" => _("Images not found!"), "attributes" => [ "class" => "warning"] ];
+
         } else {
             foreach ($data as $valueEdit) {
                 $content[] = self::simpleTag("div", [
@@ -83,13 +115,15 @@ class ImageObjectWidget {
                 ], [ "class" => "box", "style" => "overflow: hidden;"]);
             }
         }
+
         return $content;
     }
 
     /**
      * @throws Exception
      */
-    protected static function formImageObjectEdit($value): array {
+    protected static function formImageObjectEdit($value): array
+    {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = self::input("id", "hidden", $ID);
         // FIGURE
@@ -126,7 +160,8 @@ class ImageObjectWidget {
     /**
      * @throws Exception
      */
-    protected function formIsPartOf($value): array {
+    protected function formIsPartOf($value): array
+    {
         $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
@@ -158,13 +193,8 @@ class ImageObjectWidget {
                 [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 0, $value['representativeOfPage'] == 0 ? "checked" : null ] ], _("No")
             ] ]
         ]];
-        // caption
-        $content[] = [ "tag" => "fieldset", "content" => [
-            [ "tag" => "legend", "content" => "Legenda" ],
-            [ "tag" => "input", "attributes" => [ "name" => "caption", "type" => "text", "value" => $value['caption'] ?? null ] ]
-        ]];
         // image, height and href for use in web page element
-        if (isset($value['width']) && $this->tableHasPart === "webPageElement") {
+        if (isset($value['width']) && $this->tableHasPart == "webPageElement") {
             // width
             $width = isset($value['width']) && $value['width'] != '0.00' ? $value['width'] : null;
             $content[] = [ "tag" => "fieldset", "content" => [
@@ -183,6 +213,8 @@ class ImageObjectWidget {
                 [ "tag" => "input", "attributes" => [ "name" => "href", "type" => "text", "value" => $value['href'] ?? null ] ]
             ]];
         }
+        // caption
+        $content[] = self::fieldsetWithInput(_("Caption"), "caption", $value['caption']);
         //
         $content[] = self::submitButtonSend();
         $content[] = self::submitButtonDelete("/admin/imageObject/erase");
@@ -190,7 +222,12 @@ class ImageObjectWidget {
         return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$ID", "name" => "form-imageObject-edit", "action" => "/admin/imageObject/edit", "enctype" => "multipart/form-data", "method" => "post" ], "content" => $content ];
     }
 
-    protected static function infoIsPartOf($data): array {
+    /**
+     * @param $data
+     * @return array
+     */
+    protected static function infoIsPartOf($data): array
+    {
         $id = ArrayTool::searchByValue($data['identifier'],"id","value");
         $contentUrl = $data['contentUrl'];
         $keywords = $data['keywords'];
@@ -226,7 +263,8 @@ class ImageObjectWidget {
      * @param null $idHasPart
      * @return array
      */
-    protected function upload($tableHasPart = null, $idHasPart = null): array {
+    protected function upload($tableHasPart = null, $idHasPart = null): array
+    {
         $form = new Form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
         $form->action('/admin/imageObject/new')->method('post');
         // TITLE
@@ -234,7 +272,7 @@ class ImageObjectWidget {
         // HIDDENS
         if ($tableHasPart && $idHasPart) {
             $form->input('tableHasPart',$tableHasPart,'hidden');
-            $form->input('idHasPart',$idHasPart,'hidden');
+            $form->input('idHasPart',(string)$idHasPart,'hidden');
         }
         // IMAGE UPLOAD
         $form->fieldsetWithInput('imageupload[]', null, _("Select images"),'file',null,['multiple']);
@@ -248,7 +286,11 @@ class ImageObjectWidget {
         return $form->ready();
     }
 
-    private static function locationsOnUpload(): array {
+    /**
+     * @return array
+     */
+    private static function locationsOnUpload(): array
+    {
         $imageDir = App::getImagesFolder();
         $datalist = ImageObjectServer::listLocation($imageDir, true);
         // FIELDSET
@@ -265,7 +307,11 @@ class ImageObjectWidget {
         return $fieldset->ready();
     }
 
-    private static function keywordsOnUpload(): array {
+    /**
+     * @return array
+     */
+    private static function keywordsOnUpload(): array
+    {
         $listKeywords = ImageObjectServer::listKeywords();
         // FIELDSET
         $fieldset = new Element('fieldset');
