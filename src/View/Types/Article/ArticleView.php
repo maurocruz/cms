@@ -1,69 +1,94 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Article;
 
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
-use Plinct\Cms\View\ViewInterface;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-class ArticleView implements ViewInterface {
-    protected $content;
-
+class ArticleView
+{
     use FormElementsTrait;
 
-    protected function navbarArticle($title = null)     {
-        $title1 = _("Article");
-        $list = [ "/admin/article" => _("View all"), "/admin/article/new" => _("Add new") ];
-        $level = 2;
-        $append = navbarTrait::searchPopupList("article","headline");
-        $this->content['navbar'][] = navbarTrait::navbar($title1, $list, $level, $append);
+    protected function navbarArticle(string $title = null)
+    {
+        View::navbar(_("Article"), [
+            "/admin/article" => Fragment::icon()->home(),
+            "/admin/article/new" => Fragment::icon()->plus()
+        ], 2, ['table'=>'article','searchBy'=>'headline'] );
+
         if ($title) {
-            $this->content['navbar'][] = navbarTrait::navbar($title, [], 3);
+            View::navbar($title, [], 3);
         }
     }
 
-    public function index(array $data): array {
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
         $this->navbarArticle();
-        $this->content['main'][] = FormElementsTrait::listAll($data, "article", _("List of articles"), [ "headline" => _("Title"), "datePublished" => _("Date published"), "dateModified" => _("Date modified") ]);
-        return $this->content;
+        View::main(FormElementsTrait::listAll($data, "article", _("List of articles"), [ "headline" => _("Title"), "datePublished" => _("Date published"), "dateModified" => _("Date modified") ]));
     }
 
-    public function edit(array $data): array {
+    /**
+     * @param array $data
+     * @throws Exception
+     */
+    public function edit(array $data)
+    {
         if (!empty($data)) {
             $value = $data[0];
             $this->navbarArticle($value['headline'] ?? null);
             if (empty($value)) {
-                $this->content['main'][] = self::noContent();
+                $content[] = self::noContent();
             } else {
-                $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-                $this->content['main'][] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
+                $id = (int)ArrayTool::searchByValue($value['identifier'], "id")['value'];
+                $content[] = self::divBox(_("Article"), "article", [self::formArticle("edit", $value, $id)]);
                 // author
-                $this->content['main'][] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
+                $content[] = self::divBoxExpanding(_("Author"), "Person", [self::relationshipOneToOne("Article", $id, "author", "Person", $value['author'])]);
                 // images
-                $this->content['main'][] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
+                $content[] = self::divBoxExpanding(_("Images"), "imageObject", [(new ImageObjectView())->getForm("article", $id, $value['image'])]);
             }
         } else {
             $this->navbarArticle();
-            $this->content['main'][] = self::noContent("No articles were found!",['class'=>'warning']);
+            $content[] = self::noContent("No articles were found!",['class'=>'warning']);
         }
-        return $this->content;
+
+        View::main($content);
     }
 
-    public function new($data = null): array {
+    /**
+     * @param null $data
+     */
+    public function new($data = null)
+    {
         $this->navbarArticle();
-        $this->content['main'][] = self::divBox(_("Article"), "article", [ self::formArticle()]);
-        return $this->content;
+        View::main(self::divBox(_("Article"), "article", [ self::formArticle()]));
     }
 
-    static private function formArticle($case = "new", $value = null, $ID = null): array {
-        $content[] = $case == "edit" ? self::input("id", "hidden", $ID) : null;
+    /**
+     * @param string $case
+     * @param null $value
+     * @param null $ID
+     * @return array
+     */
+    static private function formArticle(string $case = "new", $value = null, $ID = null): array
+    {
+        $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
+
+        $content[] = $case == "edit" ? self::input("id", "hidden", (string)$ID) : null;
         // title
         $content[] = self::fieldsetWithInput(_("Title"), "headline", $value['headline'] ?? null, ["style" => "width: 100%;"]);
         // article body
         $content[] = [ "tag" => "fieldset", "attributes" => ["style" => "width: 100%;"], "content" => [
             [ "tag" => "legend", "content" => _("Text") ],
-            [ "tag" => "textarea", "attributes" => [ "id" => "article_body", "name"=>"articleBody", "style"=>"height: 200px;" ], "content" => stripslashes($value['articleBody'] ?? null) ]
+            [ "tag" => "textarea", "attributes" => [ "id" => "article_body", "name"=>"articleBody", "style"=>"height: 200px;" ], "content" => $articleBody ]
         ]];
         $content[] = [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('article_body',200);", "style" => "width: 96%; display: block;" ], "content" => sprintf(_("Expand textarea by %s px"), 200) ];
         // section

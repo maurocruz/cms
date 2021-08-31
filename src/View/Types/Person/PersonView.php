@@ -1,117 +1,125 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Person;
 
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\Structure\Main\MainView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\ContactPointView;
 use Plinct\Cms\View\Types\Intangible\PostalAddressView;
-use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
+use Plinct\Cms\View\Types\Intangible\Service\ServiceView;
+use Plinct\Cms\View\Types\Product\ProductView;
+use Plinct\Cms\View\Types\TypeViewInterface;
+use Plinct\Cms\View\View;
 use Plinct\Tool\ArrayTool;
 
-class PersonView {
-    protected $content;
-        
-    use navbarTrait;
-    use FormElementsTrait;
+class PersonView extends PersonViewAbstract implements TypeViewInterface
+{
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
+        $this->navbarPerson();
 
-    public function navbarPerson($id = null, $name = null) {
-        $title = _("Person");
-        $list = [ "/admin/person" => _("View all"), "/admin/person/new" => _("Add new person") ];
-        $search = self::searchPopupList("person");
-        $this->content['navbar'][] = self::navbar($title, $list, 2, $search);
-        if($id) {
-            $this->content['navbar'][] = self::navbar($name, [], 3);
-        }
+        $list = Fragment::listTable();
+        $list->caption( _("List of persons"));
+        $list->labels(_('Name'), _('Date modified'));
+        $list->rows($data['itemListElement'],['name','dateModified']);
+        $list->setEditButton('/admin/person?id=');
+        View::main($list->ready());
     }
-    
-    public function index(array $data): array {
+
+    /**
+     * @param null $data
+     */
+    public function new($data = null)
+    {
         $this->navbarPerson();
-        $this->content['main'][] = self::listAll($data, "person", _("List of persons"), [ "dateModified" => "Date modified" ]);
-        return $this->content;
+        MainView::content([ "tag" => "h3", "content" => _("Add new person") ]);
+        MainView::content(self::formPerson());
     }
-    
-    public function new(): array {
-        $this->navbarPerson();
-        $this->content['main'][] = [ "tag" => "h3", "content" => _("Add new person") ];
-        $this->content['main'][] = self::formPerson();
-        return $this->content;
-    }
-    
-    public function edit(array $data): array {
+
+    /**
+     * @param array $data
+     * @throws Exception
+     */
+    public function edit(array $data)
+    {
         if (!empty($data)) {
             $value = $data[0];
-            $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-            $this->navbarPerson($id, $value['name'] ?? "ND");
+
+            $this->id = (int)ArrayTool::searchByValue($value['identifier'], "id")['value'];
+            $this->setName($value['name']);
+
+            // NAVBAR
+            $this->navbarPersonEdit();
+
             // FORM
-            $this->content['main'][] = self::divBox2(_("Edit person"), [ self::formPerson('edit', $value) ]);
+            MainView::content(self::divBox2(_("Edit person"), [ self::formPerson('edit', $value) ]));
             // CONTACT POINT
-            $this->content['main'][] = self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('person', $id, $value['contactPoint'])]);
+            MainView::content(self::divBoxExpanding(_("Contact point"), "ContactPoint", [(new ContactPointView())->getForm('person', $this->id, $value['contactPoint'])]));
             // ADDRESS
-            $this->content['main'][] = self::divBoxExpanding(_("Postal address"), "PostalAddress", [(new PostalAddressView())->getForm("person", $id, $value['address'])]);
+            MainView::content(self::divBoxExpanding(_("Postal address"), "PostalAddress", [(new PostalAddressView())->getForm("person", $this->id, $value['address'])]));
             // IMAGE
-            $this->content['main'][] = self::divBoxExpanding(_("Image"), "ImageObject", [(new ImageObjectView())->getForm("Person", $id, $value['image'])]);
+            MainView::content(self::divBoxExpanding(_("Image"), "ImageObject", [(new ImageObjectView())->getForm("Person", $this->id, $value['image'])]));
+
         } else {
             $this->navbarPerson();
-            $this->content['main'][] = self::noContent(_("Person is not exists!"));
+            MainView::content(self::noContent(_("Person is not exists!")));
         }
-        return $this->content;
     }
-    
-    private static function formPerson($case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array {
-        $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], 'id')['value'] : null;
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"id", "type" => "hidden", "value" => $id ] ] : null ;
-        if ($tableHasPart) {
-            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"tableHasPart", "type" => "hidden", "value"=>$tableHasPart ] ] ;
-            $content[] = [ "tag" => "input", "attributes" => [ "name"=>"idHasPart", "type" => "hidden", "value"=>$idHasPart ] ] ;
+
+    /**
+     * @param $value
+     */
+    public function service($value)
+    {
+        if ($value['@type'] == 'Service') {
+            $this->id = ArrayTool::searchByValue($value['provider']['identifier'], 'id', 'value');
+            $this->name = $value['provider']['name'];
+
+            // NAVBAR
+            $this->navbarPersonEdit();
+
+            $service = new ServiceView();
+            $service->editWithPartOf($value);
+
+        } else {
+            $this->id = ArrayTool::searchByValue($value['identifier'], 'id', 'value');
+            $this->name = $value['name'];
+
+            // NAVBAR
+            $this->navbarPersonEdit();
+
+            $service = new ServiceView();
+
+            if (isset($value['action']) && $value['action'] ==  "new") {
+                $service->newWithPartOf($value);
+            } else {
+                $service->listServices($value);
+            }
         }
-        // GIVEN NAME
-        $attributes = [ "name"=>"givenName", "type" => "text", "value" => $value['givenName'] ?? "" ];
-        $attr = $case !== "edit" ? array_merge($attributes, [ "data-idselect" => "gv".($id ?? $case), "onKeyUp" => "selectItemFormBd(this,'person');", "autocomplete" => "off" ]) : $attributes;
-        $content[] = [ "tag" => "fieldset", "content" => [
-            [ "tag" =>"legend", "content" => _("Given name") ],
-            [ "tag" => "input", "attributes" => $attr ] 
-        ]];
-        // family name
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Family name") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"familyName", "type" => "text", "value"=>$value['familyName'] ?? null ] ]
-        ]];
-        // additional name
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Additional name") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"additionalName", "type" => "text", "value"=>$value['additionalName'] ?? null ] ]
-        ]];
-        // Tax ID
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Tax ID") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"taxId", "type" => "text", "value"=>$value['taxId'] ?? null ] ]
-        ]];
-        // birth date
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Birth date") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"birthDate", "type" => "date", "value"=>$value['birthDate'] ?? null ] ]
-        ]];
-        // birth place
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Birth place") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"birthPlace", "type" => "text", "value"=>$value['birthPlace'] ?? null ] ]
-        ]];
-        // gender
-        $content[] = [ "tag" => "fieldset", "content" => [ 
-            [ "tag" =>"legend", "content" => _("Gender") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"gender", "type" => "text", "value"=>$value['gender'] ?? null ] ]
-        ]];
-        // has occupation
-        $content[] = [ "tag" => "fieldset", "content" => [
-            [ "tag" =>"legend", "content" => _("Has occupation") ],
-            [ "tag" => "input", "attributes" => [ "name"=>"hasOccupation", "type" => "text", "value" => $value['hasOccupation'] ?? null ] ]
-        ]];
-        
-        // submit
-        $content[] = self::submitButtonSend();
-        if ($case !== "add") {
-            $content[] = self::submitButtonDelete("/admin/person/erase");
+    }
+
+    public function product($value)
+    {
+        $action = $value['action'] ?? null;
+        $this->name = $value['name'];
+        $this->id = ArrayTool::searchByValue($value['identifier'],'id','value');
+
+        // NAVBAR
+        $this->navbarPersonEdit();
+
+        // MAIN
+        $product = new ProductView();
+        if ($action == 'new') {
+            $product->newWithPartOf($value);
+        } else {
+            $product->indexWithPartOf($value);
         }
-        return [ "tag" => "form", "attributes" => [ "class" => "formPadrao form-person", "action" => "/admin/person/$case", "method" => "post"], "content" => $content ];
     }
 }

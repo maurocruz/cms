@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\App;
@@ -9,12 +12,22 @@ use Plinct\Tool\Sitemap;
 
 class PlaceController implements ControllerInterface
 {
-    public function index($params = null): array {
+    /**
+     * @param null $params
+     * @return array
+     */
+    public function index($params = null): array
+    {
         $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], $params);
         return Api::get("place", $params);
     }
-    
-    public function new($params = null): bool {
+
+    /**
+     * @param null $params
+     * @return bool
+     */
+    public function new($params = null): bool
+    {
         return true;
     }
     

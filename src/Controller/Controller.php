@@ -1,16 +1,37 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Controller;
 
 class Controller
 {
-    public function getData($type, $action, $params) {
+    /**
+     * @param $type
+     * @param $methodName
+     * @param $id
+     * @param $params
+     * @return mixed
+     */
+    public function getData($type, $methodName, $id, $params): mixed
+    {
+        unset($params['type']);
+
+        $methodName = $methodName == 'index' && isset($id) ? 'edit' : $methodName;
+
+        if($id) $params['id'] = $id;
+
         $controlClassName = "\\Plinct\\Cms\\Controller\\".ucfirst($type)."Controller";
-        if (class_exists($controlClassName)) {
+
+        if (class_exists($controlClassName))  {
+
             $object = new $controlClassName();
-            if (method_exists($object, $action)) {
-                return $object->{$action}($params);
+
+            if (method_exists($object, $methodName)) {
+                return $object->{$methodName}($params);
             }
         }
+
         return null;
     }
 }

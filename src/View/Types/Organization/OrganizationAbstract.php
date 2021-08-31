@@ -1,56 +1,90 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Organization;
 
+use Exception;
+use Plinct\Cms\View\Fragment\FormFragment;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\Intangible\Order\OrderView;
 use Plinct\Cms\View\Types\Intangible\Service\ServiceView;
 use Plinct\Cms\View\Types\Product\ProductView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-abstract class OrganizationWidget {
-    protected $content = [];
-    protected $id;
-    protected $name;
+abstract class OrganizationAbstract
+{
+    /**
+     * @var array
+     */
+    protected array $content = [];
+    /**
+     * @var int
+     */
+    protected int $id;
+    /**
+     * @var string
+     */
+    protected string $name;
 
-    use navbarTrait;
     use FormElementsTrait;
 
-    protected function setValues(array $value): array {
+    /**
+     * @param array $value
+     * @return array
+     */
+    protected function setValues(array $value): array
+    {
         $organization = $value['@type'] == 'Organization' ? $value : $value['provider'];
-        $this->id = ArrayTool::searchByValue($organization['identifier'], "id",'value');
+        $this->id = (int)ArrayTool::searchByValue($organization['identifier'], "id",'value');
         $this->name = $organization['name'];
         return $value;
     }
 
-    protected function addContent(string $target, $content) {
+    /**
+     * @param string $target
+     * @param $content
+     */
+    protected function addContent(string $target, $content)
+    {
         $this->content[$target][] = $content;
     }
 
     /**
      * INDEX NAVBAR
      */
-    protected function navbarIndex() {
-        $title = _("Organization");
-        $list = [ "/admin/organization" => _("View all"), "/admin/organization/new" => sprintf(_("Add new %s"), _("organization")) ];
-        $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "organization", "data-searchfor" => "name" ] ];
-        $this->addContent('navbar', self::navbar($title, $list, 2, $search));
+    protected function navbarIndex()
+    {
+        View::navbar(_("Organization"), [
+            "/admin/organization"=> Fragment::icon()->home(),
+            "/admin/organization/new" => Fragment::icon()->plus()
+        ], 2, ['table'=>'organization']);
     }
 
-    protected function navbarNew() {
+    /**
+     *
+     */
+    protected function navbarNew()
+    {
         $this->navbarIndex();
-        $this->addContent('navbar', self::navbar(_("Add new"), [], 3));
+        View::navbar(_("Add new"), [], 3);
     }
 
-    protected function navbarEdit() {
+    /**
+     *
+     */
+    protected function navbarEdit()
+    {
         $this->navbarIndex();
-        $subMenus = [
-            "/admin/organization/edit?id=$this->id" => _("View it"),
-            "/admin/organization/service?id=$this->id" => _("Services"),
+
+        View::navbar($this->name, [
+            "/admin/organization/edit?id=$this->id" => Fragment::icon()->home(),
+            "/admin/organization?id=$this->id&action=service" => _("Services"),
             "/admin/organization/product?id=$this->id" => _("Products"),
             "/admin/organization/order?id=$this->id" => _("Orders")
-        ];
-        $this->addContent('navbar', self::navbar($this->name, $subMenus, 3));
+        ], 3);
     }
 
     /**
@@ -59,7 +93,8 @@ abstract class OrganizationWidget {
      * @param null $value
      * @return array
      */
-    protected function formOrganization(string $case = 'new', $value = null): array {
+    protected function formOrganization(string $case = 'new', $value = null): array
+    {
         $content[] = [ "tag" => "h3", "content" => $value['name'] ?? null ];
         if ($case == "edit") {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
@@ -68,7 +103,7 @@ abstract class OrganizationWidget {
         // name
         $content[] = self::fieldsetWithInput(_("Name"), "name", $value['name'] ?? null);
         // ADDITIONAL TYPE
-        $content[] = self::additionalTypeInput("Organization", $value['additionalType'] ?? null, null, false);
+        $content[] = self::fieldset(FormFragment::selectAdditionalType('organization',$value['additionalType'] ?? null), _("Additional type"));
         // legal name
         $content[] = self::fieldsetWithInput(_("Legal Name"), "legalName", $value['legalName'] ?? null);
         // tax id
@@ -89,13 +124,18 @@ abstract class OrganizationWidget {
         return [ "tag" => "form", "attributes" => [ "name" => "form-organization", "id" => "form-organization", "class" => "formPadrao form-organization", "action" => "/admin/organization/$case", "method" => "post" ], "content" => $content ];
     }
 
-    protected function itemView(string $itemType, $data): array {
+    /**
+     * @throws Exception
+     */
+    protected function itemView(string $itemType, $data): array
+    {
         $itemProperty = null;
         $itemResponse = null;
         $itemView = null;
         $value = $data[0];
         $action = filter_input(INPUT_GET, 'action');
         $itemText = lcfirst($itemType)."s";
+
         // SET ITEM PROPERTY
         if ($itemType == "Product") {
             $itemProperty = "manufacturer";
@@ -130,8 +170,7 @@ abstract class OrganizationWidget {
         else {
             $itemResponse = $itemView->indexWithPartOf($value);
         }
-        $this->content['navbar'] = isset($itemResponse['navbar']) ? array_merge($this->content['navbar'], $itemResponse['navbar']) : $this->content['navbar'];
-        $this->content['main'] = $itemResponse['main'];
+        $this->content['main'] = $itemResponse['main'] ?? null;
         // RESPONSE
         return $this->content;
     }

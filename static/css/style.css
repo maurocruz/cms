@@ -68,21 +68,25 @@ dd {
 }
 
 /* WRAPPER
-======================================================================== */
+================================================================= */
 .wrapper {
   min-width: 990px;
 }
 
 /* HEADER
-============================================================================= */
+================================================================= */
 .header {
   background: white;
 }
 
+/* CONTAINER
+================================================================= */
 .container {
   padding-bottom: 30px;
 }
 
+/* MAIN
+================================================================ */
 .main {
   padding: 5px 10px;
   max-width: 1024px;
@@ -119,6 +123,9 @@ dd {
 }
 .menu a :hover {
   color: #336666;
+}
+.menu .menu-tab-icon {
+  font-size: 16px;
 }
 
 .menu2 {
@@ -366,16 +373,27 @@ a.white {
 .formPadrao .labelradio input[type=radio] {
   margin-right: 3px;
 }
-.formPadrao .button-submit-send .material-icons {
+.formPadrao .form-submit-button {
+  overflow: hidden;
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+.formPadrao .form-submit-button-send {
   color: #40d377;
 }
-.formPadrao .button-submit-send .material-icons:hover {
+.formPadrao .form-submit-button-send:hover {
   color: #84f7ba;
 }
-.formPadrao .button-submit-delete .material-icons {
-  color: #ee0000;
+.formPadrao .form-submit-button-delete {
+  color: #cc0000;
 }
-.formPadrao .button-submit-delete .material-icons:hover {
+.formPadrao .form-submit-button-delete:hover {
   color: #ff5555;
 }
 @media (min-width: 576px) {
@@ -648,6 +666,7 @@ a.white {
 
 .form-imageObject-edit figure {
   text-align: center;
+  max-width: 200px;
 }
 .form-imageObject-edit figure figcaption {
   line-height: normal;
@@ -673,6 +692,17 @@ a.white {
   width: 145px;
   display: inline-block;
 }
+.form-imageObject-edit fieldset:nth-of-type(4) {
+  width: calc(50% - 103px);
+  display: inline-block;
+}
+.form-imageObject-edit fieldset:nth-of-type(5) {
+  width: calc(50% - 102px);
+  display: inline-block;
+}
+.form-imageObject-edit fieldset:nth-of-type(7) {
+  width: 100%;
+}
 @media (min-width: 576px) {
   .form-imageObject-edit {
     display: block;
@@ -680,14 +710,22 @@ a.white {
   .form-imageObject-edit fieldset:nth-of-type(1) {
     width: calc(100% - 205px);
   }
-  .form-imageObject-edit fieldset:nth-of-type(4) {
+  .form-imageObject-edit fieldset:nth-of-type(6) {
     width: calc(100% - 205px);
     display: inline-block;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 674px) {
   .form-imageObject-edit fieldset:nth-of-type(4) {
-    width: calc(100% - 410px);
+    width: calc(50% - 205px);
+    display: inline-block;
+  }
+  .form-imageObject-edit fieldset:nth-of-type(5) {
+    width: calc(50% - 205px);
+    display: inline-block;
+  }
+  .form-imageObject-edit fieldset:nth-of-type(7) {
+    width: calc(100% - 205px);
     display: inline-block;
   }
 }
@@ -710,6 +748,15 @@ a.white {
   width: calc(100% - 67px);
 }
 
+/* OFFER
+====================================================== */
+.form-offer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-offer fieldset {
+  width: 50%;
+}
 /* ORDER FORM
 ====================================================== */
 .form-order {
@@ -781,14 +828,31 @@ a.white {
   }
 }
 
-/* OFFER
-====================================================== */
-.form-offer {
+/* PRODUCT
+======================================================= */
+.form-product {
   display: flex;
   flex-wrap: wrap;
 }
-.form-offer fieldset {
-  width: 50%;
+.form-product fieldset:nth-of-type(3) {
+  width: 100%;
+}
+.form-product fieldset:nth-of-type(4) {
+  width: 100%;
+}
+
+/* SERVICE
+====================================================== */
+@media (min-width: 576px) {
+  .form-service fieldset:nth-of-type(n) {
+    width: 100%;
+  }
+  .form-service fieldset:nth-of-type(1) {
+    width: 50%;
+  }
+  .form-service fieldset:nth-of-type(2) {
+    width: 50%;
+  }
 }
 /* WEBSITE
 ====================================================== */
@@ -870,6 +934,7 @@ table .form-submit-button-delete {
   background-color: transparent;
   cursor: pointer;
   border: 0;
+  color: #f33;
 }
 table .form-submit-button-delete .material-icons {
   font-size: 20px;

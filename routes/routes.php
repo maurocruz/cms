@@ -3,20 +3,22 @@
  * ROUTES CMS ADMIN
  */
 
+use Plinct\Cms\Factory\TemplateFactory;
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
-use Plinct\Cms\Template\TemplateController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
 use Plinct\Cms\Server\Server;
 use Plinct\Cms\Server\Sitemap;
 
-return function (Route $route) {
+return function (Route $route)
+{
     /**
      * ASSETS
      */
-    $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args) {
+    $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args)
+    {
         $filename = $args['filename'];
         $type = $args['type'];
         $file = realpath(__DIR__ . "/../static/$type/$filename" .".".$type);
@@ -26,32 +28,42 @@ return function (Route $route) {
         $newResponse->getBody()->write($script);
         return $newResponse;
     });
+
     /**
      * ADMIN ROUTES
      */
-    $route->group('/admin', function(Route $route) {
+    $route->group('/admin', function(Route $route)
+    {
         /**
          * AUTHENTICATION ROUTES
          */
         $authRoutes = require __DIR__ . '/AuthRoutes.php';
         $authRoutes($route);
+
         /**
          * DEFAULT
          */
-        $route->get('[/{type}[/{action}[/{identifier}[/{has}[/{hasAction}[/{hasId]]]]]]', function (Request $request, Response $response) {
-            $template = new TemplateController();
+        $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
+        {
+            $template = TemplateFactory::create();
+
             if (isset($_SESSION['userLogin']['admin'])) {
-                $template->getContent($request);
+                $content = $template->viewContent($args, $request->getQueryParams());
             } else {
-                $template->login();
+                $content = $template->login();
             }
-            $response->getBody()->write($template->ready());
+
+            $response->getBody()->write($content);
+
             return $response;
+
         })->addMiddleware(new Authentication());
+
         /**
          * ADMIN POST
          */
-        $route->post('/{type}/{action}', function (Request $request, Response $response, $args) {
+        $route->post('/{type}/{action}', function (Request $request, Response $response, $args)
+        {
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();

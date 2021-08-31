@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\App;
@@ -7,19 +10,34 @@ use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
-class OrganizationController implements ControllerInterface {
-
-    public function index($params = null): array {
+class OrganizationController
+{
+    /**
+     * @param null $params
+     * @return array
+     */
+    public function index($params = null): array
+    {
         $paramsSet = [ "format" => "ItemList", "properties" => "name,additionalType,dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
         $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
         return Api::get("organization", $paramsGet);
     }
-    
-    public function edit(array $params): array {
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function edit(array $params): array
+    {
         return Api::get("organization", [ "id" => $params['id'], "properties" => "*,address,location,contactPoint,member,image" ]);
     }
-    
-    public function new($params = null): bool {
+
+    /**
+     * @param null $params
+     * @return bool
+     */
+    public function new($params = null): bool
+    {
         return true;
     }
 
@@ -44,43 +62,65 @@ class OrganizationController implements ControllerInterface {
      * @param array $params
      * @return array
      */
-    public function product(array $params): array {
+    public function product(array $params): array
+    {
+        $id = $params['id'] ?? null;
         $itemId = $params['item'] ?? null;
+        $action = $params['action'] ?? null;
+
+        $data = Api::get("organization", [ "id" => $id, "properties" => "*,address,location,contactPoint,member,image" ]);
+
         if ($itemId) {
-            $data = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
+            $data[0]['action'] = "edit";
+            $data[0]['product'] = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
         } else {
-            $data = $this->edit($params);
-            $data[0]['products'] = Api::get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $params['id']]);
+            if ($action == 'new') {
+                $data[0]['action'] = 'new';
+            } else {
+                $data[0]['products'] = Api::get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $id]);
+            }
         }
-        return $data;
+        return $data[0];
     }
 
-    public function order(array $params): array {
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function order(array $params): array
+    {
         // PARAMS
         $itemId = $params['item'] ?? null;
         $id = $params['id'];
         $customerName = $params['customerName'] ?? null;
         $action = filter_input(INPUT_GET, 'action');
+
         // ITEM
         if ($itemId):
             $data = (new OrderController())->editWithPartOf($itemId, $id);
+
         // PAYMENT
         elseif($action == "payment"):
             $data = $this->edit($params);
             $data[0]['orders'] = (new OrderController())->payment($id);
+
         // EXPIRED
         elseif($action == "expired"):
             $data = $this->edit($params);
             $data[0]['orders'] = (new OrderController())->expired();
+
         // LIST
         else:
             $data = $this->edit($params);
             $data[0]['orders'] = (new OrderController())->indexWithPartOf($customerName, $id);
+
         endif;
+
         return $data;
     }
 
-    public function saveSitemap() {
+    public function saveSitemap()
+    {
         $dataSitemap = null;
         $params = [ "properties" => "image,dateModified", "orderBy" => "dateModified desc" ];
         $data = Api::get("organization", $params);

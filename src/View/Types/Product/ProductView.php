@@ -1,75 +1,89 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Product;
 
-use Plinct\Cms\View\ViewInterface;
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
-use Plinct\Cms\View\Widget\HtmlPiecesTrait;
+use Plinct\Cms\View\View;
 use Plinct\Tool\ArrayTool;
 
-class ProductView extends ProductWidget implements ViewInterface {
+class ProductView extends ProductAbstract
+{
+    /**
+     * @param string|null $title
+     */
+    private function navbarProduct(string $title = null)
+    {
+        View::navbar(_("Product"), [
+            "/admin/$this->manufacturerType/product?id=$this->manufacturer" => Fragment::icon()->home(),
+            "/admin/$this->manufacturerType/product?id=$this->manufacturer&action=new" => Fragment::icon()->plus()
+        ], 4, ['table'=>'product'] );
 
-    private function navbarProduct($value = null) {
-        $list = [ "/admin/product" => _("View all"), "/admin/product/new" => _("Add new") ];
-        $title = _("Product");
-        $level = 2;
-        $append = self::searchPopupList("Product");
-        $this->content['navbar'][] = self::navbar($title, $list, $level, $append);
-        if ($value) {
-            $this->content['navbar'][] = self::navbar($value['name'], [], 3);
+        if ($title) {
+            View::navbar($title, [], 5);
         }
     }
 
-    public function index(array $data): array {
-        self::navbarProduct();
-        $additionalColumns = [
-            "additionalType" => _("Additional type"),
-            "availability" => _("Availability")
-        ];
-        $this->content['main'][] = self::listAll($data, "Product", _("List of products"), $additionalColumns);
-        return $this->content;
+    /**
+     * @param null $value
+     */
+    public function newWithPartOf($value = null)
+    {
+        $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
+        $this->manufacturerType = strtolower($value['@type']);
+
+        $this->navbarProduct(_("Add new"));
+
+        View::main(Fragment::box()->simpleBox(parent::formProduct()));
     }
 
-    public function new($data = null): array {
-        return $this->content;
+    /**
+     * @param $value
+     */
+    public function indexWithPartOf($value)
+    {
+        $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
+        $this->manufacturerType = strtolower($value['@type']);
+        $itemListElement = $value['products']['itemListElement'];
+
+        $this->navbarProduct();
+
+        $listTable = Fragment::listTable();
+        // CAPTION
+        $listTable->caption(sprintf(_("List of %s"), _("Products")));
+        // LABELS
+        $listTable->labels(_('Name'), _('Category'),_("Date modified"));
+        // ROWS
+        $listTable->rows($itemListElement,['name','category','dateModified']);
+        // BUTTONS
+        $listTable->setEditButton("/admin/$this->manufacturerType/product?id=$this->manufacturer&item=");
+        // READY
+        View::main($listTable->ready());
     }
 
-    public function edit(array $data): array {
-        $value = $data[0];
-        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        self::navbarProduct($value);
-        // FORM
-        $this->content['main'][] = self::divBox($value['name'], "product", [ parent::formProduct("edit", $value) ]);
-        // IMAGES
-        $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("product", $id, $value['image']) ]);
-        return $this->content;
-    }
+    /**
+     * @throws Exception
+     */
+    public function editWithPartOf($value)
+    {
+        $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
+        $this->manufacturerType = strtolower($value['@type']);
 
-    public function newWithPartOf($data = null): array {
-        $this->content['main'][] = self::divBox(sprintf(_("Add new product for %s"), $data['manufacturer']['name']), "product", [ parent::formProduct("new", $data) ]);
-        return $this->content;
-    }
+        $product = $value['product'][0];
+        $this->id = ArrayTool::searchByValue($product['identifier'],'id','value');
 
-    public function indexWithPartOf($value) {
-        $rowsColumns = [
-            "name" => _("Name"),
-            "category" => _("Category"),
-            "additionalType" => _("Additional type"),
-            "dateCreated" => _("Date created"),
-            "dateModified" => _("Date modified")
-        ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value, "products", $rowsColumns, $value['products']['itemListElement']);
-        return $this->content;
-    }
+        $this->navbarProduct($product['name']);
 
-    public function editWithPartOf($value): array {
-        $idProduct = ArrayTool::searchByValue($value['identifier'], "id")['value'];
         // FORM EDIT PRODUCT
-        $content[] = self::divBox2(_("Edit"), [ parent::formProduct("edit", $value) ]);
+        View::main(Fragment::box()->simpleBox(self::formProduct('edit',$product)));
+
         // OFFERS
-        $content[] = self::divBoxExpanding(_("Offer"), "offer", [ (new OfferView())->edit($value) ]);
+        View::main(Fragment::box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($product) ));
         // IMAGES
-        $content[] = self::divBoxExpanding(_("Images"), "imageObject", [ (new ImageObjectView())->getForm("product", $idProduct, $value['image']) ]);
-        return $content;
+        View::main(Fragment::box()->expandingBox( _("Images"), (new ImageObjectView())->getForm("product", (int)$this->id, $value['image']) ));
     }
 }

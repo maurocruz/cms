@@ -1,9 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Invoice;
 
-class InvoiceView extends InvoiceWidget {
-
-    public function edit(array $data): array {
+class InvoiceView extends InvoiceWidget
+{
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function edit(array $data): array
+    {
         $this->idorder = $data['idorder'];
         $lenght = $data['partOfInvoice'] ? count($data['partOfInvoice']): 0;
         // NEW

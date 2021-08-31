@@ -1,37 +1,61 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Service;
 
-use Plinct\Cms\View\ViewInterface;
+use Plinct\Cms\Factory\ViewFactory;
+use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\Fragment\ListTable\ListTable;
+use Plinct\Cms\View\Types\TypeViewInterface;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\HtmlPiecesTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
-class ServiceView extends ServiceWidget implements ViewInterface {
-
-    private function navbarService() {
-        $title =  _("Service");
-        $list = [
-            "/admin/$this->tableHasPart/service?id=$this->idHasPart" => _("List all"),
-            "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => _("Add new") ]
-        ;
-        $this->content['navbar'][] = navbarTrait::navbar($title,$list,4);
+class ServiceView extends ServiceAbstract implements TypeViewInterface
+{
+    /**
+     *
+     */
+    private function navbarService()
+    {
+        View::navbar(_("Services"), [
+            "/admin/$this->tableHasPart?id=$this->idHasPart&action=service" => Fragment::icon()->home(),
+            "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => Fragment::icon()->plus()
+        ], 4);
     }
 
-    public function index(array $data): array {
-        $this->content['main'][] = parent::noContent("Method not done!");
-        return $this->content;
+    /**
+     * @param array $data
+     */
+    public function index(array $data)
+    {
+        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
     }
 
-    public function new($data = null): array {
-        return $this->content;
-    }
-    public function edit(array $data): array {
-        $this->content['main'][] = parent::noContent("Method not done!");
-        return $this->content;
+    /**
+     * @param null $data
+     * @return void
+     */
+    public function new($data = null)
+    {
+        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
     }
 
-    public function indexWithPartOf(array $data): array {
+    /**
+     * @param array $data
+     */
+    public function edit(array $data)
+    {
+        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
+    }
+
+    /**
+     * @param array $data
+     */
+    public function indexWithPartOf(array $data)
+    {
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'],'id','value');
         $this->navbarService();
@@ -42,36 +66,64 @@ class ServiceView extends ServiceWidget implements ViewInterface {
             "category" => [ _("Category"), [ "style" => "width: 200px;" ]],
             "dateModified" => [ _("Date modified"), [ "style" => "width: 150px;"] ]
         ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($data, "service", $columnRows, $data['services']['itemListElement'] );
-        return $this->content;
+        ViewFactory::mainContent(HtmlPiecesTrait::indexWithSubclass($data, "service", $columnRows, $data['services']['itemListElement'] ));
     }
 
-    public function newWithPartOf($data = null): array {
-        $this->tableHasPart = lcfirst($data['provider']['@type']);
-        $this->idHasPart = ArrayTool::searchByValue($data['provider']['identifier'],'id','value');
-        $this->content['main'][] = self::divBox2(sprintf(_("Add new %s from %s"), _("service"), $data['provider']['name']), [ parent::serviceForm("new", $data) ]);
-        return $this->content;
+    /**
+     * @param null $data
+     */
+    public function newWithPartOf($data = null)
+    {
+        $this->tableHasPart = lcfirst($data['@type']);
+        $this->idHasPart = ArrayTool::searchByValue($data['identifier'],'id','value');
+        // NAVBAR
+        $this->navbarService();
+        // FORM
+        parent::newWithPartOfForm();
     }
 
-    public function editWithPartOf(array $data): array {
+    /**
+     * @param array $data
+     */
+    public function editWithPartOf(array $data)
+    {
         $this->tableHasPart = lcfirst($data['provider']['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['provider']['identifier'],'id','value');
+
+        // NAVBAR
+        $this->navbarService();
+
         if (empty($data)) {
-            $this->content['main'][] = self::noContent();
+            View::main(Fragment::miscellaneous()->message());
         } else {
             // EDIT SERVICE
-            $this->content['main'][] = self::divBox(sprintf("%s %s",_("Edit"),_("service")), "service", [ self::serviceForm("edit", $data) ]);
+            View::main(self::serviceForm("edit", $data));
             // OFFER
-            $this->content['main'][] = self::divBoxExpanding(_("Offer"), "offer", [ (new OfferView())->edit($data) ]);
+            View::main(Fragment::box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($data) ));
         }
-        return $this->content;
     }
 
-    /*public function provider($data): array {
+    /**
+     * @param $value
+     */
+    public function listServices($value)
+    {
+        $this->tableHasPart = lcfirst($value['@type']);
+        $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
+
+        // NAVBAR
         $this->navbarService();
-        $providerName = $data['itemListElement'][0]['item']['provider']['name'];
-        $this->navbarService(sprintf(_("Services of '%s'"), $providerName), [], 3, false);
-        $this->content['main'][] = self::listAll($data, "Service", sprintf(_("Services list of '%s'"), $providerName));
-        return $this->content;
-    }*/
+
+        // LIST TABLE IN MAIN
+        $listTable = new ListTable();
+        $listTable->setEditButton("/admin/$this->tableHasPart/service?id=$this->idHasPart&item=");
+        // CAPTION
+        $listTable->caption(sprintf(_("%s services list"),$value['name']));
+        // LABELS
+        $listTable->labels('id',_('Name'),_("Date modified"));
+        // ROWS
+        $listTable->rows($value['services']['itemListElement'],['idservice','name','dateModified']);
+        // READY
+        ViewFactory::mainContent($listTable->ready());
+    }
 }
