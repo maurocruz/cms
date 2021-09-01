@@ -17,7 +17,7 @@ abstract class ListTableAbstract
     /**
      * @var array
      */
-    protected array $labels;
+    protected array $labels = [];
     /**
      * @var array
      */

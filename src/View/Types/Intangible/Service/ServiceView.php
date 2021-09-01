@@ -7,13 +7,11 @@ namespace Plinct\Cms\View\Types\Intangible\Service;
 use Plinct\Cms\Factory\ViewFactory;
 use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Fragment\ListTable\ListTable;
-use Plinct\Cms\View\Types\TypeViewInterface;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
 use Plinct\Cms\View\View;
-use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Tool\ArrayTool;
 
-class ServiceView extends ServiceAbstract implements TypeViewInterface
+class ServiceView extends ServiceAbstract
 {
     /**
      *
@@ -29,44 +27,21 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
     /**
      * @param array $data
      */
-    public function index(array $data)
-    {
-        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
-    }
-
-    /**
-     * @param null $data
-     * @return void
-     */
-    public function new($data = null)
-    {
-        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
-    }
-
-    /**
-     * @param array $data
-     */
-    public function edit(array $data)
-    {
-        ViewFactory::mainContent(Fragment::miscellaneous()->message("Method not done!"));
-    }
-
-    /**
-     * @param array $data
-     */
     public function indexWithPartOf(array $data)
     {
+        // VARS
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'],'id','value');
+        // NAVBAR
         $this->navbarService();
-        $columnRows = [
-            "idservice" => [ "ID", [ "style" => "width: 30px;" ]],
-            "name" => _("Name"),
-            "serviceType" => [ _("Service type"), [ "style" => "width: 300px;"] ],
-            "category" => [ _("Category"), [ "style" => "width: 200px;" ]],
-            "dateModified" => [ _("Date modified"), [ "style" => "width: 150px;"] ]
-        ];
-        ViewFactory::mainContent(HtmlPiecesTrait::indexWithSubclass($data, "service", $columnRows, $data['services']['itemListElement'] ));
+        // LIST
+        $listIndex = Fragment::listTable(['class'=>'table']);
+        $listIndex->caption(sprintf(_("List of %s"), _("services")));
+        $listIndex->labels(_('Name'), _("Category"), _("Date modified"));
+        $listIndex->setEditButton($_SERVER['REQUEST_URI']."&item=");
+        $listIndex->rows($data['services']['itemListElement'],['name','category','dateModified']);
+        // VIEW
+        View::main($listIndex->ready());
     }
 
     /**
@@ -117,13 +92,14 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
         // LIST TABLE IN MAIN
         $listTable = new ListTable();
         $listTable->setEditButton("/admin/$this->tableHasPart/service?id=$this->idHasPart&item=");
-        // CAPTION
+        // caption
         $listTable->caption(sprintf(_("%s services list"),$value['name']));
-        // LABELS
+        // labels
         $listTable->labels('id',_('Name'),_("Date modified"));
-        // ROWS
+        // rows
         $listTable->rows($value['services']['itemListElement'],['idservice','name','dateModified']);
-        // READY
+
+        // VIEW
         ViewFactory::mainContent($listTable->ready());
     }
 }
