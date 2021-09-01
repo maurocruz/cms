@@ -9,12 +9,10 @@ use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class TaxonView
 {
-    use navbarTrait;
     use FormElementsTrait;
 
     /**
