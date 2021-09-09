@@ -1,83 +1,100 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\WebPage;
 
+use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
 use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
-use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\HtmlPiecesTrait;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
 
-class WebPageView extends WebPageWidget {
-    private $content;
+class WebPageView extends WebPageAbstract
+{
+    /**
+     *
+     */
+    private static function navbarWebPage(string $title = null)
+    {
+        View::navbar("WebPage",[
+            "/admin/webSite/webPage?id=".self::$idwebSite => Fragment::icon()->home(),
+            "/admin/webSite/webPage?id=".self::$idwebSite."&action=new" => Fragment::icon()->plus(),
+            "/admin/webSite/webPage?id=".self::$idwebSite."&action=sitemap" => _("Site map")
+        ], 4, ['table'=>"webPage"]);
 
-    use FormElementsTrait;
-    use HtmlPiecesTrait;
-    
-    public function __construct() {
-        $appendNavbar = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "webPage", "data-searchfor" => "name" ] ];
-        $this->content['navbar'][] = [
-            "list" => [ "/admin/webPage" => "Show all WebPages", "/admin/webPage/new" => "add new WebPage", "/admin/webPage/sitemap" => _("Site map") ],
-            "attributes" => [ "class" => "menu menu3"],
-            "title" => "WebPage",
-            "append" => $appendNavbar
-        ];  
+        if($title) View::navbar(_($title), [], 5);
     }
-    
-    public function index(array $data): array {
+
+    /**
+     * @param array $data
+     */
+    public static function index(array $data)
+    {
+        self::$idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
+
+        self::navbarWebPage();
+
         if (isset($data['error'])) {
-            $this->content['main'][] = self::error($data['error'], "WebPage");
+            View::main(Fragment::miscellaneous()->message($data['error']));
+
         } else {
-            $this->content['main'][] = self::listAll($data, "WebPage", "List of webpages", [ "url" => "Url", "dateModified" => "Date modified" ]);
+            View::main(parent::listAllWebPages($data['hasPart']));
         }
-        return $this->content;
-    }
-    
-    public function new(): array {
-        $content[] = [ "tag" => "h4", "content" => "Add new webPage" ];
-        $content[] = self::formWebPage();
-        $this->content['main'][] = [ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ];
-        return $this->content;
     }
 
-    public function edit(array $data): array {
-        $value = $data[0];
+
+    /**
+     * @param array $data
+     */
+    public static function new(array $data)
+    {
         // VARS
-        parent::$idwebSite = ArrayTool::searchByValue($value['isPartOf']['identifier'],'id','value');
-        parent::$idwebPage = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-        // VIEW         
-        $this->content['main'][] = [ "tag" => "p", "content" => _("View")." <a href=\"".$value['url']."\" target=\"_blank\">".$value['url']."</a>" ];
-        // EDIT
-        $content['main'][] = self::formWebPage($value);
-        // ATTRIBUTES
-        $content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", parent::$idwebPage, $value['identifier']) ]);
-        // BOX
-        $this->content['main'][] = self::divBox($value['name'], "WebPage", [ $content ]);
-        // WEB ELEMENTS
-        $this->content['main'][] = self::divBoxExpanding(_("Web elements"), "WebPage", [ (new WebPageElementView())->getForm(parent::$idwebPage, $value['hasPart']) ]);
-        return $this->content;
+        self::$idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
+
+        // NAVBAR
+        self::navbarWebPage("Add new webpage");
+
+        // FORM
+        View::main(Fragment::box()->simpleBox(self::formWebPage(), _("Add new webpage")));
     }
 
-    public static function editWithIsPartOf(array $data): array {
+    /**
+     * @throws Exception
+     */
+    public static function edit(array $data)
+    {
         // VARS
         parent::$idwebSite = ArrayTool::searchByValue($data['isPartOf']['identifier'],'id','value');
-        parent::$idwebPage = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-        // FORM EDIT and PROPERTIES
-        $response[] = self::divBox2(_("Edit web page"), [
-            self::editWebPage($data),
-            self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPage", parent::$idwebPage, $data['identifier']) ])
-        ]);
+        parent::$idwebPage = ArrayTool::searchByValue($data['identifier'], "id", 'value');
+
+        self::navbarWebPage();
+
+        // FORM EDIT
+        View::main(Fragment::box()->simpleBox(self::formWebPage($data), ("Edit")));
+
+        // PROPERTIES
+        View::main(Fragment::box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage", parent::$idwebPage, $data['identifier'])));
+
         // WEB ELEMENTS
-        $response[] = self::divBoxExpanding(_("Web page elements"), "WebPage", [ (new WebPageElementView())->getForm(parent::$idwebPage, $data['hasPart']) ]);
-        // RESPONSE
-        return $response;
+        View::main(Fragment::box()->expandingBox(_("Web page elements"), (new WebPageElementView())->getForm((int)parent::$idwebPage, $data['hasPart'])));
     }
 
-    public function sitemap($sitemaps): array {
+    /**
+     * @param $data
+     */
+    public static function sitemap($data)
+    {
+        parent::$idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
+
+        self::navbarWebPage(_("Sitemaps"));
+
         // TITLE
-        $this->content['main'][] = self::simpleTag("h2",_("Sitemaps"));
+        View::main("<h2>"._("Sitemaps")."</h2>");
+
         // INDEX
-        $this->content['main'][] = (new SitemapWidget())->index($sitemaps);
-        return $this->content;
+        View::main((new SitemapWidget())->index($data['sitemaps']));
     }
 }

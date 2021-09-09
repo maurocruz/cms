@@ -7,9 +7,9 @@ namespace Plinct\Cms\Server;
 class Server
 {
     /**
-     * @var
+     * @var string
      */
-    private $tableHasPart;
+    private string $tableHasPart;
 
     /**
      * @param $type

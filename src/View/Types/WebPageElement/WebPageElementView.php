@@ -7,9 +7,9 @@ namespace Plinct\Cms\View\Types\WebPageElement;
 use Exception;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
+use Plinct\Cms\View\View;
 use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 
 class WebPageElementView implements ViewInterface
@@ -28,7 +28,6 @@ class WebPageElementView implements ViewInterface
     protected int $idwebPageElement;
 
     use FormElementsTrait;
-    use navbarTrait;
 
     /**
      * @param $type
@@ -46,7 +45,7 @@ class WebPageElementView implements ViewInterface
     private function navBarWebPageElement($title)
     {
         if ($title) {
-            $this->content['navbar'][] = self::navbar($title);
+            View::navbar($title);
         }
     }
 
