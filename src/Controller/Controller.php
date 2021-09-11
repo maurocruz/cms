@@ -13,7 +13,7 @@ class Controller
      * @param $params
      * @return mixed
      */
-    public function getData($type, $methodName, $id, $params): mixed
+    public function getData($type, $methodName, $id, $params)
     {
         unset($params['type']);
 
