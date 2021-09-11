@@ -7,7 +7,6 @@ namespace Plinct\Cms\Template;
 use Plinct\Cms\App;
 use Plinct\Cms\View\Structure\Header\HeaderView;
 use Plinct\Cms\View\Structure\Main\MainView;
-use Plinct\Web\Render;
 
 abstract class TemplateView extends TemplateWidget
 {
@@ -92,36 +91,17 @@ abstract class TemplateView extends TemplateWidget
                     MainView::content(parent::formRegister());
                     break;
             }
+
         } else {
             MainView::content(parent::formRegister());
         }
     }
 
-    protected function footer() {
-        parent::append("footer", [ "tag" => "p", "content" => "Copyright by Mauro Cruz" ]);
-    }
-
     /**
-     * @return string
+     *
      */
-    public function ready(): string
+    protected function footer()
     {
-        // HEADER
-        $this->append('content', HeaderView::ready());
-        // MAIN
-        $this->append('content', (new MainView())->render());
-
-        if (!App::getTitle()) {
-            self::warning(_("You need to set site name on index.php!"));
-        }
-        // TITLE
-        self::setTitle();
-        // MOUNT ELEMENTS
-        self::simpleMain();
-        // JS
-        $this->html['content'][1]['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
-        $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
-        // RETURN
-        return "<!DOCTYPE html>" . Render::arrayToString($this->html);
+        parent::append("footer", [ "tag" => "p", "content" => "Copyright by Mauro Cruz" ]);
     }
 }

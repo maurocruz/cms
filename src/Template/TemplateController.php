@@ -10,8 +10,9 @@ use Plinct\Cms\View\Structure\Header\HeaderView;
 use Plinct\Cms\View\Structure\Main\MainView;
 use Plinct\Cms\View\View;
 use Plinct\Tool\Locale;
+use Plinct\Web\Render;
 
-class TemplateController extends TemplateView implements TemplateInterface
+class TemplateController extends TemplateView
 {
     /**
      *
@@ -35,9 +36,8 @@ class TemplateController extends TemplateView implements TemplateInterface
     /**
      * @param array|null $params
      * @param array|null $queryStrings
-     * @return string
      */
-    public function viewContent(array $params = null, array $queryStrings = null): string
+    public function viewContent(array $params = null, array $queryStrings = null)
     {
         $type = $queryStrings['type'] ?? $params['type'] ?? null;
         $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
@@ -55,15 +55,13 @@ class TemplateController extends TemplateView implements TemplateInterface
         } else {
             View::main([ "tag" => "p", "content" => "Control Panel CMSCruz - version " . App::getVersion() ] );
         }
-
-        return $this->ready();
     }
 
     /**
      * LOGIN
      * @param null $auth
      */
-    public function login($auth = null): string
+    public function login($auth = null)
     {
         if ($auth && $auth['status'] == "Access unauthorized") {
             if ($auth['data'] == "Invalid email") MainView::content(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry but this email is invalid!")]);
@@ -71,8 +69,36 @@ class TemplateController extends TemplateView implements TemplateInterface
             if ($auth['data'] == "User exists") MainView::content(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Check your data.")]);
             if ($auth['data'] == "User exists but not admin") MainView::content(["tag" => "p", "attributes" => ["class" => "aviso"], "content" => _("Sorry. The user exists but is not authorized. Contact administrator.")]);
         }
-        MainView::content(parent::formLogin());
 
-        return $this->ready();
+        MainView::content(parent::formLogin());
+    }
+
+    /**
+     * @return string
+     */
+    public function ready(): string
+    {
+        // HEADER
+        $this->append('content', HeaderView::ready());
+
+        // MAIN
+        $this->append('content', (new MainView())->render());
+
+        if (!App::getTitle()) {
+            self::warning(_("You need to set site name on index.php!"));
+        }
+
+        // TITLE
+        self::setTitle();
+
+        // MOUNT ELEMENTS
+        self::simpleMain();
+
+        // JS
+        $this->html['content'][1]['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
+        $this->html['content'][1]['content'][] = '<script src="'.App::getStaticFolder().'/js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+
+        // RETURN
+        return "<!DOCTYPE html>" . Render::arrayToString($this->html);
     }
 }

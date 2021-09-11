@@ -3,7 +3,9 @@
  * ROUTES CMS ADMIN
  */
 
-use Plinct\Cms\Factory\TemplateFactory;
+declare(strict_types=1);
+
+use Plinct\Cms\Template\TemplateController;
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -21,11 +23,14 @@ return function (Route $route)
     {
         $filename = $args['filename'];
         $type = $args['type'];
+
         $file = realpath(__DIR__ . "/../static/$type/$filename" .".".$type);
         $script = file_get_contents($file);
         $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
+
         $newResponse = $response->withHeader("Content-type", $contentType);
         $newResponse->getBody()->write($script);
+
         return $newResponse;
     });
 
@@ -45,15 +50,15 @@ return function (Route $route)
          */
         $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
         {
-            $template = TemplateFactory::create();
+            $template = new TemplateController();
 
             if (isset($_SESSION['userLogin']['admin'])) {
-                $content = $template->viewContent($args, $request->getQueryParams());
+                $template->viewContent($args, $request->getQueryParams());
             } else {
-                $content = $template->login();
+                $template->login();
             }
 
-            $response->getBody()->write($content);
+            $response->getBody()->write($template->ready());
 
             return $response;
 
@@ -67,17 +72,20 @@ return function (Route $route)
             $type = $args['type'];
             $action = $args['action'];
             $params = $request->getParsedBody();
+
             unset($params['submit']);
             unset($params['submit_x']);
             unset($params['submit_y']);
             unset($params['x']);
             unset($params['y']);
+
             //  EDIT
             if ($action == "edit" || $action == "put") {
                 $data = (new Server())->edit($type, $params);
                 // sitemap
                 Sitemap::create($type, $params);
             }
+
             // NEW
             elseif ($action == "new" || $action == "post" || $action == "add") {
                 // put data
@@ -85,6 +93,7 @@ return function (Route $route)
                 // sitemap
                 Sitemap::create($type, $params);
             }
+
             // DELETE
             elseif ($action == "delete" || $action == "erase") {
                 // delete data
@@ -92,23 +101,29 @@ return function (Route $route)
                 // sitemap
                 Sitemap::create($type, $params);
             }
+
             // CREATE SQL TABLE
             elseif ($action == "createSqlTable") {
                 (new Server())->createSqlTable($type);
                 $data = $_SERVER['HTTP_REFERER'];
             }
+
             // SITEMAP
             elseif (($action == "sitemap")) {
                 $data = $_SERVER['HTTP_REFERER'];
                 // sitemap
                 Sitemap::create($type, $params);
             }
+
             // GENERIC
             else {
                 (new Server())->request($type, $action, $params);
                 $data = $_SERVER['HTTP_REFERER'];
             }
+
             return $response->withHeader('Location', $data)->withStatus(301);
+
         })->addMiddleware(new Authentication());
+
     })->addMiddleware(new GatewayMiddleware());
 };
