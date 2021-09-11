@@ -67,7 +67,7 @@ abstract class TemplateView extends TemplateWidget
      * REGISTER FORM
      * @param string|null $warning
      */
-    protected function register(string $warning = null)
+    public function register(string $warning = null)
     {
         if ($warning) {
             switch ($warning) {
@@ -104,7 +104,7 @@ abstract class TemplateView extends TemplateWidget
     /**
      * @return string
      */
-    protected function ready(): string
+    public function ready(): string
     {
         // HEADER
         $this->append('content', HeaderView::ready());

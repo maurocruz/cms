@@ -101,7 +101,7 @@ class Api
         if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
 
-        } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+        } elseif (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
             return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ]), true);
         }
 
