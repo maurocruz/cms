@@ -464,9 +464,23 @@ a.white {
   width: 25px;
   height: 25px;
   align-self: flex-end;
+  background-color: transparent;
+  border: none;
 }
 .form-table .form-submit-button .material-icons {
-  font-size: 25px;
+  font-size: 24px;
+}
+.form-table .form-submit-button-send .material-icons {
+  color: #40d377;
+}
+.form-table .form-submit-button-send .material-icons:hover {
+  color: #84f7ba;
+}
+.form-table .form-submit-button-delete .material-icons {
+  color: #cc0000;
+}
+.form-table .form-submit-button-delete .material-icons:hover {
+  color: #ff5555;
 }
 
 .form-table-title {

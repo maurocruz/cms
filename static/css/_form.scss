@@ -215,14 +215,26 @@
     box-sizing: border-box;
     min-height: 26px;
   }
+
   .form-submit-button {
     width: 25px;
     height: 25px;
     align-self: flex-end;
+    background-color: transparent;
+    border: none;
+
     .material-icons {
-      font-size: 25px;
+      font-size: 24px;
     }
   }
+
+  .form-submit-button-send .material-icons{ color: #40d377; }
+
+  .form-submit-button-send .material-icons:hover { color: #84f7ba; }
+
+  .form-submit-button-delete .material-icons { color: #cc0000; }
+
+  .form-submit-button-delete .material-icons:hover { color: #ff5555; }
 }
 .form-table-title { font-size: 18px; }
 .form-back-red input { background-color: rgba(255,30,0,0.5) !important; }
