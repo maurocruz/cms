@@ -9,4 +9,6 @@ interface FormInterface
     public function selectAdditionalType(string $class = "thing", string $value = null): array;
 
     public function selectCategory(string $class = "thing", string $value = null): array;
+
+    public function search(string $action, string $name, string $value = null): array;
 }

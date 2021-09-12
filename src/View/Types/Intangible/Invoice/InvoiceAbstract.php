@@ -1,60 +1,104 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\Invoice;
 
 use DateTime;
 use Exception;
 use Plinct\Cms\View\Types\Intangible\OrderItem\OrderItemView;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Cms\View\Widget\navbarTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
-abstract class InvoiceWidget {
-    protected $idorder;
-    protected static $tableHasPart = null;
-    protected static $idHasPart = null;
-    protected static $customer;
-    protected static $customerType;
-    protected static $provider;
-    protected static $providerType;
-    protected $content = [];
-    protected $totalInvoiceAmount = 0;
-    protected $totalPaidAmount = 0;
-    protected $totalPayableAmount = 0;
-    protected $totalPastDueAmount = 0;
-
-    use navbarTrait;
-    private static $totalPaymentAmount;
+abstract class InvoiceAbstract
+{
+    /**
+     * @var int
+     */
+    protected int $idorder;
+    /**
+     * @var string|null
+     */
+    protected static ?string $tableHasPart = null;
+    /**
+     * @var string|null
+     */
+    protected static ?string $idHasPart = null;
+    /**
+     * @var int
+     */
+    protected static int $customer;
+    /**
+     * @var string
+     */
+    protected static string $customerType;
+    /**
+     * @var int
+     */
+    protected static int $provider;
+    /**
+     * @var string
+     */
+    protected static string $providerType;
+    /**
+     * @var float|int
+     */
+    protected float $totalInvoiceAmount = 0;
+    /**
+     * @var float|int
+     */
+    protected float $totalPaidAmount = 0;
+    /**
+     * @var float|int
+     */
+    protected float $totalPayableAmount = 0;
+    /**
+     * @var float|int
+     */
+    protected float $totalPastDueAmount = 0;
+    /**
+     * @var float
+     */
+    private static float $totalPaymentAmount;
 
     use FormElementsTrait;
 
-    protected function formInvoice($case = 'new', $value = null, $n = null): array {
+    protected function formInvoice($case = 'new', $value = null, $n = null): array
+    {
         // VARS
         $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
+
         // HIDDEN
         $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $this->idorder, "type" => "hidden"] ];
-        $content[] = self::input("tableHasPart", "hidden", $this->idorder);
+        $content[] = self::input("tableHasPart", "hidden", (string) $this->idorder);
+
         if ($case == "edit") {
             $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
         }
+
         // #
         $p = $case == "new" ? "+" : $n;
         $content[] = "<span>".$p."</span>";
+
         // TOTAL PAYMENT DUE
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Value") ] : null,
             [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'] ?? null, "type" => "number", "step" => "0.01", "min" => "0.01" ]]
         ]];
+
         // Payment due date
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Due date") ] : null,
             [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'] ?? null, "type" => "date" ]]
         ]];
+
         // PAYMENT DATE
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Payment") ] : null,
             self::input('paymentDate','date',$value['paymentDate'] ?? null)
         ]];
+
         // PAYMENT STATUS
         $content[] = [ "tag" => "fieldset", "content" => [
             $case == "new" ? [ "tag" => "legend", "content" => _("Status") ] : null,
@@ -66,13 +110,20 @@ abstract class InvoiceWidget {
                 "PaymentAutomaticallyApplied" => _("Payment automatically applied")
             ])
         ]];
+
         // submit
         $content[] = self::submitButtonSend();
         $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase") : null;
+
         return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
     }
-    
-    static private function classStyle($value): string {
+
+    /**
+     * @param $value
+     * @return string
+     */
+    static private function classStyle($value): string
+    {
         if ($value) {
             $expired = null;
             $now = new DateTime();
@@ -82,20 +133,29 @@ abstract class InvoiceWidget {
             }
             $diff = $expired->diff($now);
         }
+
         if ($value == null) { 
             return "form-back-gray";
+
         } elseif ($value['paymentDate'] && $value['paymentDate'] !== "0000-00-00") {
             return "form-back-green";
+
         } elseif($diff->invert == 0) {
             return "form-back-red";
+
         } elseif($diff->days < 30) {
             return "form-back-yellow";
+
         } else { 
             return "form-back-white";             
         }
     }
 
-    protected function balance(): array {
+    /**
+     * @return array
+     */
+    protected function balance(): array
+    {
         // SET VARS
         $totalPaymentAmount = OrderItemView::getTotalBill();
         $totalInvoiceAmount = $this->totalInvoiceAmount;
@@ -106,10 +166,13 @@ abstract class InvoiceWidget {
         $colorDiference = $difference < 0 ? "#fab5b5" : "inherit";
         $colorPayable = $totalPayableAmount > 0 ? "#fafab5" : "inherit";
         $colorPastDue = $totalPastDueAmount > 0 ? "#fab5b5" : "inherit";
+
         // TABLE
         $table = new Table();
+
         // CAPTION
         $table->caption(_("Balance"));
+
         // HEADERS
         $table->head(_("Total order amount") )
             ->head(_("Total invoice amount"))
@@ -117,6 +180,7 @@ abstract class InvoiceWidget {
             ->head(_("Amounts paid"))
             ->head(_("Amounts payable"))
             ->head(_("Amounts past due"));
+
         // BODY
         $table->bodyCell(number_format($totalPaymentAmount,2,',','.'), [ "style" => "text-align: center;" ])
             ->bodyCell(number_format($totalInvoiceAmount,2,',','.'), [ "style" => "text-align: center;" ])
@@ -125,6 +189,7 @@ abstract class InvoiceWidget {
             ->bodyCell(number_format($totalPayableAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPayable" ])
             ->bodyCell(number_format($totalPastDueAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPastDue" ])
             ->closeRow();
+
         // READY
         return $table->ready();
     }
@@ -134,24 +199,32 @@ abstract class InvoiceWidget {
      * @param $data
      * @return array
      */
-    protected static function saldoData($data): array {
+    protected static function saldoData($data): array
+    {
         $dadosSaldo = [];
         $totalPaymentAmount = 0;
         $dadosSaldo['credito'] = 0;
         $dadosSaldo['debito'] = 0;
         $dadosSaldo['atrasado'] = 0;
+
         foreach ($data as $value) {
             $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
+
             // total
             $totalPaymentAmount += $value['totalPaymentDue'];
+
             // pago            
             $dadosSaldo['credito'] += $paid ? $value['totalPaymentDue'] : 0;
+
             // debito
             $dadosSaldo['debito'] += $paid ? null : $value['totalPaymentDue'];
+
             // atrasado
             $dadosSaldo['atrasado'] += $paid === false && $value['paymentDueDate'] < date("Y-m-d") ? $value['totalPaymentDue'] : null;
         }
+
         self::$totalPaymentAmount = $totalPaymentAmount;
+
         return $dadosSaldo;
     }
 }

@@ -13,21 +13,26 @@ use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 
-class OrderView extends OrderWidget
+class OrderView extends OrderAbstract
 {
     /**
+     * LIST ORDERS
+     *
      * @param $value
-     * @return array
      */
-    public function indexWithPartOf($value): array
+    public function indexWithPartOf($value)
     {
         $orders = $value['orders'];
+
         // NAVBAR
         parent::navbarOrder($value);
+
         // SEARCH
-        $this->content['main'][] = self::search("","customerName", filter_input(INPUT_GET,'customerName'));
+        View::main( Fragment::form()->search("","customerName", filter_input(INPUT_GET,'customerName')));
+
         // PERIOD
-        $this->content['main'][] = parent::periodoParagraph($orders['itemListOrder']);
+        View::main(parent::periodoParagraph($orders['itemListOrder']));
+
         // TABLE
         $rowsColumns = [
             "idorder" => [ "ID", [ "style" => "width: 50px;" ] ],
@@ -37,56 +42,66 @@ class OrderView extends OrderWidget
             "orderStatus" => [ _("Order status"), [ "style" => "width: 140px;" ] ],
             "orderDate" => [ _("Order date"), [ "style" => "width: 100px;" ] ]
         ];
-        $this->content['main'][] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowsColumns, $orders['itemListElement']);
-        return $this->content;
+
+        View::main( HtmlPiecesTrait::indexWithSubclass($value, "order", $rowsColumns, $orders['itemListElement']) );
     }
 
     /**
+     * CREATE NEW ORDER
+     *
      * @param null $data
-     * @return array
      */
-    public function newWithPartOf($data = null): array
+    public function newWithPartOf($data = null)
     {
         $value = $data['seller'];
+
         // NAVBAR
         parent::navbarOrder($value);
+
         // FORM NEW
-        $this->content['main'][] = self::divBox2(sprintf(_("Add new %s from %s"), _("order"), $value['name']), [ self::formOrder("new", $data) ]);
-        return $this->content;
+        View::main(self::divBox2(sprintf(_("Add new %s from %s"), _("order"), $value['name']), [ self::formOrder("new", $data) ]));
     }
 
     /**
+     * EDIT A ORDER
+     *
      * @param array $data
-     * @return array
      */
-    public function editWithPartOf(array $data): array
+    public function editWithPartOf(array $data)
     {
-        // NAVBAR
-        parent::navbarOrder($data['seller']);
         if (empty($data)) {
-            $this->content['main'][] = self::noContent();
+            View::main(self::noContent());
+
         } else {
-            self::$idOrder = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+            self::$idOrder = (int) ArrayTool::searchByValue($data['identifier'],'id','value');
+
+            // NAVBAR
+            parent::navbarOrder($data['seller'],$data['customer']['name']);
+
             // ORDER
-            $this->content['main'][] = self::divBox(_("Order"), "order", [ self::formOrder("edit", $data) ]);
+            View::main(self::divBox(_("Order"), "order", [ self::formOrder("edit", $data) ]));
+
             // ORDERED ITEMS
-            $this->content['main'][] = self::divBox(_("Ordered items"), "orderItem", [ (new OrderItemView())->edit($data) ]);
+            View::main(self::divBox(_("Ordered items"), "orderItem", [ (new OrderItemView())->edit($data) ]));
+
             // INVOICES
-            $this->content['main'][] = self::divBox(_("Invoices"), "invoice", [ (new InvoiceView())->edit($data) ]);
+            View::main(self::divBox(_("Invoices"), "invoice", [ (new InvoiceView())->edit($data) ]));
+
             // HISTORY
-            $this->content['main'][] = self::divBox2(_("Historic"), [ (new HistoryView())->view($data['history']) ]);
+            View::main(self::divBox2(_("Historic"), [ (new HistoryView())->view($data['history']) ]));
         }
-        return $this->content;
     }
 
     /**
-     * PAYMENT INVOICES
+     * SHOW PAYMENT INVOICES WHICH DUE DATE EXPIRED OR NEXT TO EXPIRY
+     *
      * @param $value
      */
     public function payment($value)
     {
         // NAVBAR
         parent::navbarOrder($value);
+
         View::navbar(_("Payments"),[
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => Fragment::icon()->home(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
@@ -99,8 +114,10 @@ class OrderView extends OrderWidget
 
         // TITLE
         $content[] = [ "tag" => "h3", "content" => ucfirst(_("payments")) ];
+
         // SELECT PERIOD
         $content[] = parent::selectPeriodo(count($value['orders']), "payment");
+
         $total = 0;
         foreach ($value['orders'] as $key => $value) {
             //var_dump($value);
@@ -122,6 +139,7 @@ class OrderView extends OrderWidget
             ]];
             $total += $value['totalPaymentDue'];
         }
+
         // total
         $tbody[] = [ "tag" => "tr", "attributes" => [ "style" => "background-color: rgba(0,0,0,0.65);" ], "content" => [
             [ "tag" => "td", "attributes" => [ "colspan" => "2"], "content" => "" ],
@@ -132,6 +150,7 @@ class OrderView extends OrderWidget
             [ "tag" => "td", "content" => "" ],
             [ "tag" => "td", "content" => "" ]
         ]];
+
         $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
             [ "tag" => "thead", "content" => [
                 [ "tag" => "tr", "content" => [
@@ -147,26 +166,32 @@ class OrderView extends OrderWidget
             ]],
             [ "tag" => "tbody", "content" => $tbody ]
         ] ];
+
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
 
         View::main([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
     }
 
     /**
+     * SHOW ORDERS WHOSE DUE DATE HAS EXPIRED
+     *
      * @param $value
      */
     public function expired($value)
     {
         // NAVBAR
         parent::navbarOrder($value);
+
         View::navbar(_("Expired"),[
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => Fragment::icon()->home(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
             "javascript: print();" => _("Print out")
         ],5);
+
         // VARS
         $orders = $value['orders'];
+
         $rowColunms = [
             "idorder" => [ "ID", [ "style" => "width: 50px;" ] ],
             "paymentDueDate" => [ _("Due date"), [ "style" => "width: 82px;" ] ],
@@ -174,15 +199,20 @@ class OrderView extends OrderWidget
             "orderedItem" => _("Ordered item"),
             "orderStatus" => _("Order status")
         ];
+
         // TITLE
         $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
+
         // SELECT BY PERIOD
         $content[] = self::selectPeriodo($orders['numberOfItems'], "expired");
+
         // TABLE
         $content[] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowColunms, $orders['itemListElement']);
+
         // PRINT
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
-        // WRAPPER
+
+        // VIEW
         View::main([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
     }
 }

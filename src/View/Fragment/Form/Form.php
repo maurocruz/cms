@@ -4,55 +4,71 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Fragment\Form;
 
-use Plinct\Cms\Factory\ServerFactory;
-use Plinct\Web\Element\Element;
-
-class Form implements FormInterface
+class Form extends FormAbstract implements FormInterface
 {
-
+    /**
+     * WRITE <SELECT> ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
+     *
+     * @param string $class
+     * @param string|null $value
+     * @return array
+     */
     public function selectAdditionalType(string $class = "thing", string $value = null): array
     {
         return self::selectReady('additionalType', self::getData(['class'=>$class]), $value);
     }
 
+    /**
+     * WRITE <SELECT> ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
+     *
+     * @param string $class
+     * @param string|null $value
+     * @return array
+     */
     public function selectCategory(string $class = "thing", string $value = null): array
     {
         return self::selectReady('category', self::getData(['class'=>$class,'source'=>'category']), $value);
     }
 
     /**
-     * @param array $params
-     * @return mixed
-     */
-    private static function getData(array $params) {
-        $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
-        return json_decode((ServerFactory::soloine())->get($params), true);
-    }
-
-    /**
-     * @param string $property
-     * @param $data
-     * @param null $value
+     * WRITE <FORM> WITH SEARCH <INPUT> ELEMENT
+     *
+     * @param string $action
+     * @param string $name
+     * @param string|null $value
      * @return array
      */
-    private static function selectReady(string $property, $data, $value = null): array
+    public function search(string $action, string $name, string $value = null): array
     {
-        $select = new Element('select',['class'=>'select-soloine','name'=>$property]);
+        $form = new \Plinct\Web\Element\Form(['class'=>'form']);
 
-        if($value) {
-            $select->content("<option value='$value'>$value</option>");
-        }
+        // ACTION AND METHOD
+        $form->action($action)->method('get');
 
-        if (isset($data['@graph'])) {
-            $select->content("<option value=''>" . _("Select $property") . "</option>");
+        $form->content('<fieldset>');
 
-            foreach ($data['@graph'] as $key => $item) {
-                $select->content("<option value='$key'>$item</option>");
+        // CAPTION
+        $form->content("<legend>"._("Search")."</legend>");
+
+        // URI
+        $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+        if ($queryString) {
+            parse_str($queryString, $queryArray);
+            if ($queryArray) {
+                foreach ($queryArray as $nameQuery => $valueQuery) {
+                    $form->input($nameQuery, $valueQuery, "hidden");
+                }
             }
-        } else {
-            $select->content("<option value=''>{$data['message']}</option>");
         }
 
-        return $select->ready();
+        // INPUT SEARCH
+        $form->input($name, $value ?? '');
+
+        // SUBMIT
+        $form->input('', _("Submit") , 'submit');
+
+        $form->content('</fieldset>');
+
+        return $form->ready();
     }
 }

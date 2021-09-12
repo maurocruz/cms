@@ -1,33 +1,44 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Types\Intangible\OrderItem;
 
-use Plinct\Cms\View\ViewInterface;
 use Plinct\Tool\ArrayTool;
 
-class OrderItemView extends OrderItemWidget implements ViewInterface {
-    public static $totalWithoutDiscount;
-    public static $totalWithDiscount;
+class OrderItemView extends OrderItemAbstract
+{
+    /**
+     * @var float
+     */
+    public static float $totalWithoutDiscount;
+    /**
+     * @var float
+     */
+    public static float $totalWithDiscount;
 
-    public function index(array $data): array {
-        return [];
-    }
-
-    public function new($data = null): array {
-        return [];
-    }
-
-    public function edit(array $data): array {
-        $this->referencesOrder = $data['idorder'];
-        $this->orderedItem = $data['orderedItem'];
-        $this->sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function edit(array $data): array
+    {
+        $this->referencesOrder = (int) $data['idorder'];
+        $this->orderedItem = (int) $data['orderedItem'];
+        $this->sellerId = (int) ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
         $this->sellerType = $data['seller']['@type'];
+
         return [
             parent::listOrderedItems($data),
             parent::divBoxExpanding(_("Include new item"), "OrderItem", [ parent::listSellerOfferedItems($data['seller']['hasOfferCatalog']) ])
         ];
     }
 
-    public static function getTotalBill() {
+    /**
+     * @return float
+     */
+    public static function getTotalBill(): float
+    {
         return self::$TOTAL_BILL;
     }
 }
