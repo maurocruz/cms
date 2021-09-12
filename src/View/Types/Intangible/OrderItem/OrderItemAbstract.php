@@ -168,7 +168,7 @@ abstract class OrderItemAbstract
                 ->bodyCell(_($type))
                 ->bodyCell($price, ["style"=>"text-align: right;"])
                 ->bodyCell($elegibleDuration)
-                ->bodyCell(self::input("items[$key][orderQuantity]", "number", "1", [ "min" => "1" ]), [ "style" => "widht: 80px;"])
+                ->bodyCell(self::input("items[$key][orderQuantity]", "number", "1", [ "min" => "1" ]), [ "style" => "width: 80px;"])
                 ->closeRow();
         }
 
