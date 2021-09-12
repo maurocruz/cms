@@ -76,7 +76,8 @@ class Api
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
 
             try {
-                $remoteAccessApi = json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true);
+                $execRequest = (new Curl(App::getApiHost()))->{$action}($type, $params, $token);
+                $remoteAccessApi = is_string($execRequest) ? json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true) : ( $execRequest == true ? ['message'=>'true'] : ['message'=>'false']);
                 if (isset($remoteAccessApi['error'])) {
                     throw new Exception($remoteAccessApi['error']['message']);
 
