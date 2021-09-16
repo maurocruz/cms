@@ -49,7 +49,7 @@ abstract class OrderItemAbstract
     /**
      * @var float
      */
-    protected static float $TOTAL_BILL;
+    protected static float $TOTAL_BILL = 0;
 
     use FormElementsTrait;
 
