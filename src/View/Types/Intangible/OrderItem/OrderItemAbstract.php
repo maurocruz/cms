@@ -87,7 +87,7 @@ abstract class OrderItemAbstract
                 $type = $value['orderedItem']['@type'];
                 $name = $value['orderedItem']['name'];
                 $idItem = ArrayTool::searchByValue($value['orderedItem']['identifier'],"id")['value'];
-                $orderQuantity = $value['orderQuantity'];
+                $orderQuantity = (float)$value['orderQuantity'];
                 $price = isset($value['offer']['price']) ? (float)$value['offer']['price'] : null;
                 $totalPrice = $price * $orderQuantity;
                 $priceCurrency = $value['offer']['priceCurrency'] ?? null;
@@ -97,7 +97,7 @@ abstract class OrderItemAbstract
                     ->bodyCell($type, ["style" =>"text-align: center;"])
                     ->bodyCell(sprintf('<a href="/admin/%s/%s?id=%s&item=%s">%s</a>',lcfirst($sellerType),lcfirst($type),$sellerId,$idItem,$name))
                     ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
-                    ->bodyCell($priceCurrency." ".number_format($price,2,',','.'), ["style" =>"text-align: right;"])
+                    ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
                     ->bodyCell(self::deleteButton($value['idorderItem'],$idHasPart,$name))
                     ->closeRow();
