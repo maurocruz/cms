@@ -8,18 +8,32 @@ use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\Sitemap;
 use Plinct\Tool\ArrayTool;
 
-class WebSiteController implements ControllerInterface {
-
+class WebSiteController implements ControllerInterface
+{
+    /**
+     * @param null $params
+     * @return array
+     */
     public function index($params = null): array {
         return Api::get('webSite',['format'=>'ItemList','properties'=>'name,url']);
     }
 
-    public function edit(array $params): array {
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function edit(array $params): array
+    {
         $id = $params['id'] ?? null;
         return Api::get('webSite',['id'=>$id,'properties'=>'*,hasPart']);
     }
 
-    public function new($params = null): array {
+    /**
+     * @param null $params
+     * @return array
+     */
+    public function new($params = null): array
+    {
         return [];
     }
 
@@ -37,20 +51,21 @@ class WebSiteController implements ControllerInterface {
         // ITEM
         if ($item) {
             $dataWebPage = Api::get('webPage',['id'=>$item,'properties'=>'*,isPartOf,hasPart']);
-            return $dataWebPage[0];
+            return (array)$dataWebPage[0];
         }
+
         // ALL and NEW
         $dataWebSite = Api::get('webSite',['id'=>$id,'properties'=>'*']);
-        $data = $dataWebSite[0];
+        $data = (array)$dataWebSite[0];
         $idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
 
         // list all webpages if not isset action
         if (!$action) {
-            $data['hasPart'] = Api::get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified']);
+            $data['hasPart'] = Api::get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified desc']);
+
         } elseif ($action == 'sitemap') {
             $data['sitemaps'] = (new Sitemap())->getSitemaps();
         }
-
         // response
         return $data;
     }

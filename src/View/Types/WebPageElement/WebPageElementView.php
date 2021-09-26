@@ -126,8 +126,8 @@ class WebPageElementView implements ViewInterface
     private function formWebPageElement(string $case = "new", $value = null): array
     {
         $id = $this->idwebPageElement ?? $this->idwebPage;
+        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ];
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
-        $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ] : null;
         $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "isPartOf", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
         $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
         $content[] = [ "tag" => "fieldset", "content" => [
