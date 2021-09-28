@@ -7,11 +7,6 @@ namespace Plinct\Cms\Server;
 class Server
 {
     /**
-     * @var string
-     */
-    private string $tableHasPart;
-
-    /**
      * @param $type
      * @param $params
      * @return string
@@ -29,18 +24,17 @@ class Server
 
         // API
         $data = Api::post($type, $params);
+
         if ($type == "product") {
-            return self::httpReferrer();
+            return filter_input(INPUT_SERVER, 'HTTP_REFERER');
         }
 
         // REDIRECT TO EDIT PAGE
         if (isset($data['id']) && !isset($params['tableHasPart'])) {
             return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+        } else {
+            return filter_input(INPUT_SERVER, 'HTTP_REFERER');
         }
-
-        $this->unsetRelParams($params);
-
-        return $this->return();
     }
 
     /**
@@ -85,7 +79,7 @@ class Server
 
         // RESPONSE REDIRECT
         if (isset($response['message']) && $response['message'] == "Deleted successfully") {
-            return isset($params['tableHasPart']) ? self::httpReferrer() : self::requestUri();
+            return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         } else {
             var_dump([ "error" => [ "response" => $response ]]);
             die;
@@ -102,46 +96,6 @@ class Server
     }
 
     /**
-     * @param $params
-     */
-    private function unsetRelParams($params): void
-    {
-        $this->tableHasPart = $params['tableHasPart'] ?? null;
-        unset($params['tableHasPart']);
-        unset($params['idHasPart']);
-        unset($params['tableIsPartOf']);
-        unset($params['idIsPartOf']);
-    }
-
-    /**
-     * @return string
-     */
-    private static function httpReferrer(): string
-    {
-        return filter_input(INPUT_SERVER, 'HTTP_REFERER');
-    }
-
-    /**
-     * @return string
-     */
-    private static function requestUri(): string
-    {
-        return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-    }
-
-    /**
-     * @return string
-     */
-    private function return(): string
-    {
-        if ($this->tableHasPart) {
-            return self::httpReferrer();
-        } else {                
-            return self::requestUri();
-        }
-    }
-
-    /**
      * @param $type
      * @param $action
      * @param $params
@@ -150,6 +104,6 @@ class Server
     public function request($type, $action, $params): string
     {
         Api::request($type,$action,$params);
-        return self::httpReferrer();
+        return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 }

@@ -11,6 +11,7 @@ use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
+use Plinct\Web\Debug\Debug;
 
 class WebPageView extends WebPageAbstract
 {
@@ -33,15 +34,18 @@ class WebPageView extends WebPageAbstract
      */
     public static function index(array $data)
     {
-        self::$idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
+        // FROM WEBSITE CONTROLLER
+        if ($data['@type'] == 'WebSite') {
+            self::$idwebSite = ArrayTool::searchByValue($data['identifier'], 'id', 'value');
 
-        self::navbarWebPage();
+            self::navbarWebPage();
 
-        if (isset($data['error'])) {
-            View::main(Fragment::miscellaneous()->message($data['error']));
+            if (isset($data['error'])) {
+                View::main(Fragment::miscellaneous()->message($data['error']));
 
-        } else {
-            View::main(parent::listAllWebPages($data['hasPart']));
+            } else {
+                View::main(parent::listAllWebPages($data['hasPart']));
+            }
         }
     }
 

@@ -64,11 +64,12 @@ class Api
         // if api host equals cms app host
         if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+
             $data = (new $classname())->{$action}($params);
 
             if (isset($data['error'])) {
                 var_dump($data);
-                die();
+                die(' at ' . __FILE__ . ' in line 74');
             }
             return $data;
 
