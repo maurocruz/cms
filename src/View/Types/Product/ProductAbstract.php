@@ -41,12 +41,14 @@ abstract class ProductAbstract
 
         $form->content("<h4>" . _(ucfirst($case)) . "</h4>");
 
-        // HIDDENS
+        // HIDDEN
         $form->input('manufacturer',$this->manufacturer,'hidden');
         $form->input('manufacturerType',$this->manufacturerType,'hidden');
         if($case == 'edit') $form->input('id', $this->id,'hidden');
         // NAME
         $form->fieldsetWithInput('name', $value['name'] ?? null, _('name'));
+        // ADDITIONAL TYPE
+        $form->fieldset(Fragment::form()->selectAdditionalType('Product', $value['additionalType'] ?? null), _('Additional Type'));
         // CATEGORY
         $form->fieldset(Fragment::form()->selectCategory('Product', $value['category'] ?? null), _("Category"));
         // DESCRIPTION

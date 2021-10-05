@@ -33,10 +33,9 @@ class OrganizationController
     }
 
     /**
-     * @param null $params
      * @return bool
      */
-    public function new($params = null): bool
+    public function new(): bool
     {
         return true;
     }
@@ -72,7 +71,8 @@ class OrganizationController
 
         if ($itemId) {
             $data[0]['action'] = "edit";
-            $data[0]['product'] = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
+            $productData = Api::get('product', [ "id" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
+            $data[0]['product'] = $productData[0];
         } else {
             if ($action == 'new') {
                 $data[0]['action'] = 'new';

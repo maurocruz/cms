@@ -14,7 +14,8 @@ class WebSiteController implements ControllerInterface
      * @param null $params
      * @return array
      */
-    public function index($params = null): array {
+    public function index($params = null): array
+    {
         return Api::get('webSite',['format'=>'ItemList','properties'=>'name,url']);
     }
 

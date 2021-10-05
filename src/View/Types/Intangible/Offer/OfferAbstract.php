@@ -11,19 +11,19 @@ abstract class OfferAbstract
     /**
      * @var array
      */
-    protected $content = [];
+    protected array $content = [];
     /**
-     * @var
+     * @var string
      */
-    protected $tableHasPart;
+    protected string $tableHasPart;
     /**
-     * @var
+     * @var int
      */
-    protected $idHasPart;
+    protected int $idHasPart;
     /**
-     * @var
+     * @var array
      */
-    protected $offeredBy;
+    protected array $offeredBy;
 
     use FormElementsTrait;
 

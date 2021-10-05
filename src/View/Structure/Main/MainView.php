@@ -9,7 +9,7 @@ use Plinct\Web\Element\Element;
 
 class MainView implements StructureViewInterface
 {
-    private static $mainElement;
+    private static Element $mainElement;
 
     /**
      *

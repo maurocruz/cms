@@ -17,7 +17,7 @@ abstract class OfferWidget extends OfferAbstract
         $case = $value ? "edit" : "new";
 
         if ($this->tableHasPart && $this->idHasPart) {
-            $content[] = self::input("itemOffered", "hidden", $this->idHasPart);
+            $content[] = self::input("itemOffered", "hidden", (string)$this->idHasPart);
             $content[] = self::input("itemOfferedType", "hidden", $this->tableHasPart);
 
         } else {

@@ -6,6 +6,8 @@ namespace Plinct\Cms\View\Fragment;
 
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
+use Plinct\Cms\View\Fragment\Error\Error;
+use Plinct\Cms\View\Fragment\Error\ErrorInterface;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\Fragment\Form\FormInterface;
 use Plinct\Cms\View\Fragment\Icon\IconInterface;
@@ -34,6 +36,11 @@ class Fragment
     public static function box(): BoxInterface
     {
         return new Box();
+    }
+
+    public static function error(): ErrorInterface
+    {
+        return new Error();
     }
 
     public static function form(): FormInterface

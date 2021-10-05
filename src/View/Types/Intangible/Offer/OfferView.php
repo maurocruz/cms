@@ -38,8 +38,9 @@ class OfferView extends OfferWidget
     public function editWithPartOf(array $data): array
     {
         $this->setOfferedBy($data);
+
         $this->tableHasPart = lcfirst($data['@type']);
-        $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+        $this->idHasPart = (int)ArrayTool::searchByValue($data['identifier'], "id")['value'];
 
         // NEW OFFER
         $content[] = Fragment::box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer());

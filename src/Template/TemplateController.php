@@ -46,7 +46,7 @@ class TemplateController extends TemplateView
         if($id && $methodName == 'index') $methodName = 'edit';
 
         if ($type) {
-            $controller = new Controller();
+            $controller = new Controller($type);
             $data = $controller->getData($type, $methodName, $id, $queryStrings);
 
             $view = new View();

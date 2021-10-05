@@ -8,6 +8,7 @@ use Exception;
 use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\Intangible\Offer\OfferView;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
+use Plinct\Cms\View\Types\Organization\OrganizationView;
 use Plinct\Cms\View\View;
 use Plinct\Tool\ArrayTool;
 
@@ -25,6 +26,20 @@ class ProductView extends ProductAbstract
 
         if ($title) {
             View::navbar($title, [], 5);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function edit($data)
+    {
+        $value = $data[0];
+        if ($value['manufacturerType'] == 'organization') {
+            $organization = $value['manufacturer'];
+            $organization['action'] = 'edit';
+            $organization['product'] = $value;
+            (new OrganizationView())->product($organization);
         }
     }
 
@@ -73,7 +88,7 @@ class ProductView extends ProductAbstract
         $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
         $this->manufacturerType = strtolower($value['@type']);
 
-        $product = $value['product'][0];
+        $product = $value['product'];
         $this->id = ArrayTool::searchByValue($product['identifier'],'id','value');
 
         $this->navbarProduct($product['name']);
@@ -83,7 +98,8 @@ class ProductView extends ProductAbstract
 
         // OFFERS
         View::main(Fragment::box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($product) ));
+
         // IMAGES
-        View::main(Fragment::box()->expandingBox( _("Images"), (new ImageObjectView())->getForm("product", (int)$this->id, $value['image']) ));
+        View::main(Fragment::box()->expandingBox( _("Images"), (new ImageObjectView())->getForm("product", (int)$this->id, $product['image']) ));
     }
 }

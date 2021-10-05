@@ -11,17 +11,17 @@ abstract class ViewAbstract
      */
     protected const NAMESPACE_VIEW = "\\Plinct\\Cms\\View\\Types\\";
     /**
-     * @var
+     * @var string
      */
-    protected $title;
+    protected string  $title;
     /**
-     * @var
+     * @var string
      */
-    protected $description;
+    protected string $description;
     /**
-     * @var
+     * @var array
      */
-    protected $content;
+    protected array $content;
 
     /**
      * @param array $content

@@ -111,7 +111,7 @@ trait FormElementsTrait {
         return $return;
     }
 
-    protected static function errorInfo($data, $type): ?array {
+    /*protected static function errorInfo($data, $type): ?array {
         if ($data['code'] == '42S02' || $data['code'] == '1146') {
             return [ "tag" => "div", "content" => [
                 [ "tag" => "p", "content" => _($data['message']) ],
@@ -121,7 +121,7 @@ trait FormElementsTrait {
             ]];
         }
         return null;
-    }
+    }*/
 
     protected static function additionalTypeInput($typeSelected, $additionalTypeValue, $attributes = null, $includeType = true): array {
         $datalist = null;

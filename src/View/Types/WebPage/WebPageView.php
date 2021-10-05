@@ -11,7 +11,6 @@ use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
 
 class WebPageView extends WebPageAbstract
 {
@@ -43,7 +42,7 @@ class WebPageView extends WebPageAbstract
             if (isset($data['error'])) {
                 View::main(Fragment::miscellaneous()->message($data['error']));
 
-            } else {
+            } elseif(isset($data['hasPart'])) {
                 View::main(parent::listAllWebPages($data['hasPart']));
             }
         }

@@ -7,6 +7,24 @@ namespace Plinct\Cms\Controller;
 class Controller
 {
     /**
+     * @var string
+     */
+    private string $type;
+
+    public function __construct(string $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
      * @param $type
      * @param $methodName
      * @param $id

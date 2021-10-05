@@ -15,6 +15,10 @@ class SoloineServer
      */
     public function get(array $params = null): string
     {
-        return Curl::getUrlContents( App::getSoloineUrl() . "?" . http_build_query($params) );
+        if (filter_var(App::getSoloineUrl(), FILTER_VALIDATE_URL)) {
+            return Curl::getUrlContents(App::getSoloineUrl() . "?" . http_build_query($params));
+        } else {
+            die('Error: Soloine url api not set!');
+        }
     }
 }
