@@ -919,8 +919,16 @@ table caption {
 }
 table caption h1 {
   font-size: 1.4em;
-  margin: 1em 0;
+  margin: 0;
   color: #eecc77;
+}
+table caption p {
+  font-weight: normal;
+}
+table caption p span {
+  margin: 0 5px;
+  color: #eecc77;
+  font-size: 110%;
 }
 table th {
   background: #336699;

@@ -15,6 +15,10 @@ abstract class ListTableAbstract
      */
     protected Table $table;
     /**
+     * @var string
+     */
+    protected string $caption;
+    /**
      * @var array
      */
     protected array $labels = [];
@@ -41,6 +45,17 @@ abstract class ListTableAbstract
     public function __construct(array $attributes = null)
     {
         $this->table = new Table($attributes);
+    }
+
+    protected function buildCaption()
+    {
+        // count
+        $numberOfItems = is_array($this->rows) ? count($this->rows) : "ND";
+
+        $caption = "<h1>$this->caption</h1>";
+        $caption .= "<p>" . sprintf(_("Showing %s items!"), "<span>$numberOfItems</span>") . "</p>";
+
+        $this->table->caption($caption);
     }
 
     /**

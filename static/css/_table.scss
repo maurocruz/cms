@@ -15,8 +15,17 @@ table {
     font-size: 1em;
     h1 {
       font-size: 1.4em;
-      margin: 1em 0;
+      margin: 0;
       color: #eecc77;
+    }
+    p {
+      font-weight: normal;
+
+      span {
+        margin: 0 5px;
+        color: #eecc77;
+        font-size: 110%;
+      }
     }
   }
 

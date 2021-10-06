@@ -52,7 +52,7 @@ class PlaceView implements TypeViewInterface
     {
         $this->navbarPlace();
         $listTable = new ListTable();
-        $listTable->caption(_("Places"));
+        $listTable->caption(sprintf(_("List of %s"),_("places")));
         $listTable->labels('id',_("Name"),_("AdditionalType"), _("Date modified"));
         $listTable->rows($data['itemListElement'],['idplace','name','additionalType','dateModified']);
         $listTable->setEditButton('/admin/place/edit/');

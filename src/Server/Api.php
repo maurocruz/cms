@@ -34,9 +34,9 @@ class Api
     /**
      * @param string $type
      * @param array $params
-     * @return array
+     * @return ?array
      */
-    public static function put(string $type, array $params): array
+    public static function put(string $type, array $params): ?array
     {
         return self::request($type, 'put', $params);
     }
@@ -55,9 +55,9 @@ class Api
      * @param $type
      * @param $action
      * @param $params
-     * @return array
+     * @return ?array
      */
-    public static function request($type, $action, $params): array
+    public static function request($type, $action, $params): ?array
     {
         $remoteAccessApi = null;
 
@@ -71,7 +71,8 @@ class Api
 
             try {
                 $execRequest = (new Curl(App::getApiHost()))->{$action}($type, $params, $token);
-                $remoteAccessApi = is_string($execRequest) ? json_decode((new Curl(App::getApiHost()))->{$action}($type, $params, $token), true) : ( $execRequest == true ? ['message'=>'true'] : ['message'=>'false']);
+                $remoteAccessApi = is_string($execRequest) ? json_decode($execRequest, true) : ( $execRequest == true ? ['message'=>'true'] : ['message'=>'false']);
+
                 if (isset($remoteAccessApi['error'])) {
                     throw new Exception($remoteAccessApi['error']['message']);
 

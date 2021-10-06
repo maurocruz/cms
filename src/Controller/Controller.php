@@ -33,6 +33,11 @@ class Controller
      */
     public function getData($type, $methodName, $id, $params)
     {
+        // IF SEND SEARCH QUERY
+        if (isset($params['q'])) {
+            $params['nameLike'] = $params['q'];
+        }
+
         unset($params['type']);
 
         $methodName = $methodName == 'index' && isset($id) ? 'edit' : $methodName;

@@ -17,6 +17,9 @@ msgstr "Categoria"
 msgid "Add new %s"
 msgstr "Adicionar novo %s"
 
+msgid "List of %s"
+msgstr "Lista de %s"
+
 msgid "List of %s from %s"
 msgstr "Lista de %s de %s"
 
@@ -123,9 +126,6 @@ msgstr "Veja isto"
 
 msgid "There are no enabled modules!"
 msgstr "Não há módulos habilitados!"
-
-msgid "Place"
-msgstr "Local"
 
 msgid "View all %s"
 msgstr "Ver todos %s"
@@ -643,9 +643,6 @@ msgstr "Lista de ofertas "
 msgid "List of local business"
 msgstr "Lista dos negócios locais"
 
-msgid "List of '%s' locals business"
-msgstr "Lista de '%s' para negócios locais"
-
 msgid "Business, services and products"
 msgstr "Negócios, serviços e produtos"
 
@@ -971,8 +968,17 @@ msgstr "Nomes e pontos de contatos"
 msgid "List of places"
 msgstr "Lista de locais"
 
+msgid "Place"
+msgstr "Local"
+
 msgid "Places"
 msgstr "Locais"
+
+msgid "place"
+msgstr "local"
+
+msgid "places"
+msgstr "locais"
 
 msgid "Add new place"
 msgstr "Adicionar novo local"

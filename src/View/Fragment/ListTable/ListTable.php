@@ -22,7 +22,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
      */
     public function caption(string $caption)
     {
-        $this->table->caption($caption);
+        $this->caption = $caption;
     }
 
     /**
@@ -58,10 +58,15 @@ class ListTable extends ListTableAbstract implements ListTableInterface
      */
     public function ready(): array
     {
+        // CAPTION
+        $this->buildCaption();
+
         // LABELS COLUMNS
         $this->buildLabels();
+
         // ROWS
         $this->buildRows();
+
         // READY
         return $this->table->ready();
     }
