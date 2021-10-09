@@ -1,12 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\Factory\ServerFactory;
 use Plinct\Web\Element\Element;
+use Plinct\Web\Element\Form;
 
 class FormAbstract
 {
+    /**
+     * @var Form
+     */
+    protected Form $form;
+
+
     /**
      * GET A DATA FROM SOLOINE SERVER
      *

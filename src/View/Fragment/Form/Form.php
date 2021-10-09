@@ -4,8 +4,18 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Fragment\Form;
 
+use Plinct\Web\Element\Form as WebForm;
+
 class Form extends FormAbstract implements FormInterface
 {
+
+    public function create(array $attributes = null): WebForm
+    {
+        $this->form = new WebForm($attributes);
+        return $this->form;
+    }
+
+
     /**
      * WRITE <SELECT> ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
      *
