@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\Types\WebPageElement;
 
 use Exception;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Types\ImageObject\ImageObjectView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
 use Plinct\Cms\View\View;
-use Plinct\Cms\View\ViewInterface;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 
-class WebPageElementView implements ViewInterface
+class WebPageElementView
 {
     /**
      * @var array
@@ -30,22 +30,12 @@ class WebPageElementView implements ViewInterface
     use FormElementsTrait;
 
     /**
-     * @param $type
-     * @param $methodName
-     * @param $data
-     */
-    public function view($type, $methodName, $data)
-    {
-        // TODO: Implement view() method.
-    }
-
-    /**
      * @param $title
      */
     private function navBarWebPageElement($title)
     {
         if ($title) {
-            View::navbar($title);
+            View::navbar($title, [], 2);
         }
     }
 
@@ -71,29 +61,42 @@ class WebPageElementView implements ViewInterface
     }
 
     /**
+     * @param array $data
      * @throws Exception
      */
-    public function edit(array $data): array
+    public function edit(array $data)
     {
-        $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+        // IDS
+        $this->idwebPageElement = (int)ArrayTool::searchByValue($data['identifier'], "id")['value'];
+        $this->idwebPage = (int)$data['isPartOf'];
+
+        // NAVBAR
         $this->navBarWebPageElement(_("Web page element"));
+
+        // IS PART OF
         $webPageEditHref = "/admin/webPage/edit/".$data['isPartOf'];
-        $this->content['main'][] = [ "tag" => "p", "content" => _("Is part of: "). '<a href="'.$webPageEditHref.'">'.$webPageEditHref.'</a>' ];
-        $this->content['main'][] = self::divBox(_("Web page element"), "WebPageElement", [ self::editForms($data) ] );
-        return $this->content;
+        View::main("<p>"._("Is part of: ")."<a href='$webPageEditHref'>$webPageEditHref</a></p>");
+
+        // FORM
+        View::main(Fragment::box()->simpleBox(self::editForms($data), _("Web page element")));
     }
 
     /**
+     * @param array $value
+     * @return array
      * @throws Exception
      */
     public function editForms(array $value): array
     {
-        // content
+        // FORM CONTENT
         $content[] = self::formWebPageElement("edit", $value);
-        // attributes
+
+        // ATTRIBUTES
         $content[] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']) ]);
-        // images
+
+        // IMAGES
         $content[] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("webPageElement", $this->idwebPageElement, $value['image']) ]);
+
         return $content;
     }
 
@@ -126,25 +129,30 @@ class WebPageElementView implements ViewInterface
     private function formWebPageElement(string $case = "new", $value = null): array
     {
         $id = $this->idwebPageElement ?? $this->idwebPage;
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "value" => "webPage", "type" => "hidden" ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "value" => $this->idwebPage, "type" => "hidden" ] ];
-        $content[] = $case == "new" ? [ "tag" => "input", "attributes" => [ "name" => "isPartOf", "value" => $this->idwebPage, "type" => "hidden" ] ] : null;
-        $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $this->idwebPageElement, "type" => "hidden" ] ] : null;
-        $content[] = [ "tag" => "fieldset", "content" => [
-                [ "tag" => "legend", "content" => "Título" ],
-                [ "tag" => "input", "attributes" => [ "name" => "name", "type" => "text", "value" => $value['name'] ?? null ] ]
-            ]];
-        $content[] = [ "tag" => "fieldset", "content" => [
-                [ "tag" => "legend", "content" => "Posição" ],
-                [ "tag" => "input", "attributes" => [ "name" => "position", "type" => "text", "value" => $value['position'] ?? null ] ]
-            ]];
-        $content[] = [ "tag" => "fieldset", "content" => [
-                [ "tag" => "legend", "content" => "Conteúdo (usar HTML)" ],
-                [ "tag" => "textarea", "attributes" => [ "id" => "textareaPost-$id", "style" => "width: 100%;", "name" => "text" ], "content" => $value['text'] ?? null ]
-            ]];            
-        $content[] = [ "tag" => "a", "attributes" => [ "href" => "javascript:void();", "onclick" => "expandTextarea('textareaPost-$id',100);", "style" => "width: 96%; display: block;" ], "content" => "Expandir textarea em 100px" ];
-        $content[] = self::submitButtonSend();
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/webPageElement/erase") : null;
-        return [ "tag" => "form", "attributes" => [ "name" => "form-webPageElement--$case", "id" => "form-webPageElement-$case-$id", "action" => "/admin/webPageElement/$case", "class" => "formPadrao form-webPageElement", "method" => "post" ], "content" => $content ];
+
+        $form = Fragment::form()->create(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
+        $form->action("/admin/webPageElement/$case")->method('post');
+
+        // HIDDEN
+        $form->input('tableHasPart','webPage','hidden')->input('idHasPart', (string)$this->idwebPage,'hidden');
+        if ($case == 'edit') $form->input('id', (string)$this->idwebPageElement, 'hidden');
+        if($case == 'new') $form->input('isPartOf', (string)$this->idwebPage, 'hidden');
+
+        // NAME
+        $form->fieldsetWithInput('name', $value['name'] ?? null, _('Title'));
+
+        // POSITION
+        $form->fieldsetWithInput('position', $value['position'] ?? null, _('Position'));
+
+        // TEXT
+        $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaPost$id"]);
+        $form->setEditor("textareaPost$id");
+
+        // SUBMIT BUTTONS
+        $form->submitButtonSend();
+        if ($case=='edit') $form->submitButtonDelete("/admin/webPageElement/erase");
+
+        // READY
+        return $form->ready();
     }
 }
