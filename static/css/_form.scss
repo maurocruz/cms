@@ -280,6 +280,26 @@
   }
 }
 
+/* EVENT
+======================================================= */
+.form-event {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-child(n) { width: 100%; }
+  fieldset:nth-of-type(2) { width: 50%; }
+  fieldset:nth-of-type(3) { width: 50%; }
+  fieldset:nth-of-type(4) { width: 50%; }
+  fieldset:nth-of-type(5) { width: 50%; }
+
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(2) { width: 25%; }
+    fieldset:nth-of-type(3) { width: 25%; }
+    fieldset:nth-of-type(4) { width: 25%; }
+    fieldset:nth-of-type(5) { width: 25%; }
+  }
+
+}
+
 /* IMAGE OBJECT
 ======================================================= */
 .form-imageObject {
