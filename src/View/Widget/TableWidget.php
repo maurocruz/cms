@@ -1,25 +1,59 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\View\Widget;
 
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
-class TableWidget {
-    private $table;
-    private $caption;
-    private $property_label;
-    private $rows;
+class TableWidget
+{
+    /**
+     * @var Table
+     */
+    private Table $table;
+    /**
+     * @var string|null
+     */
+    private ?string $tableHasPart;
+    /**
+     * @var string|null
+     */
+    private ?string $caption = null;
+    /**
+     * @var array
+     */
+    private array $property_label;
+    /**
+     * @var array
+     */
+    private array $rows;
 
-    public function __construct(array $attributes = null) {
+    /**
+     * @param array|null $attributes
+     */
+    public function __construct(array $attributes = null)
+    {
         $this->table = new Table($attributes);
     }
 
-    public function setTitle($title): TableWidget {
+    /**
+     * @param $title
+     * @return $this
+     */
+    public function setTitle($title): TableWidget
+    {
         $this->caption .= "<h1>"._($title)."</h1>";
         return $this;
     }
 
-    public function setData(array $data = null): TableWidget {
+    /**
+     * @param array|null $data
+     * @return $this
+     */
+    public function setData(array $data = null): TableWidget
+    {
         if (isset($data['itemListElement'])) {
             $this->rows = $data['itemListElement'];
             $numberOfItems = $data['numberOfItems'];
@@ -37,22 +71,44 @@ class TableWidget {
         return $this;
     }
 
-    public function setPropertyLabels(array $property_label): TableWidget  {
+    /**
+     * @param array $property_label
+     * @return $this
+     */
+    public function setPropertyLabels(array $property_label): TableWidget
+    {
         $this->property_label = $property_label;
         return $this;
     }
 
-    public function setButtonEdit(string $link): TableWidget {
+    /**
+     * @param string $link
+     * @return $this
+     */
+    public function setButtonEdit(string $link): TableWidget
+    {
         $this->property_label = [$link=>'Edit'] + $this->property_label;
         return $this;
     }
 
-    public function setButtonDelete(): TableWidget {
+    /**
+     * @param string|null $tableHasPart
+     * @return $this
+     */
+    public function setButtonDelete(string $tableHasPart = null): TableWidget
+    {
+        $this->tableHasPart = $tableHasPart;
+
         $this->property_label += ["DELETE"=>'Delete'];
+
         return $this;
     }
 
-    public function ready(): array {
+    /**
+     * @return array
+     */
+    public function ready(): array
+    {
         // CAPTION
         if ($this->caption) {
             $this->table->caption($this->caption);
@@ -88,7 +144,13 @@ class TableWidget {
         return $this->table->ready();
     }
 
-    private static function editButton($key,$item): string {
+    /**
+     * @param $key
+     * @param $item
+     * @return string
+     */
+    private static function editButton($key,$item): string
+    {
         $link = $key;
         preg_match_all('/\[([^]]+)]*/',$key, $match);
         foreach ($match[1] as $valueMatch) {
@@ -97,18 +159,19 @@ class TableWidget {
         return "<a href='$link' class='table-itemlist-button table-itemlist-button-edit' title='"._("Edit")."'><span class='material-icons'>edit</span></a>";
     }
 
-    private static function deleteButton($item): array {
+    private function deleteButton($item): array
+    {
         // VARS
         $type = lcfirst($item['@type']);
         $id = $item['id'];
-        $tableHasPart = $item['isPartOf']['@type'];
+        $tableHasPart = $item['isPartOf']['@type'] ?? $this->tableHasPart;
         // FORM
         $form = new \Plinct\Web\Element\Form(['class'=>'table-delete-button']);
         $form->action("/admin/$type/erase")->method('post');
         // id
         $form->input('id',$id,'hidden');
         // table has part
-        $form->input('tableHasPart',$tableHasPart,'hidden');
+        if ($tableHasPart) $form->input('tableHasPart',$tableHasPart,'hidden');
         // button
         $form->submitButtonDelete(null,['class'=>'form-submit-button-delete']);
         // RESPONSE
