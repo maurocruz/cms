@@ -19,14 +19,20 @@ class IconFragment implements IconInterface
      */
     public function plus(): string
     {
-        return "<span class='iconify menu-tab-icon icon-plus' data-icon='bi:plus-lg'></span>";
+        return "<span class='iconify menu-tab-icon icon-plus' data-icon='akar-icons:plus'></span>";
     }
 
+    /**
+     * @return string
+     */
     public function edit(): string
     {
         return "<span class='iconify menu-tab-icon icon-edit' data-icon='fa-solid:edit'></span>";
     }
 
+    /**
+     * @return string
+     */
     public function delete(): string
     {
         return "<span class='iconify menu-tab-icon icon-delete' data-icon='ic:round-delete-forever'></span>";
