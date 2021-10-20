@@ -13,9 +13,9 @@ class WebPageAbstract
      */
     protected static string $idwebSite;
     /**
-     * @var string
+     * @var ?string
      */
-    protected static string $idwebPage;
+    protected static ?string $idwebPage = null;
 
     /**
      * @param array $data
@@ -39,7 +39,7 @@ class WebPageAbstract
          $table->setData($data);
          // buttons
          $table->setButtonEdit("/admin/webSite/webPage?id=$idwebSite&item=[id]")
-             ->setButtonDelete();
+             ->setButtonDelete("webSite");
 
          return $table->ready();
      }
@@ -51,6 +51,7 @@ class WebPageAbstract
     protected static function formWebPage(array $value = null): array
     {
         // VARS
+        $idwebPage = self::$idwebPage;
         $name = $value['name'] ?? null;
         $url = $value['url'] ?? null;
         $description = $value['description'] ?? null;
@@ -62,13 +63,16 @@ class WebPageAbstract
         $form->action("/admin/webPage/$case")->method('post');
         // hidden
         $form->input('isPartOf',self::$idwebSite,'hidden');
-        if ($case == "edit") $form->input('id', self::$idwebPage,'hidden');
+        if ($case == "edit") $form->input('id', $idwebPage,'hidden');
         // title
         $form->fieldsetWithInput('name',$name,_('Title'));
         // url
         $form->fieldsetWithInput('url',$url,'Url');
-        // description
-        $form->fieldsetWithTextarea('description',$description,_('Description'));
+
+        // DESCRIPTION
+        $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$idwebPage"]);
+        $form->setEditor("textarea$case$idwebPage");
+
         // alternativeHeadline
         $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));
         // submit

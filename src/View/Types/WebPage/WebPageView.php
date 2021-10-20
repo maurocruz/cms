@@ -42,7 +42,7 @@ class WebPageView extends WebPageAbstract
             if (isset($data['error'])) {
                 View::main(Fragment::miscellaneous()->message($data['error']));
 
-            } elseif(isset($data['hasPart'])) {
+            } elseif (isset($data['hasPart'])) {
                 View::main(parent::listAllWebPages($data['hasPart']));
             }
         }
