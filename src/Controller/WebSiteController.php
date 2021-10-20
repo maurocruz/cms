@@ -26,7 +26,12 @@ class WebSiteController implements ControllerInterface
     public function edit(array $params): array
     {
         $id = $params['id'] ?? null;
-        return Api::get('webSite',['id'=>$id,'properties'=>'*,hasPart']);
+        $data = Api::get('webSite',['id'=>$id, 'properties'=>'hasPart']);
+
+        $idSite = ArrayTool::searchByValue($data[0]['identifier'],'id','value');
+        $data[0]['hasPart'] = Api::get('webPage',['isPartOf'=>$idSite, 'orderBy'=>'dateModified desc']);
+
+        return $data;
     }
 
     /**
