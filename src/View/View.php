@@ -11,6 +11,15 @@ use Plinct\Cms\View\Structure\Main\MainView;
 class View extends ViewAbstract implements ViewInterface
 {
     /**
+     * @param $content
+     * @return void
+     */
+    public static function contentHeader($content)
+    {
+        HeaderView::content($content);
+    }
+
+    /**
      * @param string|null $title
      * @param array|null $list
      * @param int|null $level

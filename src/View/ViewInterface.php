@@ -13,4 +13,10 @@ interface ViewInterface
      * @return mixed
      */
     public function view($type, $methodName, $data);
+
+    /**
+     * @param $content
+     * @return mixed
+     */
+    public static function contentHeader($content);
 }
