@@ -1,4 +1,7 @@
 <?php
+/**
+ * FACTORY FOR FRAGMENTS HTML FROM CMS PLINCT PROJECT
+ */
 
 declare(strict_types=1);
 
@@ -16,9 +19,43 @@ use Plinct\Cms\View\Fragment\ListTable\ListTable;
 use Plinct\Cms\View\Fragment\ListTable\ListTableInterface;
 use Plinct\Cms\View\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\View\Fragment\Miscellaneous\MiscellaneousInterface;
+use Plinct\Cms\View\Fragment\Navbar\NavbarFragment;
+use Plinct\Cms\View\Fragment\Navbar\NavbarFragmentInterface;
 
 class Fragment
 {
+    /**
+     * @return BoxInterface
+     */
+    public static function box(): BoxInterface
+    {
+        return new Box();
+    }
+
+    /**
+     * @return ErrorInterface
+     */
+    public static function error(): ErrorInterface
+    {
+        return new Error();
+    }
+
+    /**
+     * @return FormInterface
+     */
+    public static function form(): FormInterface
+    {
+        return new Form();
+    }
+
+    /**
+     * @return IconInterface
+     */
+    public static function icon(): IconInterface
+    {
+        return new IconFragment();
+    }
+
     /**
      * @param array|null $attributes
      * @return ListTableInterface
@@ -28,28 +65,16 @@ class Fragment
         return new ListTable($attributes);
     }
 
-    public static function icon(): IconInterface
-    {
-        return new IconFragment();
-    }
-
-    public static function box(): BoxInterface
-    {
-        return new Box();
-    }
-
-    public static function error(): ErrorInterface
-    {
-        return new Error();
-    }
-
-    public static function form(): FormInterface
-    {
-        return new Form();
-    }
-
+    /**
+     * @return MiscellaneousInterface
+     */
     public static function miscellaneous(): MiscellaneousInterface
     {
         return new Miscellaneous();
+    }
+
+    public static function navbar(): NavbarFragmentInterface
+    {
+        return new NavbarFragment();
     }
 }
