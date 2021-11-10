@@ -6,11 +6,13 @@ namespace Plinct\Cms\View\Types\WebPage;
 
 use Exception;
 use Plinct\Cms\View\Fragment\Fragment;
+use Plinct\Cms\View\Structure\Header\HeaderView;
 use Plinct\Cms\View\Types\Intangible\PropertyValueView;
 use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
+use Plinct\Web\Debug\Debug;
 
 class WebPageView extends WebPageAbstract
 {
@@ -19,13 +21,24 @@ class WebPageView extends WebPageAbstract
      */
     private static function navbarWebPage(string $title = null)
     {
-        View::navbar("WebPage",[
-            "/admin/webSite/webPage?id=".self::$idwebSite => Fragment::icon()->home(),
-            "/admin/webSite/webPage?id=".self::$idwebSite."&action=new" => Fragment::icon()->plus(),
-            "/admin/webSite/webPage?id=".self::$idwebSite."&action=sitemap" => _("Site map")
-        ], 4, ['table'=>"webPage"]);
+        HeaderView::content(
+            Fragment::navbar()
+                ->type('webPage')
+                ->level(4)
+                ->title("WebPage")
+                ->newTab("/admin/webSite/webPage?id=".self::$idwebSite, Fragment::icon()->home())
+                ->newTab("/admin/webSite/webPage?id=".self::$idwebSite."&action=new", Fragment::icon()->plus())
+                ->newTab("/admin/webSite/webPage?id=".self::$idwebSite."&action=sitemap", _("Site map"))
+                ->search("/admin/webSite/webPage?id=".self::$idwebSite."&action=search", 'name', null, '/admin/webSite/webPage?id='.self::$idwebSite.'&item=[idItem]')
+                ->ready()
+        );
 
-        if($title) View::navbar(_($title), [], 5);
+        if ($title) HeaderView::content(
+            Fragment::navbar()
+                ->level(5)
+                ->title($title)
+                ->ready()
+        );
     }
 
     /**
@@ -73,7 +86,7 @@ class WebPageView extends WebPageAbstract
         parent::$idwebSite = ArrayTool::searchByValue($data['isPartOf']['identifier'],'id','value');
         parent::$idwebPage = ArrayTool::searchByValue($data['identifier'], "id", 'value');
 
-        self::navbarWebPage();
+        self::navbarWebPage($data['name']);
 
         // FORM EDIT
         View::main(Fragment::box()->simpleBox(self::formWebPage($data), ("Edit")));

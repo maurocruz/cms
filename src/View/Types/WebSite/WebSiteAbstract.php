@@ -20,15 +20,25 @@ class WebSiteAbstract
 
     protected function navbarWebSite($title = null)
     {
-        View::navbar(_("WebSite"),[
-            '/admin/webSite' => Fragment::icon()->home(),
-            '/admin/webSite/new' => Fragment::icon()->plus()
-        ], 2, ['table'=>'webSite']);
+        View::contentHeader(
+            Fragment::navbar()
+                ->type('webSite')
+                ->title("WebSite")
+                ->level(2)
+                ->newTab('/admin/webSite', Fragment::icon()->home())
+                ->newTab('/admin/webSite/new', Fragment::icon()->plus())
+                ->search("/admin/webSite")
+                ->ready()
+        );
 
-        if ($title) View::navbar(_($title), [
-            "/admin/webSite/edit/$this->idwebSite" => Fragment::icon()->home(),
-            "/admin/webSite/webPage?id=$this->idwebSite"=>_("List of web pages")
-        ], 3);
+        if ($title) View::contentHeader(
+            Fragment::navbar()
+                ->title(_($title))
+                ->level(3)
+                ->newTab("/admin/webSite/edit/$this->idwebSite", Fragment::icon()->home())
+                ->newTab("/admin/webSite/webPage?id=$this->idwebSite", _("List of web pages"))
+                ->ready()
+        );
     }
 
     /**
