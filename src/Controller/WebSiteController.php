@@ -53,6 +53,7 @@ class WebSiteController implements ControllerInterface
         $id = $params['id'];
         $action = $params['action'] ?? null;
         $item = $params['item'] ?? null;
+        $search = $params['q'] ?? $params['search'] ?? null;
 
         // ITEM
         if ($item) {
@@ -71,6 +72,15 @@ class WebSiteController implements ControllerInterface
 
         } elseif ($action == 'sitemap') {
             $data['sitemaps'] = (new Sitemap())->getSitemaps();
+
+        } elseif ($action == 'search') {
+            $data['hasPart']  = Api::get('webPage', [
+                'format'=>'ItemList',
+                'isPartOf'=>$idwebSite,
+                'properties'=>'isPartOf,dateModified',
+                'nameLike' => $search,
+                'orderBy'=>'dateModified desc'
+            ]);
         }
         // response
         return $data;
