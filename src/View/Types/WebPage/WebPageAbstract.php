@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Plinct\Cms\View\Types\WebPage;
@@ -45,6 +46,8 @@ class WebPageAbstract
      }
 
     /**
+     * * * * * FORM * * * *
+     *
      * @param array|null $value
      * @return array
      */
@@ -71,7 +74,7 @@ class WebPageAbstract
 
         // DESCRIPTION
         $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$idwebPage"]);
-        $form->setEditor("textarea$case$idwebPage");
+        $form->setEditor("textarea$case$idwebPage", "editor$case$idwebPage");
 
         // alternativeHeadline
         $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));

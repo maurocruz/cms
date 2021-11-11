@@ -12,7 +12,6 @@ use Plinct\Cms\View\Types\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\SitemapWidget;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
 
 class WebPageView extends WebPageAbstract
 {
@@ -63,6 +62,8 @@ class WebPageView extends WebPageAbstract
 
 
     /**
+     * * * * * NEW * * * * *
+     *
      * @param array $data
      */
     public static function new(array $data)
@@ -78,6 +79,8 @@ class WebPageView extends WebPageAbstract
     }
 
     /**
+     * * * * * EDIT * * * * *
+     *
      * @throws Exception
      */
     public static function edit(array $data)

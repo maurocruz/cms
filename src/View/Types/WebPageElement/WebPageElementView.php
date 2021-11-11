@@ -23,9 +23,9 @@ class WebPageElementView
      */
     protected int $idwebPage;
     /**
-     * @var int
+     * @var ?int
      */
-    protected int $idwebPageElement;
+    protected ?int $idwebPageElement = null;
 
     use FormElementsTrait;
 
@@ -128,7 +128,7 @@ class WebPageElementView
      */
     private function formWebPageElement(string $case = "new", $value = null): array
     {
-        $id = $this->idwebPageElement ?? $this->idwebPage;
+        $id = $this->idwebPageElement;
 
         $form = Fragment::form()->create(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
         $form->action("/admin/webPageElement/$case")->method('post');
@@ -145,8 +145,8 @@ class WebPageElementView
         $form->fieldsetWithInput('position', $value['position'] ?? null, _('Position'));
 
         // TEXT
-        $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaPost$id"]);
-        $form->setEditor("textareaPost$id");
+        $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaWebPageElement$id"]);
+        $form->setEditor("textareaWebPageElement$id", "editor$case$id");
 
         // SUBMIT BUTTONS
         $form->submitButtonSend();
