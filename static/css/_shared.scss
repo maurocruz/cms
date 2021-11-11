@@ -32,11 +32,39 @@
 
 /* COMPONENT _ navbar-search
 ====================================================================== */
-.navbar-search { margin: 0 5px; position: relative; }
-.navbar-search .material-icons { font-size: 25px; }
-.navbar-search-form button { margin: 0; padding: 0; line-height: 0; border-width: 1px; }
-.navbar-search-form-input { height: 20px; border-width: 3px; }
-.navbar-search-form-image { height: 25px; vertical-align: middle; }
+.navbar-search {
+  margin: 0 5px;
+  position: relative;
+
+  .navbar-search-form {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+
+    button {
+      margin: 0;
+      padding: 0;
+      line-height: 0;
+      border-width: 1px;
+      height: 27px;
+
+      svg {
+        font-size: 26px;
+        color: #444444;
+      }
+    }
+  }
+
+  .navbar-search-form-input {
+    height: 20px;
+    border-width: 3px;
+  }
+
+  .navbar-search-form-image {
+    height: 25px;
+    vertical-align: middle;
+  }
+}
 
 /* COMPONENT _ figure caption black
 ===================================================================== */
