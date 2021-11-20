@@ -75,14 +75,18 @@ class Server
         }
 
         // API ACTION
-        $response = Api::delete($type, [ "id" => $params['id'] ]);
+        if (isset($params['id'])) {
+            $params["id".lcfirst($type)] = $params['id'];
+            unset($params['id']);
+        }
+
+        $response = Api::delete($type, $params);
 
         // RESPONSE REDIRECT
-        if (isset($response['message']) && $response['message'] == "Deleted successfully") {
-            return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        if (isset($response['error'])) {
+            die([ "error" => [ "response" => $response ]]);
         } else {
-            var_dump([ "error" => [ "response" => $response ]]);
-            die;
+            return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }
     }
 
