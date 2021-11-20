@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Server;
 
-use Exception;
 use Plinct\Api\Auth\AuthController;
 use Plinct\Cms\App;
 use Plinct\Tool\Curl;
+use Plinct\Tool\ToolBox;
 
 class Api
 {
@@ -59,30 +59,46 @@ class Api
      */
     public static function request($type, $action, $params): ?array
     {
-        $remoteAccessApi = null;
+        $apiHostName = App::getApiHost();
 
-        // if api host equals cms app host
-        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
+        // IF SITE HOST === API HOST
+        if (App::$HOST == pathinfo($apiHostName)['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
             return (new $classname())->{$action}($params);
 
         } else {
+            // TOKEN
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
 
-            try {
-                $execRequest = (new Curl(App::getApiHost()))->{$action}($type, $params, $token);
-                $remoteAccessApi = is_string($execRequest) ? json_decode($execRequest, true) : ( $execRequest == true ? ['message'=>'true'] : ['message'=>'false']);
+            // URL FOR API
+            $apiHostName = $apiHostName . $type . ($action == 'get' ?  "?" . http_build_query($params): null);
 
-                if (isset($remoteAccessApi['error'])) {
-                    throw new Exception($remoteAccessApi['error']['message']);
+            // CURL
+            $curlHandle = ToolBox::Curl()
+                ->setUrl($apiHostName)
+                ->returnWithJson();
 
-                } else {
-                    return $remoteAccessApi;
-                }
+            // METHOD
+            if ($action !== 'get') $curlHandle->method($action)->authorizationBear($token)->params($params);
 
-            } catch (Exception $e) {
-                var_dump($remoteAccessApi['error']);
-                die;
+            // LOCALHOST
+            if (substr($curlHandle->getInfo()['primary_ip'],0,3) == '127') {
+               $curlHandle->connectWithLocalhost();
+            }
+
+            // READY
+            $ready = $curlHandle->ready();
+
+            // JSON
+            $json = json_decode($ready, true);
+
+            // RETURN IF ERROR
+            if (json_last_error() === 0) {
+                return $json;
+            } else {
+                return [ "error" => [
+                    "message" => $ready
+                ]];
             }
         }
     }
