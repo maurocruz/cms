@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Types\WebPage;
 
-use Plinct\Cms\View\Widget\TableWidget;
 use Plinct\Web\Element\Form;
 
 class WebPageAbstract
@@ -17,33 +16,6 @@ class WebPageAbstract
      * @var ?string
      */
     protected static ?string $idwebPage = null;
-
-    /**
-     * @param array $data
-     * @return array
-     */
-     protected static function listAllWebPages(array $data): array
-     {
-         $idwebSite = self::$idwebSite;
-
-         // TABLE
-         $table = new TableWidget(['class'=>'table-webPages']);
-         // title
-         $table->setTitle("List of web pages");
-         // columns
-         $table->setPropertyLabels([
-             'id' => "ID",
-             'name' => _("Name"),
-             'url' => "Url"
-         ]);
-         // rows
-         $table->setData($data);
-         // buttons
-         $table->setButtonEdit("/admin/webSite/webPage?id=$idwebSite&item=[id]")
-             ->setButtonDelete("webSite");
-
-         return $table->ready();
-     }
 
     /**
      * * * * * FORM * * * *

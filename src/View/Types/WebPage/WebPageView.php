@@ -55,11 +55,18 @@ class WebPageView extends WebPageAbstract
                 View::main(Fragment::miscellaneous()->message($data['error']));
 
             } elseif (isset($data['hasPart'])) {
-                View::main(parent::listAllWebPages($data['hasPart']));
+                $list = isset($data['hasPart']['@type']) && $data['hasPart']['@type'] == 'ItemList' ? $data['hasPart']['itemListElement'] : $data['hasPart'];
+                View::main(
+                    Fragment::listTable(['class'=>'table'])
+                        ->caption(_("List of webpages"))
+                        ->labels("id",_("Name"),"url",_("Date modified"))
+                        ->setEditButton("/admin/webSite/webPage?id=".self::$idwebSite."&item=")
+                        ->rows($list,['idwebPage','name','url','dateModified'])
+                        ->ready()
+                );
             }
         }
     }
-
 
     /**
      * * * * * NEW * * * * *
