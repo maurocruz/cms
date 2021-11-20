@@ -57,13 +57,16 @@ class WebSiteController implements ControllerInterface
 
         // ITEM
         if ($item) {
-            $dataWebPage = Api::get('webPage',['id'=>$item,'properties'=>'*,isPartOf,hasPart']);
-            return (array)$dataWebPage[0];
+            $dataWebPage = Api::get('webPage',['id'=>$item,'properties'=>'*,isPartOf'])[0];
+
+            $idwebPage = $dataWebPage['idwebPage'];
+            $dataWebPage['hasPart'] = Api::get('webPageElement', ['isPartOf'=>$idwebPage, 'properties'=>'image']);
+            return $dataWebPage;
         }
 
         // ALL and NEW
         $dataWebSite = Api::get('webSite',['id'=>$id,'properties'=>'*']);
-        $data = (array)$dataWebSite[0];
+        $data = $dataWebSite[0];
         $idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
 
         // list all webpages if not isset action

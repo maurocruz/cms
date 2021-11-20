@@ -29,22 +29,20 @@ class WebPageController
     {
         $params2 = array_merge($params, [ "properties" => "*,hasPart" ]);
         $data = Api::get("webPage", $params2);
-        return (array)$data[0];
+        return $data[0];
     }
 
     /**
-     * @param $params
      * @return array
      */
-    public function sitemap($params): array
+    public function sitemap(): array
     {
         return (new \Plinct\Cms\Server\Sitemap())->getSitemaps();
     }
 
     /**
-     * @param null $params
      */
-    public function saveSitemap($params = null)
+    public function saveSitemap()
     {
         $dataSitemap = null;
         $data = Api::get("webPage", ["properties" => "url,dateModified", "orderBy" => "dateModified desc"]);
