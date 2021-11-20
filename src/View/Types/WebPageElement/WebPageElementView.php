@@ -40,20 +40,18 @@ class WebPageElementView
     }
 
     /**
-     * @param array $data
      * @return array
      */
-    public function index(array $data): array
+    public function index(): array
     {
         $this->navBarWebPageElement(_("Web page element"));
         return $this->content;
     }
 
     /**
-     * @param null $data
      * @return array
      */
-    public function new($data = null): array
+    public function new(): array
     {
         $content[] = [ "tag" => "h4", "content" => "Adicionar novo <span class=\"box-expanding--text\">[<a href=\"javascript: void(0)\" onclick=\"expandBox(this,'box-WebPageElement-add');\">Expandir</a>]</span>" ];
         $content[] = self::formWebPageElement();
@@ -114,7 +112,7 @@ class WebPageElementView
         if ($value) {
             foreach ($value as $valueWebPageElement) {
                 $this->idwebPageElement = (int)ArrayTool::searchByValue($valueWebPageElement['identifier'], "id")['value'];
-                $name = strip_tags(str_replace("<br>"," ",$valueWebPageElement['name']));
+                $name = $valueWebPageElement['name'] ? strip_tags(str_replace("<br>"," ",$valueWebPageElement['name'])) : null;
                 $content[] = self::divBoxExpanding("[" . $this->idwebPageElement . "] " . $name , "WebPageElement", [self::editForms($valueWebPageElement)]);
             }
         }
