@@ -19,38 +19,45 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 
     /**
      * @param string $caption
+     * @return ListTable
      */
-    public function caption(string $caption)
+    public function caption(string $caption): ListTable
     {
         $this->caption = $caption;
+        return $this;
     }
 
     /**
-     * @param ...$label
+     * @param string ...$label
+     * @return ListTable
      */
-    public function labels(...$label)
+    public function labels(string ...$label): ListTable
     {
         $this->labels = func_get_args();
+        return $this;
     }
 
     /**
      * @param array $itemListElement
      * @param array $properties
+     * @return ListTable
      */
-    public function rows(array $itemListElement, array $properties)
+    public function rows(array $itemListElement, array $properties): ListTable
     {
         $this->properties = $properties;
         $this->rows = $itemListElement;
+        return $this;
     }
 
-
     /**
-     *
+     * @param string|null $pathToEditButton
+     * @return $this
      */
-    public function setEditButton(string $pathToEditButtom = null): void
+    public function setEditButton(string $pathToEditButton = null): ListTable
     {
         $this->editButton = true;
-        $this->pathToEditButtom = $pathToEditButtom;
+        $this->pathToEditButton = $pathToEditButton;
+        return $this;
     }
 
     /**

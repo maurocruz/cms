@@ -8,27 +8,29 @@ interface ListTableInterface
 {
     /**
      * @param string $caption
-     * @return mixed
+     * @return ListTable
      */
-    public function caption(string $caption);
+    public function caption(string $caption): ListTable;
 
     /**
-     * @param ...$label
-     * @return mixed
+     * @param string ...$label
+     * @return ListTable
      */
-    public function labels(...$label);
+    public function labels(string ...$label): ListTable;
 
     /**
      * @param array $itemListElement
      * @param array $properties
-     * @return mixed
+     * @return ListTable
      */
-    public function rows(array $itemListElement, array $properties);
+    public function rows(array $itemListElement, array $properties): ListTable;
 
     /**
-     * @param string|null $pathToEditButtom
+     * @param string|null $pathToEditButton
+     * @return ListTable
      */
-    public function setEditButton(string $pathToEditButtom = null): void;
+    public function setEditButton(string $pathToEditButton = null): ListTable;
+
     /**
      * @return array
      */

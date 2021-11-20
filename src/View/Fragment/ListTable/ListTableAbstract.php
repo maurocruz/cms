@@ -25,7 +25,7 @@ abstract class ListTableAbstract
     /**
      * @var array
      */
-    protected array $rows;
+    protected array $rows = [];
     /**
      * @var array
      */
@@ -35,9 +35,9 @@ abstract class ListTableAbstract
      */
     protected ?bool $editButton = null;
     /**
-     * @var string
+     * @var ?string
      */
-    protected string $pathToEditButtom;
+    protected ?string $pathToEditButton = null;
 
     /**
      * @param array|string[] $attributes
@@ -67,13 +67,7 @@ abstract class ListTableAbstract
             $this->table->head(_("Edit"), ['style'=>'width: 50px;']);
         }
         foreach ($this->labels as $columnLabel) {
-            if(is_array($columnLabel)) {
-                $key = key($columnLabel);
-                $value = $columnLabel[$key];
-                $this->table->head($value, null, $key);
-            } else {
-                $this->table->head($columnLabel);
-            }
+            $this->table->head($columnLabel);
         }
     }
 
@@ -84,11 +78,11 @@ abstract class ListTableAbstract
     {
         if (!empty($this->rows)) {
             foreach ($this->rows as $itemList) {
-                $item = $itemList['item'];
+                $item = $itemList['item'] ?? $itemList;
                 $id = ArrayTool::searchByValue($item['identifier'], 'id', 'value');
 
                 if ($this->editButton) {
-                    $this->table->bodyCell(Fragment::icon()->edit(), ['style' => 'text-align: center;'], $this->pathToEditButtom . $id);
+                    $this->table->bodyCell(Fragment::icon()->edit(), ['style' => 'text-align: center;'], $this->pathToEditButton . $id);
                 }
 
                 foreach ($this->properties as $property) {
