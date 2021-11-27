@@ -4,7 +4,8 @@ namespace Plinct\Cms\View\Widget;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
-trait HtmlPiecesTrait {
+trait HtmlPiecesTrait // DEPRECATED
+{
     private static $BUTTON_EDIT = '<img src="https://plinct.com.br/App/static/cms/images/edit4-yellow.svg" width="20" alt="edit">';
     private static $BUTTON_DELETE = "https://plinct.com.br//App/static/cms/images/delete4-red.svg";
 

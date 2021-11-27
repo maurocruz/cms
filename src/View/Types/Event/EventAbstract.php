@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Types\Event;
 
-use Plinct\Web\Element\Form;
+use Plinct\Cms\View\Fragment\Fragment;
 
 abstract class EventAbstract
 {
@@ -28,7 +28,7 @@ abstract class EventAbstract
         $description = isset($value['description']) ? stripslashes($value['description']) : null;
 
         // FROM
-        $form = new Form(["class"=>"formPadrao form-event"]);
+        $form = Fragment::form(["class"=>"formPadrao form-event"]);
         $form->action("/admin/event/$case")->method("post");
         $form->content("<h4>"._("Event")."</h4>");
 

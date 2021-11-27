@@ -7,11 +7,11 @@ namespace Plinct\Cms\View\Types\ImageObject;
 use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Type\ImageObjectServer;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;
 use Plinct\Web\Element\Element;
-use Plinct\Web\Element\Form;
 
 class ImageObjectWidget
 {
@@ -265,7 +265,7 @@ class ImageObjectWidget
      */
     protected function upload($tableHasPart = null, $idHasPart = null): array
     {
-        $form = new Form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
+        $form = Fragment::form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
         $form->action('/admin/imageObject/new')->method('post');
         // TITLE
         $form->content("<h4>"._("Upload images")."</h4>");

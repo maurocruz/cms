@@ -47,16 +47,22 @@ class TaxonView
      */
     public function edit(array $data)
     {
-        $value = $data[0];
-        $id = (int)ArrayTool::searchByValue($value['identifier'], 'id', 'value');
+        if (!empty($data)) {
+            $value = $data[0];
+            $id = (int)ArrayTool::searchByValue($value['identifier'], 'id', 'value');
 
-        $this->navbarTaxon($value['name']." (".$value['taxonRank'].")", 3);
+            $this->navbarTaxon($value['name'] . " (" . $value['taxonRank'] . ")", 3);
 
-        // form taxon
-        View::main(self::formTaxon('edit', $value));
+            // form taxon
+            View::main(self::formTaxon('edit', $value, $data['parentTaxonList']));
 
-        // images
-        View::main(self::divBoxExpanding("Images", "ImageObject", [ (new ImageObjectView())->getForm("taxon", $id, $value['image'])]));
+            // images
+            View::main(self::divBoxExpanding("Images", "ImageObject", [(new ImageObjectView())->getForm("taxon", $id, $value['image'])]));
+        } else {
+            $this->navbarTaxon();
+
+            View::main(Fragment::noContent(_("No item found!")));
+        }
     }
 
     /**
@@ -71,14 +77,14 @@ class TaxonView
     /**
      * @param string $case
      * @param null $value
+     * @param array|null $parentTaxonList
      * @return array
      */
-    private static function formTaxon(string $case = "new", $value = null): array
+    private static function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
     {
         $id = $value ? ArrayTool::searchByValue($value['identifier'], 'id','value') : null;
 
-        // TODO atualizar formulário taxon
-        /*$form = new Form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
+        $form = Fragment::form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
         $form->action("/admin/taxon/$case")->method('post');
         // title
         $form->content("<h3>"._("Taxon")."</h3>");
@@ -86,51 +92,43 @@ class TaxonView
         if ($id) $form->input('id', $id, 'hidden');
         // name
         $form->fieldsetWithInput('name', $value['name'] ?? null, _("Name"));
-
-        return $form->ready();
-        */
-        $content[] = [ "tag" => "h3", "content" => _("Taxon") ];
-        // id
-        $content[] = $case == 'edit' ? self::input("id", "hidden", $id) : null;
-        // name
-        $content[] = self::fieldsetWithInput("Name", "name", $value['name'] ?? null);
         // scientificNameAuthorship
-        $content[] = self::fieldsetWithInput("Scientific name authorship", "scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null);
+        $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
         // vernacularName
-        $content[] = self::fieldsetWithInput("Vernacular name", "vernacularName", $value['vernacularName'] ?? null);
+        $form->fieldsetWithInput("vernacularName", $value['vernacularName'] ?? null, _('Vernacular name'));
         // taxonRank
-        $content[] = self::fieldsetWithSelect("Taxon rank", "taxonRank", $value['taxonRank'] ?? null, [ "family" => "family", "genus" => "genus", "species" => "species"], null, [ "id" => "taxonRank" ]);
-        // parentTaxon
-        if ($value) {
-            $parentTaxon = $value['parentTaxon'];
-            $idParentTaxon = ArrayTool::searchByValue($parentTaxon['identifier'], "id")['value'];
-            $content[] = self::fieldsetWithSelect("Parent taxon", "parentTaxon", [ $idParentTaxon => $parentTaxon['name'] ], [], null, ["id" => "parentTaxon" ]);
-        }
+        $selectTaxonRank = isset($value['taxonRank']) ? [ $value['taxonRank'] => _($value['taxonRank']) ] : null;
+        $form->fieldsetWithSelect("taxonRank", $selectTaxonRank, ["family"=>_("Family"), "genus" => _("Genus"), "species"=>_("Species")], _("Taxon rank"));
+        // parent taxon
+        $parentTaxonList = $parentTaxonList ?? [];
+        $selectParentTaxon = isset($value['parentTaxon']) ? [ $value['parentTaxon'] => $parentTaxonList[$value['parentTaxon']]] : null;
+        $form->fieldsetWithSelect('parentTaxon', $selectParentTaxon, $parentTaxonList, _("Parent taxon"));
         // url
-        $content[] = self::fieldsetWithInput("Url", "url", $value['url'] ?? null);
+        $form->fieldsetWithInput('url', $value['url'] ?? null, "Url");
         // description
-        $content[] = self::fieldsetWithTextarea("Description", "description", $value['description'] ?? null, 100);
+        $form->fieldsetWithTextarea('description',$value['description'] ?? null, _('Description'));
         // occurrence
-        $content[] = self::fieldsetWithInput("Occurrence", "occurrence", $value['occurrence'] ?? null);
+        $form->fieldsetWithInput('occurrence', $value['occurrence'] ?? null, _("Occurrence"));
         // flowering
-        $content[] = self::fieldsetWithInput("Flowering", "flowering", $value['flowering'] ?? null);
+        $form->fieldsetWithInput('flowering', $value['flowering'] ?? null, _("Flowering"));
         // fructification
-        $content[] = self::fieldsetWithInput("Fructification", "fructification", $value['fructification'] ?? null);
+        $form->fieldsetWithInput('fructification', $value['fructification'] ?? null, _("Fructification"));
         // height
-        $content[] = self::fieldsetWithInput("Height", "height", $value['height'] ?? null);
+        $form->fieldsetWithInput('height', $value['height'] ?? null, _("Height"));
         // roots
-        $content[] = self::fieldsetWithInput("Roots", "roots", $value['roots'] ?? null);
+        $form->fieldsetWithInput('roots', $value['roots'] ?? null, _("Roots"));
         // leafs
-        $content[] = self::fieldsetWithInput("Leafs", "leafs", $value['leafs'] ?? null);
+        $form->fieldsetWithInput('leafs', $value['leafs'] ?? null, _("Leafs"));
         // flowers
-        $content[] = self::fieldsetWithInput("Flowers", "flowers", $value['flowers'] ?? null);
+        $form->fieldsetWithInput('flowers', $value['flowers'] ?? null, _("Flowers"));
         // fruits
-        $content[] = self::fieldsetWithInput("Fruits", "fruits", $value['fruits'] ?? null);
+        $form->fieldsetWithInput('fruits', $value['fruits'] ?? null, _("Fruits"));
         // citations
-        $content[] = self::fieldsetWithTextarea("Citations", "citations", $value['citations'] ?? null, 100);
+        $form->fieldsetWithTextarea('citations',$value['citations'] ?? null, _('Citations'), null, ['id'=>"citations$id"]);
         // submit
-        $content[] = self::submitButtonSend();
-        $content[] = $case == 'edit' ? self::submitButtonDelete("/admin/taxon/erase") : null;
-        return [ "tag" => "form", "attributes" => [ "id" => "taxonForm", "class" => "formPadrao box", "action" => "/admin/taxon/$case", "method" => "post", "onsubmit" => "return CheckRequiredFieldsInForm(event, 'name,taxonRank')" ], "content" => $content ];
+        $form->submitButtonSend();
+        if ($case == 'edit') $form->submitButtonDelete('/admin/taxon/erase');
+        // ready
+        return $form->ready();
     }
 }

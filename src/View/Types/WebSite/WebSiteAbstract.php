@@ -8,7 +8,6 @@ use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Fragment\IconFragment;
 use Plinct\Cms\View\View;
 use Plinct\Cms\View\Widget\FormElementsTrait;
-use Plinct\Web\Element\Form;
 
 class WebSiteAbstract
     {
@@ -72,8 +71,8 @@ class WebSiteAbstract
         $case = $id ? 'edit' : 'new';
 
         // form
-        $form = new Form();
-        $form->action("/admin/webSite/$case")->method('post')->attributes(['class'=>'formPadrao form-webSite']);
+        $form = Fragment::form(['class'=>'formPadrao form-webSite']);
+        $form->action("/admin/webSite/$case")->method('post');
         // hidden
         if ($id) {
             $form->input('id',$id,'hidden');

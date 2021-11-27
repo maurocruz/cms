@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Types\Intangible\Service;
 
-use Plinct\Cms\View\Fragment\FormFragment;
+use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Element\Form;
 
 abstract class ServiceAbstract
 {
     use FormElementsTrait;
 
     /**
-     * @var
+     * @var string
      */
-    protected $tableHasPart;
+    protected string $tableHasPart;
     /**
-     * @var
+     * @var string
      */
-    protected $idHasPart;
+    protected string $idHasPart;
 
     /**
      * @return array
@@ -37,20 +36,20 @@ abstract class ServiceAbstract
      */
     protected function serviceForm(string $case = "new", $value = null): array
     {
-        $form = new Form(['class'=>'formPadrao form-service box']);
+        $form = Fragment::form(['class'=>'formPadrao form-service box']);
         $form->action("/admin/service/$case")->method("post");
         // title
         $title = $case == "edit" ? "Edit service" : "Add new service";
         $form->content("<h4>"._($title)."</h4>");
         // HIDDENS
         $form->input('provider',$this->idHasPart,'hidden')->input('providerType',$this->tableHasPart,'hidden');
-        if ($case == 'edit') $form->input('id',ArrayTool::searchByValue($value['identifier'],'id','value'),'hidden');
+        if ($case == 'edit') $form->input('id', ArrayTool::searchByValue($value['identifier'],'id','value'),'hidden');
         // NAME
         $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
         // ADDITIONAL TYPE
-        $form->fieldset(FormFragment::selectAdditionalType('service', $value['additionalType'] ?? null), _("Additional type"));
+        $form->selectAdditionalType('service', $value['additionalType'] ?? null);
         // CATEGORY
-        $form->fieldset(FormFragment::selectCategory('service', $value['category'] ?? null), _("Category"));
+        $form->selectCategory('service', $value['category'] ?? null);
         // DESCRIPTION
         $form->fieldsetWithTextarea('description', $value['description'] ?? null, _("Description"));
         // DISAMBIGUATING DESCRIPTION
