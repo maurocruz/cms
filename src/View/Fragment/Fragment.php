@@ -12,7 +12,6 @@ use Plinct\Cms\View\Fragment\Box\BoxInterface;
 use Plinct\Cms\View\Fragment\Error\Error;
 use Plinct\Cms\View\Fragment\Error\ErrorInterface;
 use Plinct\Cms\View\Fragment\Form\Form;
-use Plinct\Cms\View\Fragment\Form\FormInterface;
 use Plinct\Cms\View\Fragment\Icon\IconInterface;
 use Plinct\Cms\View\Fragment\Icon\IconFragment;
 use Plinct\Cms\View\Fragment\ListTable\ListTable;
@@ -41,11 +40,12 @@ class Fragment
     }
 
     /**
-     * @return FormInterface
+     * @param array|null $attributes
+     * @return Form
      */
-    public static function form(): FormInterface
+    public static function form(array $attributes = null): Form
     {
-        return new Form();
+        return new Form($attributes);
     }
 
     /**
@@ -73,8 +73,22 @@ class Fragment
         return new Miscellaneous();
     }
 
+    /**
+     * @return NavbarFragmentInterface
+     */
     public static function navbar(): NavbarFragmentInterface
     {
         return new NavbarFragment();
+    }
+
+    /**
+     * @param string|null $message
+     * @return array
+     */
+    public static function noContent(string $message = null): array
+    {
+        $misc = new Miscellaneous();
+        $mess = $message ?? _("No content");
+        return $misc->message($mess);
     }
 }

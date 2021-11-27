@@ -485,6 +485,24 @@
   }
 }
 
+/* TAXON
+====================================================== */
+.form-taxon {
+  textarea {
+    height: 150px;
+  }
+
+  @media (min-width: 576px) {
+    display: flex;
+    flex-wrap: wrap;
+    fieldset:nth-of-type(7) { width: 100%; }
+    fieldset:nth-of-type(16) { width: 100%; }
+    textarea {
+      height: 100px;
+    }
+  }
+}
+
 /* WEBSITE
 ====================================================== */
 .form-webSite {

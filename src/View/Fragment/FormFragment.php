@@ -7,7 +7,7 @@ namespace Plinct\Cms\View\Fragment;
 use Plinct\Cms\Factory\ServerFactory;
 use Plinct\Web\Element\Element;
 
-class FormFragment
+class FormFragment // DEPRECATED
 {
     /**
      * @param string $class
@@ -36,7 +36,8 @@ class FormFragment
      */
     private static function getData(array $params) {
         $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
-        return json_decode((ServerFactory::soloine())->get($params), true);
+        $data = (ServerFactory::soloine())->get($params);
+        return json_decode($data, true);
     }
 
     /**

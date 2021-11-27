@@ -908,6 +908,27 @@ a.white {
     width: 50%;
   }
 }
+/* TAXON
+====================================================== */
+.form-taxon textarea {
+  height: 150px;
+}
+@media (min-width: 576px) {
+  .form-taxon {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .form-taxon fieldset:nth-of-type(7) {
+    width: 100%;
+  }
+  .form-taxon fieldset:nth-of-type(16) {
+    width: 100%;
+  }
+  .form-taxon textarea {
+    height: 100px;
+  }
+}
+
 /* WEBSITE
 ====================================================== */
 @media (min-width: 576px) {
