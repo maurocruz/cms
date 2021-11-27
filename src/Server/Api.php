@@ -78,13 +78,14 @@ class Api
                 ->setUrl($apiHostName)
                 ->returnWithJson();
 
+            // LOCALHOST
+            $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
+            if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {
+                $curlHandle->connectWithLocalhost();
+            }
+
             // METHOD
             if ($action !== 'get') $curlHandle->method($action)->authorizationBear($token)->params($params);
-
-            // LOCALHOST
-            if (substr($curlHandle->getInfo()['primary_ip'],0,3) == '127') {
-               $curlHandle->connectWithLocalhost();
-            }
 
             // READY
             $ready = $curlHandle->ready();
