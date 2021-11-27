@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Types\WebPage;
 
-use Plinct\Web\Element\Form;
+use Plinct\Cms\View\Fragment\Fragment;
 
 class WebPageAbstract
 {
@@ -34,7 +34,7 @@ class WebPageAbstract
         $case = $value ? 'edit' : 'new';
 
         // FORM
-        $form = new Form(['class'=>'formPadrao form-webPage']);
+        $form = Fragment::form(['class'=>'formPadrao form-webPage']);
         $form->action("/admin/webPage/$case")->method('post');
         // hidden
         $form->input('isPartOf',self::$idwebSite,'hidden');
