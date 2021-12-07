@@ -46,7 +46,6 @@ class WebPageAbstract
 
         // DESCRIPTION
         $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$idwebPage"]);
-        $form->setEditor("textarea$case$idwebPage", "editor$case$idwebPage");
 
         // alternativeHeadline
         $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));

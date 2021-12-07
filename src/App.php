@@ -65,6 +65,10 @@ class App
      * @var
      */
     private static $soloineUrl;
+    /**
+     * @var bool
+     */
+    private static bool $richTextEditor = false;
 
     /**
      * @param Slim $slim
@@ -87,6 +91,22 @@ class App
         self::$API_HOST = $apiUrl == "localhost" ? self::$HOST . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
         return $this;
+    }
+
+    /**
+     * @param bool $richTextEditor
+     */
+    public function setRichTextEditor(bool $richTextEditor): void
+    {
+        self::$richTextEditor = $richTextEditor;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function getRichTextEditor(): bool
+    {
+        return self::$richTextEditor;
     }
 
     /**

@@ -128,7 +128,7 @@ class WebPageElementView
     {
         $id = $this->idwebPageElement;
 
-        $form = Fragment::form()->create(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
+        $form = Fragment::form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
         $form->action("/admin/webPageElement/$case")->method('post');
 
         // HIDDEN

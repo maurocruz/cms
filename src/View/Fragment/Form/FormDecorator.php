@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\Fragment\Form;
 
+use Plinct\Cms\App;
 use Plinct\Cms\Factory\ServerFactory;
 use Plinct\Cms\View\Fragment\ElementDecorator;
 use Plinct\Web\Element\ElementFactory;
@@ -86,27 +87,6 @@ class FormDecorator extends ElementDecorator implements FormInterface
     }
 
     /**
-     * @param array|null $attributes
-     * @return FormInterface
-     */
-    public function submitButtonSend(array $attributes = null): FormInterface
-    {
-        $this->form->submitButtonSend($attributes);
-        return $this->form;
-    }
-
-    /**
-     * @param string|null $formaction
-     * @param array $attributes
-     * @return FormInterface
-     */
-    public function submitButtonDelete(string $formaction = null, array $attributes = []): FormInterface
-    {
-        $this->form->submitButtonDelete($formaction, $attributes);
-        return $this->form;
-    }
-
-    /**
      * @param string $name
      * @param array $value
      * @param array $list
@@ -135,18 +115,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
     }
 
     /**
-     * @param string $id
-     * @param string $editorName
-     * @return void
-     */
-    public function setEditor(string $id, string $editorName = 'editor')
-    {
-        $this->form->setEditor($id, $editorName);
-    }
-
-    /**
      * GET A DATA FROM SOLOINE SERVER
-     *
      * @param array $params
      * @return mixed
      */
@@ -182,5 +151,37 @@ class FormDecorator extends ElementDecorator implements FormInterface
         }
 
         return $select->ready();
+    }
+
+
+    /**
+     * @param string $id
+     * @param string $editorName
+     * @return void
+     */
+    public function setEditor(string $id, string $editorName = 'editor')
+    {
+        if(App::getRichTextEditor())   $this->form->setEditor($id, $editorName);
+    }
+
+    /**
+     * @param array|null $attributes
+     * @return FormInterface
+     */
+    public function submitButtonSend(array $attributes = null): FormInterface
+    {
+        $this->form->submitButtonSend($attributes);
+        return $this->form;
+    }
+
+    /**
+     * @param string|null $formaction
+     * @param array $attributes
+     * @return FormInterface
+     */
+    public function submitButtonDelete(string $formaction = null, array $attributes = []): FormInterface
+    {
+        $this->form->submitButtonDelete($formaction, $attributes);
+        return $this->form;
     }
 }
