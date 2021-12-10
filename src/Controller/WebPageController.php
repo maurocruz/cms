@@ -49,7 +49,7 @@ class WebPageController
 
         foreach ($data as $value) {
             $dataSitemap[] = [
-                "loc" => App::$HOST . $value['url'],
+                "loc" => App::getURL() . $value['url'],
                 "lastmod" => DateTime::formatISO8601($value['dateModified'])
             ];
         }

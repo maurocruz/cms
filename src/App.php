@@ -44,7 +44,7 @@ class App
     /**
      * @var string
      */
-    public static string $HOST;
+    private static string $URL;
     /**
      * @var string|null
      */
@@ -76,9 +76,17 @@ class App
     public function __construct(Slim $slim)
     {
         $this->slim = $slim;
-        self::$HOST = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
+        self::$URL = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
         self::setVersion();
         self::$LANGUAGE = Locale::getServerLanguage();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getURL(): string
+    {
+        return self::$URL;
     }
 
     /**
@@ -88,7 +96,7 @@ class App
      */
     public function setApi(string $apiUrl, ?string $apiSecretKey = null): App
     {
-        self::$API_HOST = $apiUrl == "localhost" ? self::$HOST . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
+        self::$API_HOST = $apiUrl == "localhost" ? self::$URL . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
         self::$API_SECRET_KEY = $apiSecretKey;
         return $this;
     }

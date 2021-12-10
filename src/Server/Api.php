@@ -62,7 +62,7 @@ class Api
         $apiHostName = App::getApiHost();
 
         // IF SITE HOST === API HOST
-        if (App::$HOST == pathinfo($apiHostName)['dirname']) {
+        if (App::getURL() == pathinfo($apiHostName)['dirname']) {
             $classname = "Plinct\\Api\\Type\\".ucfirst($type);
             return (new $classname())->{$action}($params);
 
@@ -111,7 +111,7 @@ class Api
      */
     public static function login(string $email, string $password): ?array
     {
-        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
+        if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
 
         } elseif (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
@@ -130,7 +130,7 @@ class Api
         unset($params['passwordRepeat']);
         unset($params['submit']);
 
-        if (App::$HOST == pathinfo(App::getApiHost())['dirname']) {
+        if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
             return (new AuthController())->register($params);
 
         } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
