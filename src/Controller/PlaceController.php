@@ -18,6 +18,9 @@ class PlaceController implements ControllerInterface
      */
     public function index($params = null): array
     {
+        // TODO Habilitar busca (search via get query string)
+        // TODO aumentar largura dos campos de latitude e longitude no banco de dados
+
         $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], $params);
         return Api::get("place", $params);
     }
@@ -43,7 +46,7 @@ class PlaceController implements ControllerInterface
         foreach ($data as $value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id",'value');
             $dataSitemap[] = [
-                "loc" => App::$HOST . "/t/place/$id",
+                "loc" => App::getURL() . "/t/place/$id",
                 "lastmod" => DateTime::formatISO8601($value['dateModified']),
                 "image" => $value['image']
             ];

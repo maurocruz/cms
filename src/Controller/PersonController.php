@@ -97,7 +97,7 @@ class PersonController
         $dataSitemap = null;
         $params = [ "orderBy" => "dateModified desc", "properties" => "dateModified,image" ];
         $data = Api::get("person", $params);
-        $loc = App::$HOST ."/t/Person/";
+        $loc = App::getURL() ."/t/Person/";
         foreach ($data as $value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $lastmod = DateTime::formatISO8601($value['dateModified']);

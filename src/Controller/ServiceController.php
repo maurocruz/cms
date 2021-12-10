@@ -19,7 +19,12 @@ class ServiceController implements ControllerInterface {
         return null;
     }
 
-    public function order($params) {
+    /**
+     * @param $params
+     * @return array
+     */
+    public function order($params): array
+    {
         $id = $params['id'];
         $params2 = [ "id" => $id ];
         $dataService = Api::get("service", $params2);

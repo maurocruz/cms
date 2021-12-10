@@ -66,7 +66,7 @@ class TaxonController implements ControllerInterface
             $id = ArrayTool::searchByValue($valueForType['identifier'],'id','value');
             $lastmod = DateTime::formatISO8601($valueForType['dateModified']);
             $dataForType[] = [
-                "loc" => App::$HOST . "/t/taxon/$id",
+                "loc" => App::getURL() . "/t/taxon/$id",
                 "lastmod" => $lastmod,
                 "image" => $valueForType['image']
             ];
@@ -76,7 +76,7 @@ class TaxonController implements ControllerInterface
             $lastmod = DateTime::formatISO8601($valueForPage['dateModified']);
             $url = $valueForPage['url'];
             $dataforPage[] = [
-                "loc" => App::$HOST . $url,
+                "loc" => App::getURL() . $url,
                 "lastmod" => $lastmod,
                 "image" => $valueForPage['image']
             ];

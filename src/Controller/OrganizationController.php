@@ -127,7 +127,7 @@ class OrganizationController
         foreach ($data as $value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $dataSitemap[] = [
-                "loc" => App::$HOST . "/t/organization/$id",
+                "loc" => App::getURL() . "/t/organization/$id",
                 "lastmod" => DateTime::formatISO8601($value['dateModified']),
                 "image" => $value['image']
             ];

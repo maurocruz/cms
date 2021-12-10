@@ -28,7 +28,7 @@ class EventController implements ControllerInterface
         $data = Api::get("event", $params);
         foreach ($data as $value) {
             $dataSitemap[] = [
-                "loc" => App::$HOST . DIRECTORY_SEPARATOR . "eventos" . DIRECTORY_SEPARATOR . substr($value['startDate'],0,10) . DIRECTORY_SEPARATOR . urlencode($value['name']),
+                "loc" => App::getURL() . DIRECTORY_SEPARATOR . "eventos" . DIRECTORY_SEPARATOR . substr($value['startDate'],0,10) . DIRECTORY_SEPARATOR . urlencode($value['name']),
                 "news" => [
                     "name" => App::getTitle(),
                     "language" => App::getLanguage(),

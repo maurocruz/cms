@@ -34,7 +34,7 @@ class LocalBusinessController
         foreach ($data as $value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
             $dataSitemap[] = [
-                "loc" => App::$HOST . "/t/localBusiness/$id",
+                "loc" => App::getURL() . "/t/localBusiness/$id",
                 "lastmod" => DateTime::formatISO8601($value['dateModified']),
                 "image" => $value['image']
             ];

@@ -44,7 +44,7 @@ class ArticleController implements ControllerInterface
         foreach ($data as $value) {
             if ($value['datePublished']) {
                 $dataSitemap[] = [
-                    "loc" => App::$HOST . DIRECTORY_SEPARATOR . "noticia" . DIRECTORY_SEPARATOR . substr($value['datePublished'], 0, 10) . DIRECTORY_SEPARATOR . urlencode($value['headline']),
+                    "loc" => App::getURL() . DIRECTORY_SEPARATOR . "noticia" . DIRECTORY_SEPARATOR . substr($value['datePublished'], 0, 10) . DIRECTORY_SEPARATOR . urlencode($value['headline']),
                     "news" => [
                         "name" => App::getTitle(),
                         "language" => App::getLanguage(),

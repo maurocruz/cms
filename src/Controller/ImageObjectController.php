@@ -59,9 +59,9 @@ class ImageObjectController implements ControllerInterface
         $data = Api::get("imageObject", [ "properties" => "license", "orderBy" => "uploadDate" ]);
         foreach ($data as $value) {
             $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-            $imageLoc = App::$HOST . str_replace(" ", "%20", $value['contentUrl']);
+            $imageLoc = App::getURL() . str_replace(" ", "%20", $value['contentUrl']);
             $dataSitemap[] = [
-                "loc" => App::$HOST . "/t/imageObject/$id",
+                "loc" => App::getURL() . "/t/imageObject/$id",
                 "image" => [
                     [ "contentUrl" => $imageLoc, "license" => $value['license'] ]
                 ]
