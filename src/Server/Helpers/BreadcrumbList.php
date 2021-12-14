@@ -42,7 +42,7 @@ class BreadcrumbList
             if (reset($explodeUrl) == '' && reset($explodeUrl) == $value) {
                 $item = $this->getItem(App::getURL(),_('Home'));
             } elseif (end($explodeUrl) == $value) {
-                $url = DIRECTORY_SEPARATOR . $value;
+                $url = $url . DIRECTORY_SEPARATOR . $value;
                 $item = self::getItem(App::getURL() . $url, $alternativeHeadline ?? ucfirst($value));
             } else {
                 $url = $url . DIRECTORY_SEPARATOR . $value;
