@@ -18,12 +18,6 @@
   .form-propertyValue {
     fieldset { width: calc(50% - 60px); }
   }
-  .form-place {
-    fieldset:nth-of-type(3) { @extend %fieldset3column }
-    fieldset:nth-of-type(4) { @extend %fieldset3column }
-    fieldset:nth-of-type(5) { @extend %fieldset3column }
-    .form-place-map { margin: 5px 0; }
-  }
   .form-postalAddress {
     fieldset:nth-of-type(1) { @extend %fieldset1column }
   }
@@ -36,11 +30,6 @@
     fieldset:nth-of-type(5) { width: 25%; }
     fieldset:nth-of-type(6) { width: 25%; }
     fieldset:nth-of-type(7) { width: 25%; }
-  }
-  // ORDER
-  .form-order {
-    fieldset:nth-of-type(3) { width: calc(50% - 80px); }
-    fieldset:nth-of-type(5) { width: calc(50% - 80px); }
   }
   // INVOICE
   .form-invoice {

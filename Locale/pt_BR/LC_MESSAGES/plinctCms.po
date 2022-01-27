@@ -1285,11 +1285,11 @@ msgstr "A senha deve conter pelo menos 1 número"
 msgid "Sorry but this email is invalid!"
 msgstr "Desculpe, mas este e-mail é inválido!"
 
-msgid "Sorry but user not exists!"
-msgstr "Desculpe, mas o usuário não existe!"
+msgid "User not exists - Access unauthorized"
+msgstr "Usuário não existe - acesso não autorizado!"
 
-msgid "Sorry. The user exists but is not authorized. Check your data."
-msgstr "Desculpe. O usuário existe, mas não está autorizado. Verifique seus dados."
+msgid "The user exists but has not logged in. Check your password!"
+msgstr "O usuário existe, mas não conectou. Verifique sua senha!"
 
 msgid "Sorry. The user exists but is not authorized. Contact administrator."
 msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\Server;
 
 use Plinct\Cms\App;
-use Plinct\Web\Debug\Debug;
 
 class Sitemap
 {
@@ -96,11 +95,13 @@ class Sitemap
      */
     private function exists_sitemap($sitemaps, $type)
     {
-        foreach ($sitemaps as $sitemapsValue) {
-            $basename = basename($sitemapsValue,".xml");
-            $sitemaName = strstr($basename,'-') !== false ? strstr($basename,'-') : $basename;
-            if (lcfirst($type) === substr($sitemaName,1)) {
-                return $sitemapsValue;
+        if ($sitemaps) {
+            foreach ($sitemaps as $sitemapsValue) {
+                $basename = basename($sitemapsValue, ".xml");
+                $sitemaName = strstr($basename, '-') !== false ? strstr($basename, '-') : $basename;
+                if (lcfirst($type) === substr($sitemaName, 1)) {
+                    return $sitemapsValue;
+                }
             }
         }
 

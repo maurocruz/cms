@@ -11,6 +11,7 @@ use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\Helpers\ImageObjectUpload;
 use Plinct\PDO\PDOConnect;
 use Plinct\Tool\FileSystem\FileSystem;
+use Plinct\Web\Debug\Debug;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -112,7 +113,7 @@ class ImageObjectServer
         // DELETE REGISTER AND UNLINK IMAGE
         else {
             // delete register
-            Api::delete('imageObject', [ "id" => $params['id'] ]);
+            Api::delete('imageObject', [ "idimageObject" => $params['id'] ]);
 
             // unlink image
             $imageFile =  $_SERVER['DOCUMENT_ROOT'] . parse_url($params['contentUrl'])['path'];
@@ -142,7 +143,7 @@ class ImageObjectServer
         foreach ($iterator as $file) {
             // UNLINK FILE
             if ($file->isFile() && strstr($file->getFileName(),$filename)) {
-                unlink($file);
+                unlink($file->getRealPath());
             }
 
             // COUNT THE IMAGES ON FOLDER PARENT
@@ -173,7 +174,7 @@ class ImageObjectServer
             $tableHasName = $value['tableName'];
             $tableHasPart = strstr($value['tableName'], "_", true);
 
-            $query = "select * from $tableHasName, $tableHasPart WHERE idimageObject=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
+            $query = "select * from $tableHasName, $tableHasPart WHERE `idimageObject`=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
             $data = PDOConnect::run($query);
 
             if (count($data) > 0) {

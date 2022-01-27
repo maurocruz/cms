@@ -85,7 +85,7 @@ class Server
         // RESPONSE REDIRECT
         if (isset($response['error'])) {
             print_r([ "error" => [ "response" => $response ]]);
-            die("Error messge: {$response['error']['message']}");
+            die("Error message: {$response['error']['message']}");
         } else {
             return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }

@@ -6,7 +6,8 @@ use Firebase\JWT\JWT;
 use Plinct\Cms\App;
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Server\Api;
-use Plinct\Cms\Template\TemplateController;
+use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\WebSite;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -21,7 +22,6 @@ return function (Route $route)
         session_start();
         unset($_SESSION['userLogin']);
         setcookie("API_TOKEN", "", time() - 3600);
-
         return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
     });
 
@@ -34,9 +34,8 @@ return function (Route $route)
             return $response->withHeader("Location", "/admin")->withStatus(302);
 
         } else {
-            $template = new TemplateController();
-            $template->login();
-            $response->getBody()->write($template->ready());
+            WebSite::addMain(Fragment::user()->login());
+            $response->getBody()->write(WebSite::ready());
             return $response;
         }
 
@@ -48,25 +47,26 @@ return function (Route $route)
     $route->post('/login',  function (Request $request, Response $response)
     {
         $parseBody = $request->getParsedBody();
-        $auth = Api::login($parseBody['email'], $parseBody['password']);
+        $authentication = Api::login($parseBody['email'], $parseBody['password']);
 
         // AUTHORIZED
-        if ($auth['status'] == "Access authorized") {
-            $token = $auth['data'];
+        if ($authentication['status'] == "success") {
+            $token = $authentication['token'];
             $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
 
             if ($tokenDecode->admin) {
                 setcookie('API_TOKEN', $token, $tokenDecode->exp);
                 $location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
                 return $response->withHeader("Location", $location)->withStatus(302);
+            } else {
+                $authentication['status'] = 'fail';
+                $authentication['message'] = "Sorry. The user exists but is not authorized. Contact administrator.";
             }
         }
 
         // UNAUTHORIZED
-        $template = new TemplateController();
-        $template->login($auth);
-
-        $response->getBody()->write($template->ready());
+        WebSite::addMain(Fragment::user()->login($authentication));
+        $response->getBody()->write(WebSite::ready());
         return $response;
 
     })->addMiddleware(new Authentication());
@@ -76,10 +76,8 @@ return function (Route $route)
      */
     $route->get('/register', function (Request $request, Response $response)
     {
-        $template = new TemplateController();
-        $template->register();
-
-        $response->getBody()->write($template->ready());
+        WebSite::addMain(Fragment::user()->register());
+        $response->getBody()->write(WebSite::ready());
         return $response;
     });
 
@@ -89,11 +87,8 @@ return function (Route $route)
     $route->post('/register', function (Request $request, Response $response)
     {
         $authentication = Api::register($request->getParsedBody());
-
-        $template = new TemplateController();
-        $template->register($authentication);
-
-        $response->getBody()->write($template->ready());
+        WebSite::addMain(Fragment::user()->register($authentication));
+        $response->getBody()->write(WebSite::ready());
         return $response;
     });
 };

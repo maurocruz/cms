@@ -5,9 +5,10 @@
 
 declare(strict_types=1);
 
-use Plinct\Cms\Template\TemplateController;
 use Plinct\Cms\Middleware\Authentication;
 use Plinct\Cms\Middleware\GatewayMiddleware;
+use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\WebSite;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -16,6 +17,8 @@ use Plinct\Cms\Server\Sitemap;
 
 return function (Route $route)
 {
+    WebSite::create();
+
     /**
      * ASSETS
      */
@@ -50,15 +53,13 @@ return function (Route $route)
          */
         $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
         {
-            $template = new TemplateController();
-
             if (isset($_SESSION['userLogin']['admin'])) {
-                $template->viewContent($args, $request->getQueryParams());
+                WebSite::getContent($args, $request->getQueryParams());
             } else {
-                $template->login();
+                if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::user()->login());
             }
 
-            $response->getBody()->write($template->ready());
+            $response->getBody()->write(WebSite::ready());
 
             return $response;
 

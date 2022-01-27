@@ -97,9 +97,10 @@ class Api
             if (json_last_error() === 0) {
                 return $json;
             } else {
-                return [ "error" => [
+                return [
+                    "status" => "error",
                     "message" => $ready
-                ]];
+                ];
             }
         }
     }
@@ -111,14 +112,11 @@ class Api
      */
     public static function login(string $email, string $password): ?array
     {
-        if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
-            return (new AuthController())->login([ "email" => $email, "password" => $password ]);
-
-        } elseif (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+        if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
             return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ]), true);
+        } else {
+            return (new AuthController())->login([ "email" => $email, "password" => $password ]);
         }
-
-        return null;
     }
 
     /**

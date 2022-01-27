@@ -41,8 +41,8 @@ class ImageObjectUpload
                     $imageTemp = new Image($tmp_name);
 
                     // IF IMAGE WIDTH > MAX WIDTH DAFAULT
-                    if ($imageTemp->getWidth() > App::getImageMaxWigth()) {
-                        $imageTemp->resize(App::getImageMaxWigth())->saveToFile($destinationFile);
+                    if ($imageTemp->getWidth() > App::getImageMaxWidth()) {
+                        $imageTemp->resize(App::getImageMaxWidth())->saveToFile($destinationFile);
 
                     } else {
                         FileSystem::makeDirectory($destinationFolder, 0777, true);

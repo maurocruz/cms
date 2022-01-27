@@ -52,7 +52,7 @@ class App
     /**
      * @var string|null
      */
-    private static ?string $API_SECRET_KEY;
+    private static string $API_SECRET_KEY = "";
     /**
      * @var float|int
      */
@@ -181,11 +181,11 @@ class App
     }
 
     /**
-     * @param int $imageMaxWigth
+     * @param int $imageMaxWidth
      */
-    public function setImageMaxWigth(int $imageMaxWigth): void
+    public function setImageMaxWidth(int $imageMaxWidth): void
     {
-        self::$IMAGE_MAX_WIDTH = $imageMaxWigth;
+        self::$IMAGE_MAX_WIDTH = $imageMaxWidth;
     }
 
     /**
@@ -215,7 +215,7 @@ class App
     /**
      * @return string|null
      */
-    public static function getApiSecretKey(): ?string
+    public static function getApiSecretKey(): string
     {
         return self::$API_SECRET_KEY;
     }
@@ -239,7 +239,7 @@ class App
     /**
      * @return int
      */
-    public static function getImageMaxWigth(): int
+    public static function getImageMaxWidth(): int
     {
         return self::$IMAGE_MAX_WIDTH;
     }

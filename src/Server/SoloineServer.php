@@ -18,7 +18,10 @@ class SoloineServer
         if (filter_var(App::getSoloineUrl(), FILTER_VALIDATE_URL)) {
             return Curl::getUrlContents(App::getSoloineUrl() . "?" . http_build_query($params));
         } else {
-            die('Error: Soloine url api not set!');
+            return json_encode([
+                'status' => 'fail',
+                'message' => 'Error: Soloine url api not set!'
+            ]);
         }
     }
 }

@@ -510,6 +510,66 @@ a.white {
   background-color: white !important;
 }
 
+/* ARTICLE
+======================================================= */
+.form-article {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-article fieldset:nth-child(n) {
+  width: 100%;
+}
+.form-article fieldset:nth-of-type(4) {
+  width: 50%;
+}
+.form-article fieldset:nth-of-type(5) {
+  width: 50%;
+}
+.form-article fieldset:nth-of-type(6) {
+  width: 50%;
+}
+.form-article fieldset:nth-of-type(7) {
+  display: flex;
+  justify-content: space-around;
+  width: 125px;
+}
+@media (min-width: 480px) {
+  .form-article fieldset:nth-of-type(3) {
+    width: 50%;
+  }
+}
+@media (min-width: 580px) {
+  .form-article fieldset:nth-of-type(3) {
+    width: 25%;
+  }
+  .form-article fieldset:nth-of-type(4) {
+    width: 25%;
+  }
+  .form-article fieldset:nth-of-type(5) {
+    width: 25%;
+  }
+  .form-article fieldset:nth-of-type(6) {
+    width: 25%;
+  }
+}
+@media (min-width: 860px) {
+  .form-article fieldset:nth-of-type(3) {
+    width: 17%;
+  }
+  .form-article fieldset:nth-of-type(4) {
+    width: 17%;
+  }
+  .form-article fieldset:nth-of-type(5) {
+    width: 17%;
+  }
+  .form-article fieldset:nth-of-type(6) {
+    width: 17%;
+  }
+  .form-article fieldset:nth-of-type(7) {
+    width: 17%;
+  }
+}
+
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint {
@@ -799,6 +859,24 @@ a.white {
   width: calc(100% - 67px);
 }
 
+/* LOCALBUSINESS
+====================================================== */
+.form-localBusiness {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-localBusiness fieldset:nth-of-type(n) {
+  width: 100%;
+}
+@media (min-width: 360px) {
+  .form-localBusiness fieldset:nth-of-type(6) {
+    width: 50%;
+  }
+  .form-localBusiness fieldset:nth-of-type(7) {
+    width: 50%;
+  }
+}
+
 /* OFFER
 ====================================================== */
 .form-offer {
@@ -808,6 +886,19 @@ a.white {
 .form-offer fieldset {
   width: 50%;
 }
+/* ORGANIZATION
+====================================================== */
+.form-organization {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-organization fieldset:nth-of-type(5) {
+  width: 100%;
+}
+.form-organization fieldset:nth-of-type(6) {
+  width: 100%;
+}
+
 /* ORDER FORM
 ====================================================== */
 .form-order {
@@ -816,6 +907,9 @@ a.white {
 }
 .form-order .choose-type-select {
   max-width: 160px;
+}
+.form-order fieldset:nth-of-type(n) {
+  width: 100%;
 }
 .form-order fieldset:nth-of-type(3) {
   max-width: 160px;
@@ -832,6 +926,14 @@ a.white {
 .form-order fieldset:nth-of-type(6) {
   max-width: 160px;
   width: 50%;
+}
+@media (min-width: 576px) {
+  .form-order fieldset:nth-of-type(3) {
+    width: calc(50% - 80px);
+  }
+  .form-order fieldset:nth-of-type(5) {
+    width: calc(50% - 80px);
+  }
 }
 
 /* PERSON
@@ -876,6 +978,46 @@ a.white {
   }
   .form-person fieldset:nth-of-type(8) {
     width: 40%;
+  }
+}
+
+/* PLACE
+====================================================== */
+.form-place {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-place fieldset:nth-of-type(n) {
+  width: 100%;
+}
+@media (min-width: 380px) {
+  .form-place fieldset:nth-of-type(3) {
+    width: 50%;
+  }
+  .form-place fieldset:nth-of-type(4) {
+    width: 50%;
+  }
+}
+@media (min-width: 520px) {
+  .form-place fieldset:nth-of-type(3) {
+    width: 33.3%;
+  }
+  .form-place fieldset:nth-of-type(4) {
+    width: 33.3%;
+  }
+  .form-place fieldset:nth-of-type(5) {
+    width: 33.3%;
+  }
+}
+@media (min-width: 576px) {
+  .form-place fieldset:nth-of-type(1) {
+    width: 50%;
+  }
+  .form-place fieldset:nth-of-type(2) {
+    width: 50%;
+  }
+  .form-place .form-place-map {
+    margin: 5px 0;
   }
 }
 
@@ -1100,16 +1242,8 @@ table .table-delete-button {
     width: 100%;
   }
 
-  .form-place fieldset:nth-of-type(5), .form-place fieldset:nth-of-type(4), .form-place fieldset:nth-of-type(3) {
-    width: 33.3%;
-  }
-
   .form-propertyValue fieldset {
     width: calc(50% - 60px);
-  }
-
-  .form-place .form-place-map {
-    margin: 5px 0;
   }
 
   .form-trip fieldset:nth-of-type(1) {
@@ -1132,13 +1266,6 @@ table .table-delete-button {
   }
   .form-trip fieldset:nth-of-type(7) {
     width: 25%;
-  }
-
-  .form-order fieldset:nth-of-type(3) {
-    width: calc(50% - 80px);
-  }
-  .form-order fieldset:nth-of-type(5) {
-    width: calc(50% - 80px);
   }
 
   .form-invoice fieldset:nth-of-type(1) {
