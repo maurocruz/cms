@@ -7,20 +7,20 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Fragment;
 
+use Plinct\Cms\Authentication\AuthFragment;
 use Plinct\Cms\WebSite\Fragment\Box\Box;
 use Plinct\Cms\WebSite\Fragment\Box\BoxInterface;
 use Plinct\Cms\WebSite\Fragment\Error\Error;
 use Plinct\Cms\WebSite\Fragment\Error\ErrorInterface;
 use Plinct\Cms\WebSite\Fragment\Form\Form;
-use Plinct\Cms\WebSite\Fragment\Icon\IconInterface;
 use Plinct\Cms\WebSite\Fragment\Icon\IconFragment;
+use Plinct\Cms\WebSite\Fragment\Icon\IconInterface;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTable;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTableInterface;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\MiscellaneousInterface;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragment;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragmentInterface;
-use Plinct\Cms\WebSite\Fragment\User\UserFragment;
 
 class Fragment
 {
@@ -94,10 +94,10 @@ class Fragment
     }
 
     /**
-     * @return UserFragment
+     * @return AuthFragment
      */
-    public static function user(): UserFragment
+    public static function auth(): AuthFragment
     {
-        return new UserFragment();
+        return new AuthFragment();
     }
 }

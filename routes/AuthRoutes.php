@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Firebase\JWT\JWT;
 use Plinct\Cms\App;
-use Plinct\Cms\Middleware\Authentication;
+use Plinct\Cms\Authentication\AuthenticationMiddleware;
 use Plinct\Cms\Server\Api;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\WebSite;
@@ -34,12 +34,12 @@ return function (Route $route)
             return $response->withHeader("Location", "/admin")->withStatus(302);
 
         } else {
-            WebSite::addMain(Fragment::user()->login());
+            WebSite::addMain(Fragment::auth()->login());
             $response->getBody()->write(WebSite::ready());
             return $response;
         }
 
-    })->addMiddleware(new Authentication());
+    })->addMiddleware(new AuthenticationMiddleware());
 
     /**
      * POST LOGIN
@@ -48,7 +48,6 @@ return function (Route $route)
     {
         $parseBody = $request->getParsedBody();
         $authentication = Api::login($parseBody['email'], $parseBody['password']);
-
         // AUTHORIZED
         if ($authentication['status'] == "success") {
             $token = $authentication['token'];
@@ -65,18 +64,18 @@ return function (Route $route)
         }
 
         // UNAUTHORIZED
-        WebSite::addMain(Fragment::user()->login($authentication));
+        WebSite::addMain(Fragment::auth()->login($authentication));
         $response->getBody()->write(WebSite::ready());
         return $response;
 
-    })->addMiddleware(new Authentication());
+    })->addMiddleware(new AuthenticationMiddleware());
 
     /**
      * REGISTER GET
      */
-    $route->get('/register', function (Request $request, Response $response)
+    $route->get('/auth/register', function (Request $request, Response $response)
     {
-        WebSite::addMain(Fragment::user()->register());
+        WebSite::addMain(Fragment::auth()->register());
         $response->getBody()->write(WebSite::ready());
         return $response;
     });
@@ -84,10 +83,31 @@ return function (Route $route)
     /**
      * REGISTER POST
      */
-    $route->post('/register', function (Request $request, Response $response)
+    $route->post('/auth/register', function (Request $request, Response $response)
     {
         $authentication = Api::register($request->getParsedBody());
-        WebSite::addMain(Fragment::user()->register($authentication));
+        WebSite::addMain(Fragment::auth()->register($authentication));
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+    });
+
+    /**
+     * RESET PASSWORD
+     */
+    $route->get('/auth/resetPassword', function (Request $request, Response $response)
+    {
+        WebSite::addMain(Fragment::auth()->resetPassword());
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+    });
+
+    $route->post('/auth/resetPassword', function (Request $request, Response $response)
+    {
+        $email = $request->getParsedBody()['email'];
+        $data = json_decode(Api::resetPassword($email), true);
+
+        WebSite::addMain(Fragment::auth()->resetPassword($data, $email));
+
         $response->getBody()->write(WebSite::ready());
         return $response;
     });
