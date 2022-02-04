@@ -433,11 +433,29 @@ msgstr "Sair"
 msgid "Log in"
 msgstr "Entrar"
 
+msgid "Sign in"
+msgstr "Entrar"
+
+msgid "Sign out"
+msgstr "Sair"
+
+msgid "Sign on"
+msgstr "Assinar"
+
 msgid "Send"
 msgstr "Enviar"
 
 msgid "Password"
 msgstr "Senha"
+
+msgid "Forgot password?"
+msgstr "Esqueceu a senha?"
+
+msgid "Enter your email"
+msgstr "Digite seu email"
+
+msgid "Reset password"
+msgstr "Redefinir senha"
 
 msgid "Developer version"
 msgstr "Versão de desenvolvimento"
@@ -446,6 +464,9 @@ msgid "New user registration"
 msgstr "Novo registro de usuário"
 
 msgid "Repeat the password"
+msgstr "Repita a senha"
+
+msgid "Repeat password"
 msgstr "Repita a senha"
 
 msgid "Make new registration"

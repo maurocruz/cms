@@ -89,7 +89,7 @@ class AuthFragment
             </fieldset>
             <input name='submit' type='submit' value='"._("Send")."'>
             <div class='form-authentication-actions'>
-                <p><a href='/admin/auth/login'>".("Sign in")."</a></p>
+                <p><a href='/admin/auth/login'>"._("Sign in")."</a></p>
                 <p><a href='/admin/auth/register'>"._("Sign on")."</a></p>
             </div>
             
@@ -113,8 +113,8 @@ class AuthFragment
             </fieldset>
             <input name='submit' type='submit' value='"._("Send")."'>
             <div class='form-authentication-actions'>
-                <p><a href='/admin/auth/register'>".("Sign on")."</a></p>
-                <!--<button><a href='/admin/auth/resetPassword'>"._("Forgot password?")."</a></button>-->
+                <p><a href='/admin/auth/register'>"._("Sign on")."</a></p>
+                <p><a href='/admin/auth/resetPassword'>"._("Forgot password?")."</a></p>
             </div>
         </form>";
     }
@@ -144,8 +144,8 @@ class AuthFragment
             </fieldset>
             <input name="submit" type="submit" value="'._("Send").'">
             <div class="form-authentication-actions">
-                <button><a href="/admin/auth/login">'.("Sign in").'</a></button>
-                <!--<button><a href="/admin/auth/resetPassword">'._("Forgot password?").'</a></button>-->
+                <p><a href="/admin/auth/login">'._("Sign in").'</a></p>
+                <!--<p><a href="/admin/auth/resetPassword">'._("Forgot password?").'</a></p>-->
             </div>
         </form>';
     }
