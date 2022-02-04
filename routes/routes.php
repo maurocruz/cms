@@ -5,8 +5,9 @@
 
 declare(strict_types=1);
 
-use Plinct\Cms\Middleware\Authentication;
+use Plinct\Cms\Authentication\AuthenticationMiddleware;
 use Plinct\Cms\Middleware\GatewayMiddleware;
+use Plinct\Cms\Server\Type\ClosureServer;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\WebSite;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -56,19 +57,19 @@ return function (Route $route)
             if (isset($_SESSION['userLogin']['admin'])) {
                 WebSite::getContent($args, $request->getQueryParams());
             } else {
-                if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::user()->login());
+                if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::auth()->login());
             }
 
             $response->getBody()->write(WebSite::ready());
 
             return $response;
 
-        })->addMiddleware(new Authentication());
+        })->addMiddleware(new AuthenticationMiddleware());
 
         /**
          * ADMIN POST
          */
-        $route->post('/{type}/{action}', function (Request $request, Response $response, $args)
+        $route->post('/{type}/{action}[/{paramsUrl:.*}]', function (Request $request, Response $response, $args)
         {
             $type = $args['type'];
             $action = $args['action'];
@@ -82,7 +83,7 @@ return function (Route $route)
 
             //  EDIT
             if ($action == "edit" || $action == "put") {
-                $data = (new Server())->edit($type, $params);
+                $returns = (new Server())->edit($type, $params);
                 // sitemap
                 Sitemap::create($type, $params);
             }
@@ -90,7 +91,7 @@ return function (Route $route)
             // NEW
             elseif ($action == "new" || $action == "post" || $action == "add") {
                 // put data
-                $data = (new Server())->new($type, $params);
+                $returns = (new Server())->new($type, $params);
                 // sitemap
                 Sitemap::create($type, $params);
             }
@@ -98,7 +99,7 @@ return function (Route $route)
             // DELETE
             elseif ($action == "delete" || $action == "erase") {
                 // delete data
-                $data = (new Server())->erase($type, $params);
+                $returns = (new Server())->erase($type, $params);
                 // sitemap
                 Sitemap::create($type, $params);
             }
@@ -106,25 +107,31 @@ return function (Route $route)
             // CREATE SQL TABLE
             elseif ($action == "createSqlTable") {
                 (new Server())->createSqlTable($type);
-                $data = $_SERVER['HTTP_REFERER'];
+                $returns = $_SERVER['HTTP_REFERER'];
             }
 
             // SITEMAP
             elseif (($action == "sitemap")) {
-                $data = $_SERVER['HTTP_REFERER'];
+                $returns = $_SERVER['HTTP_REFERER'];
                 // sitemap
                 Sitemap::create($type, $params);
+            }
+
+            // CLOSURE
+            elseif($type == "closure") {
+                $server = new ClosureServer($params);
+                $returns = $server->getReturn();
             }
 
             // GENERIC
             else {
                 (new Server())->request($type, $action, $params);
-                $data = $_SERVER['HTTP_REFERER'];
+                $returns = $_SERVER['HTTP_REFERER'];
             }
 
-            return $response->withHeader('Location', $data)->withStatus(301);
+            return $response->withHeader('Location', $returns)->withStatus(301);
 
-        })->addMiddleware(new Authentication());
+        })->addMiddleware(new AuthenticationMiddleware());
 
     })->addMiddleware(new GatewayMiddleware());
 };
