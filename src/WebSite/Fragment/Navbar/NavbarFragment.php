@@ -34,11 +34,13 @@ class NavbarFragment extends NavbarFragmentAbstract
     /**
      * @param string $link
      * @param string $text
+     * @param array|null $attributes
      * @return NavbarFragmentInterface
      */
-    public function newTab(string $link, string $text): NavbarFragmentInterface
+    public function newTab(string $link, string $text, array $attributes = null): NavbarFragmentInterface
     {
-        $this->content("<a href='$link'>$text</a>");
+        $attributes['href'] = $link;
+        $this->content([ 'tag' => 'a', 'attributes' => $attributes, 'content' => $text ]);
         return $this;
     }
 

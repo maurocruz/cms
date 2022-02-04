@@ -48,19 +48,25 @@ class Structure
             $navbar->newTab("/admin/user",_("Users"));
 
             if (App::getTypesEnabled()) {
+                $attributes = null;
+
                 foreach (App::getTypesEnabled() as $key => $value) {
                     if (is_string($key) && is_string($value)) {
                         $link = $key;
                         $text = ucfirst($value);
-                    } elseif(is_object($value)) {
+                    }
+                    // if closure
+                    elseif (is_object($value)) {
                         $link = "/admin/closure/" . $value->getMenuPath();
                         $text = ucfirst($value->getMenuText());
-                    } else {
+                        $attributes['style'] = "background-color: #574141;";
+                    }
+                    else {
                         $link = "/admin/$value";
                         $text = ucfirst($value);
                     }
 
-                    $navbar->newTab($link, $text);
+                    $navbar->newTab($link, $text, $attributes);
                 }
             }
 

@@ -137,4 +137,20 @@ class Api
 
         return null;
     }
+
+    /**
+     * @param string $email
+     * @return string
+     */
+    public static function resetPassword(string $email): string
+    {
+        $url = App::getApiHost() . "auth/reset_password";
+
+        $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params(['email'=>$email])->returnWithJson();
+
+        // for localhost
+        if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
+
+        return $handleCurl->ready();
+    }
 }
