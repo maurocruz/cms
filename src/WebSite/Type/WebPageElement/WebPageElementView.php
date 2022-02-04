@@ -104,7 +104,8 @@ class WebPageElementView
         if ($value) {
             foreach ($value as $valueWebPageElement) {
                 $this->idwebPageElement = (int)ArrayTool::searchByValue($valueWebPageElement['identifier'], "id")['value'];
-                $name = $valueWebPageElement['name'] ? strip_tags(str_replace("<br>"," ",$valueWebPageElement['name'])) : null;
+                $name = $valueWebPageElement['name'] ? strip_tags(str_replace("<br>"," ",$valueWebPageElement['name'])) : substr(strip_tags($valueWebPageElement['text']),0,40).'...';
+
                 $content[] = Fragment::box()->expandingBox("[" . $this->idwebPageElement . "] " . $name , self::editForms($valueWebPageElement));
             }
         }

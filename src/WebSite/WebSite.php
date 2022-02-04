@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Factory\ViewFactory;
 use Plinct\Cms\WebSite\Type\Controller;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Cms\WebSite\Structure\Structure;
 use Plinct\Tool\Locale;
-use Plinct\Web\Debug\Debug;
 use Plinct\Web\Render;
 use ReflectionException;
 
@@ -55,7 +53,8 @@ class WebSite extends WebSiteAbstract
         if($id && $methodName == 'index') $methodName = 'edit';
 
         if ($type == 'closure') {
-            $className = "\\" . base64_decode($queryStrings['ns']) . "\\" . $methodName;
+            $ns = $queryStrings['ns'] ?? "";
+            $className = "\\" . base64_decode($ns) . "\\" . $methodName;
             if (class_exists($className)) {
                 $classObject = new $className();
                 if (method_exists($classObject, 'viewMain')) {
