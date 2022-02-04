@@ -114,7 +114,7 @@ class AuthFragment
             <input name='submit' type='submit' value='"._("Send")."'>
             <div class='form-authentication-actions'>
                 <p><a href='/admin/auth/register'>"._("Sign on")."</a></p>
-                <p><a href='/admin/auth/resetPassword'>"._("Forgot password?")."</a></p>
+                <!--<p><a href='/admin/auth/resetPassword'>"._("Forgot password?")."</a></p>-->
             </div>
         </form>";
     }
