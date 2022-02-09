@@ -48,8 +48,8 @@ class UserView
 
         $list = Fragment::listTable();
         $list->caption(_("Users"));
-        $list->labels(_("Name"), 'Status');
-        $list->rows($data['itemListElement'],['name','status']);
+        $list->labels(_("Name"), _('Email'), 'Status');
+        $list->rows($data['itemListElement'],['name','email','status']);
         $list->setEditButton('/admin/user/edit/');
 
         WebSite::addMain($list->ready());
