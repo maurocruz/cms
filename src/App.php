@@ -70,6 +70,11 @@ class App
      */
     private static bool $richTextEditor = false;
 
+    private static ?string $mailHost = null;
+    private static ?string $mailUsername = null;
+    private static ?string $mailpassword = null;
+    private static ?string $urlToResetPassword = null;
+
     /**
      * @param Slim $slim
      */
@@ -292,12 +297,85 @@ class App
         return (int) $_SESSION['userLogin']['uid'];
     }
 
+
+    /**
+     * @param string|null $mailHost
+     * @return App
+     */
+    public function setMailHost(?string $mailHost): App
+    {
+        self::$mailHost = $mailHost;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getMailHost(): ?string
+    {
+        return self::$mailHost;
+    }
+
+    /**
+     * @param string|null $mailUsername
+     * @return App
+     */
+    public function setMailUsername(?string $mailUsername): App
+    {
+        self::$mailUsername = $mailUsername;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getMailUsername(): ?string
+    {
+        return self::$mailUsername;
+    }
+
+    /**
+     * @param string|null $mailpassword
+     * @return App
+     */
+    public function setMailpassword(?string $mailpassword): App
+    {
+        self::$mailpassword = $mailpassword;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getMailpassword(): ?string
+    {
+        return self::$mailpassword;
+    }
+
+    /**
+     * @param string|null $urlToResetPassword
+     * @return App
+     */
+    public function setUrlToResetPassword(?string $urlToResetPassword): App
+    {
+        self::$urlToResetPassword = $urlToResetPassword;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getUrlToResetPassword(): ?string
+    {
+        return self::$urlToResetPassword;
+    }
+
     /**
      * @return mixed
      */
     final public function run()
     {
-        $route = include __DIR__ . '/../routes/routes.php';
+        $route = include __DIR__ . '/routes.php';
         return $route($this->slim);
     }
 }

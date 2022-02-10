@@ -25,55 +25,59 @@ class Structure
             <title>Plinct CMS [' . App::getTitle() . ']</title>';
     }
 
-    public static function header(): array
+    /**
+     * @return string
+     */
+    public static function userBar(): string
     {
-        // USER BAR
-        if (isset($_SESSION['userLogin']['admin'])) {
-            $helloText = sprintf(_("Hello, %s. You logged with %s!"), $_SESSION['userLogin']['name'], $_SESSION['userLogin']['admin'] ? "admin" : "user");
-            $returns[] = "<div class='admin admin-bar-top'>
+        $helloText = sprintf(_("Hello, %s. You logged with %s!"), $_SESSION['userLogin']['name'], $_SESSION['userLogin']['admin'] ? "admin" : "user");
+        return "<div class='admin admin-bar-top'>
                 <p>$helloText</p>
                 <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
             </div>";
-        }
+    }
 
-        // TITLE
+    /**
+     * @return string
+     */
+    public static function header(): string
+    {
         $apiHost = App::getApiHost();
         $apiLocation = $apiHost && filter_var($apiHost, FILTER_VALIDATE_URL) ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "localhost";
-        $returns[] = '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> '. _("Control Panel") . '. Api: '. $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
+        return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
+    }
 
-        // FIRST MENU
-        if (isset($_SESSION['userLogin']['admin'])) {
-            $navbar = Fragment::navbar();
-            $navbar->newTab("/admin",_("Home"));
-            $navbar->newTab("/admin/user",_("Users"));
+    public static function mainMenu(): array
+    {
+        $navbar = Fragment::navbar();
+        $navbar->newTab("/admin",_("Home"));
+        $navbar->newTab("/admin/user",_("Users"));
 
-            if (App::getTypesEnabled()) {
-                $attributes = null;
+        if (App::getTypesEnabled()) {
+            $attributes = null;
 
-                foreach (App::getTypesEnabled() as $key => $value) {
-                    if (is_string($key) && is_string($value)) {
-                        $link = $key;
-                        $text = ucfirst($value);
-                    }
-                    // if closure
-                    elseif (is_object($value)) {
-                        $link = "/admin/closure/" . $value->getMenuPath();
-                        $text = ucfirst($value->getMenuText());
-                        $attributes['style'] = "background-color: #574141;";
-                    }
-                    else {
-                        $link = "/admin/$value";
-                        $text = ucfirst($value);
-                    }
-
-                    $navbar->newTab($link, $text, $attributes);
+            foreach (App::getTypesEnabled() as $key => $value) {
+                if (is_string($key) && is_string($value)) {
+                    $link = $key;
+                    $text = ucfirst($value);
                 }
-            }
+                // if closure
+                elseif (is_object($value)) {
+                    $link = "/admin/closure/" . $value->getMenuPath();
+                    $text = ucfirst($value->getMenuText());
+                    $attributes['style'] = "background-color: #574141;";
+                }
+                else {
+                    $link = "/admin/$value";
+                    $text = ucfirst($value);
+                }
 
-            $returns[] = $navbar->ready();
+                $navbar->newTab($link, $text, $attributes);
+            }
         }
 
-        return $returns;
+        return $navbar->ready();
+
     }
 
     public static function footer(): string

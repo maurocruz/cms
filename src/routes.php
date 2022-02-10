@@ -46,7 +46,7 @@ return function (Route $route)
         /**
          * AUTHENTICATION ROUTES
          */
-        $authRoutes = require __DIR__ . '/AuthRoutes.php';
+        $authRoutes = require __DIR__ . '/Authentication/AuthRoutes.php';
         $authRoutes($route);
 
         /**

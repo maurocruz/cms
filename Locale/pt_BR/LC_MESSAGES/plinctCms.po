@@ -218,6 +218,127 @@ msgstr "Artigos e notícias"
 msgid "No articles were found!"
 msgstr "Nenhum artigo foi encontrado!"
 
+################################   AUTHENTICATION   ##########################################
+msgid "Log out"
+msgstr "Sair"
+
+msgid "Log in"
+msgstr "Entrar"
+
+msgid "Sign in"
+msgstr "Entrar"
+
+msgid "Sign out"
+msgstr "Sair"
+
+msgid "Sign on"
+msgstr "Assinar"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Forgot password?"
+msgstr "Esqueceu a senha?"
+
+msgid "Enter your email"
+msgstr "Digite seu email"
+
+msgid "Reset password"
+msgstr "Redefinir senha"
+
+msgid "Change your password"
+msgstr "Altere a sua senha"
+
+msgid "Enter your new password"
+msgstr "Digite sua nova senha"
+
+msgid "Repeat the new password"
+msgstr "Repita a nova senha"
+
+msgid "Developer version"
+msgstr "Versão de desenvolvimento"
+
+msgid "New user registration"
+msgstr "Novo registro de usuário"
+
+msgid "Repeat the password"
+msgstr "Repita a senha"
+
+msgid "Repeat password"
+msgstr "Repita a senha"
+
+msgid "Make new registration"
+msgstr "Fazer novo registro"
+
+msgid "Registration error!"
+msgstr "Erro de Registo!"
+
+msgid "Your registration was successful!"
+msgstr "Seu registro foi um sucesso!"
+
+msgid "Registration not successful!"
+msgstr "Registro não efetuado!"
+
+msgid "Repeating the password doesn't work!"
+msgstr "A repetição da senha não confere!"
+
+msgid "This email already exists in our database!"
+msgstr "Este email já existe em nosso banco de dados!"
+
+msgid "Wait for confirmation from the administrator!"
+msgstr "Aguarde a confirmação do administrador!"
+
+msgid "The name must be longer than 4 characters"
+msgstr "O nome deve ter mais de 4 caracteres"
+
+msgid "Invalid email"
+msgstr "Email inválido"
+
+msgid "Password must be at least 8 characters in length and must contain at least one number, one upper case letter, one lower case letter and one special character"
+msgstr "A senha deve ter pelo menos 8 caracteres e deve conter pelo menos um número, uma letra maiúscula, uma letra minúscula e um caractere especial"
+
+msgid "Token invalid or date expired"
+msgstr "Token inválido ou data expirada"
+
+msgid "Your password has been changed successfully!"
+msgstr "Sua senha foi alterada com sucesso!"
+
+msgid "Sorry but this email is invalid!"
+msgstr "Desculpe, mas este e-mail é inválido!"
+
+msgid "User not exists - Access unauthorized"
+msgstr "Usuário não existe - acesso não autorizado!"
+
+msgid "The user exists but has not logged in. Check your password!"
+msgstr "O usuário existe, mas não conectou. Verifique sua senha!"
+
+msgid "Sorry. The user exists but is not authorized. Contact administrator."
+msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."
+
+msgid "A new password was requested for this email. If it wasn't you, please disregard this message."
+msgstr "Uma nova senha foi solicitada para este e-mail. Se não foi você, por favor desconsidere esta mensagem."
+
+msgid "Otherwise, go to this link <a href='%s'>%s</a> and change your password. This token expires in half an hour."
+msgstr "Caso contrário, acesse este link <a href='%s'>%s</a> e altere sua senha. Este token expira em meia hora."
+
+msgid "Thank"
+msgstr "Grato"
+
+msgid "regards!"
+msgstr "Saudações!"
+
+msgid "An email has been sent to %s from %s to confirm your identity and change your password."
+msgstr "Um e-mail foi enviado para %s de %s para confirmar sua identidade e alterar sua senha."
+
+msgid "Duplicate entry for key 'email'"
+msgstr "Entrada duplicada para a campo 'email'"
+
+msgid "No email server data"
+msgstr "Não existem dados do servidor de e-mail"
+
 #############################   CONTACT POINT   ################################
 
 msgid "Contact point"
@@ -426,51 +547,6 @@ msgstr "Restaurante"
 
 msgid "FoodEstablishment"
 msgstr "Estabelecimento Alimentar"
-
-msgid "Log out"
-msgstr "Sair"
-
-msgid "Log in"
-msgstr "Entrar"
-
-msgid "Sign in"
-msgstr "Entrar"
-
-msgid "Sign out"
-msgstr "Sair"
-
-msgid "Sign on"
-msgstr "Assinar"
-
-msgid "Send"
-msgstr "Enviar"
-
-msgid "Password"
-msgstr "Senha"
-
-msgid "Forgot password?"
-msgstr "Esqueceu a senha?"
-
-msgid "Enter your email"
-msgstr "Digite seu email"
-
-msgid "Reset password"
-msgstr "Redefinir senha"
-
-msgid "Developer version"
-msgstr "Versão de desenvolvimento"
-
-msgid "New user registration"
-msgstr "Novo registro de usuário"
-
-msgid "Repeat the password"
-msgstr "Repita a senha"
-
-msgid "Repeat password"
-msgstr "Repita a senha"
-
-msgid "Make new registration"
-msgstr "Fazer novo registro"
 
 msgid "Control Panel"
 msgstr "Painel de Controle"
@@ -1264,56 +1340,19 @@ msgstr "usuários"
 msgid "Add new user"
 msgstr "Adicionar novo usuário"
 
-msgid "Registration error!"
-msgstr "Erro de Registo!"
-
-msgid "Your registration was successful!"
-msgstr "Seu registro foi um sucesso!"
-
-msgid "Registration not successful!"
-msgstr "Registro não efetuado!"
-
-msgid "Repeating the password doesn't work!"
-msgstr "A repetição da senha não confere!"
-
-msgid "This email already exists in our database!"
-msgstr "Este email já existe em nosso banco de dados!"
+############################   WARNINGS   ###############################################
 
 msgid "Sorry! Something is wrong!"
 msgstr "Desculpe! Algo está errado!"
 
-msgid "Wait for confirmation from the administrator!"
-msgstr "Aguarde a confirmação do administrador!"
+msgid "Oops! Something went wrong!"
+msgstr "Ops! Algo deu errado!"
 
-msgid "The name must be longer than 4 characters"
-msgstr "O nome deve ter mais de 4 caracteres"
+msgid "Try again!"
+msgstr "Tente novamente!"
 
-msgid "Invalid email"
-msgstr "Email inválido"
-
-msgid "Password must be a minimum of 8 characters"
-msgstr "A senha deve ter no mínimo 8 caracteres"
-
-msgid "Password must contain at least one uppercase character"
-msgstr "A senha deve conter pelo menos um caractere maiúsculo"
-
-msgid "Password must contain at least one lowercase character"
-msgstr "A senha deve conter pelo menos um caractere minúsculo"
-
-msgid "Password must contain at least 1 number"
-msgstr "A senha deve conter pelo menos 1 número"
-
-msgid "Sorry but this email is invalid!"
-msgstr "Desculpe, mas este e-mail é inválido!"
-
-msgid "User not exists - Access unauthorized"
-msgstr "Usuário não existe - acesso não autorizado!"
-
-msgid "The user exists but has not logged in. Check your password!"
-msgstr "O usuário existe, mas não conectou. Verifique sua senha!"
-
-msgid "Sorry. The user exists but is not authorized. Contact administrator."
-msgstr "Desculpe. O usuário existe, mas não está autorizado. Entre em contato com o administrador."
+msgid "Missing data!"
+msgstr "Falta dados!"
 
 ############################   WEBSITE   #################################################
 

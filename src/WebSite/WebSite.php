@@ -46,6 +46,11 @@ class WebSite extends WebSiteAbstract
      */
     public static function getContent(array $params = null, array $queryStrings = null)
     {
+        // HEADER ELEMENTS
+        parent::addHeader(Structure::userBar(), true);
+        parent::addHeader(Structure::mainMenu());
+
+
         $type = $queryStrings['type'] ?? $params['type'] ?? null;
         $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
         $id = $queryStrings['id'] ?? $params['id'] ?? null;

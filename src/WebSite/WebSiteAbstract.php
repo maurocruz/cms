@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite;
 
-use Plinct\Web\Debug\Debug;
-
 class WebSiteAbstract
 {
     /**
@@ -48,11 +46,16 @@ class WebSiteAbstract
 
     /**
      * @param $content
+     * @param bool $firstChild
      * @return void
      */
-    public static function addHeader($content)
+    public static function addHeader($content, bool $firstChild = false)
     {
-        self::$HEADER['content'][] = $content;
+        if ($firstChild) {
+            array_unshift(self::$HEADER['content'], $content);
+        } else {
+            self::$HEADER['content'][] = $content;
+        }
     }
 
     /**

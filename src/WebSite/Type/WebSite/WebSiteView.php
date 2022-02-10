@@ -9,7 +9,6 @@ use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\WebPage\WebPageView;
 use Plinct\Cms\WebSite\WebSite;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
 
 class WebSiteView extends WebSiteAbstract
 {
