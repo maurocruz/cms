@@ -1233,6 +1233,10 @@ table .table-delete-button {
   width: 40px;
 }
 
+.table-list .icon-delete {
+  font-size: 1.3em;
+}
+
 /* IMAGES GRID _ admin-images-grid
 ============================================================================ */
 .imagesfromdatabase {

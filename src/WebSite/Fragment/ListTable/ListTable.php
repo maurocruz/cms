@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Fragment\ListTable;
 
-// TODO fazer link para ordenar listagem pelo rótulo de coluna
-
 class ListTable extends ListTableAbstract implements ListTableInterface
 {
     /**

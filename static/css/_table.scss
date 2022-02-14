@@ -76,3 +76,9 @@ table {
   td:first-child, td:last-child { text-align: center; width: 35px;  }
   td:nth-of-type(2) { width: 40px; }
 }
+
+.table-list {
+  .icon-delete {
+    font-size: 1.3em;
+  }
+}

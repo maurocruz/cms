@@ -455,7 +455,7 @@ msgid "Showing last 5 years"
 msgstr "Mostrando últimos 5 anos"
 
 msgid "Show last %s years"
-msgstr "Montra últimos %s anos"
+msgstr "Mostra últimos %s anos"
 
 msgid "Show all"
 msgstr "Mostra tudo"

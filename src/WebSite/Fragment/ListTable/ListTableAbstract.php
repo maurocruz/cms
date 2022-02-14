@@ -41,7 +41,7 @@ abstract class ListTableAbstract
     /**
      * @var array
      */
-    protected array $properties;
+    protected array $properties = [];
     /**
      * @var bool
      */
@@ -62,6 +62,14 @@ abstract class ListTableAbstract
     public function __construct(array $attributes = null)
     {
         $this->table = new Table($attributes);
+    }
+
+    /**
+     * @param array $properties
+     */
+    public function setProperties(array $properties): void
+    {
+        $this->properties = $properties;
     }
 
     /**
@@ -86,8 +94,16 @@ abstract class ListTableAbstract
             $this->table->head(_("Edit"), ['style'=>'width: 50px;']);
         }
 
+        // TODO fazer link para ordenar listagem pelo rótulo de coluna
+        /*$parseUrl = parse_url(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        parse_str($parseUrl['query'], $query);
+        unset($query['orderBy']);
+        $uri = $parseUrl['path']."?".http_build_query($query);*/
+
         foreach ($this->labels as $columnLabel) {
-            $this->table->head("<a href='#'>$columnLabel</a>");
+            //$property = $this->properties[$key];
+            //$href = '$uri&orderBy=$property';
+            $this->table->head($columnLabel);
         }
 
         if ($this->buttonDelete) {

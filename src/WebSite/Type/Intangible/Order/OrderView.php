@@ -29,20 +29,17 @@ class OrderView extends OrderAbstract
         } else {
             $orders = $value['orders'];
             $idSeller = ToolBox::searchByValue($value['identifier'],'id','value');
-
             // NAVBAR
             parent::navbarOrder($value);
-
             // SEARCH
             View::main(Fragment::form()->search("", "customerName", filter_input(INPUT_GET, 'customerName')));
-
             // PERIOD
             View::main(parent::periodoParagraph($orders['itemListOrder']));
-
             // LIST TABLE
-            $table = Fragment::listTable();
+            $table = Fragment::listTable(['class'=>'table-list']);
             $table->caption(sprintf(_("List of %s"), _("orders")))
-                ->labels("ID", _("Customer"), _("Seller"), _("Ordered items"), _("Order status"), _("Order date"));
+                ->labels("ID", _("Customer"), _("Seller"), _("Ordered items"), _("Order status"), _("Order date"))
+                ->setProperties(['idorder','customer','seller','orderedItem','orderStatus','orderDate']);
 
             foreach ($orders['itemListElement'] as $orderItem) {
                 $item = $orderItem['item'];
