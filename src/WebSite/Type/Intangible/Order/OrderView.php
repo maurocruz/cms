@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Order;
 
+use App\Tools\ToolBox;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\HistoryView;
 use Plinct\Cms\WebSite\Type\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Cms\WebSite\Type\View;
-use Plinct\Cms\View\Widget\HtmlPiecesTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 
@@ -28,6 +28,7 @@ class OrderView extends OrderAbstract
 
         } else {
             $orders = $value['orders'];
+            $idSeller = ToolBox::searchByValue($value['identifier'],'id','value');
 
             // NAVBAR
             parent::navbarOrder($value);
@@ -38,17 +39,31 @@ class OrderView extends OrderAbstract
             // PERIOD
             View::main(parent::periodoParagraph($orders['itemListOrder']));
 
-            // TABLE
-            $rowsColumns = [
-                "idorder" => ["ID", ["style" => "width: 50px;"]],
-                "customer" => _("Customer"),
-                "seller" => _("Seller"),
-                "orderedItem" => _("Item ordered"),
-                "orderStatus" => [_("Order status"), ["style" => "width: 140px;"]],
-                "orderDate" => [_("Order date"), ["style" => "width: 100px;"]]
-            ];
+            // LIST TABLE
+            $table = Fragment::listTable();
+            $table->caption(sprintf(_("List of %s"), _("orders")))
+                ->labels("ID", _("Customer"), _("Seller"), _("Ordered items"), _("Order status"), _("Order date"));
 
-            View::main(HtmlPiecesTrait::indexWithSubclass($value, "order", $rowsColumns, $orders['itemListElement']));
+            foreach ($orders['itemListElement'] as $orderItem) {
+                $item = $orderItem['item'];
+                $idIsPartOf = $item['idorder'];
+                $tableIsPartOf = "order";
+                $idHasPart = ToolBox::searchByValue($item['seller']['identifier'],'id','value');
+                $tableHasPart = lcfirst($item['seller']['@type']);
+                $orderedItems = [];
+                if (isset($item['orderedItem'])) {
+                    foreach ($item['orderedItem'] as $orderedItem) {
+                        $orderedItems[] = $orderedItem['orderedItem']['name'];
+                    }
+                }
+                $table->addRow($item['idorder'], $item['customer']['name'], $item['seller']['name'], implode("; ",$orderedItems), $item['orderStatus'], $item['orderDate'])
+                    ->buttonEdit("/admin/organization/order?id=$idSeller&item={$item['idorder']}")
+                    ->buttonDelete($idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
+                unset($orderedItems);
+            }
+
+            // ready
+            View::main($table->ready());
         }
     }
 
@@ -78,19 +93,14 @@ class OrderView extends OrderAbstract
 
         } else {
             self::$idOrder = (int) ArrayTool::searchByValue($data['identifier'],'id','value');
-
             // NAVBAR
             parent::navbarOrder($data['seller'],$data['customer']['name']);
-
             // ORDER
             View::main(Fragment::box()->simpleBox(self::formOrder("edit", $data), _("Order")));
-
             // ORDERED ITEMS
             View::main(Fragment::box()->simpleBox((new OrderItemView())->edit($data), _("Ordered items")));
-
             // INVOICES
             View::main(Fragment::box()->simpleBox((new InvoiceView())->edit($data), _("Invoices")));
-
             // HISTORY
             View::main(Fragment::box()->simpleBox((new HistoryView())->view($data['history']), _("Historic")));
         }
@@ -186,7 +196,7 @@ class OrderView extends OrderAbstract
         // NAVBAR
         parent::navbarOrder($value);
 
-        View::navbar(_("Expired"),[
+        View::navbar(_("Expired orders"),[
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => Fragment::icon()->home(),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
             "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
@@ -194,15 +204,8 @@ class OrderView extends OrderAbstract
         ],5);
 
         // VARS
+        $idHasPart = ToolBox::searchByValue($value['identifier'],'id','value');
         $orders = $value['orders'];
-
-        $rowColunms = [
-            "idorder" => [ "ID", [ "style" => "width: 50px;" ] ],
-            "paymentDueDate" => [ _("Due date"), [ "style" => "width: 82px;" ] ],
-            "customer" => _("Customer"),
-            "orderedItem" => _("Ordered item"),
-            "orderStatus" => _("Order status")
-        ];
 
         // TITLE
         $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
@@ -211,7 +214,12 @@ class OrderView extends OrderAbstract
         $content[] = self::selectPeriodo($orders['numberOfItems'], "expired");
 
         // TABLE
-        $content[] = HtmlPiecesTrait::indexWithSubclass($value, "order", $rowColunms, $orders['itemListElement']);
+        $table = Fragment::listTable();
+        $table->caption(sprintf(_("List of %s"), _("orders")));
+        $table->labels('ID', _("Due date"), _("Customer"), _("Ordered item"), _("Order status"));
+        $table->rows($orders['itemListElement'],['idorder', 'paymentDueDate', 'customer', 'orderedItem:0:orderedItem', 'orderStatus'])
+        ->setEditButton("/admin/organization/order?id=$idHasPart&item=");
+        $content[] = $table->ready();
 
         // PRINT
         $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];

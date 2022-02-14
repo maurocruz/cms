@@ -10,20 +10,28 @@ namespace Plinct\Cms\WebSite\Fragment;
 use Plinct\Cms\Authentication\AuthFragment;
 use Plinct\Cms\WebSite\Fragment\Box\Box;
 use Plinct\Cms\WebSite\Fragment\Box\BoxInterface;
+use Plinct\Cms\WebSite\Fragment\Button\Button;
 use Plinct\Cms\WebSite\Fragment\Error\Error;
 use Plinct\Cms\WebSite\Fragment\Error\ErrorInterface;
 use Plinct\Cms\WebSite\Fragment\Form\Form;
-use Plinct\Cms\WebSite\Fragment\Icon\IconFragment;
-use Plinct\Cms\WebSite\Fragment\Icon\IconInterface;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTable;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTableInterface;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\MiscellaneousInterface;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragment;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragmentInterface;
+use Plinct\Web\Fragment\IconsFragment;
 
 class Fragment
 {
+    /**
+     * @return AuthFragment
+     */
+    public static function auth(): AuthFragment
+    {
+        return new AuthFragment();
+    }
+
     /**
      * @return BoxInterface
      */
@@ -32,6 +40,10 @@ class Fragment
         return new Box();
     }
 
+    public static function button(): Button
+    {
+        return new Button();
+    }
     /**
      * @return ErrorInterface
      */
@@ -50,11 +62,11 @@ class Fragment
     }
 
     /**
-     * @return IconInterface
+     * @return IconsFragment
      */
-    public static function icon(): IconInterface
+    public static function icon(): IconsFragment
     {
-        return new IconFragment();
+        return \Plinct\Web\Fragment\Fragment::icons();
     }
 
     /**
@@ -91,13 +103,5 @@ class Fragment
         $misc = new Miscellaneous();
         $mess = $message ?? _("No content");
         return $misc->message($mess);
-    }
-
-    /**
-     * @return AuthFragment
-     */
-    public static function auth(): AuthFragment
-    {
-        return new AuthFragment();
     }
 }

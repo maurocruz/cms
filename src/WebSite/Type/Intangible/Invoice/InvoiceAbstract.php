@@ -6,8 +6,8 @@ namespace Plinct\Cms\WebSite\Type\Intangible\Invoice;
 
 use DateTime;
 use Exception;
+use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\OrderItem\OrderItemView;
-use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
@@ -62,60 +62,45 @@ abstract class InvoiceAbstract
      */
     private static float $totalPaymentAmount;
 
-    use FormElementsTrait;
-
+    /**
+     * @param $case
+     * @param $value
+     * @param $n
+     * @return array
+     */
     protected function formInvoice($case = 'new', $value = null, $n = null): array
     {
         // VARS
         $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
 
-        // HIDDEN
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "referencesOrder", "value" => $this->idorder, "type" => "hidden"] ];
-        $content[] = self::input("tableHasPart", "hidden", (string) $this->idorder);
-
-        if ($case == "edit") {
-            $content[] = [ "tag" => "input", "attributes" => [ "name" => "id", "value" => $idinvoice, "type" => "hidden"] ];
-        }
-
+        $form = Fragment::form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
+        $form->action("/admin/invoice/".$case)->method("post");
+        // HIDDENS
+        $form->input("referencesOrder", (string)$this->idorder, "hidden");
+        $form->input("tableHasPart", (string) $this->idorder, "hidden");
+        if ($case == "edit")  $form->input("idinvoice", $idinvoice, "hidden");
         // #
         $p = $case == "new" ? "+" : $n;
-        $content[] = "<span>".$p."</span>";
-
+        $form->content("<span>".$p."</span>");
         // TOTAL PAYMENT DUE
-        $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Value") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "totalPaymentDue", "value" => $value['totalPaymentDue'] ?? null, "type" => "number", "step" => "0.01", "min" => "0.01" ]]
-        ]];
-
-        // Payment due date
-        $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Due date") ] : null,
-            [ "tag" => "input", "attributes" => [ "name" => "paymentDueDate", "value" => $value['paymentDueDate'] ?? null, "type" => "date" ]]
-        ]];
-
+        $form->fieldsetWithInput("totalPaymentDue",$value['totalPaymentDue'] ?? null, $case == "new" ? _("Value") : null, "number", null, ["type" => "number", "step" => "0.01", "min" => "0.01"]);
+        // PAYMENT DUE DATE
+        $form->fieldsetWithInput("paymentDueDate", $value['paymentDueDate'] ?? null, $case == "new" ? _("Due date") : null, "date");
         // PAYMENT DATE
-        $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Payment") ] : null,
-            self::input('paymentDate','date',$value['paymentDate'] ?? null)
-        ]];
-
+        $form->fieldsetWithInput("paymentDate", $value['paymentDate'] ?? null, $case == "new" ? _("Payment") : null, 'date');
         // PAYMENT STATUS
-        $content[] = [ "tag" => "fieldset", "content" => [
-            $case == "new" ? [ "tag" => "legend", "content" => _("Status") ] : null,
-            self::select("paymentStatus", $value['paymentStatus'] ?? null, [
-                "PaymentDue" => _("Payment due"),
-                "PaymentComplete" => _("Payment complete"),
-                "PaymentPastDue" => _("Payment past due"),
-                "PaymentDeclined" => _("Payment declined"),
-                "PaymentAutomaticallyApplied" => _("Payment automatically applied")
-            ])
-        ]];
-
-        // submit
-        $content[] = self::submitButtonSend();
-        $content[] = $case == "edit" ? self::submitButtonDelete("/admin/invoice/erase") : null;
-
-        return [ "tag" => "form", "attributes" => [ "id" => "form-payments-".$idinvoice, "name" => "form-payments", "action" => "/admin/invoice/".$case, "method" => "post", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);" ], "content" => $content ];
+        $form->fieldsetWithSelect("paymentStatus",$value['paymentStatus'] ?? null, [
+            "PaymentDue" => _("Payment due"),
+            "PaymentComplete" => _("Payment complete"),
+            "PaymentPastDue" => _("Payment past due"),
+            "PaymentDeclined" => _("Payment declined"),
+            "PaymentAutomaticallyApplied" => _("Payment automatically applied")
+        ], $case == "new" ? _("Status") : null);
+        // SUBMIT
+        $form->submitButtonSend();
+        if ($case == "edit") $form->submitButtonDelete("/admin/invoice/erase");
+        // READY
+        return $form->ready();
     }
 
     /**
@@ -191,7 +176,7 @@ abstract class InvoiceAbstract
             ->closeRow();
 
         // READY
-        return $table->ready();
+        return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=>$table->ready()];
     }
 
     /**

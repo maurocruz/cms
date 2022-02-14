@@ -19,6 +19,27 @@ interface ListTableInterface
     public function labels(string ...$label): ListTable;
 
     /**
+     * @param ...$list
+     * @return ListTableInterface
+     */
+    public function addRow(... $list): ListTableInterface;
+
+    /**
+     * @param string $path
+     * @return ListTableInterface
+     */
+    public function buttonEdit(string $path): ListTableInterface;
+
+    /**
+     * @param string $idIsPartOf
+     * @param string $tableIsPartOf
+     * @param string|null $idHasPart
+     * @param string|null $tableHasPart
+     * @return ListTableInterface
+     */
+    public function buttonDelete(string $idIsPartOf, string $tableIsPartOf, string $idHasPart = null, string $tableHasPart = null): ListTableInterface;
+
+    /**
      * @param array $itemListElement
      * @param array $properties
      * @return ListTable

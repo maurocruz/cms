@@ -1,12 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\ServerAbstract;
 
-class OrderServer extends ServerAbstract {
-
-    public function new($params): string {
+class OrderServer extends ServerAbstract
+{
+    /**
+     * @param $params
+     * @return string
+     */
+    public function new($params): string
+    {
         $seller = $params['seller'];
         $sellerType = $params['sellerType'];
         // insert new order
@@ -21,7 +29,12 @@ class OrderServer extends ServerAbstract {
         return parent::response($data, $redirect);
     }
 
-    public function edit($params) {
+    /**
+     * @param $params
+     * @return mixed|void
+     */
+    public function edit($params)
+    {
         // HISTORY
         $dataOld = Api::get('order', [ "id" => $params['id'] ]);
         parent::setHistoryUpdateWithDifference('order', $params['id'], $dataOld[0], $params);
@@ -29,11 +42,18 @@ class OrderServer extends ServerAbstract {
         return parent::response(Api::put('order',$params));
     }
 
-    public function erase($params) {
-        $idorder = $params['id'];
+    /**
+     * @param $params
+     * @return string
+     */
+    public function erase($params): string
+    {
+        $idorder = $params['id'] ?? $params['idIsPartOf'] ?? $params['idorder'];
+        Api::delete('order', [ "idorder" => $idorder ]);
+
         $tableHasPart = $params['tableHasPart'] ?? lcfirst($params['sellerType']);
-        $idHaspart = $params['seller'];
-        $redirect = "/admin/$tableHasPart/order?id=$idHaspart";
-        return parent::response(Api::delete('order', [ "id" => $idorder ]), $redirect);
+        $idHasPart = $params['idHasPart'] ?? $params['seller'];
+
+        return "/admin/$tableHasPart/order?id=$idHasPart";
     }
 }

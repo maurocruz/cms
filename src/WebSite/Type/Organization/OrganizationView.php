@@ -7,7 +7,6 @@ namespace Plinct\Cms\WebSite\Type\Organization;
 use Exception;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\Service\ServiceView;
-use Plinct\Cms\WebSite\Type\Structure\Main\MainView;
 use Plinct\Cms\WebSite\Type\Intangible\ContactPointView;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\Order\OrderView;

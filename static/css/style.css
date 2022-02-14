@@ -260,6 +260,8 @@ a.white {
   color: white;
 }
 
+/** BUTTONS
+======================================================================= */
 .button {
   margin: 5px;
   padding: 5px;
@@ -270,6 +272,19 @@ a.white {
   text-decoration: none;
   color: #222;
   cursor: pointer;
+}
+
+.icon-delete {
+  font-size: 3em;
+  color: #e61919;
+}
+
+.button-submit {
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  font-size: 1.2em;
 }
 
 /* COMPONENT _ form padrao
@@ -864,6 +879,12 @@ a.white {
 
 /* INVOICE
 ====================================================== */
+.form-invoice fieldset:nth-of-type(1) {
+  width: calc(50% - 18px);
+}
+.form-invoice fieldset:nth-of-type(4) {
+  width: calc(50% - 50px);
+}
 .form-invoice span {
   display: inline-block;
   width: 18px;
@@ -873,11 +894,21 @@ a.white {
 .form-invoice input {
   width: 100%;
 }
-.form-invoice fieldset:nth-of-type(1) {
-  width: calc(100% - 18px);
+.form-invoice button {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  height: fit-content;
+  align-self: end;
+  cursor: pointer;
 }
-.form-invoice fieldset:nth-of-type(4) {
-  width: calc(100% - 67px);
+.form-invoice button .form-submit-button-send {
+  color: #84f7ba;
+  height: 22px;
+}
+.form-invoice button .icon-delete {
+  color: #cc0000;
+  font-size: 1.7em;
 }
 
 /* LOCALBUSINESS
@@ -955,6 +986,10 @@ a.white {
   .form-order fieldset:nth-of-type(5) {
     width: calc(50% - 80px);
   }
+}
+
+.form-orderedItem-delete-button button svg {
+  font-size: 1.3em;
 }
 
 /* PERSON
@@ -1380,6 +1415,22 @@ table .table-delete-button {
   }
   .form-offer fieldset:nth-of-type(3) {
     width: calc(26% - 80px);
+  }
+}
+@media print {
+  .admin-bar-top {
+    display: none;
+  }
+
+  .menu {
+    display: none;
+  }
+
+  table {
+    border: 1px black solid;
+  }
+  table thead {
+    background-color: #5C5C5C;
   }
 }
 

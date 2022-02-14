@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\OrderItem;
 
-use Plinct\Cms\View\Widget\FormElementsTrait;
+use App\Tools\ToolBox;
+use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
@@ -51,7 +52,6 @@ abstract class OrderItemAbstract
      */
     protected static float $TOTAL_BILL = 0;
 
-    use FormElementsTrait;
 
     /**
      * @param $data
@@ -60,6 +60,7 @@ abstract class OrderItemAbstract
     protected function listOrderedItems($data): array
     {
         $idHasPart = ArrayTool::searchByValue($data['identifier'],"id","value");
+        $tableHasPart = lcfirst($data['@type']);
         $sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
         $sellerType = $data['sellerType'];
         $discount = (float)$data['discount'];
@@ -70,6 +71,7 @@ abstract class OrderItemAbstract
         $totalBill = 0;
 
         // TABLE
+
         $table = new Table(['class'=>'table-orderedItems']);
 
         // HEADERS
@@ -99,7 +101,7 @@ abstract class OrderItemAbstract
                     ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-                    ->bodyCell(self::deleteButton($value['idorderItem'],$idHasPart,$name))
+                    ->bodyCell(Fragment::button()->buttonDelete($value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
                     ->closeRow();
 
                 $quantityTotal += $orderQuantity;
@@ -109,18 +111,18 @@ abstract class OrderItemAbstract
             self::$TOTAL_BILL = $totalBill;
 
         } else {
-            $table->bodyCell(_("No items founded!"), [ "colspan" => "7", "style" => "text-align: center;" ])->closeRow();
+            $table->bodyCell(_("No items found!"), [ "colspan" => "7", "style" => "text-align: center;" ])->closeRow();
         }
 
         // FOOTER
-        $table->foot(sprintf(_("%s Items"), "$numberOfItems"), [ "colspan" => "2" ])
+        $table->foot(sprintf(_("%s items"), "$numberOfItems"), [ "colspan" => "2" ])
             ->foot()
             ->foot((string)$quantityTotal)
             ->foot(sprintf(_("Discount: %s"), number_format($discount,2,',','.')))
             ->foot(number_format(self::$TOTAL_BILL,2,',','.'), [ "style" => "text-align: right;" ])
             ->foot();
 
-        return $table->ready();
+        return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=> $table->ready() ];
     }
 
     /**
@@ -129,24 +131,21 @@ abstract class OrderItemAbstract
      */
     protected function listSellerOfferedItems($sellerHasOfferCatalog): array
     {
-        // NUMBER OF ITEMS
-        $content[] = [ "tag" => "p", "content" => sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) ];
+        $form = Fragment::form(['class'=>'formPadrao']);
+        $form->action("/admin/orderItem/new")->method("post");
+        // number of items
+        $form->content("<p>" . sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) . "</p>");
 
-        // TABLE
         $table = new Table();
-
-        // TABLE HEAD
         $table->head(_("Select"), [ "style" => "width: 45px;"])
             ->headers([ _("Name"), _("Type") ])
             ->head(_("Price"), [ "style" => "width: 150px;"])
             ->head(_("Elegible duration"))
-            ->head(_("Quantity"), [ "style" => "width: 100px;"]);
+            ->head(_("Quantity"), [ "style" => "width: 80px;"]);
 
-        // TABLE BODY
         foreach ($sellerHasOfferCatalog['itemListElement'] as $key => $value) {
-            // VARS
             $item = $value['item'];
-            $id = ArrayTool::searchByValue($item['itemOffered']['identifier'], "id")['value'];
+            $id = ToolBox::searchByValue($item['itemOffered']['identifier'], "id")['value'];
             $name = $item['itemOffered']['name'];
             $type = $item['itemOffered']['@type'];
             $price = $item['priceCurrency'] . " " . number_format((float)$item['price'],2,',','.');
@@ -154,46 +153,26 @@ abstract class OrderItemAbstract
             $hrefItem = sprintf("/admin/%s/%s?id=%s&item=%s", lcfirst($this->sellerType), lcfirst($type), $this->sellerId, $id);
 
             // REFERENCE ORDER
-            $content[] = self::input("items[$key][referencesOrder]", "hidden", (string) $this->referencesOrder);
-
+            $form->input("items[$key][referencesOrder]", (string) $this->referencesOrder, "hidden");
             // OFFER
-            $content[] = self::input("items[$key][offer]", "hidden", $item['idoffer']);
-
+            $form->input("items[$key][offer]", $item['idoffer'], "hidden");
             // OFFERED ITEM TYPE
-            $content[] = self::input("items[$key][orderedItemType]", "hidden", $type );
+            $form->input("items[$key][orderedItemType]", $type, "hidden");
 
             // TABLE ROW
-            $table->bodyCell(self::checkbox("items[$key][orderedItem]", $id), [ "style" => "text-align: center;"])
+            $table->bodyCell("<input name='items[$key][orderedItem]' type='checkbox' value='$id' >", [ "style" => "text-align: center;"])
                 ->bodyCell($name, null, $hrefItem)
                 ->bodyCell(_($type))
                 ->bodyCell($price, ["style"=>"text-align: right;"])
                 ->bodyCell($elegibleDuration)
-                ->bodyCell(self::input("items[$key][orderQuantity]", "number", "1", [ "min" => "1" ]), [ "style" => "width: 80px;"])
+                ->bodyCell("<input name='items[$key][orderQuantity]' type='number' value='1' min='1' style='width: 80px;'>")
                 ->closeRow();
         }
 
-        $content[] = $table->ready();
+        $form->content($table->ready());
 
-        // SEND BUTTON
-        $content[] = self::submitButtonSend();
+        $form->submitButtonSend();
 
-        return self::form("/admin/orderItem/new", $content);
-    }
-
-    /**
-     * @param $idorderItem
-     * @param $idHasPart
-     * @param $name
-     * @return array
-     */
-    private static function deleteButton($idorderItem, $idHasPart,$name): array
-    {
-        return [ "tag" => "form", "attributes" => [ "style" => "background-color: inherit; text-align: center;", "method" => "post" ], "content" => [
-                self::input("tableHasPart","hidden","order"),
-                self::input("idHasPart","hidden",$idHasPart),
-                self::input("id","hidden", $idorderItem),
-                self::input("orderItemName","hidden", $name),
-                self::submitButtonDelete("/admin/orderItem/erase", [ "style" => "width: 25px;"])
-            ]];
+        return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=> $form->ready() ];
     }
 }

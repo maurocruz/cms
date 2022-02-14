@@ -158,11 +158,11 @@ abstract class OrderAbstract
         $string = "<p class='period-paragraph'>" . sprintf(_('Showing %s'), $text);
 
         if ($period != 'last2years') {
-            $string .= " <a href='$uri&period=last2years'>" . sprintf(_("Show last %s year"),'2') . "</a>";
+            $string .= " <a href='$uri&period=last2years'>" . sprintf(_("Show last %s years"),'2') . "</a>";
         }
 
         if ($period != 'last5years') {
-            $string .= " <a href='$uri&period=last5years'>" . sprintf(_("Show last %s year"),'5') . "</a>";
+            $string .= " <a href='$uri&period=last5years'>" . sprintf(_("Show last %s years"),'5') . "</a>";
         }
 
         if($period != 'all') {

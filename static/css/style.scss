@@ -93,3 +93,18 @@
     fieldset:nth-of-type(3) { width: calc(26% - 80px); }
   }
 }
+
+@media print {
+  .admin-bar-top {
+    display: none;
+  }
+  .menu {
+    display: none;
+  }
+  table {
+    thead {
+      background-color: #5C5C5C;
+    }
+    border: 1px black solid;
+  }
+}

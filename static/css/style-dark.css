@@ -20,7 +20,7 @@ a { color: #979797; }
 .menu5 { background-color: #2a2a2a; }
 .menu6 { background-color: #2a2a2a; }
 
-form { background-color: #979797; }
+form { }
 form input[type=text] { background-color: #ccc; }
 form input[type=date] { background-color: #ccc; }
 form input[type=number] { background-color: #ccc; }
@@ -53,7 +53,6 @@ table tbody tr:nth-child(even) {
 
 .button-dropdown-contracted::after { border-top-color: #777; }
 .button-dropdown-expanded::after { border-bottom-color: #777; }
-
 
 .form-table { background-color: transparent; }
 .form-table fieldset legend { background-color: rgba(255,255,255,0.08);  }

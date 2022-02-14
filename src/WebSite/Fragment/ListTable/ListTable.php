@@ -1,11 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Fragment\ListTable;
 
 // TODO fazer link para ordenar listagem pelo rótulo de coluna
-
-// TODO fazer botão excluir
 
 class ListTable extends ListTableAbstract implements ListTableInterface
 {
@@ -38,6 +37,32 @@ class ListTable extends ListTableAbstract implements ListTableInterface
     }
 
     /**
+     * @param ...$list
+     * @return ListTableInterface
+     */
+    public function addRow(...$list): ListTableInterface
+    {
+        $this->rows[] = func_get_args();
+        return $this;
+    }
+
+    public function buttonEdit(string $path): ListTableInterface
+    {
+        $this->buttonEdit[] = $path;
+        return $this;
+    }
+
+    public function buttonDelete(string $idIsPartOf, string $tableIsPartOf, string $idHasPart = null, string $tableHasPart = null): ListTableInterface
+    {
+        $this->idIsPartOf = $idIsPartOf;
+        $this->tableIsPartOf = $tableIsPartOf;
+        $this->idHasPart = $idHasPart;
+        $this->tableHasPart = $tableHasPart;
+        $this->buttonDelete = true;
+        return $this;
+    }
+
+    /**
      * @param array $itemListElement
      * @param array $properties
      * @return ListTable
@@ -45,7 +70,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
     public function rows(array $itemListElement, array $properties): ListTable
     {
         $this->properties = $properties;
-        $this->rows = $itemListElement;
+        $this->itemListElement = $itemListElement;
         return $this;
     }
 
@@ -65,15 +90,12 @@ class ListTable extends ListTableAbstract implements ListTableInterface
      */
     public function ready(): array
     {
-        // CAPTION
-        $this->buildCaption();
-
         // LABELS COLUMNS
         $this->buildLabels();
-
         // ROWS
         $this->buildRows();
-
+        // CAPTION
+        $this->buildCaption();
         // READY
         return $this->table->ready();
     }

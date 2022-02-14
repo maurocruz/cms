@@ -441,6 +441,9 @@
 /* INVOICE
 ====================================================== */
 .form-invoice {
+  fieldset:nth-of-type(1) { width: calc(50% - 18px); }
+  fieldset:nth-of-type(4) { width: calc(50% - 50px); }
+
   span {
     display: inline-block;
     width: 18px;
@@ -450,8 +453,23 @@
   input {
     width: 100%;
   }
-  fieldset:nth-of-type(1) { width: calc(100% - 18px); }
-  fieldset:nth-of-type(4) { width: calc(100% - 67px); }
+  button {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    height: fit-content;
+    align-self: end;
+    cursor: pointer;
+
+    .form-submit-button-send {
+      color: #84f7ba;
+      height: 22px;
+    }
+    .icon-delete {
+      color: #cc0000;
+      font-size: 1.7em;
+    }
+  }
 }
 
 /* LOCALBUSINESS
@@ -507,6 +525,14 @@
   @media (min-width: 576px) {
       fieldset:nth-of-type(3) { width: calc(50% - 80px); }
       fieldset:nth-of-type(5) { width: calc(50% - 80px); }
+  }
+}
+
+.form-orderedItem-delete-button {
+  button {
+    svg {
+      font-size: 1.3em;
+    }
   }
 }
 
