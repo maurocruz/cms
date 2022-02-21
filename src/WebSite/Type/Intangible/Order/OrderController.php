@@ -176,7 +176,7 @@ class OrderController
                 }
             }
 
-            return [ "numberOfItems" => count($dataOrder), "itemListElement" => $dataOrder ];
+            return [ "numberOfItems" => $dataOrder ? count($dataOrder) : '0', "itemListElement" => $dataOrder ];
 
         } else {
             return [ "numberOfItems" => '0', "itemListElement" => null ];

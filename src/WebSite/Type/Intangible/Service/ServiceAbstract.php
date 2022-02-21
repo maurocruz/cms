@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\WebSite\Fragment\Fragment;
-use Plinct\Cms\View\Widget\FormElementsTrait;
 use Plinct\Tool\ArrayTool;
 
 abstract class ServiceAbstract
 {
-    use FormElementsTrait;
-
     /**
      * @var string
      */

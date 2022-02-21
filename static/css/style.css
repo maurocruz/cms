@@ -365,7 +365,6 @@ a.white {
   overflow: hidden;
   height: 50px;
   width: 50px;
-  margin-left: 5px;
   vertical-align: middle;
   cursor: pointer;
   background-color: transparent;
@@ -938,6 +937,34 @@ a.white {
 .form-offer fieldset {
   width: 50%;
 }
+@media (min-width: 576px) {
+  .form-offer fieldset {
+    width: 25%;
+  }
+}
+@media (min-width: 768px) {
+  .form-offer fieldset {
+    width: 14%;
+  }
+  .form-offer fieldset:nth-of-type(2) {
+    width: 50px;
+  }
+  .form-offer fieldset:nth-of-type(3) {
+    width: calc(24% - 50px);
+  }
+}
+@media (min-width: 1024px) {
+  .form-offer fieldset {
+    width: 16%;
+  }
+  .form-offer fieldset:nth-of-type(2) {
+    width: 80px;
+  }
+  .form-offer fieldset:nth-of-type(3) {
+    width: calc(26% - 80px);
+  }
+}
+
 /* ORGANIZATION
 ====================================================== */
 .form-organization {
@@ -1341,10 +1368,6 @@ table .table-delete-button {
   .form-invoice fieldset:nth-of-type(4) {
     width: 130px;
   }
-
-  .form-offer fieldset {
-    width: 25%;
-  }
 }
 @media (min-width: 768px) {
   .form-postalAddress fieldset:nth-of-type(1) {
@@ -1371,16 +1394,6 @@ table .table-delete-button {
   }
   .form-trip fieldset:nth-of-type(7) {
     width: 25%;
-  }
-
-  .form-offer fieldset {
-    width: 14%;
-  }
-  .form-offer fieldset:nth-of-type(2) {
-    width: 50px;
-  }
-  .form-offer fieldset:nth-of-type(3) {
-    width: calc(24% - 50px);
   }
 }
 @media (min-width: 992px) {
@@ -1409,16 +1422,6 @@ table .table-delete-button {
   }
   .form-postalAddress fieldset:nth-of-type(5) {
     width: 15%;
-  }
-
-  .form-offer fieldset {
-    width: 16%;
-  }
-  .form-offer fieldset:nth-of-type(2) {
-    width: 80px;
-  }
-  .form-offer fieldset:nth-of-type(3) {
-    width: calc(26% - 80px);
   }
 }
 @media print {

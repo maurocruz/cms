@@ -91,7 +91,6 @@
     overflow: hidden;
     height: 50px;
     width: 50px;
-    margin-left: 5px;
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
@@ -494,10 +493,21 @@
     width: 50%;
   }
   @media (min-width: 576px) {
-
+    fieldset {
+      width: 25%;
+    }
   }
   @media (min-width: 768px) {
-
+    fieldset {
+      width: 14%;
+    }
+    fieldset:nth-of-type(2) { width: 50px; }
+    fieldset:nth-of-type(3) { width: calc(24% - 50px); }
+  }
+  @media (min-width: 1024px) {
+    fieldset { width: 16%; }
+    fieldset:nth-of-type(2) { width: 80px; }
+    fieldset:nth-of-type(3) { width: calc(26% - 80px); }
   }
 }
 

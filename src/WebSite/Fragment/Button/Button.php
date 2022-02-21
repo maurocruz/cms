@@ -19,7 +19,7 @@ class Button
     public function buttonDelete(string $idIsPartOf, string $tableISPartOf, string $idHasPart = null, string $tableHasPart = null, array $attributes = null): array
     {
         $form = Fragment::form($attributes);
-        $form->action('/admin/$tableISPartOf/erase')->method('post');
+        $form->action("/admin/$tableISPartOf/erase")->method('post');
         $form->input('idIsPartOf', $idIsPartOf, 'hidden')
             ->input('tableIsPartOf', $tableISPartOf, 'hidden')
             ->input('idHasPart', $idHasPart, 'hidden')

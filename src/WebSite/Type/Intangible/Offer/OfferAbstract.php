@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Offer;
 
-use Plinct\Cms\View\Widget\FormElementsTrait;
-
 abstract class OfferAbstract
 {
     /**
@@ -24,8 +22,6 @@ abstract class OfferAbstract
      * @var array
      */
     protected array $offeredBy;
-
-    use FormElementsTrait;
 
     /**
      * @param array $data

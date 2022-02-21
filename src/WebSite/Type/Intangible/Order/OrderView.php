@@ -41,22 +41,24 @@ class OrderView extends OrderAbstract
                 ->labels("ID", _("Customer"), _("Seller"), _("Ordered items"), _("Order status"), _("Order date"))
                 ->setProperties(['idorder','customer','seller','orderedItem','orderStatus','orderDate']);
 
-            foreach ($orders['itemListElement'] as $orderItem) {
-                $item = $orderItem['item'];
-                $idIsPartOf = $item['idorder'];
-                $tableIsPartOf = "order";
-                $idHasPart = ToolBox::searchByValue($item['seller']['identifier'],'id','value');
-                $tableHasPart = lcfirst($item['seller']['@type']);
-                $orderedItems = [];
-                if (isset($item['orderedItem'])) {
-                    foreach ($item['orderedItem'] as $orderedItem) {
-                        $orderedItems[] = $orderedItem['orderedItem']['name'];
+            if ($orders['numberOfItems'] != '0') {
+                foreach ($orders['itemListElement'] as $orderItem) {
+                    $item = $orderItem['item'];
+                    $idIsPartOf = $item['idorder'];
+                    $tableIsPartOf = "order";
+                    $idHasPart = ToolBox::searchByValue($item['seller']['identifier'], 'id', 'value');
+                    $tableHasPart = lcfirst($item['seller']['@type']);
+                    $orderedItems = [];
+                    if (isset($item['orderedItem'])) {
+                        foreach ($item['orderedItem'] as $orderedItem) {
+                            $orderedItems[] = $orderedItem['orderedItem']['name'];
+                        }
                     }
+                    $table->addRow($item['idorder'], $item['customer']['name'], $item['seller']['name'], implode("; ", $orderedItems), $item['orderStatus'], $item['orderDate'])
+                        ->buttonEdit("/admin/organization/order?id=$idSeller&item={$item['idorder']}")
+                        ->buttonDelete($idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
+                    unset($orderedItems);
                 }
-                $table->addRow($item['idorder'], $item['customer']['name'], $item['seller']['name'], implode("; ",$orderedItems), $item['orderStatus'], $item['orderDate'])
-                    ->buttonEdit("/admin/organization/order?id=$idSeller&item={$item['idorder']}")
-                    ->buttonDelete($idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
-                unset($orderedItems);
             }
 
             // ready
