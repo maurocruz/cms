@@ -63,7 +63,7 @@ class PersonView extends PersonViewAbstract
             // ADDRESS
             View::main(Fragment::box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("person", $this->id, $value['address'])));
             // IMAGE
-            View::main(Fragment::box()->expandingBox(_("Image"), (new ImageObjectView())->getForm("Person", $this->id, $value['image'])));
+            View::main(Fragment::box()->expandingBox(_("Image"), (new ImageObjectView())->getForm("Person", (int) $this->id, $value['image'])));
 
         } else {
             $this->navbarPerson();
