@@ -69,6 +69,8 @@ class PlaceView implements TypeViewInterface
         $this->placeId = isset($value) ? (int)ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
         // NAVBAR
         $this->navbarPlace($value['name']);
+        // WARNINGS
+        if (!$value['address']) View::main(Fragment::miscellaneous()->message(_("Is important that you define place 'address'"),['class'=>'warning']));
         //place
         $place[] = self::formPlace(null, null, 'edit', $value);
         // address
