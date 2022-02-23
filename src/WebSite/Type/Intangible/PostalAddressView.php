@@ -17,17 +17,17 @@ class PostalAddressView
      */
     public function getForm($tableHasPart, $idHasPart, $value): array
     {
-        return self::formPostalAddress($tableHasPart, $idHasPart, $value ? 'edit' : 'new', $value);
+        return self::formPostalAddress($tableHasPart, (string) $idHasPart, $value ? 'edit' : 'new', $value);
     }
 
     /**
      * @param string $tableHasPart
-     * @param $idHasPart
+     * @param string $idHasPart
      * @param string $case
-     * @param $value
+     * @param null $value
      * @return array
      */
-    static private function formPostalAddress(string $tableHasPart, $idHasPart, string $case = 'new', $value = null): array
+    static private function formPostalAddress(string $tableHasPart, string $idHasPart, string $case = 'new', $value = null): array
     {
         $form = Fragment::form(["class" => "formPadrao form-postalAddress"])->action("/admin/postalAddress/$case")->method("post");
         // hiddens
