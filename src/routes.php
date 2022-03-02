@@ -50,6 +50,61 @@ return function (Route $route)
         $authRoutes($route);
 
         /**
+         * ENCLAVE
+         */
+        $route->group('/{controller:closure|enclave}', function (Route $route)
+        {
+            $route->get('/{className}', function (Request $request, Response $response, $args)
+            {
+                $queryParams = $request->getQueryParams();
+                $ns = $queryParams['ns'] ?? "";
+                $className = $args['className'];
+                $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
+
+                WebSite::enclave()->get($classNameSpace, $queryParams);
+
+                $response->getBody()->write(WebSite::ready());
+                return $response;
+
+            });
+
+            $route->post('/{className}', function(Request $request, Response $response, $args)
+            {
+                $parseBody = $request->getParsedBody();
+
+                $queryParams = $request->getQueryParams();
+                $ns = $queryParams['ns'] ?? "";
+                $action = $queryParams['action'] ?? null;
+                $className = $args['className'];
+                $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
+
+                switch ($action) {
+                    case 'edit':
+                        $returns = Server::enclave()->post($classNameSpace, $parseBody);
+                        break;
+                    case 'new':
+                    case 'add':
+                        $returns = Server::enclave()->put($classNameSpace, $parseBody);
+                        break;
+                    case 'delete':
+                        $returns = Server::enclave()->delete($classNameSpace, $parseBody);
+                        break;
+                    default:
+                        $returns = Fragment::noContent(_("Action not recognized"));
+                }
+                if (is_array($returns)) {
+                    WebSite::addMain($returns);
+                    $response->getBody()->write(WebSite::ready());
+                    return $response;
+                } elseif (is_string($returns)) {
+                    return $response->withHeader('Location', $returns)->withStatus(301);
+                } else {
+                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+                }
+            });
+        })->addMiddleware(new AuthenticationMiddleware());
+
+        /**
          * DEFAULT
          */
         $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
@@ -61,7 +116,6 @@ return function (Route $route)
             }
 
             $response->getBody()->write(WebSite::ready());
-
             return $response;
 
         })->addMiddleware(new AuthenticationMiddleware());
