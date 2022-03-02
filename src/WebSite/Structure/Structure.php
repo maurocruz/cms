@@ -25,12 +25,13 @@ class Structure
             <title>Plinct CMS [' . App::getTitle() . ']</title>';
     }
 
-    /**
-     * @return string
-     */
-    public static function userBar(): string
+  /**
+   * @param $userLogin
+   * @return string
+   */
+    public static function userBar($userLogin): string
     {
-        $helloText = sprintf(_("Hello, %s. You logged with %s!"), $_SESSION['userLogin']['name'], $_SESSION['userLogin']['admin'] ? "admin" : "user");
+        $helloText = sprintf(_("Hello, %s. You logged with %s!"), $userLogin['name'], $userLogin['admin'] ? "admin" : "user");
         return "<div class='admin admin-bar-top'>
                 <p>$helloText</p>
                 <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
@@ -61,9 +62,9 @@ class Structure
                     $link = $key;
                     $text = ucfirst($value);
                 }
-                // if closure
+                // if enclave
                 elseif (is_object($value)) {
-                    $link = "/admin/closure/" . $value->getMenuPath();
+                    $link = "/admin/enclave/" . $value->getMenuPath();
                     $text = ucfirst($value->getMenuText());
                     $attributes['style'] = "background-color: #574141;";
                 }

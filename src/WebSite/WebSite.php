@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite;
 
 use Plinct\Cms\App;
+use Plinct\Cms\Enclave\Enclave;
 use Plinct\Cms\WebSite\Type\Controller;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Cms\WebSite\Structure\Structure;
@@ -30,6 +31,13 @@ class WebSite extends WebSiteAbstract
         parent::addHeader(Structure::header());
         // FOOTER
         parent::addFooter(Structure::footer());
+
+        // HEADER ELEMENTS
+        $userLogin = $_SESSION['userLogin'] ?? null;
+        if ($userLogin) {
+            parent::addHeader(Structure::userBar($userLogin), true);
+        }
+        parent::addHeader(Structure::mainMenu());
     }
 
     /**
@@ -46,29 +54,13 @@ class WebSite extends WebSiteAbstract
      */
     public static function getContent(array $params = null, array $queryStrings = null)
     {
-        // HEADER ELEMENTS
-        parent::addHeader(Structure::userBar(), true);
-        parent::addHeader(Structure::mainMenu());
-
-
         $type = $queryStrings['type'] ?? $params['type'] ?? null;
         $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
         $id = $queryStrings['id'] ?? $params['id'] ?? null;
 
         if($id && $methodName == 'index') $methodName = 'edit';
 
-        if ($type == 'closure') {
-            $ns = $queryStrings['ns'] ?? "";
-            $className = "\\" . base64_decode($ns) . "\\" . $methodName;
-            if (class_exists($className)) {
-                $classObject = new $className();
-                if (method_exists($classObject, 'viewMain')) {
-                    View::contentHeader($classObject->navBar());
-                    View::main($classObject->viewMain());
-                }
-            }
-
-        } elseif ($type) {
+        if ($type) {
             $controller = new Controller();
             $data = $controller->getData($type, $methodName, $id, $queryStrings);
 
@@ -78,6 +70,11 @@ class WebSite extends WebSiteAbstract
         } else {
             parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
         }
+    }
+
+    public static function enclave(): Enclave
+    {
+        return new Enclave();
     }
 
     /**
