@@ -67,30 +67,36 @@ class Server
      */
     public function erase($type, $params): string
     {
-        $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+      $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
 
-        if (class_exists($classTypeServer)) {
-            $objectType = new $classTypeServer();
-            if (method_exists($objectType,"erase")) {
-                return $objectType->erase($params);
-            }
+      if (class_exists($classTypeServer)) {
+        $objectType = new $classTypeServer();
+        if (method_exists($objectType,"erase")) {
+          return $objectType->erase($params);
         }
+      }
 
-        // API ACTION
-        if (isset($params['id'])) {
-            $params["id".lcfirst($type)] = $params['id'];
-            unset($params['id']);
-        }
+	    $id = $params['id'.lcfirst($type)] ?? $params['id'] ?? $params['idIsPartOf'] ?? null;
+			if ($id) {
+				$newParams["id" . lcfirst($type)] = $id;
+				if ($params['tableHasPart'] && $params['idHasPart']){
+					$newParams['tableHasPart'] = $params['tableHasPart'];
+					$newParams['idHasPart'] = $params['idHasPart'];
+					$newParams['tableIsPartOf'] = lcfirst($type);
+					$newParams['idIsPartOf'] = $id;
+				}
+				$response = Api::delete($type, $newParams);
+			} else {
+				$response = ['status'=>'fail','message'=>'No post id value for delete action'];
+			}
 
-        $response = Api::delete($type, $params);
-
-        // RESPONSE REDIRECT
-        if (isset($response['error'])) {
-            print_r([ "error" => [ "response" => $response ]]);
-            die("Error message: {$response['error']['message']}");
-        } else {
-            return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-        }
+      // RESPONSE REDIRECT
+      if (isset($response['error'])) {
+        print_r([ "error" => [ "response" => $response ]]);
+          die("Error message: {$response['error']['message']}");
+      } else {
+        return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+      }
     }
 
     /**
