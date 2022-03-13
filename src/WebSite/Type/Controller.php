@@ -25,7 +25,7 @@ class Controller
         unset($params['type']);
 
         $methodName = $methodName == 'index' && isset($id) ? 'edit' : $methodName;
-        if($id) $params['id'] = $id;
+        if($id) $params["id$type"] = $id;
         $controlClassName = __NAMESPACE__ . "\\" . ucfirst($type) . "\\" . ucfirst($type)."Controller";
 
         if (class_exists($controlClassName))  {
