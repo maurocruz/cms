@@ -69,30 +69,23 @@ class Api
         } else {
             // TOKEN
             $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-
             // URL FOR API
             $apiHostName = $apiHostName . $type . ($action == 'get' ?  "?" . http_build_query($params): null);
-
             // CURL
             $curlHandle = ToolBox::Curl()
                 ->setUrl($apiHostName)
                 ->returnWithJson();
-
             // LOCALHOST
             $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
             if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {
                 $curlHandle->connectWithLocalhost();
             }
-
             // METHOD
             if ($action !== 'get') $curlHandle->method($action)->authorizationBear($token)->params($params);
-
             // READY
             $ready = $curlHandle->ready();
-
             // JSON
             $json = json_decode($ready, true);
-
             // RETURN IF ERROR
             if (json_last_error() === 0) {
                 return $json;
@@ -113,7 +106,8 @@ class Api
     public static function login(string $email, string $password): ?array
     {
         if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-            return json_decode((new Curl(App::getApiHost()))->post("login", [ "email" => $email, "password" => $password ]), true);
+            $curl = ToolBox::Curl()->setUrl(App::getApiHost()."/auth/login")->method('post')->params([ "email" => $email, "password" => $password ])->returnWithJson();
+            return json_decode($curl->ready(), true);
         } else {
             return (new AuthController())->login([ "email" => $email, "password" => $password ]);
         }
@@ -153,9 +147,6 @@ class Api
         $params['urlToResetPassword'] = App::getUrlToResetPassword();
 
         $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
-
-        // for localhost
-        if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
 
         return $handleCurl->ready();
     }
