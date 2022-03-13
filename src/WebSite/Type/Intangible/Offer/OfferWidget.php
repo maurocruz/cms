@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Offer;
 
+use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Tool\ArrayTool;
 
 abstract class OfferWidget extends OfferAbstract
@@ -16,25 +17,25 @@ abstract class OfferWidget extends OfferAbstract
     {
         $case = $value ? "edit" : "new";
 
+        $form = Fragment::form(['class'=>'formPadrao form-offer']);
+        $form->action("/admin/offer/$case")->method('post');
+        // HIDDENS
         if ($this->tableHasPart && $this->idHasPart) {
-            $content[] = self::input("itemOffered", "hidden", (string)$this->idHasPart);
-            $content[] = self::input("itemOfferedType", "hidden", $this->tableHasPart);
-
+            $form->input("itemOffered", (string)$this->idHasPart, "hidden");
+            $form->input("itemOfferedType", $this->tableHasPart, "hidden");
         } else {
-            $content[] = self::fieldset(self::chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
+            $form->fieldset($form->chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
         }
-
-        $content[] = self::input("offeredBy", "hidden", ArrayTool::searchByValue($this->offeredBy['identifier'], "id")['value']);
-        $content[] = self::input("offeredByType", "hidden", $this->offeredBy['@type']);
-
         if ($value) {
             $id = ArrayTool::searchByValue($value['identifier'], 'id')['value'];
-            $content[] = self::input("id", "hidden", $id);
+            $form->input("id", $id, "hidden");
         }
-
-        $content[] = self::fieldsetWithInput(_("Price"), "price", $value['price'] ?? null, null, "number", [ "min" => 0, "step" => "any" ]);
-        $content[] = self::fieldsetWithInput(_("Price currency"), "priceCurrency", $value['priceCurrency'] ?? "R$", null, "text", [ "maxlength" => "2" ]);
-        $content[] = self::fieldsetWithSelect(_("Availability"), "availability", $value['availability'] ?? null, [
+        // PRICE
+        $form->fieldsetWithInput("price", $value['price'] ?? null, _("Price"), "number", null, [ "min" => 0, "step" => "any" ]);
+        // PRICE CURRENCY
+        $form->fieldsetWithInput("priceCurrency", $value['priceCurrency'] ?? "R$",_("Price currency"), "text", null, [ "maxlength" => "2" ]);
+        // AVAILABILITY
+        $form->fieldsetWithSelect("availability", $value['availability'] ?? null, [
             "Discontinued" => _("Discontinued"),
             "InStock" => _("In stock"),
             "InStoreOnly" => _("In store only"),
@@ -44,17 +45,17 @@ abstract class OfferWidget extends OfferAbstract
             "PreOrder" => _("Pre order"),
             "PreSale" => _("Pre sale"),
             "SoldOut" => _("Sould out")
-        ]);
+        ], _("Availability"));
         // VALID THROUGH
-        $content[] = self::fieldsetWithInput(_("Valid through"), "validThrough", $value['validThrough'] ?? null);
+        $form->fieldsetWithInput("validThrough", $value['validThrough'] ?? null, _("Valid through"));
         // ELEGIBLE QUANTITY
-        $content[] = self::fieldsetWithInput(_("Elegible quantity"), "elegibleQuantity", $value['elegibleQuantity'] ?? null);
+        $form->fieldsetWithInput("elegibleQuantity", $value['elegibleQuantity'] ?? null, _("Elegible quantity"));
         // ELEGIBLE DURATION
-        $content[] = self::fieldsetWithInput(_("Elegible duration"), "elegibleDuration", $value['elegibleDuration'] ?? null);
+        $form->fieldsetWithInput("elegibleDuration", $value['elegibleDuration'] ?? null, _("Elegible duration"));
         // SUBMIT
-        $content[] = self::submitButtonSend();
-        $content[] = $value ? self::submitButtonDelete("/admin/offer/erase") : null;
-
-        return self::form("/admin/offer/$case", $content,['class'=>'formPadrao form-offer']);
+        $form->submitButtonSend();
+        if ($value) $form->submitButtonDelete("/admin/offer/erase");
+        // READY
+        return $form->ready();
     }
 }

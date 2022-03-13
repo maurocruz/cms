@@ -75,7 +75,7 @@ class ContactPointView
         // OBS
         $form->fieldsetWithInput("obs", $value['obs'] ?? null, _("Obs"));
         // SUBMIT
-        $form->submitButtonDelete();
+        $form->submitButtonSend();
         if ($case == "edit") $form->submitButtonDelete("/admin/contactPoint/erase");
         // READY
         return $form->ready();

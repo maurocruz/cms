@@ -33,7 +33,7 @@ class InvoiceServer extends  ServerAbstract
         // REGISTER HISTORY IN ORDER REFERENCE
         $history = new HistoryServer('order', $params['referencesOrder']);
         // GET OLDER DATA
-        $data = Api::get('invoice', [ "id" => $params['id'] ]);
+        $data = Api::get('invoice', [ "idinvoice" => $params['idinvoice'] ]);
         // COMPARE NEW DATA
         $history->setSummaryByDifference($params, $data[0]);
         // REGISTER HISTORY
@@ -42,6 +42,10 @@ class InvoiceServer extends  ServerAbstract
         return parent::response(Api::put("invoice", $params));
     }
 
+    /**
+     * @param $params
+     * @return mixed|void
+     */
     public function erase($params)
     {
         // REGISTER HISTORY IN ORDER REFERENCE

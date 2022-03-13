@@ -28,7 +28,11 @@ class OfferView extends OfferWidget
     {
         $this->navbarOffer();
 
-        View::main(self::listAll($data, "offer", null, [ "price" => _("Price"), "validThrough" => _("Valid through"), "itemOffered:name" => _("Item offered"), "itemOfferedType" => _("Item offered type") ]));
+        $table = Fragment::listTable();
+        $table->caption(sprintf(_("List of %s"), _("offers")));
+        $table->labels(_("Price"), _("Valid through"), _("Item offered"), _("Item offered type"));
+        $table->rows($data['itemListElement'], ['price','validThrough','itemOffered:name','itemOfferedType']);
+        View::main($table->ready());
     }
 
     /**
@@ -65,7 +69,7 @@ class OfferView extends OfferWidget
     {
         $this->tableHasPart = lcfirst($data['@type']);
         $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-        View::main(self::divBoxExpanding(sprintf(_("Add new %s"), _("offer")), "offer", [ parent::formOffer() ]));
+        View::main(Fragment::box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer()));
     }
 
     /**

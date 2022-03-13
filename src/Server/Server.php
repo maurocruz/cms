@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Server;
 
+use Plinct\Cms\Enclave\Enclave;
+
 class Server
 {
     /**
@@ -110,5 +112,10 @@ class Server
     {
         Api::request($type,$action,$params);
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+    }
+
+    public static function enclave(): Enclave
+    {
+        return new Enclave();
     }
 }

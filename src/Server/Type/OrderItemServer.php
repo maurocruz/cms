@@ -1,12 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Server\Type;
 
 use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\ServerAbstract;
 
-class OrderItemServer extends ServerAbstract {
-
-    public function new(array $params) {
+class OrderItemServer extends ServerAbstract
+{
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public function new(array $params)
+    {
         $numberOfOrderedItems = 0;
         $itemsOrdered = null;
         foreach ($params['items'] as $value) {
@@ -23,12 +31,17 @@ class OrderItemServer extends ServerAbstract {
         return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
-    public function erase($params) {
+    /**
+     * @param $params
+     * @return mixed|void
+     */
+    public function erase($params)
+    {
         // HISTORY
         $history = new HistoryServer($params['tableHasPart'],$params['idHasPart']);
         $history->setSummary(sprintf("Deleted order item %s",$params['orderItemName']));
         $history->register("DELETE");
         // RESPONSE
-        return parent::response(Api::delete('orderItem',["id"=>$params['id']]));
+        return parent::response(Api::delete('orderItem',["idorderItem"=>$params['idIsPartOf']]));
     }
 }
