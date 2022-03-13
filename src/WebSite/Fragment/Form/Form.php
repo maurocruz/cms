@@ -89,7 +89,6 @@ class Form extends FormDecorator implements FormInterface
     public function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
         $table = lcfirst($tableIsPartOf);
-
         $this->form->attributes(["class" => "formPadrao form-relationship"]);
         $this->form->action("/admin/$tableHasPart/edit")->method("post");
 
@@ -107,14 +106,15 @@ class Form extends FormDecorator implements FormInterface
         return $this->form->ready();
     }
 
-    /**
-     * @param $tableHasPart
-     * @param $idHasPart
-     * @param $tableIsPartOf
-     * @param $value
-     * @return array
-     */
-    public function relationshipOneToMany($tableHasPart, $idHasPart, $tableIsPartOf, $value = null): array
+	/**
+	 * @param string $tableHasPart
+	 * @param string $idHasPart
+	 * @param string $tableIsPartOf
+	 * @param array|null $value
+	 * @param string|null $orberBy
+	 * @return array
+	 */
+    public function relationshipOneToMany(string $tableHasPart, string $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
     {
         if ($value) {
             foreach ($value as $item) {
@@ -134,7 +134,7 @@ class Form extends FormDecorator implements FormInterface
         $this->form->action("/admin/" . lcfirst($tableIsPartOf) . "/new")->method("post");
         $this->form->input("tableHasPart", $tableHasPart, "hidden")
             ->input("idHasPart", $idHasPart, "hidden")
-            ->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => lcfirst($tableIsPartOf), "data-idHasPart" => $idHasPart  ] ]);
+            ->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => lcfirst($tableIsPartOf), "data-idHasPart" => $idHasPart, "data-orderBy" => $orberBy  ] ]);
 
         $return[] = $this->form->ready();
 
