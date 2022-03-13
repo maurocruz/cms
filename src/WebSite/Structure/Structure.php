@@ -14,7 +14,7 @@ class Structure
         return '
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width">
-            <link rel="shortcut icon" href="/portal/public/images/icons/favicon.ico" type="image/x-icon">
+            <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <link href="/admin/assets/css/reset" type="text/css" rel="stylesheet">
             <link href="/admin/assets/css/estilos" type="text/css" rel="stylesheet">
