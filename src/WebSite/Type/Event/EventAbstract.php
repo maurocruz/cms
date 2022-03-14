@@ -9,9 +9,9 @@ use Plinct\Cms\WebSite\Fragment\Fragment;
 abstract class EventAbstract
 {
     /**
-     * @var int|null
+     * @var ?string
      */
-    protected ?int $idEvent = null;
+    protected ?string $idevent = null;
 
     /**
      * @param string $case
@@ -20,19 +20,19 @@ abstract class EventAbstract
      */
     protected function formEvent(string $case = "new", array $value = null): array
     {
-        // VARS
-        $startDate = isset($value) ? strstr($value['startDate'], " ", true) : null;
-        $startTime = isset($value) ? substr(strstr($value['startDate'], " "), 1) : null;
-        $endDate = isset($value) ? strstr($value['endDate'], " ", true) : null;
-        $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
-        $description = isset($value['description']) ? stripslashes($value['description']) : null;
+      // VARS
+      $startDate = isset($value) ? strstr($value['startDate'], " ", true) : null;
+      $startTime = isset($value) ? substr(strstr($value['startDate'], " "), 1) : null;
+      $endDate = isset($value) ? strstr($value['endDate'], " ", true) : null;
+      $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
+      $description = isset($value['description']) ? stripslashes($value['description']) : null;
 
         // FROM
         $form = Fragment::form(["class"=>"formPadrao form-event"]);
         $form->action("/admin/event/$case")->method("post");
         $form->content("<h4>"._("Event")."</h4>");
         // HIDDENS
-        if ($case == "edit") $form->input('id', (string)$this->idEvent, 'hidden');
+        if ($case == "edit") $form->input('id', (string)$this->idevent, 'hidden');
         // TITLE
         $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
         // START DATE
@@ -49,7 +49,6 @@ abstract class EventAbstract
         // BUTTONS
         $form->submitButtonSend();
         if ($case == "edit") $form->submitButtonDelete("/admin/event/erase");
-
         // READY
         return $form->ready();
     }

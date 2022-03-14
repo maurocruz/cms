@@ -12,21 +12,40 @@ use Plinct\Tool\Sitemap;
 
 class EventController implements ControllerInterface
 {
-    public function index($params = null): array {
+	/**
+	 * @param $params
+	 * @return array
+	 */
+    public function index($params = null): array
+    {
         $params2 = array_merge([ "format" => "ItemList", "orderBy" => "startDate", "ordering" => "desc" ], $params);
         return Api::get("event", $params2);
     }
 
-    public function new($params = null): bool {
+	/**
+	 * @param $params
+	 * @return bool
+	 */
+    public function new($params = null): bool
+    {
         return true;
     }
 
-    public function edit(array $params): array {
-        $params= array_merge($params, [ "properties" => "*,location,image" ]);
-        return Api::get("event", $params);
+	/**
+	 * @param array $params
+	 * @return array
+	 */
+    public function edit(array $params): array
+    {
+      $params= array_merge($params, [ "properties" => "*,location,image,subEvent" ]);
+      return Api::get("event", $params);
     }
 
-    public function saveSitemap() {
+	/**
+	 * @return void
+	 */
+    public function saveSitemap()
+    {
         $dataSitemap = null;
         $params = [ "orderBy" => "startDate desc" ];
         $data = Api::get("event", $params);
