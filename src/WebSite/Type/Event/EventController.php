@@ -18,7 +18,7 @@ class EventController implements ControllerInterface
 	 */
     public function index($params = null): array
     {
-        $params2 = array_merge([ "format" => "ItemList", "orderBy" => "startDate", "ordering" => "desc" ], $params);
+        $params2 = array_merge([ "format" => "ItemList", "orderBy" => "dateModified desc, startDate desc"], $params);
         return Api::get("event", $params2);
     }
 
@@ -32,14 +32,14 @@ class EventController implements ControllerInterface
     }
 
 	/**
-	 * @param array $params
+   * @param array $params
 	 * @return array
-	 */
-    public function edit(array $params): array
-    {
-      $params= array_merge($params, [ "properties" => "*,location,image,subEvent" ]);
-      return Api::get("event", $params);
-    }
+  */
+  public function edit(array $params): array
+  {
+    $params = array_merge($params, [ "properties" => "*,location,image,superEvent,subEvent" ]);
+	  return Api::get("event", $params);
+  }
 
 	/**
 	 * @return void

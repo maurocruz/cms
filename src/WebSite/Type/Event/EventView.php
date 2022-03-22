@@ -67,10 +67,12 @@ class EventView extends EventAbstract
       View::main([ "tag" => "p", "content" => _("View on website"), "href" => "/eventos/". substr($value['startDate'], 0, 10)."/". urlencode($value['name']), "hrefAttributes" => [ "target" => "_blank" ] ]);
       // EVENT FORM
       View::main(Fragment::box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
+			// SUPER EVENTS
+      View::main(Fragment::box()->expandingBox(_("Super Event"), Fragment::form()->relationship("event", $this->idevent, "event")->oneToOne('superEvent', $value['superEvent'], 'startDate desc') ));
 			// SUB EVENTS
       View::main(Fragment::box()->expandingBox(_("Sub Events"), Fragment::form()->relationshipOneToMany("event", $this->idevent, 'event', $value['subEvent'], "idevent desc")));
       // PLACE
-      View::main(Fragment::box()->expandingBox(_("Place"), Fragment::form()->relationshipOneToOne("event", $this->idevent, "location", "place", $value['location'])));
+      View::main(Fragment::box()->expandingBox(_("Place"), Fragment::form()->relationship("event", $this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
       // IMAGE
       View::main(Fragment::box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("event", (int) $this->idevent, $value['image'])));
     }
