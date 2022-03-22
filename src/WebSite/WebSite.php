@@ -88,7 +88,7 @@ class WebSite extends WebSiteAbstract
         parent::$CONTENT['content'][] = self::$FOOTER;
         parent::$BODY['content'][] = self::$CONTENT;
 
-        parent::$BODY['content'][] = '<script>window.apiHost = "'.App::getApiHost().'/"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
+        parent::$BODY['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
         parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 
         parent::$HTML['content'][] = self::$HEAD;

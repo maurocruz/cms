@@ -31,7 +31,7 @@ class OrganizationController
      */
     public function edit(array $params, bool $allProperties = true): array
     {
-        $paramsGet['id'] = $params['id'] ?? null;
+        $paramsGet['idorganization'] = $params['idorganization'] ?? $params['id'] ?? null;
         if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member,image";
         return Api::get("organization", $paramsGet);
     }
