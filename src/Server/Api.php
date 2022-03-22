@@ -51,52 +51,58 @@ class Api
         return self::request($type, 'delete', $params);
     }
 
-    /**
-     * @param $type
-     * @param $action
-     * @param $params
-     * @return ?array
-     */
-    public static function request($type, $action, $params): ?array
-    {
-        $apiHostName = App::getApiHost();
+  /**
+   * @param $type
+   * @param $action
+   * @param $params
+   * @return ?array
+   */
+  public static function request($type, $action, $params): ?array
+  {
+    $apiHostName = App::getApiHost();
 
-        // IF SITE HOST === API HOST
-        if (App::getURL() == pathinfo($apiHostName)['dirname']) {
-            $classname = "Plinct\\Api\\Type\\".ucfirst($type);
-            return (new $classname())->{$action}($params);
+    // IF SITE HOST === API HOST
+    if (App::getURL() == pathinfo($apiHostName)['dirname']) {
+      $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+      return (new $classname())->{$action}($params);
 
-        } else {
-            // TOKEN
-            $token = filter_input(INPUT_COOKIE, "API_TOKEN");
-            // URL FOR API
-            $apiHostName = $apiHostName . $type . ($action == 'get' ?  "?" . http_build_query($params): null);
-            // CURL
-            $curlHandle = ToolBox::Curl()
-                ->setUrl($apiHostName)
-                ->returnWithJson();
-            // LOCALHOST
-            $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
-            if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {
-                $curlHandle->connectWithLocalhost();
-            }
-            // METHOD
-            if ($action !== 'get') $curlHandle->method($action)->authorizationBear($token)->params($params);
-            // READY
-            $ready = $curlHandle->ready();
-            // JSON
-            $json = json_decode($ready, true);
-            // RETURN IF ERROR
-            if (json_last_error() === 0) {
-                return $json;
-            } else {
-                return [
-                    "status" => "error",
-                    "message" => $ready
-                ];
-            }
-        }
+    } else {
+      // TOKEN
+      $token = filter_input(INPUT_COOKIE, "API_TOKEN");
+      // URL FOR API
+      $apiHostName = $apiHostName . $type . ($action == 'get' ?  "?" . http_build_query($params): null);
+      // CURL
+      $curlHandle = ToolBox::Curl()
+        ->setUrl($apiHostName)
+        ->method($action);
+      // METHOD
+			if ($action == 'put') {
+				$curlHandle->authorizationBear($token)->put($params);
+			} elseif ($action !== 'get') {
+				$curlHandle->authorizationBear($token)->params($params);
+			} else {
+				$curlHandle->returnWithJson();
+			}
+      // LOCALHOST
+      $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
+      if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {
+        $curlHandle->connectWithLocalhost();
+      }
+      // READY
+      $ready = $curlHandle->ready();
+      // JSON
+      $json = json_decode($ready, true);
+      // RETURN IF ERROR
+      if (json_last_error() === 0) {
+          return $json;
+      } else {
+          return [
+              "status" => "error",
+              "message" => $ready
+          ];
+      }
     }
+  }
 
     /**
      * @param string $email
