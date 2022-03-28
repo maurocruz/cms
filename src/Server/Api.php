@@ -104,20 +104,21 @@ class Api
     }
   }
 
-    /**
-     * @param string $email
-     * @param string $password
-     * @return array|null
-     */
-    public static function login(string $email, string $password): ?array
-    {
-        if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-            $curl = ToolBox::Curl()->setUrl(App::getApiHost()."/auth/login")->method('post')->params([ "email" => $email, "password" => $password ])->returnWithJson();
-            return json_decode($curl->ready(), true);
-        } else {
-            return (new AuthController())->login([ "email" => $email, "password" => $password ]);
-        }
-    }
+  /**
+   * @param string $email
+   * @param string $password
+   * @return array|null
+   */
+  public static function login(string $email, string $password): ?array
+  {
+	  if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+			$apiHost = substr(App::getApiHost(),-1) !== "/" ? App::getApiHost()."/" : App::getApiHost();
+	    $curl = ToolBox::Curl()->setUrl($apiHost."auth/login")->method('post')->params([ "email" => $email, "password" => $password ])->returnWithJson();
+	    return json_decode($curl->ready(), true);
+	  } else {
+	    return (new AuthController())->login([ "email" => $email, "password" => $password ]);
+	  }
+  }
 
     /**
      * @param $params
