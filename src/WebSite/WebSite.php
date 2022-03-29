@@ -37,7 +37,9 @@ class WebSite extends WebSiteAbstract
         if ($userLogin) {
             parent::addHeader(Structure::userBar($userLogin), true);
         }
-        parent::addHeader(Structure::mainMenu());
+        if (isset($_SESSION['userLogin']['admin'])) {
+					parent::addHeader(Structure::mainMenu());
+        }
     }
 
     /**

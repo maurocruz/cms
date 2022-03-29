@@ -18,174 +18,195 @@ use Plinct\Cms\Server\Sitemap;
 
 return function (Route $route)
 {
-    WebSite::create();
+  WebSite::create();
+
+  /**
+   * ASSETS
+   */
+  $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args)
+  {
+    $filename = $args['filename'];
+    $type = $args['type'];
+
+    $file = realpath(__DIR__ . "/../static/$type/$filename" .".".$type);
+    $script = file_get_contents($file);
+    $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
+
+    $newResponse = $response->withHeader("Content-type", $contentType);
+    $newResponse->getBody()->write($script);
+
+    return $newResponse;
+  });
+
+  /**
+   * ADMIN ROUTES
+   */
+  $route->group('/admin', function(Route $route)
+  {
+    /**
+     * AUTHENTICATION ROUTES
+     */
+    $authRoutes = require __DIR__ . '/Authentication/AuthRoutes.php';
+    $authRoutes($route);
 
     /**
-     * ASSETS
+     * ENCLAVE
      */
-    $route->get('/admin/assets/{type}/{filename}', function(Request $request, Response $response, array $args)
+    $route->group('/{controller:closure|enclave}', function (Route $route)
     {
-        $filename = $args['filename'];
-        $type = $args['type'];
+      $route->get('/{className}', function (Request $request, Response $response, $args)
+      {
+				// CHECK AUTHENTICATION
+				if (!isset($_SESSION['userLogin']['admin'])) {
+					WebSite::addMain(Fragment::auth()->login());
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				}
 
-        $file = realpath(__DIR__ . "/../static/$type/$filename" .".".$type);
-        $script = file_get_contents($file);
-        $contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
+        $queryParams = $request->getQueryParams();
+        $ns = $queryParams['ns'] ?? "";
+        $className = $args['className'];
+        $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
 
-        $newResponse = $response->withHeader("Content-type", $contentType);
-        $newResponse->getBody()->write($script);
+        WebSite::enclave()->get($classNameSpace, $queryParams);
 
-        return $newResponse;
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+
+      })->addMiddleware(new AuthenticationMiddleware());
+
+      $route->post('/{className}', function(Request $request, Response $response, $args)
+      {
+	      // CHECK AUTHENTICATION
+	      if (!isset($_SESSION['userLogin']['admin'])) {
+		      WebSite::addMain(Fragment::auth()->login());
+		      $response->getBody()->write(WebSite::ready());
+		      return $response;
+	      }
+
+        $parseBody = $request->getParsedBody();
+
+        $queryParams = $request->getQueryParams();
+        $ns = $queryParams['ns'] ?? "";
+        $action = $queryParams['action'] ?? null;
+        $className = $args['className'];
+        $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
+
+        switch ($action) {
+          case 'edit':
+            $returns = Server::enclave()->post($classNameSpace, $parseBody);
+            break;
+          case 'new':
+          case 'add':
+            $returns = Server::enclave()->put($classNameSpace, $parseBody);
+            break;
+          case 'delete':
+            $returns = Server::enclave()->delete($classNameSpace, $parseBody);
+            break;
+          default:
+            $returns = Fragment::noContent(_("Action not recognized"));
+        }
+        if (is_array($returns)) {
+          WebSite::addMain($returns);
+          $response->getBody()->write(WebSite::ready());
+          return $response;
+        } elseif (is_string($returns)) {
+          return $response->withHeader('Location', $returns)->withStatus(301);
+        } else {
+          return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
+        }
+      })->addMiddleware(new AuthenticationMiddleware());
     });
 
     /**
-     * ADMIN ROUTES
+     * DEFAULT
      */
-    $route->group('/admin', function(Route $route)
+    $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
     {
-        /**
-         * AUTHENTICATION ROUTES
-         */
-        $authRoutes = require __DIR__ . '/Authentication/AuthRoutes.php';
-        $authRoutes($route);
+      if (isset($_SESSION['userLogin']['admin'])) {
+        WebSite::getContent($args, $request->getQueryParams());
+      } else {
+        if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::auth()->login());
+      }
 
-        /**
-         * ENCLAVE
-         */
-        $route->group('/{controller:closure|enclave}', function (Route $route)
-        {
-            $route->get('/{className}', function (Request $request, Response $response, $args)
-            {
-                $queryParams = $request->getQueryParams();
-                $ns = $queryParams['ns'] ?? "";
-                $className = $args['className'];
-                $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
+      $response->getBody()->write(WebSite::ready());
+      return $response;
 
-                WebSite::enclave()->get($classNameSpace, $queryParams);
+    })->addMiddleware(new AuthenticationMiddleware());
 
-                $response->getBody()->write(WebSite::ready());
-                return $response;
+    /**
+     * ADMIN POST
+     */
+    $route->post('/{type}/{action}[/{paramsUrl:.*}]', function (Request $request, Response $response, $args)
+    {
+	    // CHECK AUTHENTICATION
+	    if (!isset($_SESSION['userLogin']['admin'])) {
+		    WebSite::addMain(Fragment::auth()->login());
+		    $response->getBody()->write(WebSite::ready());
+		    return $response;
+	    }
 
-            });
+      $type = $args['type'];
+      $action = $args['action'];
+      $params = $request->getParsedBody();
 
-            $route->post('/{className}', function(Request $request, Response $response, $args)
-            {
-                $parseBody = $request->getParsedBody();
+      unset($params['submit']);
+      unset($params['submit_x']);
+      unset($params['submit_y']);
+      unset($params['x']);
+      unset($params['y']);
 
-                $queryParams = $request->getQueryParams();
-                $ns = $queryParams['ns'] ?? "";
-                $action = $queryParams['action'] ?? null;
-                $className = $args['className'];
-                $classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
+      //  EDIT
+      if ($action == "edit" || $action == "put") {
+        $returns = (new Server())->edit($type, $params);
+        // sitemap
+        Sitemap::create($type, $params);
+      }
 
-                switch ($action) {
-                    case 'edit':
-                        $returns = Server::enclave()->post($classNameSpace, $parseBody);
-                        break;
-                    case 'new':
-                    case 'add':
-                        $returns = Server::enclave()->put($classNameSpace, $parseBody);
-                        break;
-                    case 'delete':
-                        $returns = Server::enclave()->delete($classNameSpace, $parseBody);
-                        break;
-                    default:
-                        $returns = Fragment::noContent(_("Action not recognized"));
-                }
-                if (is_array($returns)) {
-                    WebSite::addMain($returns);
-                    $response->getBody()->write(WebSite::ready());
-                    return $response;
-                } elseif (is_string($returns)) {
-                    return $response->withHeader('Location', $returns)->withStatus(301);
-                } else {
-                    return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
-                }
-            });
-        })->addMiddleware(new AuthenticationMiddleware());
+      // NEW
+      elseif ($action == "new" || $action == "post" || $action == "add") {
+        // put data
+        $returns = (new Server())->new($type, $params);
+        // sitemap
+        Sitemap::create($type, $params);
+      }
 
-        /**
-         * DEFAULT
-         */
-        $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
-        {
-            if (isset($_SESSION['userLogin']['admin'])) {
-                WebSite::getContent($args, $request->getQueryParams());
-            } else {
-                if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::auth()->login());
-            }
+      // DELETE
+      elseif ($action == "delete" || $action == "erase") {
+        // delete data
+        $returns = (new Server())->erase($type, $params);
+        // sitemap
+        Sitemap::create($type, $params);
+      }
 
-            $response->getBody()->write(WebSite::ready());
-            return $response;
+      // CREATE SQL TABLE
+      elseif ($action == "createSqlTable") {
+        (new Server())->createSqlTable($type);
+        $returns = $_SERVER['HTTP_REFERER'];
+      }
 
-        })->addMiddleware(new AuthenticationMiddleware());
+      // SITEMAP
+      elseif (($action == "sitemap")) {
+        $returns = $_SERVER['HTTP_REFERER'];
+        // sitemap
+        Sitemap::create($type, $params);
+      }
 
-        /**
-         * ADMIN POST
-         */
-        $route->post('/{type}/{action}[/{paramsUrl:.*}]', function (Request $request, Response $response, $args)
-        {
-            $type = $args['type'];
-            $action = $args['action'];
-            $params = $request->getParsedBody();
+      // CLOSURE
+      elseif($type == "closure") {
+        $server = new ClosureServer($params);
+        $returns = $server->getReturn();
+      }
 
-            unset($params['submit']);
-            unset($params['submit_x']);
-            unset($params['submit_y']);
-            unset($params['x']);
-            unset($params['y']);
+      // GENERIC
+      else {
+        (new Server())->request($type, $action, $params);
+        $returns = $_SERVER['HTTP_REFERER'];
+      }
 
-            //  EDIT
-            if ($action == "edit" || $action == "put") {
-                $returns = (new Server())->edit($type, $params);
-                // sitemap
-                Sitemap::create($type, $params);
-            }
+      return $response->withHeader('Location', $returns)->withStatus(301);
 
-            // NEW
-            elseif ($action == "new" || $action == "post" || $action == "add") {
-                // put data
-                $returns = (new Server())->new($type, $params);
-                // sitemap
-                Sitemap::create($type, $params);
-            }
+    })->addMiddleware(new AuthenticationMiddleware());
 
-            // DELETE
-            elseif ($action == "delete" || $action == "erase") {
-                // delete data
-                $returns = (new Server())->erase($type, $params);
-                // sitemap
-                Sitemap::create($type, $params);
-            }
-
-            // CREATE SQL TABLE
-            elseif ($action == "createSqlTable") {
-                (new Server())->createSqlTable($type);
-                $returns = $_SERVER['HTTP_REFERER'];
-            }
-
-            // SITEMAP
-            elseif (($action == "sitemap")) {
-                $returns = $_SERVER['HTTP_REFERER'];
-                // sitemap
-                Sitemap::create($type, $params);
-            }
-
-            // CLOSURE
-            elseif($type == "closure") {
-                $server = new ClosureServer($params);
-                $returns = $server->getReturn();
-            }
-
-            // GENERIC
-            else {
-                (new Server())->request($type, $action, $params);
-                $returns = $_SERVER['HTTP_REFERER'];
-            }
-
-            return $response->withHeader('Location', $returns)->withStatus(301);
-
-        })->addMiddleware(new AuthenticationMiddleware());
-
-    })->addMiddleware(new GatewayMiddleware());
+  })->addMiddleware(new GatewayMiddleware());
 };
