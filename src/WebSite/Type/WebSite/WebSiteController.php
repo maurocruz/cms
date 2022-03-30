@@ -8,7 +8,6 @@ use Plinct\Cms\Server\Api;
 use Plinct\Cms\Server\Sitemap;
 use Plinct\Cms\WebSite\Type\ControllerInterface;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
 
 class WebSiteController implements ControllerInterface
 {
@@ -27,7 +26,7 @@ class WebSiteController implements ControllerInterface
      */
     public function edit(array $params): array
     {
-        $id = $params['id'] ?? null;
+        $id = $params['id'] ?? $params['idwebSite'] ?? null;
         $data = Api::get('webSite',['id'=>$id, 'properties'=>'hasPart']);
         if (isset($data[0]['identifier'])) {
             $idSite = ArrayTool::searchByValue($data[0]['identifier'], 'id', 'value');
