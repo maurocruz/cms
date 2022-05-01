@@ -36,7 +36,7 @@ class App
     /**
      * @var array
      */
-    public static array $TypesEnabled = [];
+    private static array $TypesEnabled = [];
     /**
      * @var string
      */

@@ -14,7 +14,7 @@ class Sitemap
      */
     public static function create($type, $params = null)
     {
-        $classController = "\\Plinct\\Cms\\Controller\\" . ucfirst($type) . "Controller";
+        $classController = "\\Plinct\\Cms\\WebSite\\Type\\" . ucfirst($type). "\\" . ucfirst($type)."Controller";
 
         if (class_exists($classController)) {
             $objectController = new $classController();
@@ -61,8 +61,8 @@ class Sitemap
         $i = 1;
         libxml_use_internal_errors(true);
 
-        foreach (App::$TypesEnabled as $type) {
-            $sitemapFilename = $this->exists_sitemap($sitemaps, $type);
+        foreach (App::getTypesEnabled() as $type) {
+					$sitemapFilename = is_string($type) ? $this->exists_sitemap($sitemaps, $type) : null;
 
             if ($sitemapFilename) {
                 $fileXml = $_SERVER['DOCUMENT_ROOT']."/".$sitemapFilename;
