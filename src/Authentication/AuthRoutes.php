@@ -14,140 +14,146 @@ use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route)
 {
+  /**
+   * LOGOUT
+   */
+  $route->get('/logout',  function (Request $request, Response $response)
+  {
+    session_start();
+    unset($_SESSION['userLogin']);
+    setcookie("API_TOKEN", "", time() - 3600);
+    return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
+  });
+
+  /**
+   * POST LOGIN
+   */
+  $route->post('/login',  function (Request $request, Response $response)
+  {
+    $parseBody = $request->getParsedBody();
+    $authentication = Api::login($parseBody['email'], $parseBody['password']);
+    // AUTHORIZED
+    if ($authentication['status'] == "success") {
+      $token = $authentication['token'];
+      $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
+
+      if ($tokenDecode->admin) {
+				// cookie
+        setcookie('API_TOKEN', $token, $tokenDecode->exp);
+				// session
+	      $_SESSION['userLogin']['name'] = $tokenDecode->name;
+	      $_SESSION['userLogin']['admin'] = $tokenDecode->admin;
+	      $_SESSION['userLogin']['uid'] = $tokenDecode->uid;
+				// redirect
+        $location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
+        return $response->withHeader("Location", $location)->withStatus(302);
+      } else {
+        $authentication['status'] = 'fail';
+        $authentication['message'] = "Sorry. The user exists but is not authorized. Contact administrator.";
+      }
+    }
+
+    // UNAUTHORIZED
+    WebSite::addMain(Fragment::auth()->login($authentication));
+    $response->getBody()->write(WebSite::ready());
+    return $response;
+
+  })->addMiddleware(new AuthenticationMiddleware());
+
+
+  /**
+   *  GROUP AUTH
+   */
+  $route->group('/auth', function (Route $route)
+  {
     /**
-     * LOGOUT
+     * GET LOGIN
      */
-    $route->get('/logout',  function (Request $request, Response $response)
+    $route->get('/login', function (Request $request, Response $response)
     {
-        session_start();
-        unset($_SESSION['userLogin']);
-        setcookie("API_TOKEN", "", time() - 3600);
-        return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
-    });
+      if (isset($_SESSION['userLogin']['admin'])) {
+        return $response->withHeader("Location", "/admin")->withStatus(302);
 
-    /**
-     * POST LOGIN
-     */
-    $route->post('/login',  function (Request $request, Response $response)
-    {
-        $parseBody = $request->getParsedBody();
-        $authentication = Api::login($parseBody['email'], $parseBody['password']);
-        // AUTHORIZED
-        if ($authentication['status'] == "success") {
-            $token = $authentication['token'];
-            $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
-
-            if ($tokenDecode->admin) {
-                setcookie('API_TOKEN', $token, $tokenDecode->exp);
-                $location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
-                return $response->withHeader("Location", $location)->withStatus(302);
-            } else {
-                $authentication['status'] = 'fail';
-                $authentication['message'] = "Sorry. The user exists but is not authorized. Contact administrator.";
-            }
-        }
-
-        // UNAUTHORIZED
-        WebSite::addMain(Fragment::auth()->login($authentication));
+      } else {
+        WebSite::addMain(Fragment::auth()->login());
         $response->getBody()->write(WebSite::ready());
         return $response;
+      }
 
     })->addMiddleware(new AuthenticationMiddleware());
 
+    if(!isset($_SESSION['userLogin'])) {
+      /**
+       * REGISTER GET
+       */
+      $route->get('/register', function (Request $request, Response $response)
+      {
+        WebSite::addMain(Fragment::auth()->register());
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+      });
 
-    /**
-     *  GROUP AUTH
-     */
-    $route->group('/auth', function (Route $route)
-    {
-        /**
-         * GET LOGIN
-         */
-        $route->get('/login', function (Request $request, Response $response)
-        {
-            if (isset($_SESSION['userLogin']['admin'])) {
-                return $response->withHeader("Location", "/admin")->withStatus(302);
+      /**
+       * REGISTER POST
+       */
+      $route->post('/register', function (Request $request, Response $response)
+      {
+        $authentication = Api::register($request->getParsedBody());
+        WebSite::addMain(Fragment::auth()->register($authentication));
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+      });
 
-            } else {
-                WebSite::addMain(Fragment::auth()->login());
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            }
-
-        })->addMiddleware(new AuthenticationMiddleware());
-
-        if(!isset($_SESSION['userLogin'])) {
-            /**
-             * REGISTER GET
-             */
-            $route->get('/register', function (Request $request, Response $response)
-            {
-                WebSite::addMain(Fragment::auth()->register());
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            });
-
-            /**
-             * REGISTER POST
-             */
-            $route->post('/register', function (Request $request, Response $response)
-            {
-                $authentication = Api::register($request->getParsedBody());
-                WebSite::addMain(Fragment::auth()->register($authentication));
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            });
-
-            /**
-             * RESET PASSWORD
-             */
-            $route->get('/resetPassword', function (Request $request, Response $response)
-            {
-                if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
-                    WebSite::addMain(Fragment::auth()->resetPassword());
-                } else {
-                    WebSite::addMain("<p class='warning'>"._("No email server data")."</p>");
-                }
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            });
-
-            $route->post('/resetPassword', function (Request $request, Response $response)
-            {
-                $email = $request->getParsedBody()['email'];
-                $data = json_decode(Api::resetPassword($email), true);
-                WebSite::addMain(Fragment::auth()->resetPassword($data, $email));
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            });
-
-            /**
-             * CHANGE PASSWORD
-             */
-            $route->get('/change_password', function (Request $request, Response $response)
-            {
-                $selector = $request->getQueryParams()['selector'] ?? null;
-                $validator = $request->getQueryParams()['validator'] ?? null;
-
-                if ($selector && $validator) {
-                    WebSite::addMain(Fragment::auth()->changePassword($request->getQueryParams()));
-                } else {
-                    WebSite::addMain(Fragment::noContent(_("Missing data!")));
-                }
-
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-            });
-
-            $route->post('/change_password', function (Request $request, Response $response)
-            {
-                $params = $request->getParsedBody();
-                $data = json_decode(Api::changePassword($params), true);
-                WebSite::addMain(Fragment::auth()->changePassword($params, $data));
-                $response->getBody()->write(WebSite::ready());
-                return $response;
-
-            });
+      /**
+       * RESET PASSWORD
+       */
+      $route->get('/resetPassword', function (Request $request, Response $response)
+      {
+        if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
+          WebSite::addMain(Fragment::auth()->resetPassword());
+        } else {
+          WebSite::addMain("<p class='warning'>"._("No email server data")."</p>");
         }
-    });
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+      });
+
+      $route->post('/resetPassword', function (Request $request, Response $response)
+      {
+        $email = $request->getParsedBody()['email'];
+        $data = json_decode(Api::resetPassword($email), true);
+        WebSite::addMain(Fragment::auth()->resetPassword($data, $email));
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+      });
+
+      /**
+       * CHANGE PASSWORD
+       */
+      $route->get('/change_password', function (Request $request, Response $response)
+      {
+        $selector = $request->getQueryParams()['selector'] ?? null;
+        $validator = $request->getQueryParams()['validator'] ?? null;
+
+        if ($selector && $validator) {
+          WebSite::addMain(Fragment::auth()->changePassword($request->getQueryParams()));
+        } else {
+          WebSite::addMain(Fragment::noContent(_("Missing data!")));
+        }
+
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+      });
+
+      $route->post('/change_password', function (Request $request, Response $response)
+      {
+        $params = $request->getParsedBody();
+        $data = json_decode(Api::changePassword($params), true);
+        WebSite::addMain(Fragment::auth()->changePassword($params, $data));
+        $response->getBody()->write(WebSite::ready());
+        return $response;
+
+      });
+    }
+  });
 };
