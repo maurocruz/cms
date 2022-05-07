@@ -113,8 +113,11 @@ class Api
   {
 	  if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
 			$apiHost = substr(App::getApiHost(),-1) !== "/" ? App::getApiHost()."/" : App::getApiHost();
-	    $curl = ToolBox::Curl()->setUrl($apiHost."auth/login")->method('post')->params([ "email" => $email, "password" => $password ])->returnWithJson();
+		  $url = $apiHost."auth/login";
+		  $params = ['email'=>$email, 'password'=>$password ];
+			$curl = ToolBox::Curl($url)->post($params);
 	    return json_decode($curl->ready(), true);
+
 	  } else {
 	    return (new AuthController())->login([ "email" => $email, "password" => $password ]);
 	  }
