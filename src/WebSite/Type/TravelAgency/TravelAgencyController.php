@@ -20,8 +20,9 @@ class TravelAgencyController
      * @param array $params
      * @return array
      */
-    public function edit(array $params): array {
-        $id = $params['id'] ?? null;
+    public function edit(array $params): array
+    {
+        $id = $params['idtravelAgency'] ?? null;
         $data = Api::get('organization',['id'=>$id,'properties'=>'name']);
         return $data[0];
     }

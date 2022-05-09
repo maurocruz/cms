@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Plinct\Cms\WebSite\Type\Trip;
 
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\WebSite\Type\Intangible\PropertyValueView;
-use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
+use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\WebSite;
 
 class TripView extends TripAbstract
 {
@@ -15,26 +15,33 @@ class TripView extends TripAbstract
      */
     public function index(array $data)
     {
-        Debug::dump($data);
-        //$this->idprovider = ArrayTool::searchByValue($data['identifier'],'id','value');
-        //$this->providerName = $data['name'];
-        //$tripList = $data['trip'];
-        // NAVBAR
-        $this->navbarTrip();
-        // TABLE LIST
+      // NAVBAR
+      $this->navbarTrip();
 
-        //$this->content['main'][] = parent::listIndex($tripList);
+	    // CONTENT
+	    WebSite::addMain(Fragment::miscellaneous()->message("Under development!"));
+
+      // TABLE LIST
+			WebSite::addMain(Fragment::listTable()
+				->labels(_('Name'))
+				->rows($data['itemListElement'],['name'])
+				->ready()
+			);
+	    // CONTENT
+	    WebSite::addMain('<h4>Under development!</h4>');
     }
 
-    public function new($data = null): array {
-        $this->idprovider =$data[0]['identifier']['value'];
+    public function new($data = null)
+    {
+       /* $this->idprovider =$data[0]['identifier']['value'];
         $this->content['main'][] = self::divBox2(sprintf(_("New %s"),'trip'), parent::formTrip());
         // RESPONSE
-        return $this->content;
+        return $this->content;*/
     }
 
-    public function edit(array $data): array {
-        $value = $data[0];
+    public function edit(array $data)
+    {
+       /* $value = $data[0];
         $this->idtrip = ArrayTool::searchByValue($value['identifier'],'id','value');
         $this->idprovider = ArrayTool::searchByValue($value['provider']['identifier'],'id','value');
         $this->providerName = $value['provider']['name'];
@@ -49,6 +56,6 @@ class TripView extends TripAbstract
         // images
         $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("trip", $this->idtrip, $value['image']) ]);
         // RESPONSE
-        return $this->content;
+        return $this->content;*/
     }
 }
