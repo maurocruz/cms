@@ -26,14 +26,14 @@ class ImageObjectView extends ImageObjectWidget
         }
     }
 
-    /**
-     * @param array $data
-     */
-    public function index(array $data)
-    {
-        $this->navBarImageObject();
-        View::main(parent::keywordsList($data));
-    }
+  /**
+   * @param array $data
+   */
+  public function index(array $data)
+  {
+    $this->navBarImageObject();
+    View::main(parent::keywordsList($data));
+  }
 
     /**
      * @param null $data
@@ -70,18 +70,19 @@ class ImageObjectView extends ImageObjectWidget
         View::main($content);
     }
 
-    /**
-     * @param $data
-     */
-    public function keywords($data)
-    {
-        $keywordName = $data['paramsUrl']['id'] ?? _("Undefined");
-        $this->navBarImageObject(_("Keyword") . ": " . $keywordName);
-        $content[] = parent::imagesList($data['list']);
-        $content[] = Fragment::icon()->arrowBack();
+	/**
+	 * @param $data
+	 * @throws Exception
+	 */
+	public function keywords($data)
+  {
+    $keywordName = $data['paramsUrl']['idimageObject'] ?? _("Undefined");
+    $this->navBarImageObject(_("Keyword") . ": " . $keywordName);
+    $content[] = parent::imagesList($data['list']);
+    $content[] = "<div style='margin-top: 10px;'>".Fragment::icon()->arrowBack()."</div>";
 
-        View::main($content);
-    }
+    View::main($content);
+  }
 
     /**
      * @throws Exception

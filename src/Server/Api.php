@@ -74,15 +74,11 @@ class Api
       // CURL
       $curlHandle = ToolBox::Curl()
         ->setUrl($apiHostName)
-        ->method($action);
+        ->method($action)
+	      ->returnWithJson();
       // METHOD
-			if ($action == 'put') {
-				$curlHandle->authorizationBear($token)->put($params);
-			} elseif ($action !== 'get') {
-				$curlHandle->authorizationBear($token)->params($params);
-			} else {
-				$curlHandle->returnWithJson();
-			}
+			if ($action !== 'get') $curlHandle->authorizationBear($token)->params($params);
+
       // LOCALHOST
       $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
       if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {

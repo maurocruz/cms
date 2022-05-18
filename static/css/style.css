@@ -1272,22 +1272,37 @@ table .table-delete-button {
 
 .admin-images-grid {
   display: grid;
-  grid-gap: 15px;
+  grid-gap: 0;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-auto-rows: 5px;
+  grid-auto-rows: 1px;
 }
 .admin-images-grid a {
   text-decoration: none;
 }
 .admin-images-grid .admin-images-grid-figure {
   position: relative;
+  text-align: center;
+  margin: 5px;
+  grid-row-end: span 120;
+  background-color: black;
+  min-height: 120px;
 }
 .admin-images-grid .admin-images-grid-figure img {
-  width: 100%;
+  /*width: 100%;
+  min-height: 95px;*/
 }
 .admin-images-grid .admin-images-grid-figure figcaption {
-  background-color: black;
   line-height: normal;
+  padding: 4px 5px 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.admin-images-grid .admin-images-grid-figure .imageGrid-countParts {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px;
+  border-radius: 20px;
+  min-width: 13px;
+  line-height: 0.85em;
 }
 .admin-images-grid .admin-image-grid-buttons {
   width: 100%;

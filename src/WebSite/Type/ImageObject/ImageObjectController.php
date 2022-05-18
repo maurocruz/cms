@@ -13,21 +13,27 @@ use Plinct\Tool\Sitemap;
 
 class ImageObjectController implements ControllerInterface
 {
-    /**
-     * @param null $params
-     * @return array
-     */
-    public function index($params = null): array
-    {
-        $params2 = [ "format" => "ItemList", "groupBy" => "keywords", "orderBy" => "keywords",'fields'=>'distinct(keywords),contentUrl' ];
-        $params3 = $params ? array_merge($params2, $params) : $params2;
-        return Api::get("imageObject", $params3);
-    }
+  /**
+   * @param null $params
+   * @return array
+   */
+  public function index($params = null): array
+  {
+    $params2 = ['groupBy'=>'keywords','orderBy'=>'keywords','fields'=>'distinct(keywords),contentUrl'];
+    $params3 = $params ? array_merge($params2, $params) : $params2;
+	  return Api::get("imageObject", $params3);
+
+
+	  /*foreach ($data as $value) {
+		  $array = explode(',',$value['keywords']);
+		  $keywords[$array[0]] = $value['contentUrl'];
+	  }*/
+  }
 
     public function keywords($params): array
     {
-        $keywords = isset($params['id']) ? urldecode($params['id']) : null;
-        $params2 = [ "format" => "ItemList", "limit" => "none", "orderBy" => "uploadDate desc, keywords" ];
+        $keywords = isset($params['idimageObject']) ? urldecode($params['idimageObject']) : null;
+        $params2 = [ "format" => "ItemList", "limit" => 'none', "orderBy" => "uploadDate desc, keywords" ];
         if($keywords) {
             $params2['keywords'] = $keywords;
         } else {
