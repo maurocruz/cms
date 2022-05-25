@@ -5,51 +5,52 @@ declare(strict_types=1);
 namespace Plinct\Cms\Server;
 
 use Plinct\Api\Auth\AuthController;
+use Plinct\Api\User\User;
 use Plinct\Cms\App;
 use Plinct\Tool\Curl;
 use Plinct\Tool\ToolBox;
 
 class Api
 {
-    /**
-     * @param string $type
-     * @param array|null $params
-     * @return array
-     */
-    public static function get(string $type, array $params = null): array
-    {
-        return self::request($type, "get", $params);
-    }
+  /**
+   * @param string $type
+   * @param array|null $params
+   * @return array
+   */
+  public static function get(string $type, array $params = null): array
+  {
+    return self::request($type, "get", $params);
+  }
 
-    /**
-     * @param string $type
-     * @param array $params
-     * @return array
-     */
-    public static function post(string $type, array $params): array
-    {
-        return self::request($type, "post", $params);
-    }
+  /**
+   * @param string $type
+   * @param array $params
+   * @return array
+   */
+  public static function post(string $type, array $params): array
+  {
+    return self::request($type, "post", $params);
+  }
 
-    /**
-     * @param string $type
-     * @param array $params
-     * @return ?array
-     */
-    public static function put(string $type, array $params): ?array
-    {
-        return self::request($type, 'put', $params);
-    }
+  /**
+   * @param string $type
+   * @param array $params
+   * @return ?array
+   */
+  public static function put(string $type, array $params): ?array
+  {
+    return self::request($type, 'put', $params);
+  }
 
-    /**
-     * @param string $type
-     * @param array $params
-     * @return array
-     */
-    public static function delete(string $type, array $params): array
-    {
-        return self::request($type, 'delete', $params);
-    }
+  /**
+   * @param string $type
+   * @param array $params
+   * @return array
+   */
+  public static function delete(string $type, array $params): array
+  {
+    return self::request($type, 'delete', $params);
+  }
 
   /**
    * @param $type
@@ -90,12 +91,12 @@ class Api
       $json = json_decode($ready, true);
       // RETURN IF ERROR
       if (json_last_error() === 0) {
-          return $json;
+        return $json;
       } else {
-          return [
-              "status" => "error",
-              "message" => $ready
-          ];
+        return [
+          "status" => "error",
+          "message" => $ready
+        ];
       }
     }
   }
@@ -111,7 +112,7 @@ class Api
 			$apiHost = substr(App::getApiHost(),-1) !== "/" ? App::getApiHost()."/" : App::getApiHost();
 		  $url = $apiHost."auth/login";
 		  $params = ['email'=>$email, 'password'=>$password ];
-			$curl = ToolBox::Curl($url)->post($params);
+			$curl = ToolBox::Curl()->setUrl($url)->post($params);
 	    return json_decode($curl->ready(), true);
 
 	  } else {
@@ -119,53 +120,53 @@ class Api
 	  }
   }
 
-    /**
-     * @param $params
-     * @return false|mixed|string|null
-     */
-    public static function register($params)
-    {
-        unset($params['passwordRepeat']);
-        unset($params['submit']);
+  /**
+   * @param $params
+   * @return false|mixed|string|null
+   */
+  public static function register($params)
+  {
+    unset($params['passwordRepeat']);
+    unset($params['submit']);
 
-        if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
-            return (new AuthController())->register($params);
+    if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
+      return (new User())->post($params);
 
-        } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-            return json_decode((new Curl(App::getApiHost()))->post("register", $params), true);
-        }
-
-        return null;
+    } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+      return json_decode((new Curl(App::getApiHost()))->post("register", $params), true);
     }
 
-    /**
-     * @param string $email
-     * @return string
-     */
-    public static function resetPassword(string $email): string
-    {
-        $url = App::getApiHost() . "auth/reset_password";
+    return null;
+  }
 
-        $params['email'] = $email;
-        $params['mailHost'] = App::getMailHost();
-        $params['mailUsername'] = App::getMailUsername();
-        $params['mailPassword'] = App::getMailpassword();
-        $params['urlToResetPassword'] = App::getUrlToResetPassword();
+  /**
+   * @param string $email
+   * @return string
+   */
+  public static function resetPassword(string $email): string
+  {
+    $url = App::getApiHost() . "auth/reset_password";
 
-        $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
+    $params['email'] = $email;
+    $params['mailHost'] = App::getMailHost();
+    $params['mailUsername'] = App::getMailUsername();
+    $params['mailPassword'] = App::getMailpassword();
+    $params['urlToResetPassword'] = App::getUrlToResetPassword();
 
-        return $handleCurl->ready();
-    }
+    $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
 
-    public static function changePassword(array $params): string
-    {
-        $url = App::getApiHost() . "auth/change_password";
+    return $handleCurl->ready();
+  }
 
-        $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
+  public static function changePassword(array $params): string
+  {
+    $url = App::getApiHost() . "auth/change_password";
 
-        // for localhost
-        if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
+    $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
 
-        return $handleCurl->ready();
-    }
+    // for localhost
+    if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
+
+    return $handleCurl->ready();
+  }
 }
