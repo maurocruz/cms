@@ -74,15 +74,11 @@ class Api
       // CURL
       $curlHandle = ToolBox::Curl()
         ->setUrl($apiHostName)
-        ->method($action);
+        ->method($action)
+	      ->returnWithJson();
       // METHOD
-			if ($action == 'put') {
-				$curlHandle->authorizationBear($token)->put($params);
-			} elseif ($action !== 'get') {
-				$curlHandle->authorizationBear($token)->params($params);
-			} else {
-				$curlHandle->returnWithJson();
-			}
+			if ($action !== 'get') $curlHandle->authorizationBear($token)->params($params);
+
       // LOCALHOST
       $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
       if ( $ipAddress <= 127 || ($ipAddress >= 192 && $ipAddress <= 233 )) {
@@ -113,8 +109,11 @@ class Api
   {
 	  if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
 			$apiHost = substr(App::getApiHost(),-1) !== "/" ? App::getApiHost()."/" : App::getApiHost();
-	    $curl = ToolBox::Curl()->setUrl($apiHost."auth/login")->method('post')->params([ "email" => $email, "password" => $password ])->returnWithJson();
+		  $url = $apiHost."auth/login";
+		  $params = ['email'=>$email, 'password'=>$password ];
+			$curl = ToolBox::Curl($url)->post($params);
 	    return json_decode($curl->ready(), true);
+
 	  } else {
 	    return (new AuthController())->login([ "email" => $email, "password" => $password ]);
 	  }

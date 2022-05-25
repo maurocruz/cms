@@ -14,7 +14,9 @@ class TripController
      */
     public function index($params = null): array
     {
-        return Api::get('trip',['format'=>'ItemList', 'properties'=>'name,dateModified,identifier','orderBy'=>'dateModified desc']);
+			$params2 = ['format'=>'ItemList', 'properties'=>'name,dateModified,identifier','orderBy'=>'dateModified desc'];
+			$params3 = $params ?  array_merge($params2, $params) : $params2;
+        return Api::get('trip',$params3);
     }
 
     /**

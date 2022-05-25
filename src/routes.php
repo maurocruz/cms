@@ -123,7 +123,11 @@ return function (Route $route)
      */
     $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
     {
+			$type = $args['type'] ?? null;
       if (isset($_SESSION['userLogin']['admin'])) {
+				if ($type == 'login') {
+					return $response->withHeader('Location', '/admin')->withStatus(301);
+				}
         WebSite::getContent($args, $request->getQueryParams());
       } else {
         if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::auth()->login());
