@@ -9,6 +9,8 @@ use Plinct\Cms\Authentication\AuthenticationMiddleware;
 use Plinct\Cms\Middleware\GatewayMiddleware;
 use Plinct\Cms\Server\Type\ClosureServer;
 use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\Section\User\UserController;
+use Plinct\Cms\WebSite\Section\User\UserView;
 use Plinct\Cms\WebSite\WebSite;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -48,6 +50,21 @@ return function (Route $route)
      */
     $authRoutes = require __DIR__ . '/Authentication/AuthRoutes.php';
     $authRoutes($route);
+
+	  /**
+	   * USER
+	   */
+		$route->get('/user[/{action}[/{iduser}]]', function (Request $request, Response $response, $args)
+		{
+			$params = $request->getQueryParams();
+
+			$data = (new UserController())->index($params);
+			(new UserView())->index($data);
+
+			$response->getBody()->write(WebSite::ready());
+			return $response;
+
+		})->addMiddleware(new AuthenticationMiddleware());
 
     /**
      * ENCLAVE
