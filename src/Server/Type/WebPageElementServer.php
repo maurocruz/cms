@@ -15,7 +15,7 @@ class WebPageElementServer
   public function new($params)
   {
     Api::post("webPageElement", $params);
-    Api::put("webPage", ['idwebPageElement'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
+    Api::put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 
@@ -28,7 +28,7 @@ class WebPageElementServer
     $idHasPart = $params['idHasPart'];
     unset($params['idHasPart']);
     Api::put("webPageElement", $params);
-    Api::put("webPage", ['idwebPageElement'=>$idHasPart, 'dateModified'=>date('Y-m-d H:i:s') ]);
+    Api::put("webPage", ['idwebPage'=>$idHasPart, 'dateModified'=>date('Y-m-d H:i:s') ]);
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 
@@ -39,7 +39,7 @@ class WebPageElementServer
   public function erase($params)
   {
     Api::delete('webPageElement', ['idwebPageElement'=>$params['idwebPageElement'] ?? $params['id']]);
-    Api::put("webPage", ['idwebPageElement'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
+    Api::put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 }
