@@ -5,40 +5,85 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Trip;
 
 use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\Type\View;
 use Plinct\Cms\WebSite\WebSite;
 
 class TripAbstract
 {
-	protected string $idprovider;
-	protected string $idtrip;
-
-	protected function navbarTrip($title = null)
-  {
+	/**
+	 * @return void
+	 */
+	protected function navbarIndex()
+	{
 		WebSite::addHeader(Fragment::navbar()
+			->type('trip')
 			->title('Trips')
+			->newTab('/admin/trip', Fragment::icon()->home())
+			->newTab('/admin/trip/new', Fragment::icon()->plus())
+			->search('/admin/trip')
+			->level(2)
 			->ready()
 		);
-    // ORGANIZATION
-    /*$organizationMenu = [ "/admin/organization/edit/$this->idprovider"=>sprintf(_("View %s"), "organization") ];
-    $this->content['navbar'][] = self::navbar(sprintf("%s - %s", $this->providerName, _("travel agency")), $organizationMenu);
-    // TRIPS OF ORGANIZATION
-    $tripMenu = [
-        "/admin/trip?provider=$this->idprovider"=>sprintf(_("View all %s"), _("trips")),
-        "/admin/trip/new?provider=$this->idprovider"=>sprintf(_("Add new %s"), _("trip"))
-    ];
-    $search = [ "tag" => "div", "attributes" => [ "class" => "navbar-search", "data-type" => "trip", "data-searchfor" => "name" ] ];
-    $this->content['navbar'][] = self::navbar(sprintf(_("Trips of %s"), $this->providerName), $tripMenu, 3, $search);*/
-    // TRIP
-    if($title) {
-        WebSite::addHeader(Fragment::navbar()
-	        ->title($title)
-	        ->ready()
-        );
-    }
+	}
+
+	/**
+	 * @param $name
+	 * @param $id
+	 * @return void
+	 */
+	protected function navBarProvider($name, $id)
+	{
+		self::navbarIndex();
+		View::contentHeader(Fragment::navbar()
+			->title($name)
+			->newTab("/admin/trip?provider=$id", Fragment::icon()->home())
+			->newTab("/admin/trip?provider=$id&action=new", Fragment::icon()->plus())
+			->level(3)
+			->ready()
+		);
+	}
+
+	/**
+	 * @param $providerName
+	 * @param $providerId
+	 * @param $tripName
+	 * @return void
+	 */
+	protected function navbarTrip($providerName, $providerId, $tripName)
+  {
+		self::navBarProvider($providerName, $providerId);
+    WebSite::addHeader(Fragment::navbar()
+      ->title($tripName)
+	    ->level(4)
+      ->ready()
+    );
   }
 
+	/**
+	 * @param $data
+	 * @return void
+	 */
+	protected function listOfProviderTrips($data)
+	{
+		$table = Fragment::listTable();
+		$table->labels(_('Name'),_('Date modified'));
+
+		foreach ($data['trips']['itemListElement'] as $item) {
+			$trip = $item['item'];
+			$id = $trip['idtrip'];
+			$table->buttonEdit("/admin/trip/edit/$id");
+			$table->addRow($trip['name'], $trip['dateModified']);
+		}
+		View::main($table->ready());
+	}
+
+	/**
+	 * @param $value
+	 * @return array
+	 */
   protected function formTrip($value = null): array
   {
+		$idtrip = $value['idtrip'] ?? null;
     $name = $value['name'] ?? null;
     $description = $value['description'] ?? null;
     $disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
@@ -47,20 +92,21 @@ class TripAbstract
     $departureDate = $value['departureDate'] ?? null;
     $departureTime = $value['departureTime'] ?? null;
     $case = $value ? 'edit': 'new';
+		$provider= $value['provider'] ?? null;
+
     // FORM
     $form = Fragment::form();
     $form->action("/admin/trip/$case")->method('post')->attributes(['class'=>'formPadrao form-trip']);
-    $form->input('provider', $this->idprovider, 'hidden');
     // HIDDENS
-    if ($value) {
-        $form->input('id', $this->idtrip, 'hidden');
-    }
+    if ($idtrip) $form->input('id', $idtrip, 'hidden');
     // NAME
     $form->fieldsetWithInput('name', $name, _('Name'));
+	  // PROVIDER
+	  $form->fieldset($form->chooseType('provider','organization',$provider), _('Provider'));
     // DESCRIPTION
     $form->fieldsetWithTextarea('description', $description, _('Description'));
     // DISAMBIGUATING DESCRIPTION
-    $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Disambiguating description'));
+    $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Disambiguating description'), ['class'=>'form-trip-disambiguatingDescription']);
     // ARRIVAL DATE
     $form->fieldsetWithInput('arrivalDate',$arrivalDate, _("Arrival date"), 'date');
     // ARRIVAL TIME

@@ -4,58 +4,72 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Trip;
 
+use Exception;
 use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
+use Plinct\Cms\WebSite\Type\Intangible\PropertyValueView;
+use Plinct\Cms\WebSite\Type\View;
 use Plinct\Cms\WebSite\WebSite;
 
 class TripView extends TripAbstract
 {
-    /**
-     * @param array $data
-     * @return void
-     */
-    public function index(array $data)
-    {
-      // NAVBAR
-      $this->navbarTrip();
+  /**
+   * @param array $data
+   * @return void
+   */
+  public function index(array $data)
+  {
+		if (isset($data['idorganization'])) {
+			$idorganization = $data['idorganization'];
+			$organizationName =$data['name'];
+			$this->navBarProvider($organizationName, $idorganization);
+			parent::listOfProviderTrips($data);
 
-	    // CONTENT
-	    WebSite::addMain(Fragment::miscellaneous()->message("Under development!"));
+		} else {
+			$this->navbarIndex();
 
-      // TABLE LIST
-			WebSite::addMain(Fragment::listTable()
-				->labels(_('Name'))
-				->rows($data['itemListElement'],['name'])
-				->ready()
-			);
-	    // CONTENT
-	    WebSite::addMain('<h4>Under development!</h4>');
-    }
+			View::main(_('Show organization with trips'));
+			// TABLE
+			$table = Fragment::listTable();
+			$table->labels(_('Name'));
+			foreach ($data['itemListElement'] as $item) {
+				$provider = $item['item']['provider'];
+				$id = $provider['idorganization'];
+				$table->buttonEdit("/admin/trip?provider=$id");
+				$table->addRow($provider['name']);
+			}
+			WebSite::addMain($table->ready());
+		}
+  }
 
-    public function new($data = null)
-    {
-       /* $this->idprovider =$data[0]['identifier']['value'];
-        $this->content['main'][] = self::divBox2(sprintf(_("New %s"),'trip'), parent::formTrip());
-        // RESPONSE
-        return $this->content;*/
-    }
+  public function new($data = null)
+  {
+		$value = $data ? $data[0] : null;
+		parent::navbarIndex();
+		View::main(Fragment::box()->simpleBox(parent::formTrip($value),sprintf(_("New %s"),'trip')));
+  }
 
-    public function edit(array $data)
-    {
-       /* $value = $data[0];
-        $this->idtrip = ArrayTool::searchByValue($value['identifier'],'id','value');
-        $this->idprovider = ArrayTool::searchByValue($value['provider']['identifier'],'id','value');
-        $this->providerName = $value['provider']['name'];
-        // NAVBAR
-        $this->navbarTrip($value['name']);
-        // TRIP FORM
-        $this->content['main'][] = self::divBox2(sprintf(_("Edit %s"),'trip'), parent::formTrip($value));
-        // PART OF TRIP
-        $this->content['main'][] = self::divBoxExpanding(_("Sub trips"), "Trip", [self::relationshipOneToMany("trip", $this->idtrip, "trip", $value['subTrip'])]);
-        // PROPERTY VALUES
-        $this->content['main'][] = self::divBoxExpanding(_("Properties"), "PropertyValue", [ (new PropertyValueView())->getForm("trip", $this->idtrip, $value['identifier']) ]);
-        // images
-        $this->content['main'][] = self::divBoxExpanding(_("Images"), "ImageObject", [ (new ImageObjectView())->getForm("trip", $this->idtrip, $value['image']) ]);
-        // RESPONSE
-        return $this->content;*/
-    }
+	/**
+	 * @throws Exception
+	 */
+	public function edit(array $data)
+  {
+		$trip = $data[0];
+		$tripId = $trip['idtrip'];
+		$tripName = $trip['name'];
+		$provider = $trip['provider'];
+		$providerName = $provider['name'];
+		$providerId = $provider['idorganization'];
+
+		parent::navbarTrip($providerName, $providerId, $tripName);
+
+	  // TRIP FORM
+    View::main(Fragment::box()->simpleBox(parent::formTrip($trip),sprintf(_("Edit %s"),'trip')));
+		// PART OF TRIP
+    View::main(Fragment::box()->expandingBox(_("Sub trips"), Fragment::form()->relationship('trip', $tripId, "trip")->oneToMany($trip['subtrip'] ?? null)));
+    // PROPERTY VALUES
+    View::main(Fragment::box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("trip", $tripId, $trip['identifier'])));
+	  // images
+    View::main(Fragment::box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("trip", (int) $tripId, $trip['image'])));
+  }
 }
