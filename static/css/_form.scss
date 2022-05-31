@@ -83,7 +83,7 @@
     border: 1px #336699 solid;
     height: 20px;
     padding: 0;
-    width: 100%;
+    /*width: 100%;*/
   }
 
   button[type=submit] {
@@ -643,6 +643,29 @@
     textarea {
       height: 100px;
     }
+  }
+}
+
+/* TRIP
+====================================================== */
+.form-trip {
+  @media (min-width: 576px) {
+    fieldset:nth-of-type(1) { width: 100%; }
+    fieldset:nth-of-type(2) { width: 100%; }
+    fieldset:nth-of-type(3) { width: 100%; }
+    fieldset:nth-of-type(4) { width: 100%; }
+    fieldset:nth-of-type(5) { width: 25%; }
+    fieldset:nth-of-type(6) { width: 25%; }
+    fieldset:nth-of-type(7) { width: 25%; }
+    fieldset:nth-of-type(8) { width: 25%; }
+  }
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(1) { width: 50%; }
+    fieldset:nth-of-type(2) { width: 50%; }
+    fieldset:nth-of-type(5) { width: 25%; }
+    fieldset:nth-of-type(6) { width: 25%; }
+    fieldset:nth-of-type(7) { width: 25%; }
+    fieldset:nth-of-type(8) { width: 25%; }
   }
 }
 

@@ -14,7 +14,6 @@ use Plinct\Cms\WebSite\Fragment\Button\Button;
 use Plinct\Cms\WebSite\Fragment\Error\Error;
 use Plinct\Cms\WebSite\Fragment\Error\ErrorInterface;
 use Plinct\Cms\WebSite\Fragment\Form\Form;
-use Plinct\Cms\WebSite\Fragment\Form\FormInterface;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTable;
 use Plinct\Cms\WebSite\Fragment\ListTable\ListTableInterface;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\Miscellaneous;
@@ -55,9 +54,9 @@ class Fragment
 
     /**
      * @param array|null $attributes
-     * @return FormInterface
+     * @return Form
      */
-    public static function form(array $attributes = null): FormInterface
+    public static function form(array $attributes = null): Form
     {
         return new Form($attributes);
     }

@@ -358,7 +358,7 @@ a.white {
   border: 1px #336699 solid;
   height: 20px;
   padding: 0;
-  width: 100%;
+  /*width: 100%;*/
 }
 .formPadrao button[type=submit] {
   display: inline-block;
@@ -1154,6 +1154,55 @@ a.white {
   }
 }
 
+/* TRIP
+====================================================== */
+@media (min-width: 576px) {
+  .form-trip fieldset:nth-of-type(1) {
+    width: 100%;
+  }
+  .form-trip fieldset:nth-of-type(2) {
+    width: 100%;
+  }
+  .form-trip fieldset:nth-of-type(3) {
+    width: 100%;
+  }
+  .form-trip fieldset:nth-of-type(4) {
+    width: 100%;
+  }
+  .form-trip fieldset:nth-of-type(5) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(6) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(7) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(8) {
+    width: 25%;
+  }
+}
+@media (min-width: 768px) {
+  .form-trip fieldset:nth-of-type(1) {
+    width: 50%;
+  }
+  .form-trip fieldset:nth-of-type(2) {
+    width: 50%;
+  }
+  .form-trip fieldset:nth-of-type(5) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(6) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(7) {
+    width: 25%;
+  }
+  .form-trip fieldset:nth-of-type(8) {
+    width: 25%;
+  }
+}
+
 /* WEBSITE
 ====================================================== */
 @media (min-width: 576px) {
@@ -1348,28 +1397,6 @@ table .table-delete-button {
     width: calc(50% - 60px);
   }
 
-  .form-trip fieldset:nth-of-type(1) {
-    width: 100%;
-  }
-  .form-trip fieldset:nth-of-type(2) {
-    width: 100%;
-  }
-  .form-trip fieldset:nth-of-type(3) {
-    width: 100%;
-  }
-  .form-trip fieldset:nth-of-type(4) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(5) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(6) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(7) {
-    width: 25%;
-  }
-
   .form-invoice fieldset:nth-of-type(1) {
     width: calc(100% - 452px);
     max-width: 120px;
@@ -1396,19 +1423,6 @@ table .table-delete-button {
   }
   .form-postalAddress fieldset:nth-of-type(5) {
     width: 33.3%;
-  }
-
-  .form-trip fieldset:nth-of-type(4) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(5) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(6) {
-    width: 25%;
-  }
-  .form-trip fieldset:nth-of-type(7) {
-    width: 25%;
   }
 }
 @media (min-width: 992px) {
