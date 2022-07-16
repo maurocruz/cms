@@ -120,6 +120,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 		$this->action("/admin/$this->tableHasPart/edit")->method("post");
 
 		if ($value) {
+			$value = array_key_exists(0,$value) ? $value[0] : $value;
 			$id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
 
 			$this->input("idHasPart", $this->idHasPart, "hidden")
