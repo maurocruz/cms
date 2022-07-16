@@ -6,7 +6,6 @@ namespace Plinct\Cms\WebSite\Section\User;
 
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\WebSite;
-use Plinct\Tool\ArrayTool;
 
 class UserView
 {
@@ -39,7 +38,7 @@ class UserView
    * @param array $data
    * @return void
    */
-  public function index(array $data)
+  public function indexView(array $data)
   {
     // navbar
     $this->navbarUser();
@@ -49,7 +48,11 @@ class UserView
     $list = Fragment::listTable();
     $list->caption(_("Users"));
     $list->labels(_("Name"), _('Email'), 'Status');
-    $list->rows($data,['name','email','status']);
+		foreach ($data as $item) {
+			$edit = "<a href='/admin/user/edit/{$item['iduser']}'>" . Fragment::icon()->edit() . "</a>";
+			$list->addRow($edit, $item['name'],$item['email'], $item['status']);
+		}
+    //$list->rows($data,['name','email','status']);
     $list->setEditButton('/admin/user/edit/');
 
     WebSite::addMain($list->ready());
@@ -57,12 +60,12 @@ class UserView
 
   /**
    */
-  public function new()
+  public function newView($params = null)
   {
     $status = filter_input(INPUT_GET,'status');
     $message = filter_input(INPUT_GET,'message');
 
-    $this->navbarUser();
+		$this->navbarUser(_("Add new"));
 
     if ($status == 'fail') {
       WebSite::addMain("<p class='aviso'>" . _($message) . "</p>");
@@ -74,7 +77,7 @@ class UserView
   /**
    * @param array $data
    */
-  public function edit(array $data)
+  public function editView(array $data)
   {
     $this->navbarUser($data['name']);
 
@@ -88,7 +91,7 @@ class UserView
    */
   static private function formUser(string $case = 'new', $value = null): array
   {
-    $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
+    $id = isset($value) ? $value['iduser'] : null;
     $form = Fragment::form([ "class" => "formPadrao" ]);
     $form->action("/admin/user/$case")->method('post');
     // ID
@@ -103,7 +106,7 @@ class UserView
     $statusText = _(UserController::getStatusWithText($value['status'] ?? null));
     $form->fieldsetWithSelect('status', [$value['status'] ?? '0' => $statusText ], ['0'=>_('User'),'1'=>_('Administrator')], _('Status'));
     // created date
-    if ($case == 'edit') $form->fieldsetWithInput('create_time', $value['create_time'], _("Created date"), 'text', null, ['readonly']);
+    if ($case == 'edit') $form->fieldsetWithInput('dateCreated', $value['dateCreated'], _("Date Created"), 'text', null, ['readonly']);
     // submit buttons
     $form->submitButtonSend();
     if ($case == 'edit') $form->submitButtonDelete('/admin/user/erase');
