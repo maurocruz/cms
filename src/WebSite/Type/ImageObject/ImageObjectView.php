@@ -11,105 +11,86 @@ use Plinct\Tool\ArrayTool;
 
 class ImageObjectView extends ImageObjectWidget
 {
-    /**
-     * @param null $title
-     */
-    private function navBarImageObject($title = null)
-    {
-        View::navbar(_("Images"), [
-            "/admin/imageObject" => Fragment::icon()->home(),
-            "/admin/imageObject/new" => Fragment::icon()->plus()
-        ], 2, ['table'=>'imageObject']);
-
-        if ($title) {
-            View::navbar($title, [], 3);
-        }
-    }
-
-  /**
-   * @param array $data
-   */
-  public function index(array $data)
+	/**
+	 * @param array $data
+	 * @param $params
+	 */
+  public function index(array $data, $params)
   {
-    $this->navBarImageObject();
-    View::main(parent::keywordsList($data));
+		$listBy = $params['listBy'] ?? null;
+
+		parent::navBarLevel1();
+		if ($listBy === 'groups') {
+			// TODO UNDER DEVELOPMENT
+			View::main('<p>Under development!</p>');
+
+		} else {
+			View::main('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
+		}
   }
 
-    /**
-     * @param null $data
-     */
-    public function new($data = null)
-    {
-        $this->navBarImageObject("Add");
-        View::main(self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function edit(array $data)
-    {
-        if (!empty($data)) {
-            $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-            $contentUrl = $data['contentUrl'];
-            $this->navBarImageObject(_("Image") . ": $contentUrl");
-            // edit image
-            $content[] = Fragment::box()->simpleBox([
-                self::formImageObjectEdit($data),
-                self::infoIsPartOf($data)
-            ], _("Image"));
-            // author
-            $content[] = Fragment::box()->expandingBox(_("Author"), [ Fragment::form()->relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author'])]);
-            $content[] = Fragment::icon()->arrowBack();
-
-        } else {
-            $this->navBarImageObject(_("Image not founded!"));
-            $content[] = Fragment::noContent(_("Item not founded"));
-        }
-
-        View::main($content);
-    }
-
-	/**
-	 * @param $data
-	 * @throws Exception
-	 */
-	public function keywords($data)
+  /**
+   * @param null $data
+   */
+  public function new($data = null)
   {
-    $keywordName = $data['paramsUrl']['idimageObject'] ?? _("Undefined");
-    $this->navBarImageObject(_("Keyword") . ": " . $keywordName);
-    $content[] = parent::imagesList($data['list']);
-    $content[] = "<div style='margin-top: 10px;'>".Fragment::icon()->arrowBack()."</div>";
+		// NAVBAR
+		parent::navBarLevel2(_('Add'));
+    View::main(self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null));
+  }
+
+  /**
+   * @throws Exception
+   */
+  public function edit(array $data)
+  {
+    if (!empty($data)) {
+      $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
+      $contentUrl = $data['contentUrl'];
+      $this->navBarLevel2(_("Image") . ": $contentUrl");
+      // edit image
+      $content[] = Fragment::box()->simpleBox([
+        self::formImageObjectEdit($data),
+        self::infoIsPartOf($data)
+      ], _("Image"));
+      // author
+      $content[] = Fragment::box()->expandingBox(_("Author"), [ Fragment::form()->relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author'])]);
+      $content[] = Fragment::icon()->arrowBack();
+
+    } else {
+      $this->navBarLevel2(_("Image not founded!"));
+      $content[] = Fragment::noContent(_("Item not founded"));
+    }
 
     View::main($content);
   }
 
-    /**
-     * @throws Exception
-     */
-    public function getForm(string $tableHasPart, int $idHasPart, $data = []): array
-    {
-        $this->tableHasPart = $tableHasPart;
-        $this->idHasPart = $idHasPart;
+  /**
+   * @throws Exception
+   */
+  public function getForm(string $tableHasPart, int $idHasPart, $data = []): array
+  {
+    $this->tableHasPart = $tableHasPart;
+    $this->idHasPart = $idHasPart;
 
-        // form for edit
-        $content[] = self::editWithPartOf($data ?? []);
-        // upload
-        $content[] = self::upload($tableHasPart, $idHasPart);
-        // save with a database image 
-        $content[] = self::addImagesFromDatabase();
+    // form for edit
+    $content[] = self::editWithPartOf($data ?? []);
+    // upload
+    $content[] = self::upload($tableHasPart, $idHasPart);
+    // save with a database image
+    $content[] = self::addImagesFromDatabase();
 
-        return $content;
-    }
+    return $content;
+  }
 
-    /**
-     * @return array
-     */
-    protected function addImagesFromDatabase(): array
-    {
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
-        $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
-        $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
-        return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
-    }
+  /**
+   * @return array
+   */
+  protected function addImagesFromDatabase(): array
+  {
+    $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
+    $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
+    $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
+    return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
+  }
 }

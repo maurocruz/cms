@@ -8,6 +8,7 @@ use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\Server\Type\ImageObjectServer;
 use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\WebSite\Type\View;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;
 use Plinct\Web\Element\Element;
@@ -23,95 +24,35 @@ class ImageObjectWidget
    */
   protected int $idHasPart;
 
-  /**
-   * @param $data
-   * @return array
-   */
-  protected function keywordsList($data): array
-  {
-    $list = null;
-    $numberOfItems = count($data);
+	protected int $limit = 40;
 
-    $content[] = [ "tag" => "p", "content" => sprintf(_("Listing %s groups"), $numberOfItems ) ];
-
-    foreach ($data as $value) {
-      $item = $value;
-      $keywords = $item['keywords'];
-      $src = $item['contentUrl'];
-      $href = "/admin/imageObject/keywords/".urlencode($keywords);
-      $list[] = "<li class='imageObject-index' data-keywords='$keywords' data-contentUrl='$src'>
-        <figure class='list-folder-figure' id='$keywords'>
-          <a href='$href'><img src='$src' alt='$keywords'></a>
-	        <figcaption><a href='$href'>$keywords</a></figcaption>
-        </figure>
-      </li>";
-    }
-
-    $content[] = [ "tag" => "ul", "attributes" => ['id'=>'imageObject-listAll', "class" => "list-folder" ], "content" => $list ];
-
-    return [ "tag" => "div", "content" => $content ];
-  }
+	protected int $offset = 0;
 
 	/**
-  * @param $data
-  * @return array
-  * @throws Exception
-  */
-  protected function imagesList($data): array
-  {
-    $containerImages = null;
-    $content[] = [ "tag" => "p", "content" => sprintf(_("Show %s items!"), $data['numberOfItems']) ];
-    $imageServer = new ImageObjectServer();
+	 * @return void
+	 */
+	protected function navBarLevel1()
+	{
+		View::contentHeader(Fragment::navbar()
+			->title(_('Images'))
+			->level(2)
+			->newTab("/admin/imageObject", Fragment::icon()->home())
+			->newTab("/admin/imageObject/new", Fragment::icon()->plus())
+			->newTab("/admin/imageObject?listBy=keywords", _("Keywords"))
+			->newTab("/admin/imageObject?listBy=groups", _("Groups"))
+			->ready()
+		);
+	}
 
-    foreach ($data['itemListElement'] as $value) {
-      $item = $value['item'];
-			$isImage = true;
-      // vars
-      $id = $item['idimageObject'];
-      $href = "/admin/imageObject/edit/$id";
-      $src = $item['contentUrl'];
-			$thumbnail = $item['thumbnail'] ?? $src;
-
-      $image = new Image($src);
-      // span
-      if (!$item['height']) {
-        if ($image->isValidImage()) {
-	        $item['width'] = $image->getWidth();
-	        $item['height'] = $image->getHeight();
-        } else {
-					$isImage = false;
-        }
-      }
-
-			if ($isImage) {
-				// <img>
-				$img = "<a href='$href'><img src='$thumbnail' alt=''></a>";
-				// <figcaption>
-				$info = $imageServer->getImageHasPartOf($id);
-				$n = $info ? "<b style='color: green'>" . count($info) . "</b>" : "<b style='color: red'>0</b>";
-				// buttons
-				$edit = "<a href='$href' class='imageGrid-edit'>".Fragment::icon()->edit()."</a>";
-				$measures = "<span class='imageGrid-measures'>" . $item['width'] . " x " . $item['height'] . "</span>";
-				$countParts = "<span class='imageGrid-countParts'>$n</span>";
-				$selected = "<span class='imageGrid-selected'><input type='checkbox' name='idImageObject[]' value='$id'/></span>";
-
-				$figcaption = "<figcaption>".$edit.$measures.$countParts.$selected."</figcaption>";
-
-				$figureContent = $img.$figcaption;
-
-			} else {
-				$figureContent = "<a href='$href'>".Fragment::icon()->noImage(200)."</a>";
-			}
-
-      $containerImages[] = "<figure class='admin-images-grid-figure'>$figureContent</figure>";
-    }
-
-		$containerImages[] = "<script src='/admin/assets/js/imageGrid'></script>";
-
-    $content[] = [ "tag" => "div", "attributes" => [ "class" => "admin-images-grid", "id"=>"imageGrid-container" ], "content" => $containerImages ];
-
-    return [ "tag" => "div", "content" => $content ];
-  }
+	protected function navBarLevel2($title)
+	{
+		self::navBarLevel1();
+		View::contentHeader(Fragment::navbar()
+			->title($title)
+			->level(3)
+			->ready()
+		);
+	}
 
   /**
    *
@@ -178,65 +119,64 @@ class ImageObjectWidget
     return $form->ready();
   }
 
-  /**
+	/**
    * @throws Exception
    */
-  protected function formIsPartOf($value): array
-  {
-      $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+	protected function formIsPartOf($value): array
+	{
+    $ID = $value['idimageObject'];
 
-
-      $form = Fragment::form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$ID", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
-      $form->action("/admin/imageObject/edit")->method('post');
-      // hiddens
-      $form->input('tableHasPart', $this->tableHasPart, 'hidden');
-      $form->input('idHasPart', (string) $this->idHasPart, 'hidden');
-      $form->input('idIsPartOf', $ID, 'hidden');
-      $form->input('tableIsPartOf', 'imageObject', 'hidden');
-      $form->input('id', $ID, 'hidden');
-      // image
-      $image = new Image($value['contentUrl']);
-      $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
-      $form->content([
-          "object" => "figure",
-          "attributes"=>['class'=>'form-imageObject-edit-figure'],
-          "src" => $image->getSrc(),
-          "width" => 200,
-          "href" => "/admin/imageObject/edit/$ID",
-          "caption" => $caption
-      ]);
-      // content url
-      $form->fieldsetWithInput("contentUrl", $value['contentUrl'], _("Content url"),  "text", null, [ "readonly" ]);
-      // position
-      $form->fieldsetWithInput("position", $value['position'] ?? '1', _("Position"), "number", null, [ "min" => "1" ]);
-      // highlights
-      $form->content([ "tag" => "fieldset", "content" => [
-          [ "tag" => "legend", "content" => _("Representative of page") ],
-          [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
-              [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 1, ($value['representativeOfPage'] == 1 ? "checked" : null) ] ], _("Yes")
-          ] ],
-          [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
-              [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 0, $value['representativeOfPage'] == 0 ? "checked" : null ] ], _("No")
-          ] ]
-      ]]);
-      // image, height and href for use in web page element
-      if (isset($value['width']) && $this->tableHasPart == "webPageElement") {
-          // width
-          $width = $value['width'] != '0.00' ? $value['width'] : null;
-          $form->fieldsetWithInput('width', $width, _("Width"));
-          // height
-          $height = isset($value['height']) && $value['height'] != '0.00' ? $value['height'] : null;
-          $form->fieldsetWithInput('height', $height, _('Height'));
-          // href
-          $form->fieldsetWithInput('href', $value['href'] ?? null, _("Link"));
-      }
-      // caption
-      $form->fieldsetWithInput("caption", $value['caption'], _("Caption"));
-      // submit buttons
-      $form->submitButtonSend();
-      $form->submitButtonDelete("/admin/imageObject/erase");
-      // ready
-      return $form->ready();
+    $form = Fragment::form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$ID", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
+    $form->action("/admin/imageObject/edit")->method('post');
+    // hiddens
+    $form->input('tableHasPart', $this->tableHasPart, 'hidden');
+    $form->input('idHasPart', (string) $this->idHasPart, 'hidden');
+    $form->input('idIsPartOf', $ID, 'hidden');
+    $form->input('tableIsPartOf', 'imageObject', 'hidden');
+    $form->input('id', $ID, 'hidden');
+    // image
+    $image = new Image($value['contentUrl']);
+    $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
+    $form->content([
+      "object" => "figure",
+      "attributes"=>['class'=>'form-imageObject-edit-figure'],
+      "src" => $image->getSrc(),
+      "width" => 200,
+      "href" => "/admin/imageObject/edit/$ID",
+      "caption" => $caption
+    ]);
+    // content url
+    $form->fieldsetWithInput("contentUrl", $value['contentUrl'], _("Content url"),  "text", null, [ "readonly" ]);
+    // position
+    $form->fieldsetWithInput("position", $value['position'] ?? '1', _("Position"), "number", null, [ "min" => "1" ]);
+    // highlights
+    $form->content([ "tag" => "fieldset", "content" => [
+      [ "tag" => "legend", "content" => _("Representative of page") ],
+      [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
+        [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 1, ($value['representativeOfPage'] == 1 ? "checked" : null) ] ], _("Yes")
+      ] ],
+      [ "tag" => "label", "attributes" => [ "class" => "labelradio" ], "content" => [
+        [ "tag" => "input",  "attributes" => [ "name" => "representativeOfPage", "type" => "radio", "value" => 0, $value['representativeOfPage'] == 0 ? "checked" : null ] ], _("No")
+      ] ]
+    ]]);
+    // image, height and href for use in web page element
+    if (isset($value['width']) && $this->tableHasPart == "webPageElement") {
+      // width
+      $width = $value['width'] != '0.00' ? $value['width'] : null;
+      $form->fieldsetWithInput('width', $width, _("Width"));
+      // height
+      $height = isset($value['height']) && $value['height'] != '0.00' ? $value['height'] : null;
+      $form->fieldsetWithInput('height', $height, _('Height'));
+      // href
+      $form->fieldsetWithInput('href', $value['href'] ?? null, _("Link"));
+    }
+    // caption
+    $form->fieldsetWithInput("caption", $value['caption'], _("Caption"));
+    // submit buttons
+    $form->submitButtonSend();
+    $form->submitButtonDelete("/admin/imageObject/erase");
+    // ready
+    return $form->ready();
   }
 
   /**
