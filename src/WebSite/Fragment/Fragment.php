@@ -20,7 +20,8 @@ use Plinct\Cms\WebSite\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\WebSite\Fragment\Miscellaneous\MiscellaneousInterface;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragment;
 use Plinct\Cms\WebSite\Fragment\Navbar\NavbarFragmentInterface;
-use Plinct\Web\Fragment\IconsFragment;
+use Plinct\Web\Fragment\Icons\IconsFragment;
+use Plinct\Web\Fragment\PageNavigation\PageNavigation;
 
 class Fragment
 {
@@ -61,12 +62,9 @@ class Fragment
         return new Form($attributes);
     }
 
-    /**
-     * @return IconsFragment
-     */
     public static function icon(): IconsFragment
     {
-        return \Plinct\Web\Fragment\Fragment::icons();
+			return \Plinct\Web\Fragment\Fragment::icons();
     }
 
     /**
@@ -104,4 +102,13 @@ class Fragment
         $mess = $message ?? _("No content");
         return $misc->message($mess);
     }
+
+	/**
+	 * @param array|null $attributes
+	 * @return PageNavigation
+	 */
+	public static function PageNavigation(array $attributes = null): PageNavigation
+	{
+		return new PageNavigation($attributes);
+	}
 }
