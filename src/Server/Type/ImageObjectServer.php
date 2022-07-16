@@ -36,7 +36,7 @@ class ImageObjectServer
   /**
    *
    */
-  public function setTableHasImageObject()
+  public function setTableHasImageObject() // DEPRECATED
   {
     $table_schema = PDOConnect::getDbname();
     $this->tablesHasImageObject = PDOConnect::run("select table_name as tableName from information_schema.tables WHERE table_schema = '$table_schema' AND table_name LIKE '%_has_imageObject';");
@@ -69,15 +69,16 @@ class ImageObjectServer
 
     } else {
       // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
-      $id = $params['id'];
+      $idArray = $params['idimageObject'] ?? $params['id'] ?? $params['idArray'];
 
-      if (is_array($id)) {
-        foreach($id as $value) {
-          $newParams = $params;
-          $newParams['id'] = $value;
-          $responseDataBase[] = Api::post('imageObject', $newParams);
+      if (is_array($idArray)) {
+        foreach($idArray as $value) {
+          $params['idIsPartOf'] = $value;
+					unset($params['idimageObject']);
+					unset($params['id']);
+					unset($params['idArray']);
+          $responseDataBase[] = Api::post('imageObject', $params);
         }
-
       } else {
         $responseDataBase[] = Api::post("imageObject", $params);
       }
@@ -136,26 +137,29 @@ class ImageObjectServer
     $pathinfo = pathinfo($imageFile);
     $dirname = $pathinfo['dirname'];
     $filename = $pathinfo['filename'];
-    $directory = new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS);
-    $iterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::CHILD_FIRST);
 
-    foreach ($iterator as $file) {
-      // UNLINK FILE
-      if ($file->isFile() && strstr($file->getFileName(),$filename)) {
-        unlink($file->getRealPath());
-      }
+		if (is_dir($dirname) && is_file($filename)) {
+			$directory = new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS);
+			$iterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::CHILD_FIRST);
 
-      // COUNT THE IMAGES ON FOLDER PARENT
-      if ($iterator->getDepth() === 0) {
-        $n += $file->isFile() ? 1 : 0;
-      }
-    }
+			foreach ($iterator as $file) {
+				// UNLINK FILE
+				if ($file->isFile() && strstr($file->getFileName(), $filename)) {
+					unlink($file->getRealPath());
+				}
 
-    // REMOVE DIR IF EMPTY
-    if ($n == 0) {
-      rmdir($dirname."/thumbs");
-      rmdir($dirname);
-    }
+				// COUNT THE IMAGES ON FOLDER PARENT
+				if ($iterator->getDepth() === 0) {
+					$n += $file->isFile() ? 1 : 0;
+				}
+			}
+
+			// REMOVE DIR IF EMPTY
+			if ($n == 0) {
+				rmdir($dirname . "/thumbs");
+				rmdir($dirname);
+			}
+		}
 
     return $n;
   }
@@ -164,23 +168,25 @@ class ImageObjectServer
    * @param $idIsPartOf
    * @return array|null
    */
-  public function getImageHasPartOf($idIsPartOf): ?array
+  public function getImageHasPartOf($idIsPartOf): ?array // DEPRECATED
   {
     $info = null;
     $this->setTableHasImageObject();
 
     foreach ($this->tablesHasImageObject as $value) {
-      $tableHasName = $value['tableName'];
-      $tableHasPart = strstr($value['tableName'], "_", true);
+	    $tableHasName = $value['tableName'];
+	    $tableHasPart = strstr($value['tableName'], "_", true);
 
-      $query = "select * from $tableHasName, $tableHasPart WHERE `idimageObject`=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
-      $data = PDOConnect::run($query);
+	    if ($tableHasPart !== 'group') {
+		    $query = "select * from `$tableHasName`, `$tableHasPart` WHERE `idimageObject`=$idIsPartOf AND $tableHasPart.id$tableHasPart=$tableHasName.id$tableHasPart;";
+		    $data = PDOConnect::run($query);
 
-      if (count($data) > 0) {
-        foreach ($data as $valueTableIspartOf) {
-          $id = $valueTableIspartOf["id$tableHasPart"];
-          $info[] = [ "tableHasPart" => $tableHasPart, "idHasPart" => $id, "values" => $valueTableIspartOf  ];
-        }
+		    if (!isset($data['error']) && count($data) > 0) {
+			    foreach ($data as $valueTableIspartOf) {
+				    $id = $valueTableIspartOf["id$tableHasPart"];
+				    $info[] = ["tableHasPart" => $tableHasPart, "idHasPart" => $id, "values" => $valueTableIspartOf];
+			    }
+		    }
       }
     }
 
