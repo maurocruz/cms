@@ -15,87 +15,87 @@ use ReflectionException;
 
 class WebSite extends WebSiteAbstract
 {
-    /**
-     * @return void
-     */
-    public static function create()
-    {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        // LANGUAGE
-        self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
-        // TRANSLATE BY GETTEXT
-        Locale::translateByGettext(App::getLanguage(), "plinctCms", __DIR__."/../../Locale");
-        // HEAD
-        parent::addHead(Structure::head());
-        // HEADER
-        parent::addHeader(Structure::header());
-        // FOOTER
-        parent::addFooter(Structure::footer());
+  /**
+   * @return void
+   */
+  public static function create()
+  {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    // LANGUAGE
+    self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
+    // TRANSLATE BY GETTEXT
+    Locale::translateByGettext(App::getLanguage(), "plinctCms", __DIR__."/../../Locale");
+    // HEAD
+    parent::addHead(Structure::head());
+    // HEADER
+    parent::addHeader(Structure::header());
+    // FOOTER
+    parent::addFooter(Structure::footer());
 
-        // HEADER ELEMENTS
-        $userLogin = $_SESSION['userLogin'] ?? null;
-        if ($userLogin) {
-            parent::addHeader(Structure::userBar($userLogin), true);
-        }
-        if (isset($_SESSION['userLogin']['admin'])) {
-					parent::addHeader(Structure::mainMenu());
-        }
+    // HEADER ELEMENTS
+    $userLogin = $_SESSION['userLogin'] ?? null;
+    if ($userLogin) {
+      parent::addHeader(Structure::userBar($userLogin), true);
     }
-
-    /**
-     * @param string $message
-     * @return void
-     */
-    public static function warning(string $message)
-    {
-        parent::addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
+    if (isset($_SESSION['userLogin']['admin'])) {
+			parent::addHeader(Structure::mainMenu());
     }
+  }
 
-    /**
-     * @throws ReflectionException
-     */
-    public static function getContent(array $params = null, array $queryStrings = null)
-    {
-        $type = $queryStrings['type'] ?? $params['type'] ?? null;
-        $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
-        $id = $queryStrings['id'] ?? $params['id'] ?? null;
+  /**
+   * @param string $message
+   * @return void
+   */
+  public static function warning(string $message)
+  {
+      parent::addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
+  }
 
-        if($id && $methodName == 'index') $methodName = 'edit';
+  /**
+   * @throws ReflectionException
+   */
+  public static function getContent(array $params = null, array $queryStrings = null)
+  {
+    $type = $queryStrings['type'] ?? $params['type'] ?? null;
+    $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
+    $id = $queryStrings['id'] ?? $params['id'] ?? null;
 
-        if ($type) {
-            $controller = new Controller();
-            $data = $controller->getData($type, $methodName, $id, $queryStrings);
+    if($id && $methodName == 'index') $methodName = 'edit';
 
-            $view = new View();
-            $view->view($type, $methodName, $data);
+    if ($type) {
+      $controller = new Controller();
+      $data = $controller->getData($type, $methodName, $id, $queryStrings);
 
-        } else {
-            parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
-        }
+      $view = new View();
+			$allParams = array_merge($params, $queryStrings);
+      $view->view($type, $methodName, $data, $allParams);
+
+    } else {
+      parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
     }
+  }
 
-    public static function enclave(): Enclave
-    {
-        return new Enclave();
-    }
+  public static function enclave(): Enclave
+  {
+    return new Enclave();
+  }
 
-    /**
-     * @return string
-     */
-    public static function ready(): string
-    {
+  /**
+   * @return string
+   */
+  public static function ready(): string
+  {
+    parent::$CONTENT['content'][] = self::$HEADER;
+    parent::$CONTENT['content'][] = self::$MAIN;
+    parent::$CONTENT['content'][] = self::$FOOTER;
+    parent::$BODY['content'][] = self::$CONTENT;
 
-        parent::$CONTENT['content'][] = self::$HEADER;
-        parent::$CONTENT['content'][] = self::$MAIN;
-        parent::$CONTENT['content'][] = self::$FOOTER;
-        parent::$BODY['content'][] = self::$CONTENT;
+    parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
+    parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 
-        parent::$BODY['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
-        parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/plinctcms.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
-
-        parent::$HTML['content'][] = self::$HEAD;
-        parent::$HTML['content'][] = self::$BODY;
-        // RETURN
-        return "<!DOCTYPE html>" . Render::arrayToString(parent::$HTML);
-    }
+    parent::$HTML['content'][] = self::$HEAD;
+    parent::$HTML['content'][] = self::$BODY;
+    // RETURN
+    return "<!DOCTYPE html>" . Render::arrayToString(parent::$HTML);
+  }
 }

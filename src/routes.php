@@ -10,7 +10,6 @@ use Plinct\Cms\Middleware\GatewayMiddleware;
 use Plinct\Cms\Server\Type\ClosureServer;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Section\User\UserController;
-use Plinct\Cms\WebSite\Section\User\UserView;
 use Plinct\Cms\WebSite\WebSite;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -56,10 +55,18 @@ return function (Route $route)
 	   */
 		$route->get('/user[/{action}[/{iduser}]]', function (Request $request, Response $response, $args)
 		{
+			$action = $args['action'] ?? null;
+			$iduser = $args['iduser'] ?? null;
 			$params = $request->getQueryParams();
 
-			$data = (new UserController())->index($params);
-			(new UserView())->index($data);
+			$userController = new UserController();
+			if ($action == "new") {
+				$userController->new($params);
+			} elseif ($iduser && $action == "edit") {
+				$userController->edit($params);
+			} else {
+				$userController->index($params);
+			}
 
 			$response->getBody()->write(WebSite::ready());
 			return $response;
