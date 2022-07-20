@@ -9,6 +9,7 @@ use Plinct\Api\User\User;
 use Plinct\Cms\App;
 use Plinct\Tool\Curl;
 use Plinct\Tool\ToolBox;
+use Plinct\Web\Debug\Debug;
 
 class Api
 {
@@ -62,7 +63,7 @@ class Api
   {
     $apiHostName = App::getApiHost();
 
-    // IF SITE HOST === API HOST
+	  // IF SITE HOST === API HOST
     if (App::getURL() == pathinfo($apiHostName)['dirname']) {
       $classname = "Plinct\\Api\\Type\\".ucfirst($type);
       return (new $classname())->{$action}($params);
@@ -71,6 +72,7 @@ class Api
       // TOKEN
       $token = filter_input(INPUT_COOKIE, "API_TOKEN");
       // URL FOR API
+	    $apiHostName = substr($apiHostName,-1) === '/' ? $apiHostName : $apiHostName.'/';
       $apiHostName = $apiHostName . $type . ($action == 'get' ?  "?" . http_build_query($params): null);
       // CURL
       $curlHandle = ToolBox::Curl()
