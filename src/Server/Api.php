@@ -9,7 +9,6 @@ use Plinct\Api\User\User;
 use Plinct\Cms\App;
 use Plinct\Tool\Curl;
 use Plinct\Tool\ToolBox;
-use Plinct\Web\Debug\Debug;
 
 class Api
 {
