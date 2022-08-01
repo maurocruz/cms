@@ -82,78 +82,92 @@ return function (Route $route)
 
     })->addMiddleware(new AuthenticationMiddleware());
 
-    if(!isset($_SESSION['userLogin'])) {
+    if(!App::getUserLoginId()) {
       /**
        * REGISTER GET
        */
-      $route->get('/register', function (Request $request, Response $response)
-      {
-        WebSite::addMain(Fragment::auth()->register());
-        $response->getBody()->write(WebSite::ready());
-        return $response;
-      });
+			$route->group('/register', function (Route $route)
+			{
+				$route->get('', function (Request $request, Response $response)
+				{
+					WebSite::addMain(Fragment::auth()->register());
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
 
-      /**
-       * REGISTER POST
-       */
-      $route->post('/register', function (Request $request, Response $response)
-      {
-        $authentication = Api::register($request->getParsedBody());
-        WebSite::addMain(Fragment::auth()->register($authentication));
-        $response->getBody()->write(WebSite::ready());
-        return $response;
-      });
+				/**
+				 * REGISTER POST
+				 */
+				$route->post('', function (Request $request, Response $response)
+				{
+					$authentication = Api::register($request->getParsedBody());
+					WebSite::addMain(Fragment::auth()->register($authentication));
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
+			});
 
       /**
        * RESET PASSWORD
        */
-      $route->get('/resetPassword', function (Request $request, Response $response)
-      {
-        if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
-          WebSite::addMain(Fragment::auth()->resetPassword());
-        } else {
-          WebSite::addMain("<p class='warning'>"._("No email server data")."</p>");
-        }
-        $response->getBody()->write(WebSite::ready());
-        return $response;
-      });
+			$route->group('/resetPassword', function (Route $route)
+			{
+				$route->get('', function (Request $request, Response $response)
+				{
+					if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
+						WebSite::addMain(Fragment::auth()->resetPassword());
+					} else {
+						WebSite::addMain("<p class='warning'>"._("No email server data")."</p>");
+					}
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
 
-      $route->post('/resetPassword', function (Request $request, Response $response)
-      {
-        $email = $request->getParsedBody()['email'];
-        $data = json_decode(Api::resetPassword($email), true);
-        WebSite::addMain(Fragment::auth()->resetPassword($data, $email));
-        $response->getBody()->write(WebSite::ready());
-        return $response;
-      });
+				$route->post('', function (Request $request, Response $response)
+				{
+					$email = $request->getParsedBody()['email'];
+					$data = json_decode(Api::resetPassword($email), true);
+					WebSite::addMain(Fragment::auth()->resetPassword($data, $email));
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
+			});
 
       /**
        * CHANGE PASSWORD
        */
-      $route->get('/change_password', function (Request $request, Response $response)
-      {
-        $selector = $request->getQueryParams()['selector'] ?? null;
-        $validator = $request->getQueryParams()['validator'] ?? null;
+			$route->group('/change_password', function (Route $route)
+			{
+				$route->get('', function (Request $request, Response $response)
+				{
+					$selector = $request->getQueryParams()['selector'] ?? null;
+					$validator = $request->getQueryParams()['validator'] ?? null;
 
-        if ($selector && $validator) {
-          WebSite::addMain(Fragment::auth()->changePassword($request->getQueryParams()));
-        } else {
-          WebSite::addMain(Fragment::noContent(_("Missing data!")));
-        }
+					if ($selector && $validator) {
+						WebSite::addMain(Fragment::auth()->changePassword($request->getQueryParams()));
+					} else {
+						WebSite::addMain(Fragment::noContent(_("Missing data!")));
+					}
 
-        $response->getBody()->write(WebSite::ready());
-        return $response;
-      });
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
 
-      $route->post('/change_password', function (Request $request, Response $response)
-      {
-        $params = $request->getParsedBody();
-        $data = json_decode(Api::changePassword($params), true);
-        WebSite::addMain(Fragment::auth()->changePassword($params, $data));
-        $response->getBody()->write(WebSite::ready());
-        return $response;
+				$route->post('', function (Request $request, Response $response)
+				{
+					$params = $request->getParsedBody();
+					$data = json_decode(Api::changePassword($params), true);
+					WebSite::addMain(Fragment::auth()->changePassword($params, $data));
+					$response->getBody()->write(WebSite::ready());
+					return $response;
+				});
+			});
 
-      });
+    } else {
+			$route->get('[/{paramsUrl:.*}]', function (Request $request, Response $response)
+			{
+				return $response->withHeader('Location', '/admin')->withStatus(301);
+			});
     }
   });
 };

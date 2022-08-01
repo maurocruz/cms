@@ -154,20 +154,19 @@ class Api
     $params['mailPassword'] = App::getMailpassword();
     $params['urlToResetPassword'] = App::getUrlToResetPassword();
 
-    $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
+    $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
 
     return $handleCurl->ready();
   }
 
   public static function changePassword(array $params): string
   {
-    $url = App::getApiHost() . "auth/change_password";
-
+		unset($params['submit']);
+		$base = substr(App::getApiHost(),-1) !== '/' ? App::getApiHost().'/' : App::getApiHost();
+    $url = $base . "auth/change_password";
     $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
-
     // for localhost
     if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
-
     return $handleCurl->ready();
   }
 }
