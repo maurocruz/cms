@@ -5,6 +5,7 @@
 
 declare(strict_types=1);
 
+use Plinct\Cms\App;
 use Plinct\Cms\Authentication\AuthenticationMiddleware;
 use Plinct\Cms\Middleware\GatewayMiddleware;
 use Plinct\Cms\Server\Type\ClosureServer;
@@ -59,13 +60,17 @@ return function (Route $route)
 			$iduser = $args['iduser'] ?? null;
 			$params = $request->getQueryParams();
 
-			$userController = new UserController();
-			if ($action == "new") {
-				$userController->new($params);
-			} elseif ($iduser && $action == "edit") {
-				$userController->edit($params);
+			if (App::getUserLoginId()) {
+				$userController = new UserController();
+				if ($action == "new") {
+					$userController->new($params);
+				} elseif ($iduser && $action == "edit") {
+					$userController->edit($params);
+				} else {
+					$userController->index($params);
+				}
 			} else {
-				$userController->index($params);
+				WebSite::addMain(Fragment::auth()->login());
 			}
 
 			$response->getBody()->write(WebSite::ready());
