@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Service;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
-use Plinct\Cms\WebSite\Fragment\ListTable\ListTable;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\Offer\OfferView;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Tool\ArrayTool;
-use Plinct\Web\Debug\Debug;
 
 class ServiceView extends ServiceAbstract
 {
@@ -95,7 +94,7 @@ class ServiceView extends ServiceAbstract
         $this->navbarService();
 
         // LIST TABLE IN MAIN
-        $listTable = new ListTable();
+        $listTable = CmsFactory::response()->fragment()->listTable();
         $listTable->setEditButton("/admin/$this->tableHasPart/service?id=$this->idHasPart&item=");
         // caption
         $listTable->caption(sprintf(_("%s services list"),$value['name']));

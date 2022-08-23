@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Order;
 
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Tool\ArrayTool;
 
 class OrderController

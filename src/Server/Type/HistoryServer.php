@@ -1,10 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Plinct\Cms\Server\Type;
 
-use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Request\Api;
 
-class HistoryServer {
+class HistoryServer
+{
     private $tableHasPart;
     private $idHasPart;
     private $action;
@@ -19,7 +23,7 @@ class HistoryServer {
     public function __construct($tableHasPart, $idHasPart) {
         $this->tableHasPart = $tableHasPart;
         $this->idHasPart = $idHasPart;
-        $this->userId = App::getUserLoginId();
+        $this->userId = CmsFactory::request()->user()->userLogged()->getIduser();
     }
 
     /**

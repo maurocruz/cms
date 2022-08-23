@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\WebSite\Type\Intangible\ContactPointView;
+use Plinct\Cms\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Tool\ArrayTool;
 
@@ -65,7 +65,7 @@ class LocalBusinessView
         // LOCATION
         $content[] = Fragment::box()->expandingBox(_("Place"), Fragment::form()->relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']));
         // CONTACT POINT
-        $content[] = Fragment::box()->expandingBox(_("Contact point"), (new ContactPointView())->getForm("localBusiness", $id, $value['contactPoint']));
+        $content[] = Fragment::box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm("localBusiness", $id, $value['contactPoint']));
         // ORGANIZATION
         $content[] = Fragment::box()->expandingBox(_("Organization"), Fragment::form()->relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']));
         // MEMBER

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Product;
 
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 
 class ProductController
 {

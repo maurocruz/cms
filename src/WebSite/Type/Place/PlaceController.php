@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Place;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Cms\WebSite\Type\ControllerInterface;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
@@ -22,7 +22,7 @@ class PlaceController implements ControllerInterface
         // TODO Habilitar busca (search via get query string)
         // TODO aumentar largura dos campos de latitude e longitude no banco de dados
 
-        $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], $params);
+        $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], (array)$params);
         return Api::get("place", $params);
     }
 

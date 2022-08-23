@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Person;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\WebSite\Type\Intangible\ContactPointView;
+use Plinct\Cms\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Cms\WebSite\Type\Intangible\Service\ServiceView;
 use Plinct\Cms\WebSite\Type\Product\ProductView;
@@ -59,7 +59,7 @@ class PersonView extends PersonViewAbstract
             // FORM
             View::main(Fragment::box()->simpleBox(self::formPerson('edit', $value), _("Edit person")));
             // CONTACT POINT
-            View::main(Fragment::box()->expandingBox(_("Contact point"), (new ContactPointView())->getForm('person', $this->id, $value['contactPoint'])));
+            View::main(Fragment::box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->id, $value['contactPoint'])));
             // ADDRESS
             View::main(Fragment::box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("person", $this->id, $value['address'])));
             // IMAGE

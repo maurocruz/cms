@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\OrderItem;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Tool\ArrayTool;
 
 class OrderItemView extends OrderItemAbstract

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\OrderItem;
 
-use App\Tools\ToolBox;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
+use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
 
 abstract class OrderItemAbstract
@@ -101,7 +101,7 @@ abstract class OrderItemAbstract
                     ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
                     ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-                    ->bodyCell(Fragment::button()->buttonDelete($value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
+                    ->bodyCell(CmsFactory::response()->fragment()->button()->buttonDelete($value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
                     ->closeRow();
 
                 $quantityTotal += $orderQuantity;
@@ -131,7 +131,7 @@ abstract class OrderItemAbstract
      */
     protected function listSellerOfferedItems($sellerHasOfferCatalog): array
     {
-        $form = Fragment::form(['class'=>'formPadrao']);
+        $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao']);
         $form->action("/admin/orderItem/new")->method("post");
         // number of items
         $form->content("<p>" . sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) . "</p>");

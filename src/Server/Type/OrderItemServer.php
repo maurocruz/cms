@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Server\Type;
 
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Cms\Server\ServerAbstract;
 
 class OrderItemServer extends ServerAbstract
@@ -15,6 +15,7 @@ class OrderItemServer extends ServerAbstract
      */
     public function new(array $params)
     {
+			$value = null;
         $numberOfOrderedItems = 0;
         $itemsOrdered = null;
         foreach ($params['items'] as $value) {

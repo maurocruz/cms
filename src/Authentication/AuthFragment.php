@@ -4,30 +4,29 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Authentication;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 
 class AuthFragment
 {
   /**
-   * @param array|null $authentication
-   * @return string
+   * @param array|null $data
    */
-  public function login(array $authentication = null): string
+  public function login(array $data = null): string
   {
-    $message = $authentication['message'] ?? null;
-    return ($message ? "<p class='aviso'>" . _($message) . "</p>" : null) . self::formLogin();
+    $message = $data['message'] ?? null;
+		return ($message ? "<p class='aviso'>" . _($message) . "</p>" : null) . self::formLogin();
   }
 
   /**
-   * @param $authentication
+   * @param $data
    * @return string
    */
-  public function register($authentication = null): string
+  public function register($data = null): string
   {
     $message = null;
     $form = self::formRegister();
-    if ($authentication) {
-      $message = $authentication['message'];
+    if ($data) {
+      $message = $data['message'];
       if ($message == "Duplicate entry for key 'email'") {
         return "<p class='warning'>"._("This email already exists in our database!") . "</p>" . self::formLogin();
       }
@@ -46,7 +45,7 @@ class AuthFragment
     $returns = null;
     if ($response) {
       if ($response['status'] == 'fail') {
-        $returns[] = Fragment::noContent($response['message']);
+        $returns[] = CmsFactory::response()->message()->warning($response['message']);
       } elseif ($response['status'] == 'success') {
         return ["<p class='warning'>{$response['data']['mail']['message']}</p>"];
       }

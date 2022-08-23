@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\Server\Helpers;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 
 class BreadcrumbList
 {

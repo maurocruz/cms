@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Article;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\ControllerInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
@@ -20,7 +20,7 @@ class ArticleController implements ControllerInterface
     {
         $params2 = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "dateModified desc, datePublished desc" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
-        return Api::get("article", $params3);
+				return CmsFactory::request()->api()->get('article', $params3)->ready();
     }
 
     /**
@@ -31,7 +31,10 @@ class ArticleController implements ControllerInterface
     {
         $params2 = [ "properties" => "*,image,author" ];
         $params3 = $params ? array_merge($params, $params2) : $params2;
-        return Api::get("article", $params3);
+				if (isset($params3['idarticle'])) {
+					return CmsFactory::request()->api()->get("article", $params3)->ready();
+				}
+				return [];
     }
 
     public function new($params = null) {
@@ -41,7 +44,7 @@ class ArticleController implements ControllerInterface
     public function saveSitemap() {
         $dataSitemap = null;
         $params = [ "orderBy" => "datePublished", "ordering" => "desc" ];
-        $data = Api::get("article", $params);
+        $data = CmsFactory::request()->api()->get("article", $params)->ready();
         foreach ($data as $value) {
             if ($value['datePublished']) {
                 $dataSitemap[] = [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Event;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 
 abstract class EventAbstract
 {

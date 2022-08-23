@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\WebSite;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\WebPage\WebPageView;
-use Plinct\Cms\WebSite\WebSite;
 use Plinct\Tool\ArrayTool;
 
 class WebSiteView extends WebSiteAbstract
@@ -19,13 +18,13 @@ class WebSiteView extends WebSiteAbstract
     {
         $this->navbarWebSite();
 
-        $listTable = Fragment::listTable();
+        $listTable = CmsFactory::response()->fragment()->listTable();
         $listTable->caption(_("List of websites"))
             ->labels("url")
             ->rows($data['itemListElement'],['url'])
             ->setEditButton("/admin/webSite/edit/");
 
-        WebSite::addMain($listTable->ready());
+				CmsFactory::webSite()->addMain($listTable->ready());
     }
 
     /**
@@ -34,9 +33,8 @@ class WebSiteView extends WebSiteAbstract
     {
         // NAVBAR
         $this->navbarWebSite();
-
         // FORM
-        WebSite::addMain(self::newView());
+        CmsFactory::webSite()->addMain(self::newView());
     }
 
     /**
@@ -51,7 +49,7 @@ class WebSiteView extends WebSiteAbstract
         parent::navbarWebSite($value['name']);
 
         // form
-        WebSite::addMain(parent::editView($value));
+        CmsFactory::webSite()->addMain(parent::editView($value));
 
         // list web pages
         WebPageView::index($value);

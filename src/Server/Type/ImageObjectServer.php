@@ -6,13 +6,14 @@ namespace Plinct\Cms\Server\Type;
 
 use Exception;
 use FilesystemIterator;
-use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
-use Plinct\Cms\Server\Helpers\ImageObjectUpload;
-use Plinct\PDO\PDOConnect;
-use Plinct\Tool\FileSystem\FileSystem;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Plinct\PDO\PDOConnect;
+use Plinct\Tool\FileSystem\FileSystem;
+
+use Plinct\Cms\App;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Server\Helpers\ImageObjectUpload;
 
 class ImageObjectServer
 {
@@ -23,7 +24,7 @@ class ImageObjectServer
   /**
    * @var array
    */
-  private static array $KEYWORDS_LIST;
+  private static array $KEYWORDS_LIST = [];
   /**
    * @var array
    */
@@ -31,7 +32,7 @@ class ImageObjectServer
   /**
    * @var array
    */
-  private static array $LIST_LOCATIONS;
+  private static array $LIST_LOCATIONS = [];
 
   /**
    *
@@ -63,7 +64,7 @@ class ImageObjectServer
 
         foreach ($newParams as $valueNewParams) {
           $params = array_merge($params, $valueNewParams);
-          $responseDataBase[] = Api::post("imageObject", $params);
+          $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params)->ready();
         }
       }
 
@@ -77,10 +78,10 @@ class ImageObjectServer
 					unset($params['idimageObject']);
 					unset($params['id']);
 					unset($params['idArray']);
-          $responseDataBase[] = Api::post('imageObject', $params);
+          $responseDataBase[] = CmsFactory::request()->api()->post('imageObject', $params)->ready();
         }
       } else {
-        $responseDataBase[] = Api::post("imageObject", $params);
+        $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params)->ready();
       }
     }
 
@@ -106,14 +107,14 @@ class ImageObjectServer
     $n = 0;
     // ERASE TABLE RELATIONSHOP ONLY
     if (isset($params['tableHasPart']) && isset($params['idHasPart']) && isset($params['tableIsPartOf']) && isset($params['idIsPartOf'])) {
-      Api::delete('imageObject', $params);
+      CmsFactory::request()->api()->delete('imageObject', $params)->ready();
       return filter_input(INPUT_SERVER, 'HTTP_REFERER');
     }
 
     // DELETE REGISTER AND UNLINK IMAGE
     else {
       // delete register
-      Api::delete('imageObject', [ "idimageObject" => $params['id'] ]);
+      CmsFactory::request()->api()->delete('imageObject', [ "idimageObject" => $params['id'] ])->ready();
 
       // unlink image
       $imageFile =  $_SERVER['DOCUMENT_ROOT'] . parse_url($params['contentUrl'])['path'];
@@ -196,9 +197,9 @@ class ImageObjectServer
   /**
    * @param $directory
    * @param null $relative
-   * @return array|false
+   * @return array
    */
-  public static function listLocation($directory, $relative = null)
+  public static function listLocation($directory, $relative = null): array
   {
     self::$LIST_LOCATIONS = self::$LIST_LOCATIONS ?? FileSystem::listDirectories($directory);
 
@@ -222,7 +223,7 @@ class ImageObjectServer
    */
   public static function listKeywords(): array
   {
-    self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? Api::get("ImageObject", [ "fields"=>"distinct(keywords)", "groupBy" => "keywords", "orderBy" => "keywords" ]);
+    self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? CmsFactory::request()->api()->get("ImageObject", [ "fields"=>"distinct(keywords)", "groupBy" => "keywords", "orderBy" => "keywords" ])->ready();
 
     if(self::$KEYWORDS === []) {
       foreach (self::$KEYWORDS_LIST as $value) {

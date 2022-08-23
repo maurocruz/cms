@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Trip;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\WebSite\Type\View;
-use Plinct\Cms\WebSite\WebSite;
 
 class TripView extends TripAbstract
 {
@@ -38,7 +38,7 @@ class TripView extends TripAbstract
 				$table->buttonEdit("/admin/trip?provider=$id");
 				$table->addRow($provider['name']);
 			}
-			WebSite::addMain($table->ready());
+			CmsFactory::webSite()->addMain($table->ready());
 		}
   }
 

@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Organization;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\Service\ServiceView;
-use Plinct\Cms\WebSite\Type\Intangible\ContactPointView;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\Order\OrderView;
 use Plinct\Cms\WebSite\Type\Product\ProductView;
-use Plinct\Cms\WebSite\Type\View;
 
 class OrganizationView extends OrganizationAbstract
 {
@@ -23,13 +20,13 @@ class OrganizationView extends OrganizationAbstract
         // NAVBAR
         parent::navbarIndex();
 
-        $listTable = Fragment::listTable()
+        $listTable = CmsFactory::response()->fragment()->listTable()
             ->caption(_("List of organizations"))
             ->labels(_('Name'),_('Additional type'), _("Date modified"))
             ->rows($data['itemListElement'],['name','additionalType','dateModified'])
             ->setEditButton("/admin/organization/edit/");
 
-        View::main($listTable->ready());
+        CmsFactory::webSite()->addMain($listTable->ready());
     }
 
     /**
@@ -40,7 +37,9 @@ class OrganizationView extends OrganizationAbstract
         // NAVBAR
         parent::navbarNew();
         //
-        View::main(Fragment::box()->simpleBox( self::formOrganization(), _("Add organization")));
+        CmsFactory::webSite()->addMain(
+					CmsFactory::response()->fragment()->box()->simpleBox( self::formOrganization(), _("Add organization"))
+        );
     }
 
     /**
@@ -52,21 +51,45 @@ class OrganizationView extends OrganizationAbstract
         if (empty($data)) {
             // NAVBAR
             parent::navbarIndex();
-            MainView::content(Fragment::noContent(_("No item founded!")));
+						CmsFactory::webSite()->addMain(
+              CmsFactory::response()->message()->noContent(_("No item founded!")));
         } else {
             $value = parent::setValues($data[0]);
             // NAVBAR
             parent::navbarEdit();
-            // organization
-            View::main(Fragment::box()->simpleBox(self::formOrganization('edit', $value), sprintf(_("Edit %s"), _("organization"))));
-            // location
-            View::main(Fragment::box()->expandingBox(_("Place"), Fragment::form()->relationshipOneToOne("organization", (string) $this->id, "location", "place", $value['location'])));
-            // contact point
-            View::main(Fragment::box()->expandingBox(_("Contact point"), (new ContactPointView())->getForm('organization', $this->id, $value['contactPoint'])));
-            // member
-            View::main(Fragment::box()->expandingBox(_("Persons"), Fragment::form()->relationshipOneToMany("organization", (string) $this->id, "person", $value['member'])));
-            // image
-            View::main(Fragment::box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("organization", $this->id, $value['image'])));
+            // ORGANIZATION
+            CmsFactory::webSite()->addMain(
+							CmsFactory::response()->fragment()->box()->simpleBox(
+								self::formOrganization('edit', $value), sprintf(_("Edit %s"), _("organization"))
+							)
+            );
+            // LOCATION
+            CmsFactory::webSite()->addMain(
+							CmsFactory::response()->fragment()->box()->expandingBox(
+								_("Place"),
+								CmsFactory::response()->fragment()->form()->relationshipOneToOne("organization", (string) $this->id, "location", "place", $value['location'])
+							)
+            );
+            // CONTACT POINT
+            CmsFactory::webSite()->addMain(
+							CmsFactory::response()->fragment()->box()->expandingBox(
+								_("Contact point"),
+								CmsFactory::webSite()->type()->intangible()->contactPoint()->getForm('organization', $this->id, $value['contactPoint'])
+							)
+            );
+            // MEMBER
+            CmsFactory::webSite()->addMain(
+							CmsFactory::response()->fragment()->box()->expandingBox(
+								_("Persons"),
+								CmsFactory::response()->fragment()->form()->relationshipOneToMany("organization", (string) $this->id, "person", $value['member']))
+            );
+            // IMAGE
+            CmsFactory::webSite()->addMain(
+							CmsFactory::response()->fragment()->box()->expandingBox(
+								_("Images"),
+								CmsFactory::webSite()->type()->imageObject()->getForm("organization", $this->id, $value['image'])
+							)
+	          );
         }
     }
 

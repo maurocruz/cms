@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Order;
 
-use App\Tools\ToolBox;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\HistoryView;
 use Plinct\Cms\WebSite\Type\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
+use Plinct\Tool\ToolBox;
 
 class OrderView extends OrderAbstract
 {

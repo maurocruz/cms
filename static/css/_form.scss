@@ -89,8 +89,6 @@
   button[type=submit] {
     display: inline-block;
     overflow: hidden;
-    height: 50px;
-    width: 50px;
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
@@ -130,20 +128,23 @@
   .form-submit-button {
     overflow: hidden;
     height: 40px;
-    width: 40px;
     display: inline-block;
-    margin-left: 5px;
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
     border: 0;
   }
 
-  .form-submit-button-send{ color: #40d377; }
+  .form-submit-button-send{
+    color: #40d377;
+    width: 30px;
+  }
   
   .form-submit-button-send:hover { color: #84f7ba; }
 
-  .form-submit-button-delete { color: #cc0000; }
+  .form-submit-button-delete {
+    color: #cc0000;
+  }
 
   .form-submit-button-delete:hover {
     color: #ff5555;
@@ -667,6 +668,43 @@
     fieldset:nth-of-type(7) { width: 25%; }
     fieldset:nth-of-type(8) { width: 25%; }
   }
+}
+
+/* USER
+===================================================== */
+.form-user {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-of-type(n) { width: 100%; }
+  fieldset:nth-of-type(1) { width: 40px; }
+  fieldset:nth-of-type(2) { width: calc(100% - 40px); }
+  fieldset:nth-of-type(4) { width: 50%; }
+  fieldset:nth-of-type(5) { width: 50%; }
+
+  @media (min-width: 576px) {
+    fieldset:nth-of-type(2) { width: calc(50% - 40px); }
+    fieldset:nth-of-type(3) { width: 50%; }
+  }
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(2) { width: calc(32% - 40px); }
+    fieldset:nth-of-type(3) { width: calc(68% - 276px); }
+    fieldset:nth-of-type(4) { width: 138px; }
+    fieldset:nth-of-type(5) { width: 138px; }
+  }
+  @media (min-width: 992px) {
+    fieldset:nth-of-type(2) { width: calc(32% - 80px); }
+    fieldset:nth-of-type(3) { width: calc(68% - 336px); }
+  }
+}
+
+.form-user-privileges {
+
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-of-type(n) { width: 50%; }
+  fieldset:nth-of-type(1) { width: 110px; }
+  fieldset:nth-of-type(2) { width: calc(40% - 96px); }
+  fieldset:nth-of-type(3) { width: calc(60% - 96px); }
 }
 
 /* WEBSITE

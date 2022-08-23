@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Structure;
 
 use Plinct\Cms\App;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 
 class Structure
 {
@@ -34,7 +34,7 @@ class Structure
    */
   public static function userBar($userLogin): string
   {
-    $helloText = sprintf(_("Hello, %s. You logged with %s!"), $userLogin['name'], $userLogin['admin'] ? "admin" : "user");
+    $helloText = sprintf(_("Hello, %s. You logged with %s!"), $userLogin['name'], "user");
     return "<div class='admin admin-bar-top'>
       <p>$helloText</p>
       <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
@@ -53,9 +53,9 @@ class Structure
 
   public static function mainMenu(): array
   {
-    $navbar = Fragment::navbar();
-    $navbar->newTab("/admin", Fragment::icon()->home());
-    $navbar->newTab("/admin/user",_("Users"));
+		$navbar = CmsFactory::response()->fragment()->navbar()
+			->newTab("/admin", CmsFactory::response()->fragment()->icon()->home())
+			->newTab("/admin/user",_("Users"));
 
     if (App::getTypesEnabled()) {
       $attributes = null;

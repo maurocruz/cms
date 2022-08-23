@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\WebPage;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\WebSite\Type\WebPageElement\WebPageElementView;
 use Plinct\Cms\WebSite\Type\View;
-use Plinct\Cms\WebSite\WebSite;
 use Plinct\Tool\ArrayTool;
 
 class WebPageView extends WebPageAbstract
@@ -20,7 +20,7 @@ class WebPageView extends WebPageAbstract
     private static function navbarWebPage(string $title = null)
     {
         if (self::$idwebSite) {
-            WebSite::addHeader(
+            CmsFactory::webSite()->addHeader(
                 Fragment::navbar()
                     ->type('webPage')
                     ->level(4)
@@ -43,7 +43,7 @@ class WebPageView extends WebPageAbstract
             );
         }
 
-        if ($title) WebSite::addHeader(
+        if ($title) CmsFactory::webSite()->addHeader(
             Fragment::navbar()
                 ->level(5)
                 ->title($title)

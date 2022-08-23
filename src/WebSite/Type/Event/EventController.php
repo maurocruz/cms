@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Event;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Cms\WebSite\Type\ControllerInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;

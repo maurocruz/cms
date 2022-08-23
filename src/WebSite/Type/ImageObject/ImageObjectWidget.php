@@ -6,8 +6,8 @@ namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Exception;
 use Plinct\Cms\App;
+use Plinct\Cms\Response\View\Fragment\Fragment;
 use Plinct\Cms\Server\Type\ImageObjectServer;
-use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;

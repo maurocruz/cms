@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\WebPage;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
 class WebPageController
 {
     /**
-     * @param null $params
+     * @param array|null $params
      * @return array
      */
-    public function index($params = null): array
+    public function index(?array $params = []): array
     {
         $params2 = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "dateModified" ], $params);
         return Api::get("webPage", $params2);

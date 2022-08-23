@@ -302,11 +302,11 @@ class App
 
   /**
    * @return ?int
-   */
+
   public static function getUserLoginId(): ?int
   {
     return isset($_SESSION['userLogin']['uid']) ? (int) $_SESSION['userLogin']['uid'] : null;
-  }
+  }*/
 
 
   /**
@@ -384,9 +384,7 @@ class App
   /**
    * @return mixed
    */
-  final public function run()
-  {
-    $route = include __DIR__ . '/routes.php';
-    return $route($this->slim);
+  final public function run() {
+		return CmsFactory::routes()->home($this->slim);
   }
 }

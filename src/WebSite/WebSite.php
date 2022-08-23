@@ -7,6 +7,7 @@ namespace Plinct\Cms\WebSite;
 use Plinct\Cms\App;
 use Plinct\Cms\Enclave\Enclave;
 use Plinct\Cms\WebSite\Type\Controller;
+use Plinct\Cms\WebSite\Type\Type;
 use Plinct\Cms\WebSite\Type\View;
 use Plinct\Cms\WebSite\Structure\Structure;
 use Plinct\Tool\Locale;
@@ -18,7 +19,7 @@ class WebSite extends WebSiteAbstract
   /**
    * @return void
    */
-  public static function create()
+  public function create()
   {
     if (session_status() === PHP_SESSION_NONE) session_start();
     // LANGUAGE
@@ -36,8 +37,6 @@ class WebSite extends WebSiteAbstract
     $userLogin = $_SESSION['userLogin'] ?? null;
     if ($userLogin) {
       parent::addHeader(Structure::userBar($userLogin), true);
-    }
-    if (isset($_SESSION['userLogin']['admin'])) {
 			parent::addHeader(Structure::mainMenu());
     }
   }
@@ -46,15 +45,14 @@ class WebSite extends WebSiteAbstract
    * @param string $message
    * @return void
    */
-  public static function warning(string $message)
-  {
-      parent::addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
+  public function warning(string $message) {
+		$this->addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
   }
 
   /**
    * @throws ReflectionException
    */
-  public static function getContent(array $params = null, array $queryStrings = null)
+  public function getContent(array $params = null, array $queryStrings = null)
   {
     $type = $queryStrings['type'] ?? $params['type'] ?? null;
     $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
@@ -75,15 +73,14 @@ class WebSite extends WebSiteAbstract
     }
   }
 
-  public static function enclave(): Enclave
-  {
+  public static function enclave(): Enclave {
     return new Enclave();
   }
 
   /**
    * @return string
    */
-  public static function ready(): string
+  public function ready(): string
   {
     parent::$CONTENT['content'][] = self::$HEADER;
     parent::$CONTENT['content'][] = self::$MAIN;
@@ -98,4 +95,9 @@ class WebSite extends WebSiteAbstract
     // RETURN
     return "<!DOCTYPE html>" . Render::arrayToString(parent::$HTML);
   }
+
+	public function type(): Type
+	{
+		return new Type();
+	}
 }

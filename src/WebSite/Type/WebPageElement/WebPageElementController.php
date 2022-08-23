@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\WebPageElement;
 
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\Request\Api;
 use Plinct\Cms\WebSite\Type\WebPage\WebPageController;
 
 class WebPageElementController
