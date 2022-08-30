@@ -66,6 +66,12 @@ class Api
 		if ($token) {
 			$this->curl->authorizationBear($token);
 		}
-		return json_decode($this->curl->ready(), true);
+		$returns = json_decode($this->curl->ready(), true);
+
+		if ($returns === null) {
+			return ['status'=>'fail', 'message' => 'User not authorized for this operation'];
+		}
+
+		return $returns;
 	}
 }

@@ -34,7 +34,7 @@ class Structure
    */
   public static function userBar($userLogin): string
   {
-    $helloText = sprintf(_("Hello, %s. You logged with %s!"), $userLogin['name'], "user");
+    $helloText = sprintf(_("Hello, %s."), $userLogin['name']);
     return "<div class='admin admin-bar-top'>
       <p>$helloText</p>
       <p><a href='/admin/logout'>" . _("Log out") . "</a></p>

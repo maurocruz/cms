@@ -39,14 +39,14 @@ class Privileges
 		$namespace = $value['namespace'] ?? null;
 
 		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
-			->action('/admin/user/privileges')->method('post');
+			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
 		if ($iduser && $iduser_privileges) {
 			$form->input('iduser', $iduser, 'hidden');
 			$form->input('iduser_privileges', $iduser_privileges, 'hidden');
 		}
 		// function
-			$form->fieldsetWithSelect('function', self::FUNCTIONS[$function], self::FUNCTIONS, _('Function') );
+		$form->fieldsetWithSelect('function', $function, self::FUNCTIONS, _('Function') );
 		// actions
 		$form->fieldsetWithInput('actions', $actions, _('Actions'));
 		// namespace

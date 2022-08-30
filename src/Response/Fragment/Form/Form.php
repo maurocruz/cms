@@ -7,9 +7,10 @@ namespace Plinct\Cms\Response\Fragment\Form;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\ElementFactory;
+use Plinct\Web\Element\ElementInterface;
 use Plinct\Web\Element\Form\Form as WebForm;
 
-class Form extends FormDecorator implements FormInterface, RelationshipInterface
+class Form extends FormDecorator implements FormInterface, RelationshipInterface, ElementInterface
 {
 	/**
 	 * @var string
@@ -34,7 +35,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
         return $this->form;
     }
 
-    /**
+	/**
      * WRITE <SELECT> ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
      *
      * @param string $class

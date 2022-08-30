@@ -13,6 +13,7 @@ use Slim\App as Slim;
  */
 class App
 {
+	private static string $BASE_DIR;
   /**
    * @var string
    */
@@ -92,10 +93,19 @@ class App
   public function __construct(Slim $slim)
   {
     $this->slim = $slim;
+		self::$BASE_DIR = realpath(__DIR__.'/../');
     self::$URL = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
     self::setVersion();
     self::$LANGUAGE = Locale::getServerLanguage();
   }
+
+	/**
+	 * @return string
+	 */
+	public static function getBASEDIR(): string
+	{
+		return self::$BASE_DIR;
+	}
 
   /**
    * @return string
@@ -301,15 +311,6 @@ class App
   }
 
   /**
-   * @return ?int
-
-  public static function getUserLoginId(): ?int
-  {
-    return isset($_SESSION['userLogin']['uid']) ? (int) $_SESSION['userLogin']['uid'] : null;
-  }*/
-
-
-  /**
    * @param string|null $mailHost
    * @return App
    */
@@ -385,6 +386,6 @@ class App
    * @return mixed
    */
   final public function run() {
-		return CmsFactory::routes()->home($this->slim);
+		return CmsFactory::request()->routes()->home($this->slim);
   }
 }

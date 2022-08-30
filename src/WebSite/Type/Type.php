@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type;
 
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
+use Plinct\Cms\Interfaces\TypeInterface;
 use Plinct\Cms\WebSite\Type\Intangible\Intangible;
 
-class Type
+class Type implements TypeInterface
 {
-	/**
-	 * @return ImageObjectView
-	 */
-	public function imageObject(): ImageObjectView
+	private ?TypeInterface $type;
+
+	public function __construct(string $type)
 	{
-		return new ImageObjectView();
+		$typeClassName = __NAMESPACE__.'\\'.ucfirst($type).'\\'.ucfirst($type);
+
+		if (class_exists($typeClassName)) {
+			$this->type = new $typeClassName();
+		}
 	}
+
+	public function getForm(string $tableHasPart, string $idHasPart, array $data = null) : array {
+		return $this->type->getForm($tableHasPart, $idHasPart, $data);
+	}
+
 
 	/**
 	 * @return Intangible

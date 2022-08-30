@@ -6,7 +6,7 @@ namespace Plinct\Cms\WebSite\Type\Intangible\Invoice;
 
 use DateTime;
 use Exception;
-use Plinct\Cms\Response\View\Fragment\Fragment;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
@@ -69,7 +69,7 @@ abstract class InvoiceAbstract
     // VARS
     $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
 
-    $form = Fragment::form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
+    $form = CmsFactory::response()->fragment()->form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
     $form->action("/admin/invoice/".$case)->method("post");
     // HIDDENS
     $form->input("referencesOrder", (string)$this->idorder, "hidden");

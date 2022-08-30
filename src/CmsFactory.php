@@ -7,9 +7,8 @@ namespace Plinct\Cms;
 use Plinct\Cms\Middleware\Middleware;
 use Plinct\Cms\Request\Request;
 use Plinct\Cms\Response\Response;
-use Plinct\Cms\Routes\Routes;
-use Plinct\Cms\Server\Server;
 use Plinct\Cms\WebSite\WebSite;
+
 use Slim\App as Slim;
 
 class CmsFactory
@@ -45,21 +44,7 @@ class CmsFactory
 	{
 		return new Response();
 	}
-	/**
-	 * @return Routes
-	 */
-	public static function routes(): Routes
-	{
-		return new Routes();
-	}
 
-	/**
-	 * @return Server
-	 */
-	public static function server(): Server
-	{
-		return new Server();
-	}
 
 	/**
 	 * @return WebSite

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Offer;
 
-use Plinct\Cms\Request\Api;
+use Plinct\Cms\CmsFactory;
 
 class OfferController
 {
@@ -14,7 +14,7 @@ class OfferController
     public function index(): array
     {
         $params2 = [ "format" => "ItemList", "properties" => "*,itemOffered" ];
-        return Api::get("offer", $params2);
+        return CmsFactory::request()->api()->get("offer", $params2)->ready();
     }
 
     /**
@@ -24,7 +24,7 @@ class OfferController
     public function edit(array $params): array
     {
         $id = $params['id'];
-        return Api::get("offer", [ "id" => $id, "properties" => "*,itemOffered"]);
+        return CmsFactory::request()->api()->get("offer", [ "id" => $id, "properties" => "*,itemOffered"])->ready();
     }
 
     /**

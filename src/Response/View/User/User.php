@@ -109,7 +109,7 @@ class User
 		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user']);
 		$form->action("/admin/user/$case")->method('post');
 		// ID
-		if ($case == "edit") $form->fieldsetWithInput('id', $id, 'ID', 'text', null, ['readonly']);
+		if ($case == "edit") $form->fieldsetWithInput('iduser', $id, 'ID', 'text', null, ['readonly']);
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
 		// email

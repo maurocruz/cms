@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite;
 
 use Plinct\Cms\App;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Enclave\Enclave;
 use Plinct\Cms\WebSite\Type\Controller;
 use Plinct\Cms\WebSite\Type\Type;
@@ -41,41 +42,64 @@ class WebSite extends WebSiteAbstract
     }
   }
 
-  /**
-   * @param string $message
-   * @return void
-   */
-  public function warning(string $message) {
-		$this->addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
-  }
+	/**
+	 * @return Enclave
+	 */
+	public static function enclave(): Enclave {
+		return new Enclave();
+	}
 
-  /**
-   * @throws ReflectionException
-   */
-  public function getContent(array $params = null, array $queryStrings = null)
-  {
-    $type = $queryStrings['type'] ?? $params['type'] ?? null;
-    $methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
-    $id = $queryStrings['id'] ?? $params['id'] ?? null;
+	/**
+	 * @throws ReflectionException
+	 */
+	public function getContent(array $params = null, array $queryStrings = null)
+	{
+		$type = $queryStrings['type'] ?? $params['type'] ?? null;
+		$methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
+		$id = $queryStrings['id'] ?? $params['id'] ?? null;
 
-    if($id && $methodName == 'index') $methodName = 'edit';
+		if($id && $methodName == 'index') $methodName = 'edit';
 
-    if ($type) {
-      $controller = new Controller();
-      $data = $controller->getData($type, $methodName, $id, $queryStrings);
+		if ($type) {
+			$controller = new Controller();
+			$data = $controller->getData($type, $methodName, $id, $queryStrings);
 
-      $view = new View();
+			$view = new View();
 			$allParams = array_merge($params, $queryStrings);
-      $view->view($type, $methodName, $data, $allParams);
+			$view->view($type, $methodName, $data, $allParams);
 
-    } else {
-      parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
-    }
-  }
+		} else {
+			parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
+		}
+	}
 
-  public static function enclave(): Enclave {
-    return new Enclave();
-  }
+	/**
+	 * @param string|null $title
+	 * @param array|null $list
+	 * @param int|null $level
+	 * @param array|null $searchInput
+	 */
+	public function navbar(string $title = null, array $list = null, int $level = null, array $searchInput = null)
+	{
+		$fragment = CmsFactory::response()->fragment()
+			->navbar()
+			->title($title)
+			->level($level);
+		if ($list) {
+			foreach ($list as $key => $value) {
+				$fragment->newTab($key, $value);
+			}
+		}
+
+		if ($searchInput) {
+			$type = $searchInput['table'] ?? null;
+			if($type) $fragment->type($type);
+			$fragment->search("/admin/$type/search",$searchInput['searchBy'] ?? "name", $searchInput['params'] ?? null, $searchInput['linkList'] ?? null);
+		}
+
+		$this->addHeader($fragment->ready());
+	}
+
 
   /**
    * @return string
@@ -96,8 +120,20 @@ class WebSite extends WebSiteAbstract
     return "<!DOCTYPE html>" . Render::arrayToString(parent::$HTML);
   }
 
-	public function type(): Type
+	/**
+	 * @param string $type
+	 * @return Type
+	 */
+	public function type(string $type): Type
 	{
-		return new Type();
+		return new Type($type);
+	}
+
+	/**
+	 * @param string $message
+	 * @return void
+	 */
+	public function warning(string $message) {
+		$this->addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
 	}
 }

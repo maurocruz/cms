@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible;
 
-use Plinct\Cms\Response\View\Fragment\Fragment;
-use Plinct\Tool\ArrayTool;
-
+use Plinct\Cms\CmsFactory;
 
 class ContactPoint
 {
@@ -39,16 +37,15 @@ class ContactPoint
    */
   static private function formContactPoint($tableHasPart, $idHasPart, string $case = 'new', $value = null, $key = null): array
   {
-    $form = Fragment::form(["class" => "formPadrao form-contactPoint"]);
+    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
     $form->input('tableHasPart', $tableHasPart, "hidden");
     if ($case === "new") {
       $form->input('idHasPart', (string) $idHasPart, "hidden");
-      $form->content("<h4>"._("new").": </h4>");
+      $form->content("<h4>"._('New').": </h4>");
     } else {
-      $id = ArrayTool::searchByValue($value['identifier'],"id")['value'];
-      $form->input('id', $id, 'hidden');
+      $form->input('idcontactPoint', $value['idcontactPoint'], 'hidden');
     }
     // POSITION
     $form->fieldsetWithInput("position", (isset($value['position']) ? (string) $value['position'] : (string) $key), "#", "number", null, [ "min" => "1"]);

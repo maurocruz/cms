@@ -6,7 +6,7 @@ namespace Plinct\Cms\Response\Fragment\Form;
 
 use Plinct\Cms\App;
 use Plinct\Cms\Response\Fragment\ElementDecorator;
-use Plinct\Cms\Server\ServerFactory;
+use Plinct\Cms\Request\Server\ServerFactory;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\Form\FormInterface;
 

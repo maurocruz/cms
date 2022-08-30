@@ -4,59 +4,61 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Enclave;
 
-use Plinct\Cms\Response\View\Fragment\Fragment;
-use Plinct\Cms\WebSite\Type\View;
+use Plinct\Cms\CmsFactory;
 
 class Enclave
 {
-    /**
-     * @param string $classNameSpace
-     * @param array $queryParams
-     * @return void
-     */
-    public function get(string $classNameSpace, array $queryParams)
-    {
-        if (class_exists($classNameSpace)) {
-            $classObject = new $classNameSpace();
-            if (method_exists($classObject, 'viewMain')) {
-                View::contentHeader($classObject->navBar());
-                View::main($classObject->viewMain($queryParams));
-            }
-        } else {
-            View::main(Fragment::miscellaneous()->message(_("Enclave not found!")));
-        }
+  /**
+   * @param string $classNameSpace
+   * @param array $queryParams
+   * @return void
+   */
+  public function get(string $classNameSpace, array $queryParams)
+  {
+    if (class_exists($classNameSpace)) {
+      $classObject = new $classNameSpace();
+      if (method_exists($classObject, 'viewMain')) {
+        CmsFactory::webSite()->addHeader($classObject->navBar());
+        CmsFactory::webSite()->addMain($classObject->viewMain($queryParams));
+      }
+    } else {
+      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message(_("Enclave not found!")));
     }
+  }
 
-    public function post(string $classNameSpace, array $params): string
-    {
-        if (class_exists($classNameSpace)) {
-            $classObject = new $classNameSpace();
-            if (method_exists($classObject, 'post')) {
-               $returns = $classObject->post($params);
-            }
-        }
-        return $returns;
+  public function post(string $classNameSpace, array $params): string
+  {
+		$returns = null;
+    if (class_exists($classNameSpace)) {
+      $classObject = new $classNameSpace();
+      if (method_exists($classObject, 'post')) {
+         $returns = $classObject->post($params);
+      }
     }
+    return $returns;
+  }
 
-    public function put(string $classNameSpace, array $params): string
-    {
-        if (class_exists($classNameSpace)) {
-            $classObject = new $classNameSpace();
-            if (method_exists($classObject, 'put')) {
-                $returns = $classObject->put($params);
-            }
-        }
-        return $returns;
+  public function put(string $classNameSpace, array $params): string
+  {
+	  $returns = null;
+    if (class_exists($classNameSpace)) {
+      $classObject = new $classNameSpace();
+      if (method_exists($classObject, 'put')) {
+        $returns = $classObject->put($params);
+      }
     }
+    return $returns;
+  }
 
-    public function delete(string $classNameSpace, array $params): string
-    {
-        if (class_exists($classNameSpace)) {
-            $classObject = new $classNameSpace();
-            if (method_exists($classObject, 'delete')) {
-                $returns = $classObject->delete($params);
-            }
+  public function delete(string $classNameSpace, array $params): string
+  {
+	  $returns = null;
+      if (class_exists($classNameSpace)) {
+        $classObject = new $classNameSpace();
+        if (method_exists($classObject, 'delete')) {
+          $returns = $classObject->delete($params);
         }
-        return $returns;
-    }
+      }
+      return $returns;
+  }
 }

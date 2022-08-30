@@ -127,7 +127,8 @@
 
   .form-submit-button {
     overflow: hidden;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
@@ -137,7 +138,6 @@
 
   .form-submit-button-send{
     color: #40d377;
-    width: 30px;
   }
   
   .form-submit-button-send:hover { color: #84f7ba; }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Trip;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\View;
 
 class TripAbstract
 {
@@ -34,7 +33,8 @@ class TripAbstract
 	protected function navBarProvider($name, $id)
 	{
 		self::navbarIndex();
-		View::contentHeader(CmsFactory::response()->fragment()->navbar()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
 			->title($name)
 			->newTab("/admin/trip?provider=$id", CmsFactory::response()->fragment()->icon()->home())
 			->newTab("/admin/trip?provider=$id&action=new", CmsFactory::response()->fragment()->icon()->plus())
@@ -74,7 +74,7 @@ class TripAbstract
 			$table->buttonEdit("/admin/trip/edit/$id");
 			$table->addRow($trip['name'], $trip['dateModified']);
 		}
-		View::main($table->ready());
+		CmsFactory::webSite()->addMain($table->ready());
 	}
 
 	/**
@@ -98,7 +98,7 @@ class TripAbstract
     $form = CmsFactory::response()->fragment()->form();
     $form->action("/admin/trip/$case")->method('post')->attributes(['class'=>'formPadrao form-trip']);
     // HIDDENS
-    if ($idtrip) $form->input('id', $idtrip, 'hidden');
+    if ($idtrip) $form->input('idtrip', $idtrip, 'hidden');
     // NAME
     $form->fieldsetWithInput('name', $name, _('Name'));
 	  // PROVIDER

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Trip;
 
-use Plinct\Cms\Request\Api;
+use Plinct\Cms\CmsFactory;
 
 class TripController
 {
@@ -15,19 +15,19 @@ class TripController
   public function index($params = null): array
   {
 		if (isset($params['provider'])) {
-			$dataProvider = Api::get('organization',['idorganization'=>$params['provider']]);
+			$dataProvider = CmsFactory::request()->api()->get('organization',['idorganization'=>$params['provider']])->ready();
 			$data = $dataProvider[0];
 
 			$params2 = ['format'=>'ItemList', 'provider'=>$params['provider'], 'orderBy'=>'dateModified desc'];
 			$params3 = $params ?  array_merge($params2, $params) : $params2;
-			$dataTrip = Api::get('trip',$params3);
+			$dataTrip = CmsFactory::request()->api()->get('trip',$params3)->ready();
 			$dataTrip['name'] = 'List of provider trips';
 			$data['trips'] = $dataTrip;
 
 		} else {
 			$params2 = ['format'=>'ItemList', 'fields'=>'distinct(provider)', 'groupBy'=>'provider', 'properties'=>'provider'];
 			$params3 = $params ?  array_merge($params2, $params) : $params2;
-			$data = Api::get('trip',$params3);
+			$data = CmsFactory::request()->api()->get('trip',$params3)->ready();
 			$data['name'] = 'List of travel providers';
 		}
 
@@ -41,7 +41,7 @@ class TripController
   public function edit(array $params): array
   {
     $id = $params['idtrip'] ?? null;
-    return Api::get('trip',['idtrip'=>$id,'properties'=>'*,provider,image,identifier,subTrip']);
+    return CmsFactory::request()->api()->get('trip',['idtrip'=>$id,'properties'=>'*,provider,image,identifier,subTrip'])->ready();
   }
 
   /**
@@ -53,7 +53,7 @@ class TripController
 		$data = null;
     $provider = $params['provider'] ?? null;
 		if ($provider) {
-			$dataProvider = Api::get('organization',['idorganization'=>$provider,'properties'=>'name']);
+			$dataProvider = CmsFactory::request()->api()->get('organization',['idorganization'=>$provider,'properties'=>'name'])->ready();
 			$data[]['provider'] = $dataProvider[0];
 		}
     return $data;

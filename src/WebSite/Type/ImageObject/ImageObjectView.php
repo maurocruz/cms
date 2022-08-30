@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Exception;
-use Plinct\Cms\Response\View\Fragment\Fragment;
-use Plinct\Cms\WebSite\Type\View;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
 
 class ImageObjectView extends ImageObjectWidget
@@ -22,10 +21,10 @@ class ImageObjectView extends ImageObjectWidget
 		parent::navBarLevel1();
 		if ($listBy === 'groups') {
 			// TODO UNDER DEVELOPMENT
-			View::main('<p>Under development!</p>');
+			CmsFactory::webSite()->addMain('<p>Under development!</p>');
 
 		} else {
-			View::main('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
+			CmsFactory::webSite()->addMain('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
 		}
   }
 
@@ -36,7 +35,7 @@ class ImageObjectView extends ImageObjectWidget
   {
 		// NAVBAR
 		parent::navBarLevel2(_('Add'));
-    View::main(self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null));
+    CmsFactory::webSite()->addMain(self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null));
   }
 
   /**
@@ -49,26 +48,26 @@ class ImageObjectView extends ImageObjectWidget
       $contentUrl = $data['contentUrl'];
       $this->navBarLevel2(_("Image") . ": $contentUrl");
       // edit image
-      $content[] = Fragment::box()->simpleBox([
+      $content[] = CmsFactory::response()->fragment()->box()->simpleBox([
         self::formImageObjectEdit($data),
         self::infoIsPartOf($data)
       ], _("Image"));
       // author
-      $content[] = Fragment::box()->expandingBox(_("Author"), [ Fragment::form()->relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author'])]);
-      $content[] = Fragment::icon()->arrowBack();
+      $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Author"), [ CmsFactory::response()->fragment()->form()->relationshipOneToOne("ImageObject", $id, "author", "Person", $data['author'])]);
+      $content[] = CmsFactory::response()->fragment()->icon()->arrowBack();
 
     } else {
       $this->navBarLevel2(_("Image not founded!"));
-      $content[] = Fragment::noContent(_("Item not founded"));
+      $content[] = CmsFactory::response()->fragment()->noContent(_("Item not founded"));
     }
 
-    View::main($content);
+    CmsFactory::webSite()->addMain($content);
   }
 
   /**
    * @throws Exception
    */
-  public function getForm(string $tableHasPart, int $idHasPart, $data = []): array
+  public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;
@@ -78,19 +77,9 @@ class ImageObjectView extends ImageObjectWidget
     // upload
     $content[] = self::upload($tableHasPart, $idHasPart);
     // save with a database image
-    $content[] = self::addImagesFromDatabase();
+    $content[] = self::addImagesFromDatabase($tableHasPart, $idHasPart);
 
     return $content;
   }
 
-  /**
-   * @return array
-   */
-  protected function addImagesFromDatabase(): array
-  {
-    $content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $this->tableHasPart ] ];
-    $content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $this->idHasPart ] ];
-    $content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
-    return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
-  }
 }

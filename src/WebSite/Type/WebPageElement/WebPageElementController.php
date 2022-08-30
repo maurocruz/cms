@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\WebPageElement;
 
-use Plinct\Cms\Request\Api;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\WebPage\WebPageController;
 
 class WebPageElementController
 {
-    /**
-     * @param array $params
-     * @return array
-     */
-    public function edit(array $params): array
-    {
-        $params2 = [ "properties" => "*" ];
-        $params3 = array_merge($params, $params2);
-        $data = Api::get("webPageElement", $params3);
-        return $data[0];
-    }
+  /**
+   * @param array $params
+   * @return array
+   */
+  public function edit(array $params): array {
+    $params2 = [ "properties" => "*" ];
+    $params3 = array_merge($params, $params2);
+    $data = CmsFactory::request()->api()->get("webPageElement", $params3)->ready();
+    return $data[0];
+  }
 
-    /**
-     */
-    public function saveSitemap()
-    {
-        (new WebPageController())->saveSitemap();
-    }
+  /**
+   */
+  public function saveSitemap() {
+    (new WebPageController())->saveSitemap();
+  }
 }

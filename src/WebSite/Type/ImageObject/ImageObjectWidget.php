@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Exception;
-use Plinct\Cms\App;
-use Plinct\Cms\Response\View\Fragment\Fragment;
-use Plinct\Cms\Server\Type\ImageObjectServer;
-use Plinct\Cms\WebSite\Type\View;
-use Plinct\Tool\ArrayTool;
 use Plinct\Tool\Image\Image;
 use Plinct\Web\Element\Element;
+
+use Plinct\Cms\App;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Request\Server\Type\ImageObjectServer;
 
 class ImageObjectWidget
 {
@@ -20,9 +19,9 @@ class ImageObjectWidget
    */
   protected string $tableHasPart;
   /**
-   * @var int
+   * @var string
    */
-  protected int $idHasPart;
+  protected string $idHasPart;
 
 	protected int $limit = 40;
 
@@ -33,21 +32,23 @@ class ImageObjectWidget
 	 */
 	protected function navBarLevel1()
 	{
-		View::contentHeader(Fragment::navbar()
-			->title(_('Images'))
-			->level(2)
-			->newTab("/admin/imageObject", Fragment::icon()->home())
-			->newTab("/admin/imageObject/new", Fragment::icon()->plus())
-			->newTab("/admin/imageObject?listBy=keywords", _("Keywords"))
-			->newTab("/admin/imageObject?listBy=groups", _("Groups"))
-			->ready()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
+				->title(_('Images'))
+				->level(2)
+				->newTab("/admin/imageObject", CmsFactory::response()->fragment()->icon()->home())
+				->newTab("/admin/imageObject/new", CmsFactory::response()->fragment()->icon()->plus())
+				->newTab("/admin/imageObject?listBy=keywords", _("Keywords"))
+				->newTab("/admin/imageObject?listBy=groups", _("Groups"))
+				->ready()
 		);
 	}
 
 	protected function navBarLevel2($title)
 	{
 		self::navBarLevel1();
-		View::contentHeader(Fragment::navbar()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
 			->title($title)
 			->level(3)
 			->ready()
@@ -81,7 +82,7 @@ class ImageObjectWidget
    */
   protected static function formImageObjectEdit($value): array
   {
-    $ID = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+    $idimageObject = $value['idimageObject'];
     // FIGURE
     $image = new Image($value['contentUrl']);
     $contentSize = $value['contentSize'] ?? (string) $image->getFileSize();
@@ -89,13 +90,13 @@ class ImageObjectWidget
     $imageHeight = $value['height'] ?? (string) $image->getHeight();
     $imageType = $value['type'] ?? $image->getEncodingFormat();
 
-    $form = Fragment::form(["class" => "formPadrao form-imageObject", "name" => "form-imageObject", "enctype" => "multipart/form-data" ]);
+    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-imageObject", "name" => "form-imageObject", "enctype" => "multipart/form-data" ]);
     $form->action("/admin/imageObject/edit")->method("post");
     // figure
     $form->content(['object'=>'figure','src'=>$value['contentUrl']]);
-    // id
-    $form->input('id', $ID, 'hidden');
-    $form->fieldsetWithInput("idimageObject", $ID, "Id", "text", null, ['disabled']);
+    // idimageObject
+    $form->input('idimageObject', $idimageObject, 'hidden');
+    $form->fieldsetWithInput("idimageObject", $idimageObject, "Id", "text", null, ['disabled']);
     // url
     $form->fieldsetWithInput('contentUrl', $value['contentUrl'], "Url", 'text', null, ['readonly']);
     //content size
@@ -124,16 +125,16 @@ class ImageObjectWidget
    */
 	protected function formIsPartOf($value): array
 	{
-    $ID = $value['idimageObject'];
+		$idimageObject = $value['idimageObject'];
 
-    $form = Fragment::form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$ID", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
+    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$idimageObject", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
     $form->action("/admin/imageObject/edit")->method('post');
     // hiddens
     $form->input('tableHasPart', $this->tableHasPart, 'hidden');
-    $form->input('idHasPart', (string) $this->idHasPart, 'hidden');
-    $form->input('idIsPartOf', $ID, 'hidden');
+    $form->input('idHasPart', $this->idHasPart, 'hidden');
+    $form->input('idIsPartOf', $idimageObject, 'hidden');
     $form->input('tableIsPartOf', 'imageObject', 'hidden');
-    $form->input('id', $ID, 'hidden');
+    $form->input('idimageObject', $idimageObject, 'hidden');
     // image
     $image = new Image($value['contentUrl']);
     $caption = "Dimensions: " . $image->getWidth() . " x " .$image->getHeight() . " px<br>Size: " . $image->getFileSize() . " bytes";
@@ -142,7 +143,7 @@ class ImageObjectWidget
       "attributes"=>['class'=>'form-imageObject-edit-figure'],
       "src" => $image->getSrc(),
       "width" => 200,
-      "href" => "/admin/imageObject/edit/$ID",
+      "href" => "/admin/imageObject/edit/$idimageObject",
       "caption" => $caption
     ]);
     // content url
@@ -202,7 +203,7 @@ class ImageObjectWidget
           $content[] = "<p style='color: yellow;'>". _("This item is not part of any other.") . "</p>";
       }
 
-      return Fragment::box()->simpleBox($content);
+      return CmsFactory::response()->fragment()->box()->simpleBox($content);
   }
 
   /**
@@ -213,7 +214,7 @@ class ImageObjectWidget
    */
   protected function upload($tableHasPart = null, $idHasPart = null): array
   {
-      $form = Fragment::form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
+      $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
       $form->action('/admin/imageObject/new')->method('post');
       // TITLE
       $form->content("<h4>"._("Upload images")."</h4>");
@@ -250,7 +251,7 @@ class ImageObjectWidget
       // input
       $fieldset->content("<input name='location' type='text' list='listlocations' autocomplete='off'/>");
       // data list
-      $fieldset->content(Fragment::form()->datalist('listlocations',$datalist));
+      $fieldset->content(CmsFactory::response()->fragment()->form()->datalist('listlocations',$datalist));
       // response
       return $fieldset->ready();
   }
@@ -268,8 +269,21 @@ class ImageObjectWidget
       // INPUT
       $fieldset->content('<input name="keywords" type="text" value="" list="keywords" autocomplete="off">');
       // DATA LIST
-      $fieldset->content(Fragment::form()->datalist('keywords',$listKeywords));
+      $fieldset->content(CmsFactory::response()->fragment()->form()->datalist('keywords',$listKeywords));
       // RESPONSE
       return $fieldset->ready();
-    }
+	}
+
+	/**
+	 * @param $tableHasPart
+	 * @param $idHasPart
+	 * @return array
+	 */
+	protected function addImagesFromDatabase($tableHasPart, $idHasPart): array
+	{
+		$content[] = [ "tag" => "input", "attributes" => [ "name" => "tableHasPart", "type" => "hidden", "value" => $tableHasPart ] ];
+		$content[] = [ "tag" => "input", "attributes" => [ "name" => "idHasPart", "type" => "hidden", "value" => $idHasPart ] ];
+		$content[] = [ "tag" => "div", "attributes" => [ "class" => "imagesfromdatabase" ] ];
+		return [ "tag" => "form", "attributes" => [ "action" => "/admin/imageObject/new", "name" => "imagesFromDatabase", "class" => "formPadrao box", "method" => "post" ], "content" => $content ];
+	}
 }
