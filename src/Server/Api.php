@@ -76,10 +76,10 @@ class Api
       // CURL
       $curlHandle = ToolBox::Curl()
         ->setUrl($apiHostName)
-        ->method($action)
+        ->$action($params)
 	      ->returnWithJson();
       // METHOD
-			if ($action !== 'get') $curlHandle->authorizationBear($token)->params($params);
+			if ($action !== 'get') $curlHandle->authorizationBear($token);
 
       // LOCALHOST
       $ipAddress = substr($curlHandle->getInfo()['local_ip'],0,3);
@@ -164,7 +164,7 @@ class Api
 		unset($params['submit']);
 		$base = substr(App::getApiHost(),-1) !== '/' ? App::getApiHost().'/' : App::getApiHost();
     $url = $base . "auth/change_password";
-    $handleCurl = ToolBox::Curl()->setUrl($url)->method('post')->params($params)->returnWithJson();
+    $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
     // for localhost
     if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
     return $handleCurl->ready();
