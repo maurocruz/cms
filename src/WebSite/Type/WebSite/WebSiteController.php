@@ -42,17 +42,9 @@ class WebSiteController
     return [];
   }
 
-  /**
-   * @param null $params
-   * @return array
-   */
-  public function webPage($params = null): array
-  {
-    // vars
-    $id = $params['id'];
-    $action = $params['action'] ?? null;
-    $item = $params['item'] ?? null;
-    $search = $params['q'] ?? $params['search'] ?? null;
+        // ITEM
+        if ($item) {
+            $dataWebPage = Api::get('webPage',['id'=>$item,'properties'=>'*,isPartOf,identifier'])[0];
 
     // ITEM
     if ($item) {

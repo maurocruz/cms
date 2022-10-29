@@ -93,7 +93,7 @@ class ImageObjectServer
         return "/admin/imageObject/edit/".$responseDataBase[0]['id'];
 
       } else {
-        return "/admin/imageObject/keywords/".$params['keywords'];
+        return "/admin/imageObject?listBy=keywords&limit=40&offset=0&keywords=".$params['keywords'];
       }
     }
   }
@@ -119,12 +119,11 @@ class ImageObjectServer
       // unlink image
       $imageFile =  $_SERVER['DOCUMENT_ROOT'] . parse_url($params['contentUrl'])['path'];
 
-      if (file_exists($imageFile)) {
+	    if (file_exists($imageFile)) {
         $n = $this->deleteFiles($imageFile);
       }
-
       // RESPONSE
-      return $n == 0 ? dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'))."/keywords/".$params['keywords'];
+      return $n == 0 ? dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) : "/admin/imageObject?listBy=keywords&limit=40&offset=0&keywords=".$params['keywords'];
     }
   }
 
@@ -139,7 +138,7 @@ class ImageObjectServer
     $dirname = $pathinfo['dirname'];
     $filename = $pathinfo['filename'];
 
-		if (is_dir($dirname) && is_file($filename)) {
+		if (is_dir($dirname) && is_file($imageFile)) {
 			$directory = new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS);
 			$iterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::CHILD_FIRST);
 
@@ -202,7 +201,6 @@ class ImageObjectServer
   public static function listLocation($directory, $relative = null): array
   {
     self::$LIST_LOCATIONS = self::$LIST_LOCATIONS ?? FileSystem::listDirectories($directory);
-
     if ($relative) {
       $newList = [];
       foreach (self::$LIST_LOCATIONS as $item) {
@@ -211,7 +209,6 @@ class ImageObjectServer
           $newList[] = $newItem;
         }
       }
-
       self::$LIST_LOCATIONS = $newList;
     }
 
