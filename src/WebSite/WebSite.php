@@ -64,9 +64,15 @@ class WebSite extends WebSiteAbstract
 			$controller = new Controller();
 			$data = $controller->getData($type, $methodName, $id, $queryStrings);
 
-			$view = new View();
-			$allParams = array_merge($params, $queryStrings);
-			$view->view($type, $methodName, $data, $allParams);
+			if (isset($data['status']) && $data['status'] == 'fail') {
+				CmsFactory::response()->webSite()->addMain(
+					CmsFactory::response()->message()->warning($data['message'])
+				);
+			} else {
+				$view = new View();
+				$allParams = array_merge($params, $queryStrings);
+				$view->view($type, $methodName, $data, $allParams);
+			}
 
 		} else {
 			parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );

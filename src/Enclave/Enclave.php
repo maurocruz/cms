@@ -18,8 +18,7 @@ class Enclave
     if (class_exists($classNameSpace)) {
       $classObject = new $classNameSpace();
       if (method_exists($classObject, 'viewMain')) {
-        CmsFactory::webSite()->addHeader($classObject->navBar());
-        CmsFactory::webSite()->addMain($classObject->viewMain($queryParams));
+				$classObject->view($queryParams);
       }
     } else {
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message(_("Enclave not found!")));
