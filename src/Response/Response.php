@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Response;
 
-use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Response\Fragment\Fragment;
 use Plinct\Cms\Response\Message\Message;
 use Plinct\Cms\Response\View\View;
@@ -42,16 +41,6 @@ class Response
 		return new WebSite();
 	}
 
-	public function isUserLogged(callable $callable)
-	{
-		if (CmsFactory::request()->user()->userLogged()->getIduser()) {
-			$callable();
-		} else {
-			CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->auth()->login()
-			);
-		}
-	}
 	/**
 	 * @param ResponseInterface $response
 	 * @return ResponseInterface

@@ -385,7 +385,8 @@ class App
   /**
    * @return mixed
    */
-  final public function run() {
+  final public function run()
+  {
 		return CmsFactory::request()->routes()->home($this->slim);
   }
 }
