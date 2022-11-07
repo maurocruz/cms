@@ -13,7 +13,12 @@ return function (Route $route)
 	 */
 	$route->group('/privileges', function(Route $route)
 	{
-		$route->post('/{action}', function (Request $request, Response $response, $args) {
+		$route->post('/{action}', function (Request $request, Response $response, $args)
+		{
+			if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
+				return CmsFactory::response()->writeBody($response);
+			}
+
 			$action = $args['action'];
 			$params = $request->getParsedBody();
 			unset($params['submit']);
@@ -50,33 +55,42 @@ return function (Route $route)
 	 */
 	$route->get('[/{action}[/{iduser}]]', function (Request $request, Response $response, $args)
 	{
+		if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
+			return CmsFactory::response()->writeBody($response);
+		}
+
 		$action = $args['action'] ?? 'index';
 		$iduser = $args['iduser'] ?? null;
 		$params = $request->getQueryParams();
 
-		CmsFactory::response()->isUserLogged(function() use ($params, $action, $iduser) {
-			if ($action == 'new') {
-				CmsFactory::response()->view()->user()->new($params);
-			} elseif($iduser && $action == 'edit') {
-				CmsFactory::request()->user()->edit($iduser, $params);
-			} else {
-				CmsFactory::request()->user()->index($params);
-			}
-		});
+		if ($action == 'new') {
+			CmsFactory::response()->view()->user()->new($params);
+		} elseif($iduser && $action == 'edit') {
+			CmsFactory::request()->user()->edit($iduser, $params);
+		} else {
+			CmsFactory::request()->user()->index($params);
+		}
 		// RESPONSE
 		return CmsFactory::response()->writeBody($response);
 	});
 
+	/**
+	 * POST
+	 */
 	$route->post('/{action}', function (Request $request, Response $response, $args)
 	{
+		if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
+			return CmsFactory::response()->writeBody($response);
+		}
+
 		$action = $args['action'];
 		$params = $request->getParsedBody();
+		$iduser = $params['iduser'] ?? $params['id'] ?? $params['idHasTable'] ?? null;
+		$params['dateModified'] = date('Y-m-d H:i:s');
 		unset($params['submit']);
-		// EDIT
-		if ($action == 'edit') {
-			$iduser = $params['iduser'] ?? $params['id'] ?? $params['idHasTable'] ?? null;
 
-			if ($iduser) {
+		// EDIT
+		if ($action == 'edit' && $iduser) {
 				$returns = CmsFactory::request()->server()->api()->put('user',$params)->ready();
 
 				if (isset($returns['status']) && $returns['status'] == 'fail') {
@@ -92,11 +106,13 @@ return function (Route $route)
 				}
 				return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
 
-			} else {
-				CmsFactory::webSite()->addMain(
-					CmsFactory::response()->message()->warning('missing mandatory data')
-				);
-			}
+		} elseif ($action == 'erase' && $iduser) {
+			CmsFactory::request()->api()->delete('user',['iduser'=>$iduser])->ready();
+			return $response->withHeader('Location', '/admin/user')->withStatus(301);
+		} else {
+			CmsFactory::webSite()->addMain(
+				CmsFactory::response()->message()->warning('missing mandatory data')
+			);
 		}
 		// RESPONSE
 		return CmsFactory::response()->writeBody($response);

@@ -18,12 +18,10 @@ return function (Route $route)
 	 */
 	$route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
 	{
-		CmsFactory::response()->isUserLogged(function() use ($request, $response, $args) {
+		if (CmsFactory::request()->user()->userLogged()->getIduser()) {
 			CmsFactory::webSite()->getContent($args, $request->getQueryParams());
-		});
-
+		}
 		return CmsFactory::response()->writeBody($response);
-
 	})->addMiddleware(CmsFactory::middleware()->authentication());
 
 	/**
@@ -32,9 +30,6 @@ return function (Route $route)
 	$route->post('/{type}/{action}[/{paramsUrl:.*}]', function (Request $request, Response $response, $args) {
 		// CHECK AUTHENTICATION
 		if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
-			CmsFactory::response()->webSite()->addMain(
-				CmsFactory::response()->fragment()->auth()->login()
-			);
 			return CmsFactory::response()->writeBody($response);
 		}
 

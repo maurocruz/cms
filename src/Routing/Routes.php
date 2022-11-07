@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Routes;
+namespace Plinct\Cms\Routing;
 
 use Slim\Routing\RouteCollectorProxy as Route;
 

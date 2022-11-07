@@ -15,11 +15,8 @@ return function (Route $route)
 	{
 		$route->get('/{className}', function (Request $request, Response $response, $args)
 		{
-			// CHECK AUTHENTICATION
-			if (!isset($_SESSION['userLogin']['admin'])) {
-				CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login());
-				$response->getBody()->write(CmsFactory::webSite()->ready());
-				return $response;
+			if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
+				return CmsFactory::response()->writeBody($response);
 			}
 
 			$queryParams = $request->getQueryParams();
@@ -32,7 +29,7 @@ return function (Route $route)
 			$response->getBody()->write(CmsFactory::webSite()->ready());
 			return $response;
 
-		})->addMiddleware(CmsFactory::middleware()->authentication());
+		});
 
 		$route->post('/{className}', function(Request $request, Response $response, $args)
 		{
@@ -74,6 +71,7 @@ return function (Route $route)
 			} else {
 				return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
 			}
-		})->addMiddleware(CmsFactory::middleware()->authentication());
-	});
+		});
+
+	})->addMiddleware(CmsFactory::middleware()->authentication());
 };

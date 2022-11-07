@@ -8,7 +8,7 @@ use Plinct\Cms\Request\Api\Api;
 use Plinct\Cms\Request\Server\Server;
 use Plinct\Cms\Request\Type\Type;
 use Plinct\Cms\Request\User\User;
-use Plinct\Cms\Request\Routes\Routes;
+use Plinct\Cms\Routing\Routes;
 
 class Request
 {
