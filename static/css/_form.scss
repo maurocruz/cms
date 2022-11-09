@@ -669,6 +669,22 @@
   }
 }
 
+/* USER
+====================================================== */
+.form-user {
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-of-type(1) { width: 60px; }
+  fieldset:nth-of-type(2) { width: calc(100% - 60px); }
+  fieldset:nth-of-type(3) { flex-basis: 100%; }
+  fieldset:nth-of-type(4) { flex-basis: 110px; }
+  fieldset:nth-of-type(5) { flex-basis: calc(100% - 212px); max-width: 150px; }
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(2) { width: calc(50% - 60px); }
+    fieldset:nth-of-type(3) { flex-basis: 50%; }
+  }
+}
+
 /* WEBSITE
 ====================================================== */
 .form-webSite {

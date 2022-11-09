@@ -1203,6 +1203,37 @@ a.white {
   }
 }
 
+/* USER
+====================================================== */
+.form-user {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-user fieldset:nth-of-type(1) {
+  width: 60px;
+}
+.form-user fieldset:nth-of-type(2) {
+  width: calc(100% - 60px);
+}
+.form-user fieldset:nth-of-type(3) {
+  flex-basis: 100%;
+}
+.form-user fieldset:nth-of-type(4) {
+  flex-basis: 110px;
+}
+.form-user fieldset:nth-of-type(5) {
+  flex-basis: calc(100% - 212px);
+  max-width: 150px;
+}
+@media (min-width: 768px) {
+  .form-user fieldset:nth-of-type(2) {
+    width: calc(50% - 60px);
+  }
+  .form-user fieldset:nth-of-type(3) {
+    flex-basis: 50%;
+  }
+}
+
 /* WEBSITE
 ====================================================== */
 @media (min-width: 576px) {
