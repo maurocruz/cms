@@ -60,6 +60,15 @@ return function (Route $route)
 			$iduser = $args['iduser'] ?? null;
 			$params = $request->getQueryParams();
 
+			if ($iduser && (!isset($params['id']) || !isset($params['iduser'])) ) {
+				$params['iduser'] = $iduser;
+			}
+
+			if (isset($params['id'])) {
+				$params['iduser'] = $params['id'];
+				unset($params['id']);
+			}
+
 			if (App::getUserLoginId()) {
 				$userController = new UserController();
 				if ($action == "new") {
