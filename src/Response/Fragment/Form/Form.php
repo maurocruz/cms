@@ -124,12 +124,13 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 			$value = array_key_exists(0,$value) ? $value[0] : $value;
 			$id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
 
-			$this->input("idHasPart", $this->idHasPart, "hidden")
+			$this->input("id$this->tableHasPart", $this->idHasPart, "hidden")
 				->fieldsetWithInput('name',$value['name'],_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "text", null, [ "disabled" ])
 				->input($propertyName, '', 'hidden')
 				->submitButtonDelete("/admin/$this->tableHasPart/edit");
 		} else {
-			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-idHasPart='$this->idHasPart' data-orderBy='$orberBy'></div>");
+			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-tableHasPart='$this->tableHasPart' data-idHasPart='$this->idHasPart'  data-orderBy='$orberBy'></div>");
+			CmsFactory::webSite()->addBundle('relationship');
 		}
 
 		return $this->ready();

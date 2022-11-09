@@ -34,6 +34,10 @@ class WebSiteAbstract
    * @var array
    */
   protected static array $FOOTER = ['tag'=>'footer', 'attributes'=>['class'=>'footer']];
+	/**
+	 * @var array
+	 */
+	protected static array $BUNDLES = [];
 
   /**
    * @param $content

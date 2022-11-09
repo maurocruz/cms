@@ -43,6 +43,17 @@ class WebSite extends WebSiteAbstract
   }
 
 	/**
+	 * @param string $bundle
+	 * @return void
+	 */
+	final public function addBundle(string $bundle)
+	{
+		if (in_array($bundle,parent::$BUNDLES) === false) {
+			parent::$BUNDLES[] = $bundle;
+		}
+	}
+
+	/**
 	 * @return Enclave
 	 */
 	public static function enclave(): Enclave {
@@ -116,9 +127,14 @@ class WebSite extends WebSiteAbstract
     parent::$CONTENT['content'][] = self::$MAIN;
     parent::$CONTENT['content'][] = self::$FOOTER;
     parent::$BODY['content'][] = self::$CONTENT;
-
+		// HEAD
     parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
-    parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+
+		// BODY BUNDLES
+	  parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+	  foreach (parent::$BUNDLES as $bundle) {
+		  parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/'.$bundle.'.bundle.js"></script>';
+	  }
 
     parent::$HTML['content'][] = self::$HEAD;
     parent::$HTML['content'][] = self::$BODY;
