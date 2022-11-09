@@ -63,10 +63,9 @@ class Api
     $apiHostName = App::getApiHost();
 
 	  // IF SITE HOST === API HOST
-    if (App::getURL() == pathinfo($apiHostName)['dirname']) {
-      $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+	  $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+    if (App::getURL() == pathinfo($apiHostName)['dirname'] && class_exists($classname)) {
       return (new $classname())->{$action}($params);
-
     } else {
       // TOKEN
       $token = filter_input(INPUT_COOKIE, "API_TOKEN");
