@@ -22,17 +22,17 @@ class ImageObjectServer
    */
   private array $tablesHasImageObject;
   /**
-   * @var array
+   * @var ?array
    */
-  private static array $KEYWORDS_LIST = [];
+  private static ?array $KEYWORDS_LIST = null;
   /**
    * @var array
    */
   private static array $KEYWORDS = [];
   /**
-   * @var array
+   * @var ?array
    */
-  private static array $LIST_LOCATIONS = [];
+  private static ?array $LIST_LOCATIONS = null;
 
   /**
    *
