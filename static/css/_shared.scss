@@ -32,11 +32,11 @@
 
 /* COMPONENT _ navbar-search
 ====================================================================== */
-.navbar-search {
+.search-box {
   margin: 0 5px;
   position: relative;
 
-  .navbar-search-form {
+  .search-box-form {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     overflow: hidden;
@@ -55,12 +55,12 @@
     }
   }
 
-  .navbar-search-form-input {
+  .search-box-form-input {
     height: 20px;
     border-width: 3px;
   }
 
-  .navbar-search-form-image {
+  .search-box-form-image {
     height: 25px;
     vertical-align: middle;
   }
