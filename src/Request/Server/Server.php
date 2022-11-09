@@ -48,7 +48,7 @@ class Server
 		$returns = CmsFactory::request()->server()->type($type)->setParams('new', $params)->getParams();
 
 		if (is_string($returns)) {
-			return $returns;
+			return ['message' => $returns];
 
 		} elseif (is_array($returns)) {
 			// API
@@ -59,7 +59,7 @@ class Server
 			}
 			// REDIRECT TO EDIT PAGE
 			if (isset($data['id']) && !isset($params['tableHasPart'])) {
-				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
 			}
 		}
 
@@ -75,8 +75,9 @@ class Server
   public function edit($type, $params)
   {
 	  $params = CmsFactory::request()->server()->type($type)->setParams('edit', $params)->getParams();
+
 		if (is_string($params)) {
-			return $params;
+			return ['message'=>$params];
 		}
 		elseif (is_array($params)) {
 			$data = CmsFactory::request()->api()->put($type, $params)->ready();
