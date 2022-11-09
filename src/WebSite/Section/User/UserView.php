@@ -81,7 +81,7 @@ class UserView
   {
     $this->navbarUser($data['name']);
 
-    WebSite::addMain(Fragment::box()->simpleBox(self::formUser("edit", $data), _("Edit user")));
+    WebSite::addMain(Fragment::box()->simpleBox(self::formUser("edit", $data), _("Edit user"),['class'=>'box','style'=>'max-width: 850px; margin: 0 auto;']));
   }
 
   /**
@@ -92,10 +92,10 @@ class UserView
   static private function formUser(string $case = 'new', $value = null): array
   {
     $id = isset($value) ? $value['iduser'] : null;
-    $form = Fragment::form([ "class" => "formPadrao" ]);
+    $form = Fragment::form([ "class" => "formPadrao form-user" ]);
     $form->action("/admin/user/$case")->method('post');
     // ID
-    if ($case == "edit") $form->fieldsetWithInput('id', $id, 'ID', 'text', null, ['readonly']);
+    if ($case == "edit") $form->fieldsetWithInput('iduser', $id, 'ID', 'text', null, ['readonly']);
     // name
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
     // email
