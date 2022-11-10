@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms;
 
+use Gitonomy\Git\Repository;
 use Plinct\Tool\Locale;
 use Slim\App as Slim;
 
@@ -219,14 +220,28 @@ class App
    */
   public static function setVersion()
   {
-    $version = "developer version";
-    $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
-    $packages = json_decode(file_get_contents($installedFile));
-    foreach ($packages->packages as $package) {
-      if ($package->name && $package->name == "plinct/cms") {
-        $version = $package->version;
-      }
-    }
+	  if ($_SERVER['SERVER_ADDR'] !== '127.0.0.1') {
+		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
+		  $packages = json_decode(file_get_contents($installedFile));
+		  foreach ($packages->packages as $package) {
+			  if ($package->name && $package->name == "plinct/cms") {
+				  $version = $package->version;
+			  }
+		  }
+	  } else {
+			$gitDirectory = realpath(__DIR__.'/../');
+			$repository = new Repository($gitDirectory);
+
+			$head = $repository->getHead();
+			$branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
+			$commit = $head->getCommitHash();
+
+			$references = $repository->getReferences();
+			$tags = $references->resolveTags($commit);
+		  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+
+		  $version = "working in localhost. Branch: <b>$branch</b>; Tag: <b>$versionTag</b>";
+	  }
     self::$VERSION = $version;
   }
 
