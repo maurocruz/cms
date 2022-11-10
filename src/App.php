@@ -238,9 +238,13 @@ class App
 
 			$references = $repository->getReferences();
 			$tags = $references->resolveTags($commit);
-		  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+			if (!empty($tags)) {
+				$versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+			} else {
+				$versionTag = substr($commit,0,8);
+			}
 
-		  $version = "working in localhost. Branch: <b>$branch</b>; Tag: <b>$versionTag</b>";
+		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
 	  }
     self::$VERSION = $version;
   }
