@@ -16,20 +16,29 @@ class Privileges
 		'5'=>'super'
 	];
 
-	public function index($data = null): array
+	/**
+	 * @param $value
+	 * @return array
+	 */
+	public function getPrivileges($value): array
 	{
-		$content = [];
-		if ($data) {
-			foreach ($data as $value) {
-				$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('edit', $value), _('Edit'));
+		$privileges = $value['privileges'] ?? null;
+		if ($privileges) {
+			foreach ($privileges as $valuePrivileges) {
+				$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('edit', $valuePrivileges), _('Edit'));
 			}
 		}
 		// new
-		$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm(), _('Add new'));
+		$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('new', $value), _('Add new'));
 		// return
 		return $content;
 	}
 
+	/**
+	 * @param string $case
+	 * @param array|null $value
+	 * @return array
+	 */
 	private function privilegesForm(string $case = 'add', array $value = null): array
 	{
 		$iduser_privileges = $value['iduser_privileges'] ?? null;
@@ -41,8 +50,8 @@ class Privileges
 		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
 			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
-		if ($iduser && $iduser_privileges) {
-			$form->input('iduser', $iduser, 'hidden');
+		$form->input('iduser', $iduser, 'hidden');
+		if ($iduser_privileges) {
 			$form->input('iduser_privileges', $iduser_privileges, 'hidden');
 		}
 		// function

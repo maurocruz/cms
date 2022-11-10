@@ -69,7 +69,7 @@ class User
 	public function new($params = null)
 	{
 		$this->navbarUser(_("Add new"));
-		CmsFactory::response()->webSite()->addMain(
+		CmsFactory::webSite()->addMain(
 			CmsFactory::response()->fragment()->auth()->register()
 		);
 	}
@@ -86,10 +86,11 @@ class User
 			CmsFactory::webSite()->addMain(
 				CmsFactory::response()->fragment()->box()->simpleBox(self::formUser("edit", $value), _("Edit user"))
 			);
+
 			// PRIVILEGES
-			CmsFactory::response()->webSite()->addMain(
+			CmsFactory::webSite()->addMain(
 				CmsFactory::response()->fragment()->box()->expandingBox(_('Privileges'),
-					$this->privileges()->index($value['privileges'] ?? null)
+					$this->privileges()->getPrivileges($value)
 				)
 			);
 		} else {
