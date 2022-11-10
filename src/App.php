@@ -220,7 +220,24 @@ class App
    */
   public static function setVersion()
   {
-	  if ($_SERVER['SERVER_ADDR'] !== '127.0.0.1') {
+	  $gitDirectory = realpath(__DIR__.'/../');
+
+	  if (file_exists($gitDirectory.'/.git')) {
+		  $repository = new Repository($gitDirectory);
+		  $head = $repository->getHead();
+		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
+		  $commit = $head->getCommitHash();
+
+		  $references = $repository->getReferences();
+		  $tags = $references->resolveTags($commit);
+		  if (!empty($tags)) {
+			  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+		  } else {
+			  $versionTag = substr($commit,0,8);
+		  }
+		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+
+	  } else {
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
 		  $packages = json_decode(file_get_contents($installedFile));
 		  foreach ($packages->packages as $package) {
@@ -228,25 +245,9 @@ class App
 				  $version = $package->version;
 			  }
 		  }
-	  } else {
-			$gitDirectory = realpath(__DIR__.'/../');
-			$repository = new Repository($gitDirectory);
-
-			$head = $repository->getHead();
-			$branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
-			$commit = $head->getCommitHash();
-
-			$references = $repository->getReferences();
-			$tags = $references->resolveTags($commit);
-			if (!empty($tags)) {
-				$versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
-			} else {
-				$versionTag = substr($commit,0,8);
-			}
-
-		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
 	  }
-    self::$VERSION = $version;
+
+	  self::$VERSION = $version;
   }
 
   /**
