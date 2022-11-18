@@ -48,7 +48,7 @@ class Server
 		$returns = CmsFactory::request()->server()->type($type)->setParams('new', $params)->getParams();
 
 		if (is_string($returns)) {
-			return ['message' => $returns];
+			return $returns;
 
 		} elseif (is_array($returns)) {
 			// API
