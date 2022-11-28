@@ -128,7 +128,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 				->input($propertyName, '', 'hidden')
 				->submitButtonDelete("/admin/$this->tableHasPart/edit");
 		} else {
-			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-idHasPart='$this->idHasPart' data-orderBy='$orberBy'></div>");
+			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-tableHasPart='$this->tableHasPart' data-idHasPart='$this->idHasPart' data-orderBy='$orberBy'></div>");
 		}
 
 		return $this->ready();

@@ -50,15 +50,18 @@ class EventController implements ControllerInterface
         $params = [ "orderBy" => "startDate desc" ];
         $data = Api::get("event", $params);
         foreach ($data as $value) {
-            $dataSitemap[] = [
-                "loc" => App::getURL() . DIRECTORY_SEPARATOR . "eventos" . DIRECTORY_SEPARATOR . substr($value['startDate'],0,10) . DIRECTORY_SEPARATOR . urlencode($value['name']),
-                "news" => [
-                    "name" => App::getTitle(),
-                    "language" => App::getLanguage(),
-                    "publication_date" => DateTime::formatISO8601($value['startDate']),
-                    "title" => $value['name']
-                ]
-            ];
+					$startDate = $value['startDate'] ?? null;
+					if ($startDate) {
+						$dataSitemap[] = [
+							"loc" => App::getURL() . DIRECTORY_SEPARATOR . "eventos" . DIRECTORY_SEPARATOR . substr($startDate, 0, 10) . DIRECTORY_SEPARATOR . urlencode($value['name']),
+							"news" => [
+								"name" => App::getTitle(),
+								"language" => App::getLanguage(),
+								"publication_date" => DateTime::formatISO8601($startDate),
+								"title" => $value['name']
+							]
+						];
+					}
         }
         (new Sitemap("sitemap-event.xml"))->saveSitemap($dataSitemap, "news");
     }

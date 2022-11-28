@@ -92,6 +92,7 @@ class WebSite extends WebSiteAbstract
 
     parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
     parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+    parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/relationship.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 
     parent::$HTML['content'][] = self::$HEAD;
     parent::$HTML['content'][] = self::$BODY;
