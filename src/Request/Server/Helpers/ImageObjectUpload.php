@@ -101,7 +101,7 @@ class ImageObjectUpload
       $extension = substr(strstr($type,"/"),1);
       $filename = pathinfo($name)['filename'];
 
-      $newName = $prefix . md5(StringTool::removeAccentsAndSpaces($filename)) . "." . $extension;
+      $newName = $prefix . substr(md5(StringTool::removeAccentsAndSpaces($filename)),0,16) . "." . $extension;
       $destinationFolder = substr($destination, -1) == "/" ? $destination : $destination . DIRECTORY_SEPARATOR ;
 
       return $destinationFolder . $newName;
