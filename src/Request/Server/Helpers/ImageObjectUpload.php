@@ -46,7 +46,7 @@ class ImageObjectUpload
 
           } else {
             FileSystem::makeDirectory($destinationFolder, 0777, true);
-            if (!move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT'] . $destinationFolder)) {
+            if (!move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT'] . $destinationFile)) {
               die("error");
             }
           }
