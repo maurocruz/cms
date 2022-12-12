@@ -19,7 +19,7 @@ class ImageObjectUpload
    */
   public static function uploadImages($imagesUploaded, $destination = ''): array
   {
-    $destinationFolder = $destination == '' ? App::getImagesFolder() : $destination;
+    $destinationFolder = $destination == '' ? App::getImagesFolder() : App::getImagesFolder() . $destination;
     $newParams = [];
 
     // NUMBER OF IMAGES
@@ -37,16 +37,16 @@ class ImageObjectUpload
         // IMAGE UPLOAD AND SET INFO FOR DATABASE
         if ($type !== "image/svg+xml") {
           // DESTINATION FILE
-          $destinationFile = self::newImageFile($destination, $type, $name);
+          $destinationFile = self::newImageFile($destinationFolder, $type, $name);
           $imageTemp = new Image($tmp_name);
 
           // IF IMAGE WIDTH > MAX WIDTH DAFAULT
-          if ($imageTemp->getWidth() > App::getImageMaxWidth()) {
+	        if ($imageTemp->getWidth() > App::getImageMaxWidth()) {
             $imageTemp->resize(App::getImageMaxWidth())->saveToFile($destinationFile);
 
           } else {
             FileSystem::makeDirectory($destinationFolder, 0777, true);
-            if (!move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT'] . $destinationFile)) {
+            if (!move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT'] . $destinationFolder)) {
               die("error");
             }
           }
