@@ -16,13 +16,13 @@ abstract class OrderItemAbstract
    */
   protected string $id;
   /**
-   * @var int
-   */
-  protected int $referencesOrder;
-  /**
    * @var string
    */
-  protected string $orderedItem;
+  protected string $referencesOrder;
+  /**
+   * @var array
+   */
+  protected array $orderedItem;
   /**
    * @var string
    */
@@ -153,7 +153,7 @@ abstract class OrderItemAbstract
       $hrefItem = sprintf("/admin/%s/%s?id=%s&item=%s", lcfirst($this->sellerType), lcfirst($type), $this->sellerId, $id);
 
       // REFERENCE ORDER
-      $form->input("items[$key][referencesOrder]", (string) $this->referencesOrder, "hidden");
+      $form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
       // OFFER
       $form->input("items[$key][offer]", $item['idoffer'], "hidden");
       // OFFERED ITEM TYPE
