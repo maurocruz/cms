@@ -56,11 +56,9 @@ class ImageObjectServer
       $location = $params['location'];
       unset($params['location']);
 
-      $destination = strpos($location,App::getImagesFolder()) === false ? App::getImagesFolder() : $location;
-
       // upload images
       if ($_FILES['imageupload']['size'][0] !== 0) {
-        $newParams = ImageObjectUpload::uploadImages($_FILES['imageupload'], $destination);
+        $newParams = ImageObjectUpload::uploadImages($_FILES['imageupload'], $location);
 
         foreach ($newParams as $valueNewParams) {
           $params = array_merge($params, $valueNewParams);
@@ -114,7 +112,7 @@ class ImageObjectServer
     // DELETE REGISTER AND UNLINK IMAGE
     else {
       // delete register
-      CmsFactory::request()->api()->delete('imageObject', [ "idimageObject" => $params['id'] ])->ready();
+      CmsFactory::request()->api()->delete('imageObject', [ "idimageObject" => $params['idimageObject'] ])->ready();
 
       // unlink image
       $imageFile =  $_SERVER['DOCUMENT_ROOT'] . parse_url($params['contentUrl'])['path'];

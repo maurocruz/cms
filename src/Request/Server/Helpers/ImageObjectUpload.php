@@ -19,7 +19,7 @@ class ImageObjectUpload
    */
   public static function uploadImages($imagesUploaded, $destination = ''): array
   {
-    $destinationFolder = $destination == '' ? App::getImagesFolder() : $destination;
+    $destinationFolder = $destination == '' ? App::getImagesFolder() : App::getImagesFolder() . $destination;
     $newParams = [];
 
     // NUMBER OF IMAGES
@@ -37,11 +37,11 @@ class ImageObjectUpload
         // IMAGE UPLOAD AND SET INFO FOR DATABASE
         if ($type !== "image/svg+xml") {
           // DESTINATION FILE
-          $destinationFile = self::newImageFile($destination, $type, $name);
+          $destinationFile = self::newImageFile($destinationFolder, $type, $name);
           $imageTemp = new Image($tmp_name);
 
           // IF IMAGE WIDTH > MAX WIDTH DAFAULT
-          if ($imageTemp->getWidth() > App::getImageMaxWidth()) {
+	        if ($imageTemp->getWidth() > App::getImageMaxWidth()) {
             $imageTemp->resize(App::getImageMaxWidth())->saveToFile($destinationFile);
 
           } else {
@@ -101,7 +101,7 @@ class ImageObjectUpload
       $extension = substr(strstr($type,"/"),1);
       $filename = pathinfo($name)['filename'];
 
-      $newName = $prefix . md5(StringTool::removeAccentsAndSpaces($filename)) . "." . $extension;
+      $newName = $prefix . substr(md5(StringTool::removeAccentsAndSpaces($filename)),0,16) . "." . $extension;
       $destinationFolder = substr($destination, -1) == "/" ? $destination : $destination . DIRECTORY_SEPARATOR ;
 
       return $destinationFolder . $newName;
