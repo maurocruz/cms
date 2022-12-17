@@ -30,7 +30,7 @@ class OrderController
         "seller" => $id,
         "sellerType" => "Organization",
         "where" => "orderdate>'$dataAgo'",
-        "orderBy" => "orderDate desc"
+        "orderBy" => "dateModified desc, orderDate desc"
       ])->ready();
     }
     $data['itemListOrder'] = $period;

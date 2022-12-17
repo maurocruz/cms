@@ -50,10 +50,10 @@ class OrganizationController
   public function service(array $params): array {
     $itemId = $params['item'] ?? null;
     if ($itemId) {
-      $data = CmsFactory::request()->api()->get('service', [ "id" => $itemId, "properties" => "*,provider,offers" ]);
+      $data = CmsFactory::request()->api()->get('service', [ "id" => $itemId, "properties" => "*,provider,offers" ])->ready();
     } else {
       $data = $this->edit($params);
-      $data[0]['services'] = CmsFactory::request()->api()->get('service', ["format" => "ItemList", "properties" => "*", "provider" => $params['id'], "orderBy" => "dateModified DESC" ]);
+      $data[0]['services'] = CmsFactory::request()->api()->get('service', ["format" => "ItemList", "properties" => "*", "provider" => $params['id'], "orderBy" => "dateModified DESC" ])->ready();
     }
     return $data[0];
   }
@@ -69,17 +69,17 @@ class OrganizationController
     $itemId = $params['item'] ?? null;
     $action = $params['action'] ?? null;
 
-    $data = CmsFactory::request()->api()->get("organization", [ "idorganization" => $id, "properties" => "*,address,location,contactPoint,member,image" ]);
+    $data = CmsFactory::request()->api()->get("organization", [ "idorganization" => $id, "properties" => "*,address,location,contactPoint,member,image" ])->ready();
 
     if ($itemId) {
       $data[0]['action'] = "edit";
-      $productData = CmsFactory::request()->api()->get('product', [ "idproduct" => $itemId, "properties" => "*,manufacturer,offers,image" ]);
+      $productData = CmsFactory::request()->api()->get('product', [ "idproduct" => $itemId, "properties" => "*,manufacturer,offers,image" ])->ready();
       $data[0]['product'] = $productData[0];
     } else {
       if ($action == 'new') {
         $data[0]['action'] = 'new';
       } else {
-        $data[0]['products'] = CmsFactory::request()->api()->get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $id]);
+        $data[0]['products'] = CmsFactory::request()->api()->get('product', ["format" => "ItemList", "properties" => "*", "manufacturer" => $id])->ready();
       }
     }
     return $data[0];
@@ -124,7 +124,7 @@ class OrganizationController
   {
     $dataSitemap = null;
     $params = [ "properties" => "image,dateModified", "orderBy" => "dateModified desc" ];
-    $data = CmsFactory::request()->api()->get("organization", $params);
+    $data = CmsFactory::request()->api()->get("organization", $params)->ready();
     foreach ($data as $value) {
       $id = $value['idorganization'];
       $dataSitemap[] = [

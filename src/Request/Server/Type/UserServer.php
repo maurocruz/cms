@@ -15,7 +15,7 @@ class UserServer
   public function new(array $params): ?string
   {
     // API
-    $data = CmsFactory::request()->api()->post('user', $params);
+    $data = CmsFactory::request()->api()->post('user', $params)->ready();
 
     if(isset($data['id'])) {
       return dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . "edit" . DIRECTORY_SEPARATOR . $data['id'];

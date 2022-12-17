@@ -14,8 +14,8 @@ class WebPageElementServer
    */
   public function new($params)
   {
-    CmsFactory::request()->api()->post("webPageElement", $params);
-    CmsFactory::request()->api()->put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
+    CmsFactory::request()->api()->post("webPageElement", $params)->ready();
+    CmsFactory::request()->api()->put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ])->ready();
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 
@@ -37,8 +37,8 @@ class WebPageElementServer
    */
   public function erase($params)
   {
-    CmsFactory::request()->api()->delete('webPageElement', ['idwebPageElement'=>$params['idwebPageElement'] ?? $params['id']]);
-    CmsFactory::request()->api()->put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ]);
+    CmsFactory::request()->api()->delete('webPageElement', ['idwebPageElement'=>$params['idwebPageElement'] ?? $params['id']])->ready();
+    CmsFactory::request()->api()->put("webPage", ['idwebPage'=>$params['idHasPart'], 'dateModified'=>date('Y-m-d H:i:s') ])->ready();
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 }

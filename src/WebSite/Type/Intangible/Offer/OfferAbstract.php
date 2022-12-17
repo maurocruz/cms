@@ -15,9 +15,9 @@ abstract class OfferAbstract
      */
     protected string $tableHasPart;
     /**
-     * @var int
+     * @var string
      */
-    protected int $idHasPart;
+    protected string $idHasPart;
     /**
      * @var array
      */

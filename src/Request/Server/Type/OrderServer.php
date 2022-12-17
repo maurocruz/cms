@@ -7,7 +7,7 @@ namespace Plinct\Cms\Request\Server\Type;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Request\Server\ServerAbstract;
 
-class OrderServer extends ServerAbstract
+class OrderServer
 {
     /**
      * @param $params
@@ -18,15 +18,14 @@ class OrderServer extends ServerAbstract
         $seller = $params['seller'];
         $sellerType = $params['sellerType'];
         // insert new order
-        $data = CmsFactory::request()->api()->post('order', $params);
+        $data = CmsFactory::request()->api()->post('order', $params)->ready();
         $id = $data['id'];
         // REGISTER HISTORY IN ORDER REFERENCE
         $history = new HistoryServer('order', $id);
         $history->setSummary("Created new order");
         $history->register("CREATED");
         // RESPONSE
-        $redirect = "/admin/" . lcfirst($sellerType) . "/order?id=$seller&item=$id";
-        return parent::response($data, $redirect);
+        return "/admin/" . lcfirst($sellerType) . "/order?id=$seller&item=$id";
     }
 
     /**
@@ -35,11 +34,13 @@ class OrderServer extends ServerAbstract
      */
     public function edit($params)
     {
-        // HISTORY
-        $dataOld = CmsFactory::request()->api()->get('order', [ "id" => $params['id'] ]);
-        parent::setHistoryUpdateWithDifference('order', $params['id'], $dataOld[0], $params);
-        // RESPONSE
-        return parent::response(CmsFactory::request()->api()->put('order',$params));
+      // HISTORY
+      $dataOld = CmsFactory::request()->api()->get('order', [ "id" => $params['id'] ]);
+	    $history = new HistoryServer('order', $params['id']);
+	    $history->setSummaryByDifference($params, $dataOld[0]);
+	    $history->register("UPDATE")->ready();
+      // RESPONSE
+      return $params;
     }
 
     /**
@@ -49,7 +50,7 @@ class OrderServer extends ServerAbstract
     public function erase($params): string
     {
         $idorder = $params['id'] ?? $params['idIsPartOf'] ?? $params['idorder'];
-        CmsFactory::request()->api()->delete('order', [ "idorder" => $idorder ]);
+        CmsFactory::request()->api()->delete('order', [ "idorder" => $idorder ])->ready();
 
         $tableHasPart = $params['tableHasPart'] ?? lcfirst($params['sellerType']);
         $idHasPart = $params['idHasPart'] ?? $params['seller'];

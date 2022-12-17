@@ -14,7 +14,7 @@ class OrganizationServer
       $params['additionalType'] = str_replace(" -> ",",",$params['additionalType']);
     }
     // API
-    $data = CmsFactory::request()->server()->api()->post("organization", $params);
+    $data = CmsFactory::request()->server()->api()->post("organization", $params)->ready();
     return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . "edit" . DIRECTORY_SEPARATOR . $data['id'];
   }
 

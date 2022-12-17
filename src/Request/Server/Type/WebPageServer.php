@@ -17,7 +17,7 @@ class WebPageServer
     {
         $params['breadcrumb'] = Helper::breadcrumb()->setPageUrl($params['url'],$params['alternativeHeadline'])->ready();
 
-        $data = CmsFactory::request()->api()->post('webPage',$params);
+        $data = CmsFactory::request()->api()->post('webPage',$params)->ready();
 
         $id = $params['isPartOf'];
         $item = $data['id'];
@@ -44,7 +44,7 @@ class WebPageServer
         $params['idwebPage'] = $params['id'];
         unset($params['id']);
 
-        $response = CmsFactory::request()->api()->delete('webPage', $params);
+        $response = CmsFactory::request()->api()->delete('webPage', $params)->ready();
 
         if (isset($response['error'])) {
             print_r([ "error" => [ "response" => $response ]]);

@@ -37,24 +37,25 @@ class Server
 		return new Type($type);
 	}
 
-  /**
-   * @param $type
-   * @param $params
-   * @return string | array
-   */
-  public function new($type, $params)
+	/**
+	 * @param string $type
+	 * @param array $params
+	 * @return string | array
+	 */
+  public function new(string $type, array $params)
   {
 		// GET PARAMS
 		$returns = CmsFactory::request()->server()->type($type)->setParams('new', $params)->getParams();
-
 		if (is_string($returns)) {
 			return $returns;
-
 		} elseif (is_array($returns)) {
 			// API
-			$data = CmsFactory::request()->api()->post($type, $params)->ready();
-
-			if (isset($data['status']) && $data['status'] == 'fail') {
+			$data = CmsFactory::request()->api()->post($type, $returns)->ready();
+			if ((isset($data['status']) && $data['status'] == 'fail') || (isset($data['error']))) {
+				if(isset($data['error'])) {
+					$data = $data['error'];
+					$data['status'] = 'error';
+				}
 				return $data;
 			}
 			// REDIRECT TO EDIT PAGE
@@ -62,7 +63,6 @@ class Server
 				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
 			}
 		}
-
 		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 
   }
@@ -75,58 +75,60 @@ class Server
   public function edit($type, $params)
   {
 	  $params = CmsFactory::request()->server()->type($type)->setParams('edit', $params)->getParams();
-
 		if (is_string($params)) {
 			return ['message'=>$params];
 		}
 		elseif (is_array($params)) {
 			$data = CmsFactory::request()->api()->put($type, $params)->ready();
-
 			if (isset($data['status']) && $data['status'] == 'fail') {
 				return $data;
 			}
 		}
-
 		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }
 
-  /**
-   * @param $type
-   * @param $params
-   * @return string
-   */
-  public function erase($type, $params): string
+	/**
+	 * @param string $type
+	 * @param array $params
+	 * @return string
+	 */
+  public function erase(string $type, array $params): string
   {
-    $classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
+	  /*$classTypeServer = __NAMESPACE__."\\Type\\".ucfirst($type)."Server";
 
-    if (class_exists($classTypeServer)) {
-      $objectType = new $classTypeServer();
-      if (method_exists($objectType,"erase")) {
-        return $objectType->erase($params);
-      }
-    }
+	  if (class_exists($classTypeServer)) {
+		  $objectType = new $classTypeServer();
+		  if (method_exists($objectType,"erase")) {
+			  return $objectType->erase($params);
+		  }
+	  }*/
+	  $params = CmsFactory::request()->server()->type($type)->setParams('erase', $params)->getParams();
 
-    $id = $params['id'.lcfirst($type)] ?? $params['id'] ?? $params['idIsPartOf'] ?? null;
-		if ($id) {
-			$newParams["id" . lcfirst($type)] = $id;
-			if (isset($params['tableHasPart']) && isset($params['idHasPart'])){
-				$newParams['tableHasPart'] = $params['tableHasPart'];
-				$newParams['idHasPart'] = $params['idHasPart'];
-				$newParams['tableIsPartOf'] = lcfirst($type);
-				$newParams['idIsPartOf'] = $id;
-			}
-			$response = $this->api()->delete($type, $newParams)->ready();
-		} else {
-			$response = ['status'=>'fail','message'=>'No post id value for delete action'];
-		}
-
-    // RESPONSE REDIRECT
-    if (isset($response['error'])) {
-      print_r([ "error" => [ "response" => $response ]]);
-        die("Error message: {$response['error']['message']}");
+    if (is_string($params)) {
+			return $params;
     } else {
-      return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-    }
+	    $id = $params['id'.lcfirst($type)] ?? $params['id'] ?? $params['idIsPartOf'] ?? null;
+			if ($id) {
+				$newParams["id" . lcfirst($type)] = $id;
+				if (isset($params['tableHasPart']) && isset($params['idHasPart'])) {
+					$newParams['tableHasPart'] = $params['tableHasPart'];
+					$newParams['idHasPart'] = $params['idHasPart'];
+					$newParams['tableIsPartOf'] = lcfirst($type);
+					$newParams['idIsPartOf'] = $id;
+				}
+				$response = CmsFactory::request()->api()->delete($type, $newParams)->ready();
+			} else {
+				$response = ['status'=>'fail','message'=>'No post id value for delete action'];
+			}
+
+	    // RESPONSE REDIRECT
+	    if (isset($response['error'])) {
+	      print_r([ "error" => [ "response" => $response ]]);
+	        die("Error message: {$response['error']['message']}");
+	    } else {
+	      return isset($params['tableHasPart']) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+	    }
+		}
   }
 
   /**
