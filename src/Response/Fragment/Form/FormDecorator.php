@@ -153,8 +153,10 @@ class FormDecorator extends ElementDecorator implements FormInterface
               foreach ($data['@graph'] as $key => $item) {
                   $element->content("<option value='$key'>$item</option>");
               }
-          } else {
+          } elseif (Isset($data['message'])) {
               $element->content("<option value=''>{$data['message']}</option>");
+          } else {
+	          $element->content("<option value=''>" ._('Not available!')."</option>");
           }
       }
 

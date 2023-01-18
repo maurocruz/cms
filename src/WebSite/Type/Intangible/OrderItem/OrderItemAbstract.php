@@ -143,31 +143,36 @@ abstract class OrderItemAbstract
       ->head(_("Elegible duration"))
       ->head(_("Quantity"), [ "style" => "width: 80px;"]);
 
-    foreach ($sellerHasOfferCatalog['itemListElement'] as $key => $value) {
-      $item = $value['item'];
-      $id = ToolBox::searchByValue($item['itemOffered']['identifier'], "id")['value'];
-      $name = $item['itemOffered']['name'];
-      $type = $item['itemOffered']['@type'];
-      $price = $item['priceCurrency'] . " " . number_format((float)$item['price'],2,',','.');
-      $elegibleDuration = $item['elegibleDuration'];
-      $hrefItem = sprintf("/admin/%s/%s?id=%s&item=%s", lcfirst($this->sellerType), lcfirst($type), $this->sellerId, $id);
+		if ($sellerHasOfferCatalog['numberOfItems'] == '0') {
+			$table->bodyCell(_("No items available!"), ['colspan'=>'6','style'=>'text-align: center;'])->closeRow();
 
-      // REFERENCE ORDER
-      $form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
-      // OFFER
-      $form->input("items[$key][offer]", $item['idoffer'], "hidden");
-      // OFFERED ITEM TYPE
-      $form->input("items[$key][orderedItemType]", $type, "hidden");
+		} else {
+			foreach ($sellerHasOfferCatalog['itemListElement'] as $key => $value) {
+				$item = $value['item'];
+				$id = ToolBox::searchByValue($item['itemOffered']['identifier'], "id")['value'];
+				$name = $item['itemOffered']['name'];
+				$type = $item['itemOffered']['@type'];
+				$price = $item['priceCurrency'] . " " . number_format((float)$item['price'], 2, ',', '.');
+				$elegibleDuration = $item['elegibleDuration'];
+				$hrefItem = sprintf("/admin/%s/%s?id=%s&item=%s", lcfirst($this->sellerType), lcfirst($type), $this->sellerId, $id);
 
-      // TABLE ROW
-      $table->bodyCell("<input name='items[$key][orderedItem]' type='checkbox' value='$id' >", [ "style" => "text-align: center;"])
-        ->bodyCell($name, null, $hrefItem)
-        ->bodyCell(_($type))
-        ->bodyCell($price, ["style"=>"text-align: right;"])
-        ->bodyCell($elegibleDuration)
-        ->bodyCell("<input name='items[$key][orderQuantity]' type='number' value='1' min='1' style='width: 80px;'>")
-        ->closeRow();
-    }
+				// REFERENCE ORDER
+				$form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
+				// OFFER
+				$form->input("items[$key][offer]", $item['idoffer'], "hidden");
+				// OFFERED ITEM TYPE
+				$form->input("items[$key][orderedItemType]", $type, "hidden");
+
+				// TABLE ROW
+				$table->bodyCell("<input name='items[$key][orderedItem]' type='checkbox' value='$id' >", ["style" => "text-align: center;"])
+					->bodyCell($name, null, $hrefItem)
+					->bodyCell(_($type))
+					->bodyCell($price, ["style" => "text-align: right;"])
+					->bodyCell($elegibleDuration)
+					->bodyCell("<input name='items[$key][orderQuantity]' type='number' value='1' min='1' style='width: 80px;'>")
+					->closeRow();
+			}
+		}
 
     $form->content($table->ready());
 

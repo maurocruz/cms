@@ -19,7 +19,7 @@ class OrderServer
     $sellerType = $params['sellerType'];
     // insert new order
     $data = CmsFactory::request()->api()->post('order', $params)->ready();
-    $id = $data['idorder'];
+    $id = $data['idorder'] ?? $data['id'];
     // REGISTER HISTORY IN ORDER REFERENCE
     $history = new HistoryServer('order', $id);
     $history->setSummary("Created new order");
