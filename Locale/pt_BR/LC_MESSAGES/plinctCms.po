@@ -411,6 +411,9 @@ msgstr "Nada encontrado!"
 msgid "No items found!"
 msgstr "Nenhum item encontrado!"
 
+msgid "No items available!"
+msgstr "Nenhum item disponível!"
+
 msgid "Are you sure you want to delete this item?"
 msgstr "Tem certeza que deseja excluir este item?"
 
