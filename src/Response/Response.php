@@ -47,6 +47,7 @@ class Response
 	 */
 	public function writeBody(ResponseInterface $response): ResponseInterface
 	{
+		$this->webSite()->buildBodyStructure();
 		$response->getBody()->write($this->webSite()->ready());
 		return $response;
 	}

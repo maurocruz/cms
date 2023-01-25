@@ -29,19 +29,20 @@ class WebSite extends WebSiteAbstract
     Locale::translateByGettext(App::getLanguage(), "plinctCms", __DIR__."/../../Locale");
     // HEAD
     parent::addHead(Structure::head());
-    // HEADER
-    parent::addHeader(Structure::header());
-    // FOOTER
-    parent::addFooter(Structure::footer());
-
-    // HEADER ELEMENTS
-    $userLogin = $_SESSION['userLogin'] ?? null;
-    if ($userLogin) {
-      parent::addHeader(Structure::userBar($userLogin), true);
-			parent::addHeader(Structure::mainMenu());
-    }
   }
 
+	/**
+	 * @return void
+	 */
+	public function buildBodyStructure()
+	{
+		// HEADER
+		if (CmsFactory::request()->user()->userLogged()->getIduser()) { parent::addHeader(Structure::mainMenu(), true); }
+		parent::addHeader(Structure::header(), true);
+		if (CmsFactory::request()->user()->userLogged()->getIduser()) { parent::addHeader(Structure::userBar(), true);}
+		// FOOTER
+		parent::addFooter(Structure::footer());
+	}
 	/**
 	 * @param string $bundle
 	 * @return void

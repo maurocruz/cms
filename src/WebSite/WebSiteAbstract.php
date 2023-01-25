@@ -25,7 +25,7 @@ class WebSiteAbstract
   /**
    * @var array
    */
-  protected static array $HEADER = ['tag'=>'header', 'attributes'=>['class'=>'header']];
+  protected static array $HEADER = ['tag'=>'header', 'attributes'=>['class'=>'header'], 'content'=>[]];
   /**
    * @var array
    */

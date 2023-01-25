@@ -29,14 +29,14 @@ class Structure
   }
 
   /**
-   * @param $userLogin
    * @return string
    */
-  public static function userBar($userLogin): string
+  public static function userBar(): string
   {
-    $helloText = sprintf(_("Hello, %s."), $userLogin['name']);
+    $helloText = sprintf(_("Hello, %s."), CmsFactory::request()->user()->userLogged()->getName());
     return "<div class='admin admin-bar-top'>
       <p>$helloText</p>
+      <button class='button-link' onclick='navigator.clipboard.writeText(\"". CmsFactory::request()->user()->userLogged()->getToken()."\")'>Copy token</button>
       <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
     </div>";
   }
