@@ -10,7 +10,7 @@ class UserLogged
 {
 	private static ?string $token = null;
 	private static ?string $iduser = null;
-	private static string $name;
+	private static ?string $name = null;
 	private static ?array $privileges = null;
 
 	/**
@@ -54,9 +54,9 @@ class UserLogged
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getName(): string
+	public function getName(): ?string
 	{
 		return self::$name;
 	}
@@ -91,8 +91,11 @@ class UserLogged
 			$namespaceValue = $value['namespace'];
 
 			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') return true;
-
-			return ($functionValue > $function && $this->permittedActions($actions, $actionsValue) && $namespaceValue == $namespace);
+			return (
+				$functionValue > $function
+				&& $this->permittedActions($actions, $actionsValue)
+				&& ($namespaceValue === 'all' || $namespaceValue == $namespace)
+			);
 		}
 
 		return false;
