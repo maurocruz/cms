@@ -283,6 +283,16 @@ a.white {
   font-size: 1.2em;
 }
 
+.button-link {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+  position: relative;
+  text-decoration: underline;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
