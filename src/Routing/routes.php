@@ -11,7 +11,7 @@ use Plinct\Cms\CmsFactory;
  */
 return function (Route $route)
 {
-  CmsFactory::webSite()->create();
+	CmsFactory::webSite()->create();
 
   $route->group('/admin', function(Route $route)
   {
@@ -30,7 +30,7 @@ return function (Route $route)
 	   */
 		$route->group('/user', function (Route $route) {
 			CmsFactory::request()->routes()->user($route);
-		})->addMiddleware(CmsFactory::middleware()->authentication());
+		});
 
     /**
      * ENCLAVE
@@ -42,5 +42,5 @@ return function (Route $route)
      */
 		CmsFactory::request()->routes()->type($route);
 
-  })->addMiddleware(CmsFactory::middleware()->gateway());
+  })->addMiddleware(CmsFactory::middleware()->gateway())->addMiddleware(CmsFactory::middleware()->authentication());
 };

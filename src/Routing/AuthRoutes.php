@@ -57,7 +57,7 @@ return function (Route $route)
 		// RESPONSE
 	  return CmsFactory::response()->writeBody($response);
 
-  })->addMiddleware(CmsFactory::middleware()->authentication());
+  });
 
   /**
    *  GROUP AUTH
@@ -78,7 +78,7 @@ return function (Route $route)
 			// RESPONSE
 	    return CmsFactory::response()->writeBody($response);
 
-    })->addMiddleware(CmsFactory::middleware()->authentication());
+    });
 
     if(!CmsFactory::request()->user()->userLogged()->getIduser()) {
       /**

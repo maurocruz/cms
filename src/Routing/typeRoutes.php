@@ -22,7 +22,7 @@ return function (Route $route)
 			CmsFactory::webSite()->getContent($args, $request->getQueryParams());
 		}
 		return CmsFactory::response()->writeBody($response);
-	})->addMiddleware(CmsFactory::middleware()->authentication());
+	});
 
 	/**
 	 * POST
@@ -98,5 +98,5 @@ return function (Route $route)
 			return CmsFactory::response()->writeBody($response);
 		}
 
-	})->addMiddleware(CmsFactory::middleware()->authentication());
+	});
 };

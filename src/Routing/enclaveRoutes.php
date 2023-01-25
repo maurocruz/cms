@@ -26,22 +26,19 @@ return function (Route $route)
 
 			CmsFactory::webSite()->enclave()->get($classNameSpace, $queryParams);
 
-			$response->getBody()->write(CmsFactory::webSite()->ready());
-			return $response;
+			return CmsFactory::response()->writeBody($response);
 
 		});
 
 		$route->post('/{className}', function(Request $request, Response $response, $args)
 		{
 			// CHECK AUTHENTICATION
-			if (!isset($_SESSION['userLogin']['admin'])) {
+			if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
 				CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login());
-				$response->getBody()->write(CmsFactory::webSite()->ready());
-				return $response;
+				return CmsFactory::response()->writeBody($response);
 			}
 
 			$parseBody = $request->getParsedBody();
-
 			$queryParams = $request->getQueryParams();
 			$ns = $queryParams['ns'] ?? "";
 			$action = $queryParams['action'] ?? null;
@@ -50,11 +47,11 @@ return function (Route $route)
 
 			switch ($action) {
 				case 'edit':
-					$returns = Server::enclave()->post($classNameSpace, $parseBody);
+					$returns = Server::enclave()->put($classNameSpace, $parseBody);
 					break;
 				case 'new':
 				case 'add':
-					$returns = Server::enclave()->put($classNameSpace, $parseBody);
+					$returns = Server::enclave()->post($classNameSpace, $parseBody);
 					break;
 				case 'delete':
 					$returns = Server::enclave()->delete($classNameSpace, $parseBody);
@@ -64,8 +61,7 @@ return function (Route $route)
 			}
 			if (is_array($returns)) {
 				CmsFactory::webSite()->addMain($returns);
-				$response->getBody()->write(CmsFactory::webSite()->ready());
-				return $response;
+				return CmsFactory::response()->writeBody($response);
 			} elseif (is_string($returns)) {
 				return $response->withHeader('Location', $returns)->withStatus(301);
 			} else {
@@ -73,5 +69,5 @@ return function (Route $route)
 			}
 		});
 
-	})->addMiddleware(CmsFactory::middleware()->authentication());
+	});
 };
