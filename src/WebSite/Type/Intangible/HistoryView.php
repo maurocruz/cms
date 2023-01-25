@@ -9,7 +9,12 @@ use Plinct\Web\Element\Table;
 
 class HistoryView
 {
-  public function view($data): array {
+	/**
+	 * @param $data
+	 * @return array
+	 */
+  public function view($data): array
+  {
     // TABLE
     $table = new Table();
     // HEADERS
@@ -22,7 +27,7 @@ class HistoryView
       foreach ($data as $value) {
         $table->bodyCell(DateTime::formatDateTime($value['datetime']))
           ->bodyCell($value['action'])
-          ->bodyCell(stripslashes($value['summary']))
+          ->bodyCell($value['summary'] ? stripslashes($value['summary']) : '')
           ->bodyCell($value['user']['name'] ?? _("Undefined"))
           ->closeRow();
       }
