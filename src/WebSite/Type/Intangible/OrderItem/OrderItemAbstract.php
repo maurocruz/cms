@@ -105,10 +105,10 @@ abstract class OrderItemAbstract
           ->closeRow();
 
         $quantityTotal += $orderQuantity;
-        $totalBill += $totalPrice - $discount;
+        $totalBill += $totalPrice;
       }
 
-      self::$TOTAL_BILL = $totalBill;
+      self::$TOTAL_BILL = $totalBill - $discount;
 
     } else {
       $table->bodyCell(_("No items found!"), [ "colspan" => "7", "style" => "text-align: center;" ])->closeRow();
