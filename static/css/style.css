@@ -1403,6 +1403,12 @@ table .table-delete-button {
   width: calc(100% - 12px);
 }
 
+.plth-additionalTypeList {
+  max-height: 400px;
+  overflow: auto;
+  background-color: rgba(250, 250, 250, 0.1);
+}
+
 @media (min-width: 576px) {
   .menu2 {
     padding-left: 6px;

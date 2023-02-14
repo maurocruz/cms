@@ -63,7 +63,7 @@ class LocalBusinessView
 
     // LOCAL BUSINESS
 		$apiHost = App::getApiHost();
-    $content[] = "<script src='/static/dist/plinct-thing/main.688a425adff178efc2dd.js'></script>";
+    $content[] = "<script src='https://plinct.com.br/static/dist/plinct-thing/main.91d0e581d14dba8801bf.js'></script>";
     $content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
 
     //$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
