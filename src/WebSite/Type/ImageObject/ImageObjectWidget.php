@@ -86,9 +86,16 @@ class ImageObjectWidget
     // FIGURE
     $image = new Image($value['contentUrl']);
     $contentSize = $value['contentSize'] ?? (string) $image->getFileSize();
+
+		if (strlen($contentSize) <=6) {
+			$size = " (".number_format($contentSize/1000,2,',','.')." kB)";
+		} else {
+			$size = " (".number_format($contentSize/1000000,2,',','.')." MB)";
+		}
+
     $imageWidth = $value['width'] ?? (string) $image->getWidth();
     $imageHeight = $value['height'] ?? (string) $image->getHeight();
-    $imageType = $value['type'] ?? $image->getEncodingFormat();
+    $imageType = $value['encodingFormat'] ?? $image->getEncodingFormat();
 
     $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-imageObject", "name" => "form-imageObject", "enctype" => "multipart/form-data" ]);
     $form->action("/admin/imageObject/edit")->method("post");
@@ -100,7 +107,7 @@ class ImageObjectWidget
     // url
     $form->fieldsetWithInput('contentUrl', $value['contentUrl'], "Url", 'text', null, ['readonly']);
     //content size
-    $form->fieldsetWithInput('contentSize', $contentSize, _("Content size"), 'text', null, ['readonly']);
+    $form->fieldsetWithInput('contentSize', $contentSize . $size, _("Content size"), 'text', null, ['readonly']);
     // width
     $form->fieldsetWithInput("width", $imageWidth, _("Image width") . " (px)", 'text', null, ['readonly'] );
     // height

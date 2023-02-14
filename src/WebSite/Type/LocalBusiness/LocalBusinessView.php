@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\ContactPoint;
-use Plinct\Tool\ArrayTool;
 
 class LocalBusinessView
 {
@@ -62,7 +62,13 @@ class LocalBusinessView
     $this->navbarLocalBussines($value['name']);
 
     // LOCAL BUSINESS
-    $content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
+		$apiHost = App::getApiHost();
+    $content[] = "<script src='/static/dist/plinct-thing/main.688a425adff178efc2dd.js'></script>";
+    $content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
+
+    //$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
+		// ADDITIONAL TYPE
+		//$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Additional type"), '<div>Development additional type functions</div>');
     // LOCATION
     $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Place"), CmsFactory::response()->fragment()->form()->relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']));
     // CONTACT POINT
@@ -78,35 +84,29 @@ class LocalBusinessView
   }
 
   /**
-   * @param string $case
-   * @param null $value
    * @return array
    */
-  private static function formLocalBussiness(string $case = "new", $value = null): array
+  private static function formLocalBussiness(): array
   {
-    $id = isset($value) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
-
     $form = CmsFactory::response()->fragment()->form(["id"=>"form-localBusiness", "class" => "formPadrao form-localBusiness"]);
-    $form->action("/admin/localBusiness/$case")->method('post');
-    // hiddens
-    if ($case == "edit") $form->input("idlocalBusiness", $id, "hidden");
+    $form->action("/admin/localBusiness/new")->method('post');
     // name
-    $form->fieldsetWithInput("name", $value['name'] ?? null, _("Name"));
+    $form->fieldsetWithInput("name", null['name'] ?? null, _("Name"));
     // description
-    $form->fieldsetWithTextarea("description", $value['description'] ?? null, _("Description"));
+    $form->fieldsetWithTextarea("description", null['description'] ?? null, _("Description"));
     // disambiguatingDescription
-    $form->fieldsetWithTextarea("disambiguatingDescription", $value['disambiguatingDescription'] ?? null, _("Disambiguating description"));
+    $form->fieldsetWithTextarea("disambiguatingDescription", null['disambiguatingDescription'] ?? null, _("Disambiguating description"));
     // hasOfferCatalog
-    $form->fieldsetWithInput("hasOfferCatalog", $value['hasOfferCatalog'] ?? null, _("Offer catalog"));
+    $form->fieldsetWithInput("hasOfferCatalog", null['hasOfferCatalog'] ?? null, _("Offer catalog"));
     // url
-    $form->fieldsetWithInput("url", $value['url'] ?? null, "Url");
+    $form->fieldsetWithInput("url", null['url'] ?? null, "Url");
     // dateCreated
-    if ($case == "edit") $form->fieldsetWithInput("dateCreated", $value['dateCreated'] ?? null, _("Date created"), "datetime", null, [ "disabled" ]);
+    if ("new" == "edit") $form->fieldsetWithInput("dateCreated", null['dateCreated'] ?? null, _("Date created"), "datetime", null, [ "disabled" ]);
     // dateModified
-    if ($case == "edit") $form->fieldsetWithInput("dateModified", $value['dateModified'] ?? null, _("Date modified"), "datetime", null, [ "disabled" ]);
+    if ("new" == "edit") $form->fieldsetWithInput("dateModified", null['dateModified'] ?? null, _("Date modified"), "datetime", null, [ "disabled" ]);
     // submit buttons
     $form->submitButtonSend();
-    if ($case == "edit") $form->submitButtonDelete("/admin/localBusiness/erase");
+    if ("new" == "edit") $form->submitButtonDelete("/admin/localBusiness/erase");
     // ready
     return $form->ready();
   }

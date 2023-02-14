@@ -1385,6 +1385,24 @@ table .table-delete-button {
   font-size: 1.3em;
 }
 
+.plcm-section {
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+.plcm-section .plcmsc-main {
+  padding: 3px 8px;
+}
+
+.pl-form legend {
+  margin: 0 0 2px 5px;
+}
+.pl-form input[type=text], .pl-form textarea {
+  padding: 4px 6px;
+  border-style: none;
+  border-radius: 4px;
+  width: calc(100% - 12px);
+}
+
 @media (min-width: 576px) {
   .menu2 {
     padding-left: 6px;
