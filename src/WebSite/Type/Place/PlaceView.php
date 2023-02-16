@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Place;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Web\Widget\OpenStreetMap;
 
 class PlaceView
@@ -70,14 +69,18 @@ class PlaceView
     if (!$value['address']) CmsFactory::webSite()->addMain(
 			CmsFactory::response()->fragment()->miscellaneous()->message(_("Is important that you define place 'address'"),['class'=>'warning'])
     );
+
+    $apiHost = App::getApiHost();
+	  CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.07c30d279276c6b3a270.js'></script>");
+		CmsFactory::webSite()->addMain("<div id='plinctPlace'  data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
     //place
-    $place[] = self::formPlace(null, null, 'edit', $value);
+    //$place[] = self::formPlace(null, null, 'edit', $value);
     // address
-    $place[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("Place", $this->placeId, $value['address']));
+    //$place[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("Place", $this->placeId, $value['address']));
     // images
-    $place[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("place", $this->placeId, $value['image']));
+    //$place[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("place", $this->placeId, $value['image']));
     // append
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox($place,$value['name']));
+    //CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox($place,$value['name']));
   }
 
   /**
