@@ -71,7 +71,7 @@ class PlaceView
     );
 
     $apiHost = App::getApiHost();
-	  CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.07c30d279276c6b3a270.js'></script>");
+	  CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.0298f97dcf8f23a55a40.js'></script>");
 		CmsFactory::webSite()->addMain("<div id='plinctPlace'  data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
     //place
     //$place[] = self::formPlace(null, null, 'edit', $value);
