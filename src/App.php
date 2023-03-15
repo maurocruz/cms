@@ -220,10 +220,12 @@ class App
    */
   public static function setVersion()
   {
+		$version = 'NAN';
+
 	  $gitDirectory = realpath(__DIR__.'/../');
 
 	  if (file_exists($gitDirectory.'/.git')) {
-		  /*$repository = new Repository($gitDirectory);
+		  $repository = new Repository($gitDirectory);
 		  $head = $repository->getHead();
 		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
 		  $commit = $head->getCommitHash();
@@ -234,8 +236,8 @@ class App
 			  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
 		  } else {
 			  $versionTag = substr($commit,0,8);
-		  }*/
-		  $version = "Erro on gitonomy";//"working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+		  }
+		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
 
 	  } else {
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");

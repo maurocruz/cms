@@ -67,7 +67,9 @@ class Api
 	 */
 	public function ready() {
 		$token = CmsFactory::request()->user()->userLogged()->getToken();
-		$this->curl->authorizationBear($token);
+		if($token) {
+			$this->curl->authorizationBear($token);
+		}
 
 		$returns = json_decode($this->curl->ready(), true);
 
