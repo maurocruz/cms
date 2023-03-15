@@ -54,6 +54,11 @@ class WebSite extends WebSiteAbstract
 		}
 	}
 
+	public function clearMain()
+	{
+		parent::$MAIN['content'] = null;
+	}
+
 	/**
 	 * @return Enclave
 	 */

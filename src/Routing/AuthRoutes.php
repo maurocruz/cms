@@ -51,6 +51,7 @@ return function (Route $route)
       }
     }
     // UNAUTHORIZED
+	  CmsFactory::webSite()->clearMain();
 	  CmsFactory::webSite()->addMain(
 			CmsFactory::response()->fragment()->auth()->login($authentication)
 	  );
@@ -72,12 +73,8 @@ return function (Route $route)
       if (CmsFactory::request()->user()->userLogged()->getIduser()) {
         return $response->withHeader("Location", "/admin")->withStatus(302);
       }
-			CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->auth()->login()
-			);
 			// RESPONSE
 	    return CmsFactory::response()->writeBody($response);
-
     });
 
     if(!CmsFactory::request()->user()->userLogged()->getIduser()) {
@@ -88,6 +85,7 @@ return function (Route $route)
 			{
 				$route->get('', function (Request $request, Response $response)
 				{
+					CmsFactory::webSite()->clearMain();
 					CmsFactory::response()->webSite()->addMain(
 						CmsFactory::response()->fragment()->auth()->register()
 					);
@@ -100,6 +98,7 @@ return function (Route $route)
 				$route->post('', function (Request $request, Response $response)
 				{
 					$data = CmsFactory::request()->server()->auth()->register($request->getParsedBody());
+					CmsFactory::webSite()->clearMain();
 					if (isset($data['status']) && $data['status'] == "success") {
 						CmsFactory::webSite()->addMain(
 							CmsFactory::response()->fragment()->auth()->login($data)
