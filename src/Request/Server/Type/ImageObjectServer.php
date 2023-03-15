@@ -13,7 +13,6 @@ use Plinct\Tool\FileSystem\FileSystem;
 
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Request\Server\Helpers\ImageObjectUpload;
 
 class ImageObjectServer
 {
@@ -48,40 +47,23 @@ class ImageObjectServer
    */
   public function new($params)
   {
-    $responseDataBase = null;
+	  $responseDataBase = null;
+	  $params['location'] = isset($params['location']) && $params['location'] != '' ? App::getImagesFolder() . $params['location'] : App::getImagesFolder();
 
-    // IF UPLOAD IMAGE
-    if (isset($_FILES['imageupload'])) {
-      // set destination
-      $location = $params['location'];
-      unset($params['location']);
-
-      // upload images
-      if ($_FILES['imageupload']['size'][0] !== 0) {
-        $newParams = ImageObjectUpload::uploadImages($_FILES['imageupload'], $location);
-
-        foreach ($newParams as $valueNewParams) {
-          $params = array_merge($params, $valueNewParams);
-          $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params)->ready();
-        }
-      }
-
-    } else {
+	  // IF UPLOAD IMAGE
+    if (!isset($_FILES)) {
       // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
       $idArray = $params['idimageObject'] ?? $params['id'] ?? $params['idArray'];
-
       if (is_array($idArray)) {
         foreach($idArray as $value) {
           $params['idIsPartOf'] = $value;
 					unset($params['idimageObject']);
 					unset($params['id']);
 					unset($params['idArray']);
-          $responseDataBase[] = CmsFactory::request()->api()->post('imageObject', $params)->ready();
         }
-      } else {
-        $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params)->ready();
       }
     }
+	  $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params, $_FILES)->ready();
 
     if (isset($params['tableHasPart'])) {
       return filter_input(INPUT_SERVER, 'HTTP_REFERER');

@@ -13,7 +13,8 @@ class Api
 	private string $hostApi;
 	private Curl $curl;
 
-	public function __construct(string $hostApi = null) {
+	public function __construct(string $hostApi = null)
+	{
 		$this->hostApi = $hostApi ?? App::getApiHost();
 		$this->curl = new Curl();
 	}
@@ -23,7 +24,8 @@ class Api
 	 * @param ?array $params
 	 * @return $this
 	 */
-	public function get(string $relativeUrl, array $params = []): Api {
+	public function get(string $relativeUrl, array $params = []): Api
+	{
 		$this->curl->setUrl($this->hostApi.$relativeUrl)->get($params)->returnWithJson();
 		return $this;
 	}
@@ -31,10 +33,12 @@ class Api
 	/**
 	 * @param string $relativeUrl
 	 * @param array $data
+	 * @param array|null $FILES
 	 * @return $this
 	 */
-	public function post(string $relativeUrl, array $data): Api {
-		$this->curl->setUrl($this->hostApi.$relativeUrl)->post($data)->returnWithJson();
+	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
+	{
+		$this->curl->setUrl($this->hostApi.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
 
@@ -63,9 +67,8 @@ class Api
 	 */
 	public function ready() {
 		$token = CmsFactory::request()->user()->userLogged()->getToken();
-		if ($token) {
-			$this->curl->authorizationBear($token);
-		}
+		$this->curl->authorizationBear($token);
+
 		$returns = json_decode($this->curl->ready(), true);
 
 		if ($returns === null) {
