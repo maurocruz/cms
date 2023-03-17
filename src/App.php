@@ -220,6 +220,8 @@ class App
    */
   public static function setVersion()
   {
+		$version = 'NAN';
+
 	  $gitDirectory = realpath(__DIR__.'/../');
 
 	  if (file_exists($gitDirectory.'/.git')) {
