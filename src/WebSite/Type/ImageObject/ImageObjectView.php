@@ -22,8 +22,10 @@ class ImageObjectView extends ImageObjectWidget
 		if ($listBy === 'groups') {
 			// TODO UNDER DEVELOPMENT
 			CmsFactory::webSite()->addMain('<p>Under development!</p>');
-
 		} else {
+			//$apiHost = App::getApiHost();
+			//CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-imageObject/main.cb79621f47fd3a6ac896.js'></script>");
+			//CmsFactory::webSite()->addMain("<div id='plinctImageObject' data-apiHost='$apiHost'></div>");
 			CmsFactory::webSite()->addMain('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
 		}
   }
