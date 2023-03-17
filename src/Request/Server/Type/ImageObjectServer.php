@@ -48,10 +48,9 @@ class ImageObjectServer
   public function new($params)
   {
 	  $responseDataBase = null;
-	  $params['location'] = isset($params['location']) && $params['location'] != '' ? App::getImagesFolder() . $params['location'] : App::getImagesFolder();
 
-	  // IF UPLOAD IMAGE
-    if (!isset($_FILES)) {
+	  // IF NOT UPLOAD IMAGE
+    if (empty($_FILES)) {
       // IF CHOOSE MULTIPLE IMAGE FOR TABLE HAS PART
       $idArray = $params['idimageObject'] ?? $params['id'] ?? $params['idArray'];
       if (is_array($idArray)) {
@@ -60,18 +59,19 @@ class ImageObjectServer
 					unset($params['idimageObject']);
 					unset($params['id']);
 					unset($params['idArray']);
+	        $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params)->ready();
         }
       }
+    } else {
+	    $params['location'] = isset($params['location']) && $params['location'] != '' ? App::getImagesFolder() . $params['location'] : App::getImagesFolder();
+	    $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params, $_FILES)->ready();
     }
-	  $responseDataBase[] = CmsFactory::request()->api()->post("imageObject", $params, $_FILES)->ready();
 
     if (isset($params['tableHasPart'])) {
       return filter_input(INPUT_SERVER, 'HTTP_REFERER');
-
     } else {
       if (count($responseDataBase) == 1) {
         return "/admin/imageObject/edit/".$responseDataBase[0]['id'];
-
       } else {
         return "/admin/imageObject?listBy=keywords&limit=40&offset=0&keywords=".$params['keywords'];
       }
