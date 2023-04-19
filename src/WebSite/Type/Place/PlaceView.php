@@ -60,13 +60,17 @@ class PlaceView
    */
   public function edit(array $data)
   {
-    $value = $data[0];
-    $this->placeId = isset($value) ? $value['idplace'] : null;
-    // NAVBAR
-    $this->navbarPlace($value['name']);
-    $apiHost = App::getApiHost();
-	  CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.4e97c1f0579a888bd994.js'></script>");
-		CmsFactory::webSite()->addMain("<div id='plinctPlace' data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
+		if (empty($data)) {
+			CmsFactory::webSite()->addMain("<p>"._("Nothing found!")."</p>");
+		} else {
+			$value = $data[0];
+			$this->placeId = isset($value) ? $value['idplace'] : null;
+			// NAVBAR
+			$this->navbarPlace($value['name']);
+			$apiHost = App::getApiHost();
+			CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.0920c100004a37a8b273.js'></script>");
+			CmsFactory::webSite()->addMain("<div id='plinctPlace' data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
+		}
   }
 
 	/**
