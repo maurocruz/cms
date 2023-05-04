@@ -68,7 +68,7 @@ class PlaceView
 			// NAVBAR
 			$this->navbarPlace($value['name']);
 			$apiHost = App::getApiHost();
-			CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.0920c100004a37a8b273.js'></script>");
+			CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.1935c2813b37368c9dac.js'></script>");
 			CmsFactory::webSite()->addMain("<div id='plinctPlace' data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
 		}
   }
