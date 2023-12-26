@@ -1,71 +1,101 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\Response\Fragment\ListTable;
 
-use Plinct\Cms\CmsFactory;
-use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 
 abstract class ListTableAbstract
 {
-    /**
-     * @var Table
-     */
-    protected Table $table;
-    /**
-     * @var ?string
-     */
-    protected ?string $caption = null;
-    /**
-     * @var array
-     */
-    protected array $labels = [];
-    /**
-     * @var array
-     */
-    protected array $rows = [];
-    /**
-     * @var ?array
-     */
-    protected ?array $buttonEdit = null;
-    /**
-     * @var bool
-     */
-    protected bool $buttonDelete = false;
-    /**
-     * @var array
-     */
-    protected array $itemListElement = [];
-    /**
-     * @var array
-     */
-    protected array $properties = [];
-    /**
-     * @var bool
-     */
-    protected ?bool $editButton = null;
-    /**
-     * @var ?string
-     */
-    protected ?string $pathToEditButton = null;
+  /**
+   * @var Table
+   */
+  protected Table $table;
+  /**
+   * @var ?string
+   */
+  protected ?string $caption = null;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $numberOfItems = null;
+  /**
+   * @var array
+   */
+  protected array $labels = [];
+  /**
+   * @var array
+   */
+  protected array $rows = [];
+  /**
+   * @var ?array
+   */
+  protected ?array $buttonEdit = null;
+  /**
+   * @var bool
+   */
+  protected bool $buttonDelete = false;
+  /**
+   * @var array
+   */
+  protected array $itemListElement = [];
+  /**
+   * @var array
+   */
+  protected array $properties = [];
+  /**
+   * @var bool
+   */
+  protected ?bool $editButton = null;
+  /**
+   * @var ?string
+   */
+  protected ?string $pathToEditButton = null;
 
-    protected string $idIsPartOf;
-    protected string $tableIsPartOf;
-    protected string $idHasPart;
-    protected string $tableHasPart;
+  protected string $idIsPartOf;
+  protected string $tableIsPartOf;
+  protected string $idHasPart;
+  protected string $tableHasPart;
 
 	protected ?string $orderBy = null;
 	protected ?string $ordering = null;
 
-    /**
-     * @param array|string[] $attributes
-     */
-    public function __construct(array $attributes = null)
-    {
-        $this->table = new Table($attributes);
-    }
+  /**
+   * @param array|string[] $attributes
+   */
+  public function __construct(array $attributes = null)
+  {
+    $this->table = new Table($attributes);
+  }
+
+	/**
+	 * @param string|null $caption
+	 * @return ListTableInterface
+	 */
+	public function setCaption(?string $caption): ListTableInterface
+	{
+		$this->caption = $caption;
+		return $this;
+	}
+
+	/**
+	 * @param string $caption
+	 * @return ListTableInterface
+	 */
+	public function caption(string $caption): ListTableInterface
+	{
+		$this->caption = $caption;
+		return $this;
+	}
+
+	/**
+	 * @param string ...$label
+	 * @return ListTableInterface
+	 */
+	public function labels(string ...$label): ListTableInterface
+	{
+		$this->labels = func_get_args();
+		return $this;
+	}
 
 	/**
    * @param array $properties
@@ -77,103 +107,83 @@ abstract class ListTableAbstract
 		return $this;
   }
 
-    /**
-     * @return void
-     */
-    protected function buildCaption()
-    {
-        $numberOfItems = $this->table->getNumberOfRows();
+	/**
+	 * @param string|null $numberOfItems
+	 * @return ListTableAbstract
+	 */
+	public function setNumberOfItems(?string $numberOfItems): ListTableAbstract
+	{
+		$this->numberOfItems = $numberOfItems;
+		return $this;
+	}
 
-        $caption = "<h1>$this->caption</h1>";
-        $caption .= "<p>" . sprintf(_("Showing %s items!"), "<span>$numberOfItems</span>") . "</p>";
 
-        $this->table->caption($caption);
-    }
+	/**
+	 * @param ...$list
+	 * @return ListTableInterface
+	 */
+	public function addRow(...$list): ListTableInterface
+	{
+		$this->rows[] = func_get_args();
+		return $this;
+	}
 
-  /**
-   * @return void
-   */
-  protected function buildLabels()
-  {
-		// BUTTON EDIT
-    if ($this->editButton || $this->buttonEdit) {
-      $this->table->head(_("Edit"), ['style'=>'width: 50px;']);
-		}
-		// COLUMN LABELS
-    foreach ($this->labels as $key => $columnLabel) {
-			if ($this->orderBy && $this->ordering) {
-				$orderBy = $this->properties[$key];
-				$ordering = $this->ordering == 'asc' ? 'desc' : 'asc';
-        $content = "<a href='?orderBy=$orderBy&ordering=$ordering'>$columnLabel</a>";
-      } else {
-				$content = $columnLabel;
-			}
-      $this->table->head($content);
-    }
-		// BUTTON DELETE
-    if ($this->buttonDelete) {
-      $this->table->head(_("Delete"), ['style'=>'width: 50px;']);
-    }
-  }
+	public function buttonEdit(string $path): ListTableInterface
+	{
+		$this->buttonEdit[] = $path;
+		return $this;
+	}
 
-    /**
-     *
-     */
-    protected function buildRows()
-    {
-        if (!empty($this->itemListElement)) {
-            foreach ($this->itemListElement as $itemList) {
-                $item = $itemList['item'] ?? $itemList;
-                $id = ArrayTool::searchByValue($item['identifier'], 'id', 'value');
+	public function buttonDelete(string $idIsPartOf, string $tableIsPartOf, string $idHasPart = null, string $tableHasPart = null): ListTableInterface
+	{
+		$this->idIsPartOf = $idIsPartOf;
+		$this->tableIsPartOf = $tableIsPartOf;
+		$this->idHasPart = $idHasPart;
+		$this->tableHasPart = $tableHasPart;
+		$this->buttonDelete = true;
+		return $this;
+	}
 
-                if ($this->editButton || $this->buttonEdit) {
-                    $this->table->bodyCell(CmsFactory::response()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], ($this->buttonEdit ?? $this->pathToEditButton) . $id);
-                }
+	/**
+	 * @param array $itemListElement
+	 * @param array $properties
+	 * @return ListTable
+	 */
+	public function rows(array $itemListElement, array $properties): ListTableInterface
+	{
+		$this->properties = $properties;
+		$this->itemListElement = $itemListElement;
+		return $this;
+	}
 
-                foreach ($this->properties as $property) {
-                    $explode = explode(":",$property);
-                    $bodyCell = $item;
-                    foreach ($explode as $prop) {
-                        if(is_array($bodyCell) && array_key_exists($prop, $bodyCell)) {
-                            $bodyCell = $bodyCell[$prop]['name'] ?? $bodyCell[$prop];
-                        }
-                    }
-                    $this->table->bodyCell($bodyCell);
-                }
+	/**
+	 * @param string|null $pathToEditButton
+	 * @return ListTableInterface
+	 */
+	public function setEditButton(string $pathToEditButton = null): ListTableInterface
+	{
+		$this->editButton = true;
+		$this->pathToEditButton = $pathToEditButton;
+		return $this;
+	}
 
-                if ($this->buttonDelete) {
-                    $this->table->bodyCell(CmsFactory::response()->fragment()->icon()->delete(), ['style' => 'text-align: center;'], $this->buttonDelete . $id);
-                }
+	/**
+	 * @param string $orderBy
+	 * @return ListTableInterface
+	 * */
+	public function setOrderBy(string $orderBy): ListTableInterface
+	{
+		$this->orderBy = $orderBy;
+		return $this;
+	}
 
-                $this->table->closeRow();
-            }
-        }
-
-        // AS ADD ROW
-        if (!empty($this->rows)) {
-            foreach ($this->rows as $key => $row) {
-                // edit buttom
-                if ($this->buttonEdit) {
-                    $this->table->bodyCell(CmsFactory::response()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], $this->buttonEdit[$key]);
-                }
-                // items
-                foreach ($row as $cell) {
-                    $this->table->bodyCell($cell);
-                }
-                // delete buttom
-                if ($this->buttonDelete) {
-                    $this->table->bodyCell(CmsFactory::response()->fragment()->button()->buttonDelete($this->idIsPartOf, $this->tableIsPartOf, $this->idHasPart, $this->tableHasPart),['style' => 'text-align: center;']);
-                }
-                // close
-                $this->table->closeRow();
-            }
-
-        }
-        // NO ITEMS FOUND
-        if ($this->table->getNumberOfRows() === 0) {
-            $countLabels = count($this->labels);
-            $colspan = $this->editButton ? $countLabels + 1 : $countLabels;
-            $this->table->bodyCell(_("No items found!"),['colspan'=>"$colspan",'style'=>'text-align: center; font-size:120%; font-weight: bold; color: yellow;'])->closeRow();
-        }
-    }
+	/**
+	 * @param string $ordering
+	 * @return ListTableInterface
+	 */
+	public function setOrdering(string $ordering): ListTableInterface
+	{
+		$this->ordering = $ordering;
+		return $this;
+	}
 }

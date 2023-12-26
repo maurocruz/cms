@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Event;
 
 use Exception;
@@ -30,10 +28,12 @@ class EventView extends EventAbstract
     $this->navbarEvent();
 
     $tablelIst = CmsFactory::response()->fragment()->listTable()
-      ->caption(_("List of events"))
-      ->labels(_('Name'),_("Date"))
-      ->rows($data['itemListElement'],['name','startDate'])
+	    ->setCaption(_("List of events"))
+	    ->labels(_('Name'),_("Start date"), _("Date modified"))
+			->setNumberOfItems($data['numberOfItems'])
+      ->rows($data['itemListElement'],['name','startDate','dateModified'])
       ->setEditButton("/admin/event/edit/");
+
     CmsFactory::webSite()->addMain($tablelIst->ready());
   }
 

@@ -16,8 +16,11 @@ class EventController
  * @return array
  */
   public function index($params = null): array {
+		$numberOfItemsData = CmsFactory::request()->api()->get('event',['fields'=>'COUNT(*) as count'])->ready();
     $params2 = array_merge([ "format" => "ItemList", "orderBy" => "dateModified desc, startDate desc"], $params);
-    return CmsFactory::request()->api()->get("event", $params2)->ready();
+		$data = CmsFactory::request()->api()->get("event", $params2)->ready();
+	  $data['numberOfItems'] = $numberOfItemsData[0]['count'];
+    return $data;
   }
 
 /**
