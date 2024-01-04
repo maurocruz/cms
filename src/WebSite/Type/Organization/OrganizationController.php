@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Organization;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\Order\OrderController;
@@ -110,13 +109,11 @@ class OrganizationController
     return $data[0];
   }
 	/**
-	 * @throws DOMException
 	 */
 	public function saveSitemap()
   {
     $dataSitemap = null;
-    $params = [ "properties" => "image,dateModified", "orderBy" => "dateModified desc" ];
-    $data = CmsFactory::request()->api()->get("organization", $params)->ready();
+    $data = CmsFactory::request()->api()->get('organization', ['properties'=>'image,dateModified','orderBy'=>'dateModified desc','limit'=>'none'])->ready();
     foreach ($data as $value) {
       $id = $value['idorganization'];
       $dataSitemap[] = [

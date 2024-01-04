@@ -1,10 +1,7 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Article;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -22,7 +19,6 @@ class ArticleController
     $params3 = $params ? array_merge($params, $params2) : $params2;
 		return CmsFactory::request()->api()->get('article', $params3)->ready();
   }
-
   /**
    * @param array $params
    * @return array
@@ -36,18 +32,18 @@ class ArticleController
 		}
 		return [];
   }
-
+	/**
+	 * @param $params
+	 * @return null
+	 */
   public function new($params = null) {
     return null;
   }
-
 	/**
-	 * @throws DOMException
 	 */
 	public function saveSitemap() {
     $dataSitemap = null;
-    $params = [ "orderBy" => "datePublished", "ordering" => "desc" ];
-    $data = CmsFactory::request()->api()->get("article", $params)->ready();
+    $data = CmsFactory::request()->api()->get("article", ['orderBy'=>'datePublished','ordering'=>'desc','limit'=>'none'])->ready();
     foreach ($data as $value) {
       if ($value['datePublished']) {
         $dataSitemap[] = [

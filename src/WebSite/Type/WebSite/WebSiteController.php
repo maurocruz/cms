@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\WebSite;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Request\Server\Sitemap;
@@ -79,13 +78,11 @@ class WebSiteController
     return $data;
   }
 	/**
-	 * @throws DOMException
-	 * @throws DOMException
 	 */
 	public function saveSitemap()
 	{
 		$dataSitemap = null;
-		$data = CmsFactory::request()->api()->get('webPage', ['orderBy'=>'dateModified desc'])->ready();
+		$data = CmsFactory::request()->api()->get('webPage', ['orderBy'=>'dateModified desc', 'limit'=>'none'])->ready();
 		foreach ($data as $value) {
 			$dataSitemap[] = [
 				"loc" => App::getURL() . $value['url'],

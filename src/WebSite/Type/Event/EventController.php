@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Event;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -39,13 +38,11 @@ class EventController
 	}
 	/**
 	 * @return void
-	 * @throws DOMException
 	 */
   public function saveSitemap()
   {
     $dataSitemap = null;
-    $params = [ "orderBy" => "startDate desc" ];
-    $data = CmsFactory::request()->api()->get("event", $params)->ready();
+    $data = CmsFactory::request()->api()->get("event", ['orderBy'=>'startDate desc','limit'=>'none'])->ready();
     foreach ($data as $value) {
       $dataSitemap[] = [
         "loc" => App::getURL() . DIRECTORY_SEPARATOR . "eventos" . DIRECTORY_SEPARATOR . substr($value['startDate'],0,10) . DIRECTORY_SEPARATOR . urlencode($value['name']),

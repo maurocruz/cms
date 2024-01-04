@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Person;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -78,13 +77,11 @@ class PersonController
   }
 	/**
 	 *
-	 * @throws DOMException
 	 */
   public function saveSitemap()
   {
     $dataSitemap = null;
-    $params = [ "orderBy" => "dateModified desc", "properties" => "dateModified,image" ];
-    $data = CmsFactory::request()->api()->get("person", $params)->ready();
+    $data = CmsFactory::request()->api()->get("person", [ "orderBy" => "dateModified desc", "properties" => "dateModified,image",'limit'=>'none'])->ready();
     $loc = App::getURL() ."/t/Person/";
     foreach ($data as $value) {
       $id = $value['idperson'];

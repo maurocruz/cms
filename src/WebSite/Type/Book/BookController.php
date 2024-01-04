@@ -1,10 +1,7 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Book;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -19,7 +16,6 @@ class BookController
 	{
 		return null;
 	}
-
 	/**
 	 * @return null
 	 */
@@ -27,7 +23,6 @@ class BookController
 	{
 		return null;
 	}
-
 	/**
 	 * @param array|null $params
 	 * @return mixed|string|null
@@ -40,19 +35,16 @@ class BookController
 		}
 		return null;
 	}
-
 	/**
-	 * @throws DOMException
 	 */
 	public function saveSitemap()
 	{
 		$dataSitemap = null;
-		$params = [ "orderBy" => "name" ];
-		$data = CmsFactory::request()->api()->get("book", $params)->ready();
+		$data = CmsFactory::request()->api()->get("book",	['orderBy'=>'name', 'limit'=>'none'])->ready();
 		foreach ($data as $value) {
 			if ($value['datePublished']) {
 				$dataSitemap[] = [
-					"loc" => App::getURL().'/catalogo/book'.$value['idbook'],
+					"loc" => App::getURL().'/catalogo/book/'.$value['idbook'],
 					'lastmod' => DateTime::formatISO8601($value['dateModified'])
 				];
 			}

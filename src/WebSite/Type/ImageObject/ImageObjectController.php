@@ -38,7 +38,7 @@ class ImageObjectController
 
   public function saveSitemap() {
     $dataSitemap = null;
-    $data = CmsFactory::request()->api()->get("imageObject", [ "properties" => "license", "orderBy" => "uploadDate" ])->ready();
+    $data = CmsFactory::request()->api()->get("imageObject", ['properties'=>'license','orderBy'=>'uploadDate','limit'=>'none'])->ready();
     foreach ($data as $value) {
       $id = $value['idimageObject'];
       $imageLoc = App::getURL() . str_replace(" ", "%20", $value['contentUrl']);

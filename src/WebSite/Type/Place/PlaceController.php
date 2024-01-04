@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Place;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -37,12 +36,10 @@ class PlaceController
     return CmsFactory::request()->api()->get("place", $params)->ready();
   }
 	/**
-	 * @throws DOMException
 	 */
 	public function saveSitemap() {
     $dataSitemap = null;
-    $params = [ "orderBy" => "dateModified desc", "properties" => "*,image" ];
-    $data =  CmsFactory::request()->api()->get("place", $params)->ready();
+    $data =  CmsFactory::request()->api()->get("place", [ "orderBy" => "dateModified desc", "properties" => "*,image", 'limit'=>'none'])->ready();
     foreach ($data as $value) {
       $id = $value['idplace'];
       $dataSitemap[] = [

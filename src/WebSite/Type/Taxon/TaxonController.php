@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Taxon;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -48,13 +47,12 @@ class TaxonController
   }
 	/**
 	 *
-	 * @throws DOMException
 	 */
   public function saveSitemap()
   {
     $dataforPage = [];
     $dataForType = [];
-    $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image" ];
+    $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image", 'limit'=>'none' ];
     $data = CmsFactory::request()->api()->get("taxon", $params)->ready();
     // for type pages
     foreach ($data as $valueForType) {

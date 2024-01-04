@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 
-use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -36,11 +35,10 @@ class LocalBusinessController
   }
 	/**
 	 * @return void
-	 * @throws DOMException
 	 */
   public function saveSitemap() {
     $dataSitemap = null;
-    $data = CmsFactory::request()->api()->get("localBusiness",[ "orderBy" => "dateModified desc", "properties" => "image,dateModified" ])->ready();
+    $data = CmsFactory::request()->api()->get('localBusiness', ['orderBy'=>'dateModified desc','properties'=>'image,dateModified','limit'=>'none'])->ready();
     foreach ($data as $value) {
       $id = $value['idlocalBusiness'];
       $dataSitemap[] = [
