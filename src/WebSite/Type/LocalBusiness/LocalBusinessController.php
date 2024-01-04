@@ -1,9 +1,8 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -21,7 +20,6 @@ class LocalBusinessController
     $params3 = $params ? array_merge($params2, $params) : $params2;
     return CmsFactory::request()->api()->get("localBusiness",$params3)->ready();
   }
-
   /**
    * @param array $params
    * @return array
@@ -30,17 +28,16 @@ class LocalBusinessController
     $newParams = array_merge($params, [ "properties" => "*,location,address,organization,contactPoint,member,image" ]);
     return CmsFactory::request()->api()->get("localBusiness",$newParams)->ready();
   }
-
   /**
    * @return bool
    */
   public function new(): bool {
-      return true;
+    return true;
   }
-
-  /**
-   * @return void
-   */
+	/**
+	 * @return void
+	 * @throws DOMException
+	 */
   public function saveSitemap() {
     $dataSitemap = null;
     $data = CmsFactory::request()->api()->get("localBusiness",[ "orderBy" => "dateModified desc", "properties" => "image,dateModified" ])->ready();
@@ -52,6 +49,6 @@ class LocalBusinessController
         "image" => $value['image']
       ];
     }
-    (new Sitemap("sitemap-localBusiness.xml"))->saveSitemap($dataSitemap);
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-localBusiness.xml"))->saveSitemap($dataSitemap);
   }
 }

@@ -49,6 +49,6 @@ class ImageObjectController
         ]
       ];
     }
-    (new Sitemap("sitemap-imageObject.xml"))->saveSitemap($dataSitemap);
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-imageObject.xml"))->saveSitemap($dataSitemap);
   }
 }

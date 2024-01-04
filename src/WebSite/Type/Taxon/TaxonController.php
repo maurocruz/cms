@@ -1,9 +1,8 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Taxon;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -21,7 +20,6 @@ class TaxonController
     $params3 = $params ? array_merge($params2, $params) : $params2;
     return CmsFactory::request()->api()->get("taxon", $params3)->ready();
   }
-
   /**
    * @param array $params
    * @return array
@@ -30,40 +28,34 @@ class TaxonController
   {
     $params2 = array_merge($params,[ "properties" => "*,image" ]);
     $data = CmsFactory::request()->api()->get("taxon", $params2)->ready();
-
     if (!empty($data)) {
       $taxonRank = $data[0]['taxonRank'];
       $parentTaxonType = $taxonRank == 'species' ? 'genus' : ($taxonRank == 'genus'
         ? 'family'
         : []);
       $parentTaxonList = CmsFactory::request()->api()->get('taxon', ['taxonRank' => $parentTaxonType, 'orderBy' => 'name'])->ready();
-
       foreach ($parentTaxonList as $parentTaxonListValue) {
         $data['parentTaxonList'][$parentTaxonListValue['idtaxon']] = $parentTaxonListValue['name'];
       }
     }
-
     return $data;
   }
-
   /**
    * @return bool
    */
   public function new(): bool {
     return true;
   }
-
-  /**
-   *
-   */
+	/**
+	 *
+	 * @throws DOMException
+	 */
   public function saveSitemap()
   {
     $dataforPage = [];
     $dataForType = [];
-
     $params = [ "orderBy" => "taxonRank", "properties" => "url,dateModified,image" ];
     $data = CmsFactory::request()->api()->get("taxon", $params)->ready();
-
     // for type pages
     foreach ($data as $valueForType) {
       $id = $valueForType['idtaxon'];
@@ -84,6 +76,6 @@ class TaxonController
         "image" => $valueForPage['image']
       ];
     }
-    (new Sitemap("sitemap-taxon.xml"))->saveSitemap(array_merge($dataforPage, $dataForType));
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-taxon.xml"))->saveSitemap(array_merge($dataforPage, $dataForType));
   }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Article;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -40,7 +41,10 @@ class ArticleController
     return null;
   }
 
-  public function saveSitemap() {
+	/**
+	 * @throws DOMException
+	 */
+	public function saveSitemap() {
     $dataSitemap = null;
     $params = [ "orderBy" => "datePublished", "ordering" => "desc" ];
     $data = CmsFactory::request()->api()->get("article", $params)->ready();
@@ -57,6 +61,6 @@ class ArticleController
         ];
       }
     }
-    (new Sitemap("sitemap-article.xml"))->saveSitemap($dataSitemap, "news");
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-article.xml"))->saveSitemap($dataSitemap, "news");
   }
 }

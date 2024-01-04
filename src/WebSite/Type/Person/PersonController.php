@@ -1,9 +1,8 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Person;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -21,7 +20,6 @@ class PersonController
     $params3 = $params ? array_merge($params2, $params) : $params2;
     return CmsFactory::request()->api()->get("person", $params3)->ready();
   }
-
   /**
    * @param array $params
    * @return array
@@ -31,15 +29,13 @@ class PersonController
     $params = array_merge($params, [ "properties" => "*,contactPoint,address,image" ]);
     return CmsFactory::request()->api()->get("person", $params)->ready();
   }
-
   /**
    * @param null $params
    * @return bool
    */
   public function new($params = null): bool {
-      return true;
+    return true;
   }
-
   /**
    * @param null $params
    * @return array
@@ -49,22 +45,18 @@ class PersonController
     $id = $params['idperson'] ?? null;
     $action = $params['action'] ?? null;
     $item = $params['item'] ?? null;
-
     if ($item) {
       $data = CmsFactory::request()->api()->get('service',['provider'=>$id,'providerType'=>'person','id'=>$item,'properties'=>'provider,offer'])->ready();
     } else {
       $data = CmsFactory::request()->api()->get('person', ['idperson' => $id])->ready();
     }
-
     if ($action == 'new') {
       $data[0]['action'] = "new";
     } else {
       $data[0]['services'] = CmsFactory::request()->api()->get('service', ['format' => 'ItemList', 'provider' => $id, 'providerType' => 'person','orderBy'=>'dateModified desc'])->ready();
     }
-
     return $data[0];
   }
-
   /**
    * PRODUCT BY PERSON
    *
@@ -75,10 +67,8 @@ class PersonController
   {
     $id = $params['idperson'] ?? null;
     $action = $params['action'] ?? null;
-
     // LIST PRODUCTS BY PERSON
     $data = CmsFactory::request()->api()->get('person',['idperson'=>$id])->ready();
-
     if($action=='new') {
       $data[0]['action'] = 'new';
     } else {
@@ -86,10 +76,10 @@ class PersonController
     }
     return $data[0];
   }
-
-  /**
-   *
-   */
+	/**
+	 *
+	 * @throws DOMException
+	 */
   public function saveSitemap()
   {
     $dataSitemap = null;
@@ -105,6 +95,6 @@ class PersonController
         "image" => $value['image']
       ];
     }
-    (new Sitemap("sitemap-person.xml"))->saveSitemap($dataSitemap);
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-person.xml"))->saveSitemap($dataSitemap);
   }
 }

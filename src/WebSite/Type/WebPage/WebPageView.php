@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebPage;
 
 use Exception;
@@ -49,7 +47,6 @@ class WebPageView extends WebPageAbstract
         ->ready()
     );
   }
-
   /**
    * @param array $data
    */
@@ -58,12 +55,9 @@ class WebPageView extends WebPageAbstract
     // FROM WEBSITE CONTROLLER
     if ($data['@type'] == 'WebSite') {
       self::$idwebSite = $data['idwebSite'];
-
       self::navbarWebPage();
-
       if (isset($data['error'])) {
         CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message($data['error']));
-
       } elseif (isset($data['hasPart'])) {
         $list = isset($data['hasPart']['@type']) && $data['hasPart']['@type'] == 'ItemList' ? $data['hasPart']['itemListElement'] : $data['hasPart'];
         CmsFactory::webSite()->addMain(
@@ -86,7 +80,6 @@ class WebPageView extends WebPageAbstract
       );
     }
   }
-
   /**
    * * * * * NEW * * * * *
    *
@@ -101,7 +94,6 @@ class WebPageView extends WebPageAbstract
     // FORM
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formWebPage(), _("Add new webpage")));
   }
-
   /**
    * * * * * EDIT * * * * *
    * @throws Exception
@@ -111,9 +103,7 @@ class WebPageView extends WebPageAbstract
     // VARS
     parent::$idwebSite = ArrayTool::searchByValue($data['isPartOf']['identifier'],'id','value');
     parent::$idwebPage = ArrayTool::searchByValue($data['identifier'], "id", 'value');
-
     self::navbarWebPage($data['name']);
-
     // FORM EDIT
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
     // PROPERTIES
@@ -121,18 +111,24 @@ class WebPageView extends WebPageAbstract
     // WEB ELEMENTS
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView())->getForm(parent::$idwebPage, $data['hasPart'])));
   }
-
   /**
    * @param $data
    */
   public static function sitemap($data)
   {
-    parent::$idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
-
+    parent::$idwebSite = $data['idwebSite'];
     self::navbarWebPage(_("Sitemaps"));
     // TITLE
     CmsFactory::webSite()->addMain("<h2>"._("Sitemaps")."</h2>");
     // INDEX
+		/*$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-sitemaps']);
+		$form->action('/admin/sitemap/new')->method('post');
+		$form->fieldsetWithInput('urlForData', null, 'Url for data api');
+		$form->fieldsetWithInput('loc', null, 'loc url');
+		$form->fieldsetWithInput('lastmod', null, 'Lastmod property');
+		$form->submitButtonSend();
+		CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox('Adicionar novo sitemap', $form->ready()));*/
+		//
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->sitemap($data['sitemaps']));
   }
 }

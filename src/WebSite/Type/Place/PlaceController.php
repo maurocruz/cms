@@ -1,9 +1,8 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Place;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
@@ -22,32 +21,36 @@ class PlaceController
     $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], (array)$params);
     return CmsFactory::request()->api()->get("place", $params)->ready();
   }
-
   /**
    * @param null $params
    * @return bool
    */
   public function new($params = null): bool {
-      return true;
+    return true;
   }
-
+	/**
+	 * @param array $params
+	 * @return array
+	 */
   public function edit(array $params): array {
     $params= array_merge($params, [ "properties" => "address,image" ]);
     return CmsFactory::request()->api()->get("place", $params)->ready();
   }
-
-  public function saveSitemap() {
-      $dataSitemap = null;
-      $params = [ "orderBy" => "dateModified desc", "properties" => "*,image" ];
-      $data =  CmsFactory::request()->api()->get("place", $params)->ready();
-      foreach ($data as $value) {
-          $id = $value['idplace'];
-          $dataSitemap[] = [
-            "loc" => App::getURL() . "/t/place/$id",
-            "lastmod" => DateTime::formatISO8601($value['dateModified']),
-            "image" => $value['image']
-          ];
-      }
-      (new Sitemap("sitemap-place.xml"))->saveSitemap($dataSitemap);
+	/**
+	 * @throws DOMException
+	 */
+	public function saveSitemap() {
+    $dataSitemap = null;
+    $params = [ "orderBy" => "dateModified desc", "properties" => "*,image" ];
+    $data =  CmsFactory::request()->api()->get("place", $params)->ready();
+    foreach ($data as $value) {
+      $id = $value['idplace'];
+      $dataSitemap[] = [
+        "loc" => App::getURL() . "/t/place/$id",
+        "lastmod" => DateTime::formatISO8601($value['dateModified']),
+        "image" => $value['image']
+      ];
+    }
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-place.xml"))->saveSitemap($dataSitemap);
   }
 }

@@ -1,9 +1,8 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Organization;
 
+use DOMException;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\Order\OrderController;
@@ -22,7 +21,6 @@ class OrganizationController
     $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
     return CmsFactory::request()->api()->get("organization", $paramsGet)->ready();
   }
-
   /**
    * @param array $params
    * @param bool $allProperties
@@ -34,14 +32,12 @@ class OrganizationController
     if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member,image";
     return CmsFactory::request()->server()->api()->get("organization", $paramsGet)->ready();
   }
-
   /**
    * @return bool
    */
   public function new(): bool {
-      return true;
+    return true;
   }
-
   /**
    * SERVICE IS PART OF
    * @param array $params
@@ -57,7 +53,6 @@ class OrganizationController
     }
     return $data[0];
   }
-
   /**
    *  PRODUCT IS PART OF
    * @param array $params
@@ -68,9 +63,7 @@ class OrganizationController
     $id = $params['idorganization'] ?? null;
     $itemId = $params['item'] ?? null;
     $action = $params['action'] ?? null;
-
     $data = CmsFactory::request()->api()->get("organization", [ "idorganization" => $id, "properties" => "*,address,location,contactPoint,member,image" ])->ready();
-
     if ($itemId) {
       $data[0]['action'] = "edit";
       $productData = CmsFactory::request()->api()->get('product', [ "idproduct" => $itemId, "properties" => "*,manufacturer,offers,image" ])->ready();
@@ -84,7 +77,6 @@ class OrganizationController
     }
     return $data[0];
   }
-
   /**
    * @param array $params
    * @return array
@@ -96,7 +88,6 @@ class OrganizationController
     $id = $params['id'];
     $customerName = $params['customerName'] ?? null;
     $action = filter_input(INPUT_GET, 'action');
-
     // ITEM
     if ($itemId):
       $data = (new OrderController())->editWithPartOf($itemId, $id);
@@ -116,11 +107,12 @@ class OrganizationController
       $data = $this->edit($params);
       $data[0]['orders'] = (new OrderController())->indexWithPartOf($customerName, $id);
     endif;
-
     return $data[0];
   }
-
-  public function saveSitemap()
+	/**
+	 * @throws DOMException
+	 */
+	public function saveSitemap()
   {
     $dataSitemap = null;
     $params = [ "properties" => "image,dateModified", "orderBy" => "dateModified desc" ];
@@ -133,6 +125,6 @@ class OrganizationController
         "image" => $value['image']
       ];
     }
-    (new Sitemap("sitemap-organization.xml"))->saveSitemap($dataSitemap);
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-organization.xml"))->saveSitemap($dataSitemap);
   }
 }

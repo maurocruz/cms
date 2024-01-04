@@ -1,11 +1,10 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebPageElement;
 
+use DOMException;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\WebPage\WebPageController;
+use Plinct\Cms\WebSite\Type\WebSite\WebSiteController;
 
 class WebPageElementController
 {
@@ -19,10 +18,10 @@ class WebPageElementController
     $data = CmsFactory::request()->api()->get("webPageElement", $params3)->ready();
     return $data[0];
   }
-
-  /**
-   */
+	/**
+	 * @throws DOMException
+	 */
   public function saveSitemap() {
-    (new WebPageController())->saveSitemap();
+    (new WebSiteController())->saveSitemap();
   }
 }

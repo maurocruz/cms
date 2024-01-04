@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Book;
 
+use DOMException;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
+use Plinct\Tool\DateTime;
+use Plinct\Tool\Sitemap;
 
 class BookController
 {
@@ -35,5 +39,24 @@ class BookController
 			return $data[0];
 		}
 		return null;
+	}
+
+	/**
+	 * @throws DOMException
+	 */
+	public function saveSitemap()
+	{
+		$dataSitemap = null;
+		$params = [ "orderBy" => "name" ];
+		$data = CmsFactory::request()->api()->get("book", $params)->ready();
+		foreach ($data as $value) {
+			if ($value['datePublished']) {
+				$dataSitemap[] = [
+					"loc" => App::getURL().'/catalogo/book'.$value['idbook'],
+					'lastmod' => DateTime::formatISO8601($value['dateModified'])
+				];
+			}
+		}
+		(new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-book.xml"))->saveSitemap($dataSitemap);
 	}
 }
