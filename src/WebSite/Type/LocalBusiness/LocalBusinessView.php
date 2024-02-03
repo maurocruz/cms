@@ -7,7 +7,6 @@ namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\ContactPoint;
 
 class LocalBusinessView
@@ -30,14 +29,9 @@ class LocalBusinessView
    */
   public function index($data)
   {
+		$apiHost = App::getApiHost();
     $this->navbarLocalBussines();
-
-    $listTable = CmsFactory::response()->fragment()->listTable();
-    $listTable->caption(sprintf(_("List of %s"), "Local business"));
-    $listTable->labels(_('Name'), _("Additional type"), _("Date modified"));
-    $listTable->rows($data['itemListElement'],['name','additionalType','dateModified']);
-    $listTable->setEditButton("/admin/localBusiness?id=");
-    CmsFactory::webSite()->addMain($listTable->ready());
+		CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='localBusiness' data-apihost='$apiHost'></div>");
   }
 
   /**
@@ -58,13 +52,20 @@ class LocalBusinessView
 	{
     $value = $data[0];
     $id = $value['idlocalBusiness'];
-		
-    $this->navbarLocalBussines($value['name']);
-
-    // LOCAL BUSINESS
 		$apiHost = App::getApiHost();
-    $content[] = "<script src='https://plinct.com.br/static/dist/plinct-thing/main.0cc1b1b5e3cba5b9653f.js'></script>";
-    $content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
+		$userToken = CmsFactory::request()->user()->userLogged()->getToken();
+		// NAVBAR
+    $this->navbarLocalBussines($value['name']);
+    // LOCAL BUSINESS
+		CmsFactory::webSite()->addMain("<div
+			class='plinct-shell'
+			data-type='localBusiness'
+			data-idispartof='{$value['idlocalBusiness']}'
+			data-apihost='{$apiHost}'
+			data-usertoken='{$userToken}'
+		></div>");
+    //$content[] = "<script src='https://plinct.com.br/static/dist/plinct-thing/main.js'></script>";
+    //$content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
 
     //$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
 		// ADDITIONAL TYPE
@@ -78,7 +79,15 @@ class LocalBusinessView
     // MEMBER
     $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Persons"), CmsFactory::response()->fragment()->form()->relationshipOneToMany("localBusiness", $id, "person", $value['member']));
     // IMAGE
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("localBusiness", $id, $value['image']));
+		/*$content[] = "<div
+			class='plinct-shell'
+			data-type='imageObject'
+			data-tablehaspart='localBusiness'
+			data-idhaspart='{$value['idlocalBusiness']}'
+			data-apihost='{$apiHost}'
+			data-usertoken='{$userToken}'
+		></div>";*/
+    //$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("localBusiness", $id, $value['image']));
 
     CmsFactory::webSite()->addMain($content);
   }

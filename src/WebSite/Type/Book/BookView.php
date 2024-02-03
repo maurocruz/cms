@@ -19,7 +19,14 @@ class BookView
 
 	public function index()
 	{
-		CmsFactory::webSite()->addMain("<div id='plinctShell' data-type='Book' data-tablehaspart='book' data-apiHost='".App::getApiHost()."'></div>");
+		CmsFactory::webSite()->addMain("
+			<div 
+				class='plinct-shell' 
+				data-type='Book'
+				data-apihost='".App::getApiHost()."' 
+				data-usertoken='".CmsFactory::request()->user()->userLogged()->getToken()."'
+				data-columnsTable='{\"edit\":\"Edit\",\"name\":\"Nome\",\"author\":\"Autor\",\"dateModified\":\"Modificado\"}'
+			></div>");
 	}
 
 	public function new()
@@ -31,6 +38,7 @@ class BookView
 	{
 		if ($value) {
 			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox($this->form('edit', $value), _("Edit")));
+			CmsFactory::webSite()->addMain('<div class="plinct-shell" data-type="imageObject" data-tableHasPart="book" data-idHasPart="'.$value['idbook'].'" data-apiHost="'.App::getApiHost().'" data-userToken="'.	CmsFactory::request()->user()->userLogged()->getToken().'"></div>');
 		} else {
 			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent(_('No items found!')));
 		}

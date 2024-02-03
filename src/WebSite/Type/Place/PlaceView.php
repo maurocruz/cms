@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Place;
 
 use Exception;
@@ -30,19 +28,12 @@ class PlaceView
     }
   }
 
-  /**
-   * @param array $data
-   */
-  public function index(array $data)
+	/**
+	 */
+  public function index()
   {
     $this->navbarPlace();
-
-    $listTable = CmsFactory::response()->fragment()->listTable()
-      ->caption(sprintf(_("List of %s"),_("places")))
-      ->labels('id', _("Name"), _("AdditionalType"), _("Date modified"))
-      ->rows($data['itemListElement'], ['idplace', 'name', 'additionalType', 'dateModified'])
-      ->setEditButton('/admin/place/edit/');
-    CmsFactory::webSite()->addMain($listTable->ready());
+		CmsFactory::webSite()->addMain('<div class="plinct-shell" data-type="place" data-tablehaspart="place" data-apihost="'.App::getApiHost().'"></div>');
   }
 
   /**
@@ -64,12 +55,12 @@ class PlaceView
 			CmsFactory::webSite()->addMain("<p>"._("Nothing found!")."</p>");
 		} else {
 			$value = $data[0];
+			$apiHost = App::getApiHost();
+			$userToken = CmsFactory::request()->user()->userLogged()->getToken();
 			$this->placeId = isset($value) ? $value['idplace'] : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
-			$apiHost = App::getApiHost();
-			CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-place/main.1935c2813b37368c9dac.js'></script>");
-			CmsFactory::webSite()->addMain("<div id='plinctPlace' data-id='{$value['idplace']}' data-apiHost='$apiHost'></div>");
+			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='place' data-idIsPartOf='{$value['idplace']}' data-apiHost='$apiHost' data-userToken='$userToken' data-openSection='true'></div>");
 		}
   }
 

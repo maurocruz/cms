@@ -10,14 +10,11 @@ use Plinct\Tool\Sitemap;
 class ArticleController
 {
   /**
-   * @param null $params
-   * @return array
+   *
    */
-  public function index($params = null): array
+  public function index()
   {
-    $params2 = [ "format" => "ItemList", "properties" => "dateModified", "orderBy" => "dateModified desc, datePublished desc" ];
-    $params3 = $params ? array_merge($params, $params2) : $params2;
-		return CmsFactory::request()->api()->get('article', $params3)->ready();
+		return null;
   }
   /**
    * @param array $params
@@ -25,7 +22,7 @@ class ArticleController
    */
   public function edit(array $params): array
   {
-    $params2 = [ "properties" => "*,image,author" ];
+    $params2 = [ "properties" => "*,author" ];
     $params3 = $params ? array_merge($params, $params2) : $params2;
 		if (isset($params3['idarticle'])) {
 			return CmsFactory::request()->api()->get("article", $params3)->ready();

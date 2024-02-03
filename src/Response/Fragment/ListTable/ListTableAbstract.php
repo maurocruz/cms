@@ -35,9 +35,9 @@ abstract class ListTableAbstract
    */
   protected bool $buttonDelete = false;
   /**
-   * @var array
+   * @var ?array
    */
-  protected array $itemListElement = [];
+  protected ?array $itemListElement = [];
   /**
    * @var array
    */
@@ -145,11 +145,11 @@ abstract class ListTableAbstract
 	}
 
 	/**
-	 * @param array $itemListElement
+	 * @param ?array $itemListElement
 	 * @param array $properties
 	 * @return ListTable
 	 */
-	public function rows(array $itemListElement, array $properties): ListTableInterface
+	public function rows(?array $itemListElement, array $properties): ListTableInterface
 	{
 		$this->properties = $properties;
 		$this->itemListElement = $itemListElement;

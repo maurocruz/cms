@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\Response\View\User;
 
 use Plinct\Cms\CmsFactory;
@@ -24,7 +22,6 @@ class User
 				->search('/admin/user')
 				->ready()
 		);
-
 		if ($title) {
 			CmsFactory::webSite()->addHeader(
 				CmsFactory::response()->fragment()->navbar()
@@ -34,7 +31,6 @@ class User
 			);
 		}
 	}
-
 	/**
 	 * @param array $data
 	 * @param string $orderBy
@@ -45,6 +41,7 @@ class User
 	{
 		// navbar
 		$this->navbarUser();
+
 		// showing
 		CmsFactory::webSite()->addMain(['tag'=>'p','content'=>sprintf(_("Showing %s items order by %s %s!"), count($data), $orderBy, $ordering )]);
 
@@ -63,7 +60,6 @@ class User
 
 		CmsFactory::webSite()->addMain($list->ready());
 	}
-
 	/**
 	 */
 	public function new($params = null)
@@ -73,7 +69,6 @@ class User
 			CmsFactory::response()->fragment()->auth()->register()
 		);
 	}
-
 	/**
 	 * @param ?array $data
 	 */
@@ -86,7 +81,6 @@ class User
 			CmsFactory::webSite()->addMain(
 				CmsFactory::response()->fragment()->box()->simpleBox(self::formUser("edit", $value), _("Edit user"))
 			);
-
 			// PRIVILEGES
 			CmsFactory::webSite()->addMain(
 				CmsFactory::response()->fragment()->box()->expandingBox(_('Privileges'),
@@ -98,7 +92,6 @@ class User
 			CmsFactory::response()->message()->noContent();
 		}
 	}
-
 	/**
 	 * @param string $case
 	 * @param null $value
@@ -127,7 +120,9 @@ class User
 		// ready
 		return $form->ready();
 	}
-
+	/**
+	 * @return Privileges
+	 */
 	public function privileges(): Privileges
 	{
 		return new Privileges();

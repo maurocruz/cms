@@ -10,14 +10,11 @@ use Plinct\Tool\Sitemap;
 class TaxonController
 {
   /**
-   * @param null $params
-   * @return array
+   *
    */
-  public function index($params = null): array
+  public function index()
   {
-    $params2 = [ "format" => "ItemList", "properties" => "taxonRank,dateModified" , "orderBy" => "dateModified", "ordering" => "desc" ];
-    $params3 = $params ? array_merge($params2, $params) : $params2;
-    return CmsFactory::request()->api()->get("taxon", $params3)->ready();
+		return null;
   }
   /**
    * @param array $params
@@ -25,8 +22,7 @@ class TaxonController
    */
   public function edit(array $params): array
   {
-    $params2 = array_merge($params,[ "properties" => "*,image" ]);
-    $data = CmsFactory::request()->api()->get("taxon", $params2)->ready();
+    $data = CmsFactory::request()->api()->get("taxon", $params)->ready();
     if (!empty($data)) {
       $taxonRank = $data[0]['taxonRank'];
       $parentTaxonType = $taxonRank == 'species' ? 'genus' : ($taxonRank == 'genus'

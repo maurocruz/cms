@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
@@ -20,21 +18,21 @@ class ServiceView extends ServiceAbstract
       "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus()
     ], 4);
   }
-
   /**
    * @param array $data
    */
   public function indexWithPartOf(array $data)
   {
+	  $this->tableHasPart = lcfirst($data['@type']);
+	  $this->idHasPart = ArrayTool::searchByValue($data['identifier'], 'id', 'value');
+	  // NAVBAR
+	  $this->navbarService();
+		//
     if (isset($data['services']['error']) || (isset($data['services']['status']) && $data['services']['status'] == 'error')) {
       $message = $data['services']['error']['message'] ?? $data['services']['message'] ?? "error";
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->error()->installSqlTable('service', $message));
     } else {
       // VARS
-      $this->tableHasPart = lcfirst($data['@type']);
-      $this->idHasPart = ArrayTool::searchByValue($data['identifier'], 'id', 'value');
-      // NAVBAR
-      $this->navbarService();
       // LIST
       $listIndex = CmsFactory::response()->fragment()->listTable(['class' => 'table']);
       $listIndex->caption(sprintf(_("List of %s"), _("services")));
@@ -45,7 +43,6 @@ class ServiceView extends ServiceAbstract
       CmsFactory::webSite()->addMain($listIndex->ready());
     }
   }
-
   /**
    * @param null $value
    */
@@ -58,7 +55,6 @@ class ServiceView extends ServiceAbstract
     // FORM
     CmsFactory::webSite()->addMain(parent::newWithPartOfForm());
   }
-
   /**
    * @param array $data
    */
@@ -79,7 +75,6 @@ class ServiceView extends ServiceAbstract
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($data) ));
     }
   }
-
   /**
    * @param $value
    */
@@ -87,10 +82,8 @@ class ServiceView extends ServiceAbstract
   {
     $this->tableHasPart = lcfirst($value['@type']);
     $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
-
     // NAVBAR
     $this->navbarService();
-
     // LIST TABLE IN MAIN
     $listTable = CmsFactory::response()->fragment()->listTable();
     $listTable->setEditButton("/admin/$this->tableHasPart/service?id=$this->idHasPart&item=");
@@ -100,7 +93,6 @@ class ServiceView extends ServiceAbstract
     $listTable->labels('id',_('Name'),_("Date modified"));
     // rows
     $listTable->rows($value['services']['itemListElement'],['idservice','name','dateModified']);
-
     // VIEW
     CmsFactory::webSite()->addMain($listTable->ready());
   }

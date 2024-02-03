@@ -28,7 +28,7 @@ class OrganizationController
   public function edit(array $params, bool $allProperties = true): array
   {
     $paramsGet['idorganization'] = $params['idorganization'] ?? $params['id'] ?? null;
-    if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member,image";
+    if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member";
     return CmsFactory::request()->server()->api()->get("organization", $paramsGet)->ready();
   }
   /**

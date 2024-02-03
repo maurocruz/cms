@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Person;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\WebSite\Type\Intangible\ContactPoint;
@@ -21,13 +22,20 @@ class PersonView extends PersonViewAbstract
   public function index(array $data)
   {
     $this->navbarPerson();
-
-    $list = CmsFactory::response()->fragment()->listTable();
+		CmsFactory::webSite()->addMain("
+			<div
+				class='plinct-shell'
+				data-type='person'
+				data-apihost='".App::getApiHost()."'
+				data-userToken='".CmsFactory::request()->user()->userLogged()->getToken()."'
+				data-columnsTable='{\"edit\":\"Edit\",\"idperson\":\"ID\",\"name\":\"Nome\",\"dateModified\":\"Modificação\"}'
+			></div>");
+    /*$list = CmsFactory::response()->fragment()->listTable();
     $list->caption( _("List of persons"));
     $list->labels(_('Name'), _('Date modified'));
     $list->rows($data['itemListElement'],['name','dateModified']);
     $list->setEditButton('/admin/person?id=');
-    CmsFactory::webSite()->addMain($list->ready());
+    CmsFactory::webSite()->addMain($list->ready());*/
   }
 
   /**

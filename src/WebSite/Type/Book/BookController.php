@@ -29,7 +29,7 @@ class BookController
 	 */
 	public function edit(array $params = null)
 	{
-		$data = CmsFactory::request()->api()->get('book', array_merge($params,['properties'=>'image']))->ready();
+		$data = CmsFactory::request()->api()->get('book', $params)->ready();
 		if (!empty($data)) {
 			return $data[0];
 		}

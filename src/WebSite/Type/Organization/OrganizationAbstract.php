@@ -1,10 +1,7 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Organization;
 
-use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
 
@@ -22,7 +19,6 @@ abstract class OrganizationAbstract
    * @var string
    */
   protected string $name;
-
   /**
    * @param array $value
    * @return array
@@ -34,7 +30,6 @@ abstract class OrganizationAbstract
     $this->name = $organization['name'];
     return $value;
   }
-
   /**
    * @param string $target
    * @param $content
@@ -42,7 +37,6 @@ abstract class OrganizationAbstract
   protected function addContent(string $target, $content) {
     $this->content[$target][] = $content;
   }
-
   /**
    * INDEX NAVBAR
    */
@@ -53,7 +47,6 @@ abstract class OrganizationAbstract
       "/admin/organization/new" => CmsFactory::response()->fragment()->icon()->plus()
     ], 2, ['table'=>'organization']);
   }
-
   /**
    *
    */
@@ -62,7 +55,6 @@ abstract class OrganizationAbstract
     $this->navbarIndex();
     CmsFactory::webSite()->navbar(_("Add new"), [], 3);
   }
-
   /**
    *
    */
@@ -75,7 +67,6 @@ abstract class OrganizationAbstract
       "/admin/organization/order?id=$this->id" => _("Orders")
     ], 3);
   }
-
   /**
    * FORM EDIT AND NEW
    * @param string $case
@@ -88,77 +79,16 @@ abstract class OrganizationAbstract
     $form->action("/admin/organization/$case")->method("post");
     $form->content([ "tag" => "h3", "content" => $value['name'] ?? null ]);
     if ($case == "edit") $form->input("idorganization", $value['idorganization'], 'hidden');
-    // name
-    $form->fieldsetWithInput("name", $value['name'] ?? null, _("Name"));
-    // ADDITIONAL TYPE
-    $form->fieldset(CmsFactory::response()->fragment()->form()->selectAdditionalType('organization',$value['additionalType'] ?? null), _("Additional type"));
     // legal name
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id
     $form->fieldsetWithInput("taxId", $value['taxId'] ?? null, _("Tax Id"));
-    // description
-    $form->fieldsetWithTextarea("description", $value['description'] ?? null, _("Description"));
-    // disambiguatingDescription
-    $form->fieldsetWithTextarea("disambiguatingDescription", $value['disambiguatingDescription'] ?? null, _("Disambiguating description"));
     // has offer catalog
     $form->fieldsetWithInput("hasOfferCatalog", $value['hasOfferCatalog'] ?? null, _("Has offer catalog"));
-    // url
-    $form->fieldsetWithInput("url", $value['url'] ?? null, "Url");
     //submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete('/admin/organization/delete');
     // READY
     return $form->ready();
   }
-
-  /**
-   * @throws Exception
-   */
-  /*protected function itemView(string $itemType, $data): array
-  {
-      $itemProperty = null;
-      $itemResponse = null;
-      $itemView = null;
-      $value = $data[0];
-      $action = filter_input(INPUT_GET, 'action');
-      $itemText = lcfirst($itemType)."s";
-
-      // SET ITEM PROPERTY
-      if ($itemType == "Product") {
-          $itemProperty = "manufacturer";
-          $itemView = new ProductView();
-      }
-      if ($itemType == "Service") {
-          $itemProperty = "provider";
-          $itemView = new ServiceView();
-      }
-      if ($itemType == "Order") {
-          $itemProperty = "seller";
-          $itemView = new OrderView();
-      }
-      // NO CONTENT
-      if (!$itemProperty || !is_object($itemView)) {
-          $this->addContent('main', CmsFactory::response()->fragment()->noContent("No item detected"));
-          return $this->content;
-      }
-      // NEW
-      if ($action == "new") {
-          $itemResponse = $itemView->newWithPartOf([ $itemProperty => $value ]);
-      }
-      // NO CONTENT
-      elseif ($value['@type'] == "Organization" && empty($value[$itemText])) {
-          $this->addContent('main', [ "tag" => "p", "content" => _("No $itemText added") ]);
-      }
-      // EDIT
-      elseif ($value['@type'] == $itemType) {
-          $itemResponse = $itemView->editWithPartOf($value);
-      }
-      // INDEX
-      else {
-          $itemResponse = $itemView->indexWithPartOf($value);
-      }
-      $this->content['main'] = $itemResponse['main'] ?? null;
-      // RESPONSE
-      return $this->content;
-  }*/
 }

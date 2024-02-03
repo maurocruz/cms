@@ -24,7 +24,7 @@ class LocalBusinessController
    * @return array
    */
   public function edit(array $params): array {
-    $newParams = array_merge($params, [ "properties" => "*,location,address,organization,contactPoint,member,image" ]);
+    $newParams = array_merge($params, [ "properties" => "*,location,address,organization,contactPoint,member" ]);
     return CmsFactory::request()->api()->get("localBusiness",$newParams)->ready();
   }
   /**

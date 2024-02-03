@@ -1,10 +1,9 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Organization;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\Service\ServiceView;
 use Plinct\Cms\WebSite\Type\Intangible\Order\OrderView;
@@ -17,18 +16,12 @@ class OrganizationView extends OrganizationAbstract
    */
   public function index(array $data)
   {
-  // NAVBAR
-  parent::navbarIndex();
-
-  $listTable = CmsFactory::response()->fragment()->listTable()
-    ->caption(_("List of organizations"))
-    ->labels(_('Name'),_('Additional type'), _("Date modified"))
-    ->rows($data['itemListElement'],['name','additionalType','dateModified'])
-    ->setEditButton("/admin/organization/edit/");
-
-  CmsFactory::webSite()->addMain($listTable->ready());
+		$apiHost = App::getApiHost();
+		// NAVBAR
+	  parent::navbarIndex();
+		// index
+	  CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='organization' data-apihost='$apiHost'></div>");
   }
-
   /**
    * @param
    */
@@ -41,7 +34,6 @@ class OrganizationView extends OrganizationAbstract
 			CmsFactory::response()->fragment()->box()->simpleBox( self::formOrganization(), _("Add organization"))
     );
   }
-
   /**
    * @param array $data
    * @throws Exception
@@ -50,7 +42,6 @@ class OrganizationView extends OrganizationAbstract
   {
 	  // NAVBAR
 	  parent::navbarIndex();
-
 		// NOT Autohorization
 		if (isset($data['status']) && $data['status'] == 'fail') {
 			CmsFactory::webSite()->addMain(
@@ -64,45 +55,33 @@ class OrganizationView extends OrganizationAbstract
 		}
 		// VIEW
 		else {
+			$apiHost = App::getApiHost();
+			$userToken = CmsFactory::request()->user()->userLogged()->getToken();
       $value = parent::setValues($data[0]);
       // NAVBAR
       parent::navbarEdit();
+			// THING
+			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='organization' data-idispartof='{$value['idorganization']}' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
       // ORGANIZATION
       CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->simpleBox(
-					self::formOrganization('edit', $value), sprintf(_("Edit %s"), _("organization"))
-				)
+				CmsFactory::response()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value))
       );
       // LOCATION
       CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->expandingBox(
-					_("Place"),
-					CmsFactory::response()->fragment()->form()->relationshipOneToOne("organization", $this->id, "location", "place", $value['location'])
-				)
+				CmsFactory::response()->fragment()->box()->expandingBox(_("Place"), CmsFactory::response()->fragment()->form()->relationshipOneToOne("organization", $this->id, "location", "place", $value['location']))
       );
       // CONTACT POINT
       CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->expandingBox(
-					_("Contact point"),
-					CmsFactory::webSite()->type('contactPoint')->intangible()->contactPoint()->getForm('organization', $this->id, $value['contactPoint'])
-				)
+				CmsFactory::response()->fragment()->box()->expandingBox(_("Contact point"), CmsFactory::webSite()->type('contactPoint')->intangible()->contactPoint()->getForm('organization', $this->id, $value['contactPoint']))
       );
       // MEMBER
       CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->expandingBox(
-					_("Persons"),
-					CmsFactory::response()->fragment()->form()->relationshipOneToMany("organization", $this->id, "person", $value['member']))
-      );
+				CmsFactory::response()->fragment()->box()->expandingBox(_("Persons"), CmsFactory::response()->fragment()->form()->relationshipOneToMany("organization", $this->id, "person", $value['member'])));
       // IMAGE
-      CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->expandingBox(
-					_("Images"),
-					CmsFactory::webSite()->type('imageObject')->getForm("organization", $this->id, $value['image'])
-				)
+      CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='organization' data-idhaspart='{$value['idorganization']}'data-apihost='$apiHost' data-usertoken='$userToken'></div>"
       );
     }
   }
-
   /**
    * @throws Exception
    */
@@ -110,11 +89,9 @@ class OrganizationView extends OrganizationAbstract
   {
     $action = $value['action'] ?? filter_input(INPUT_GET, 'action');
     $item = filter_input(INPUT_GET, 'item');
-
     parent::setValues($value);
     // NAVBAR
     parent::navbarEdit();
-
     $service = new ServiceView();
     if ($action == 'new') {
       $service->newWithPartOf($value);
@@ -124,7 +101,6 @@ class OrganizationView extends OrganizationAbstract
       $service->indexWithPartOf($value);
     }
   }
-
   /**
    * @param $value
    * @throws Exception
@@ -132,11 +108,9 @@ class OrganizationView extends OrganizationAbstract
   public function product($value)
   {
     $action = $value['action'] ?? filter_input(INPUT_GET, 'action');
-
     parent::setValues($value);
     // NAVBAR
     parent::navbarEdit();
-
     // MAIN
     $product = new ProductView();
     if ($action == 'new') {
@@ -147,7 +121,6 @@ class OrganizationView extends OrganizationAbstract
       $product->indexWithPartOf($value);
     }
   }
-
   /**
    * ORDER
    * @param $value
@@ -156,31 +129,24 @@ class OrganizationView extends OrganizationAbstract
   {
     $action = $value['action'] ?? filter_input(INPUT_GET, 'action');
     $item = filter_input(INPUT_GET, 'item');
-
     // NAVBAR ORGANIZATION
     if ($value['@type'] == "Organization") {
       parent::setValues($value);
     } else {
       parent::setValues($value['seller']);
     }
-
     // NAVBAR
     parent::navbarEdit();
-
     // MAIN
     $order = new OrderView();
     if ($action == "payment") {
       $order->payment($value);
-
     } elseif ($action == "expired") {
       $order->expired($value);
-
     } elseif ($action == 'new') {
       $order->newWithPartOf($value);
-
     } elseif ($action == 'edit' || $item) {
       $order->editWithPartOf($value);
-
     } else {
       $order->indexWithPartOf($value);
     }

@@ -1,12 +1,10 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Taxon;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 
 class TaxonView
 {
@@ -21,54 +19,48 @@ class TaxonView
       "/admin/taxon" => CmsFactory::response()->fragment()->icon()->home(),
       "/admin/taxon/new" => CmsFactory::response()->fragment()->icon()->plus()
     ], 2, ['table'=>'taxon']);
-
     if ($title) {
       CmsFactory::webSite()->navbar($title, $list, $level);
     }
   }
-
   /**
-   * @param array $data
+   *
    */
-  public function index(array $data)
+  public function index()
   {
+		$apiHost = App::getApiHost();
+		$columnsTable = '{"edit":"Edit","name":"Nome","taxonRank":"Rank","dateModified":"Modificado"}';
     $this->navbarTaxon();
-    $listTable = CmsFactory::response()->fragment()->listTable()
-      ->caption(_("List of taxons"))
-      ->labels(_('Name'), _("Taxon rank"), _("Parent taxon"), _("Date modified"))
-      ->rows($data['itemListElement'],['name','taxonRank','parentTaxon','dateModified'])
-      ->setEditButton("/admin/taxon/edit/");
-
-    CmsFactory::webSite()->addMain($listTable->ready());
+	  CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='taxon' data-apihost='$apiHost' data-columnsTable='$columnsTable'></div>");
   }
-
   /**
    * @param array $data
    * @throws Exception
    */
   public function edit(array $data)
   {
+		$apiHost = App::getApiHost();
+		$userToken = CmsFactory::request()->user()->userLogged()->getToken();
     if (!empty($data)) {
       $value = $data[0];
       $id = $value['idtaxon'];
       $this->navbarTaxon($value['name'] . " (" . $value['taxonRank'] . ")", 3);
+			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='taxon' data-idispartof='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
       // form taxon
-      CmsFactory::webSite()->addMain(self::formTaxon('edit', $value, $data['parentTaxonList']));
+      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Taxon"), self::formTaxon('edit', $value, $data['parentTaxonList'])));
       // images
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("taxon", $id, $value['image'])));
+      CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$usertoken'></div>");
     } else {
       $this->navbarTaxon();
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent(_("No item found!")));
     }
   }
-
   /**
    */
   public function new() {
     $this->navbarTaxon();
     CmsFactory::webSite()->addMain(self::formTaxon());
   }
-
   /**
    * @param string $case
    * @param null $value
@@ -78,15 +70,10 @@ class TaxonView
   private static function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
   {
     $id = $value ? $value['idtaxon'] : null;
-
     $form = CmsFactory::response()->fragment()->form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
     $form->action("/admin/taxon/$case")->method('post');
-    // title
-    $form->content("<h3>"._("Taxon")."</h3>");
     // id
     if ($id) $form->input('idtaxon', $id, 'hidden');
-    // name
-    $form->fieldsetWithInput('name', $value['name'] ?? null, _("Name"));
     // scientificNameAuthorship
     $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName
@@ -98,10 +85,6 @@ class TaxonView
     $parentTaxonList = $parentTaxonList ?? [];
     $selectParentTaxon = isset($value['parentTaxon']) ? [ $value['parentTaxon'] => $parentTaxonList[$value['parentTaxon']]] : null;
     $form->fieldsetWithSelect('parentTaxon', $selectParentTaxon, $parentTaxonList, _("Parent taxon"));
-    // url
-    $form->fieldsetWithInput('url', $value['url'] ?? null, "Url");
-    // description
-    $form->fieldsetWithTextarea('description',$value['description'] ?? null, _('Description'));
     // occurrence
     $form->fieldsetWithInput('occurrence', $value['occurrence'] ?? null, _("Occurrence"));
     // flowering

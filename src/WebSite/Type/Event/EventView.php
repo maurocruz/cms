@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Event;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 
@@ -19,22 +20,20 @@ class EventView extends EventAbstract
     ], 3, ["table"=>"event"]);
   }
 
-  /**
-   * @param array $data
-   */
-  public function index(array $data)
+	/**
+	 */
+  public function index()
   {
     // NAVBAR
     $this->navbarEvent();
-
-    $tablelIst = CmsFactory::response()->fragment()->listTable()
-	    ->setCaption(_("List of events"))
-	    ->labels(_('Name'),_("Start date"), _("Date modified"))
-			->setNumberOfItems($data['numberOfItems'])
-      ->rows($data['itemListElement'],['name','startDate','dateModified'])
-      ->setEditButton("/admin/event/edit/");
-
-    CmsFactory::webSite()->addMain($tablelIst->ready());
+		CmsFactory::webSite()->addMain("
+			<div 
+				class='plinct-shell' 
+				data-type='Event'
+				data-apihost='".App::getApiHost()."' 
+				data-usertoken='".CmsFactory::request()->user()->userLogged()->getToken()."'
+				data-columnsTable='{\"edit\":\"Edit\",\"name\":\"Nome\",\"startDate\":\"Início\",\"dateModified\":\"Modificado\"}'
+			></div>");
   }
 
   /**
@@ -73,7 +72,16 @@ class EventView extends EventAbstract
       // PLACE
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Place"), CmsFactory::response()->fragment()->form()->relationship("event", $this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
       // IMAGE
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("event", $this->idevent, $value['image'])));
+	    CmsFactory::webSite()->addMain("
+				<div
+					class='plinct-shell'
+					data-type='imageObject'
+					data-tablehaspart='event'
+					data-idhaspart='".$value['idevent']."'
+					data-apihost='".App::getApiHost()."'
+					data-usertoken='".CmsFactory::request()->user()->userLogged()->getToken()."'
+				></div>");
+      //CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("event", $this->idevent, $value['image'])));
     }
   }
 }

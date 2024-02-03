@@ -9,16 +9,12 @@ use Plinct\Tool\Sitemap;
 
 class PlaceController
 {
-  /**
-   * @param null $params
-   * @return array
-   */
-  public function index($params = null): array
+	/**
+	 * @return null
+	 */
+  public function index()
   {
-    // TODO Habilitar busca (search via get query string)
-    // TODO aumentar largura dos campos de latitude e longitude no banco de dados
-    $params = array_merge([ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc" ], (array)$params);
-    return CmsFactory::request()->api()->get("place", $params)->ready();
+		return null;
   }
   /**
    * @param null $params
@@ -32,7 +28,7 @@ class PlaceController
 	 * @return array
 	 */
   public function edit(array $params): array {
-    $params= array_merge($params, [ "properties" => "address,image" ]);
+    $params= array_merge($params, [ "properties" => "address" ]);
     return CmsFactory::request()->api()->get("place", $params)->ready();
   }
 	/**

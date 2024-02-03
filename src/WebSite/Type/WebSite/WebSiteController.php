@@ -12,10 +12,11 @@ class WebSiteController
 {
   /**
    * @param null $params
-   * @return array
+   * @return null
    */
-  public function index($params = null): array {
-		return CmsFactory::request()->api()->get('webSite',['format'=>'ItemList','properties'=>'name,url'])->ready();
+  public function index($params = null)
+  {
+		return null;
   }
   /**
    * @param array $params
@@ -24,10 +25,10 @@ class WebSiteController
   public function edit(array $params): array
   {
     $id = $params['id'] ?? $params['idwebSite'] ?? null;
-    $data = CmsFactory::request()->api()->get('webSite',['id'=>$id, 'properties'=>'hasPart'])->ready();
+    $data = CmsFactory::request()->api()->get('webSite',['id'=>$id])->ready();
     if (isset($data[0]['identifier'])) {
       $idSite = ArrayTool::searchByValue($data[0]['identifier'], 'id', 'value');
-      $data[0]['hasPart'] = CmsFactory::request()->api()->get('webPage', ['isPartOf' => $idSite, 'orderBy' => 'dateModified desc'])->ready();
+      //$data[0]['hasPart'] = CmsFactory::request()->api()->get('webPage', ['isPartOf' => $idSite, 'orderBy' => 'dateModified desc'])->ready();
     }
     return $data;
   }
@@ -62,7 +63,7 @@ class WebSiteController
     $idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
     // list all webpages if not isset action
     if (!$action) {
-      $data['hasPart'] = CmsFactory::request()->api()->get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified desc'])->ready();
+      $data['hasPart'] = [];//CmsFactory::request()->api()->get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified desc'])->ready();
     } elseif ($action == 'sitemap') {
       $data['sitemaps'] = (new Sitemap())->getSitemaps();
     } elseif ($action == 'search') {

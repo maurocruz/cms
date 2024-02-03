@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\WebPage;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\WebSite\Type\WebPageElement\WebPageElementView;
@@ -53,25 +54,22 @@ class WebPageView extends WebPageAbstract
   public static function index(array $data)
   {
     // FROM WEBSITE CONTROLLER
-    if ($data['@type'] == 'WebSite') {
-      self::$idwebSite = $data['idwebSite'];
-      self::navbarWebPage();
-      if (isset($data['error'])) {
-        CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message($data['error']));
-      } elseif (isset($data['hasPart'])) {
-        $list = isset($data['hasPart']['@type']) && $data['hasPart']['@type'] == 'ItemList' ? $data['hasPart']['itemListElement'] : $data['hasPart'];
-        CmsFactory::webSite()->addMain(
-          CmsFactory::response()->fragment()->listTable(['class'=>'table'])
-            ->caption(_("List of webpages"))
-            ->labels("id",_("Name"),"url",_("Date modified"))
-            ->setEditButton("/admin/webSite/webPage?id=".self::$idwebSite."&item=")
-            ->rows($list,['idwebPage','name','url','dateModified'])
-            ->ready()
-        );
-      }
+	  self::navbarWebPage();
+	  if ($data['@type'] == 'WebSite') {
+      //self::$idwebSite = $data['idwebSite'];
+		  CmsFactory::webSite()->addMain("
+				<div
+					class='plinct-shell'
+					data-type='webPage'
+					data-tablehaspart='webSite'
+					data-idhaspart='{$data['idwebSite']}'
+					data-apihost='".App::getApiHost()."'
+					data-usertoken='".CmsFactory::request()->user()->userLogged()->getToken()."'
+					data-columnstable='{\"edit\":\"Edit\", \"idwebPage\": \"Id\", \"name\": \"Nome\", \"dateModified\": \"Modificado\"}'
+				></div>"
+			);
     } else {
-      self::navbarWebPage();
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->listTable()
+		  CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->listTable()
         ->caption("WebPages")
         ->labels('id', _('Name'), "Url", _("Date modified"))
         ->rows($data['itemListElement'],['idwebPage','name','url','dateModified'])

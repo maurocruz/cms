@@ -1,73 +1,61 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Article;
 
 use Exception;
+use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Tool\ArrayTool;
 
 class ArticleView
 {
   protected function navbarArticle(string $title = null)
   {
-		CmsFactory::webSite()->navbar(
-			_("Article"),
-			[
+		CmsFactory::webSite()->navbar(_("Article"), [
 	      "/admin/article" => CmsFactory::response()->fragment()->icon()->home(),
 	      "/admin/article/new" => CmsFactory::response()->fragment()->icon()->plus()
       ], 2, ['table'=>'article','searchBy'=>'headline'] );
-
+		//
     if ($title) {
         CmsFactory::webSite()->navbar($title, [], 3);
     }
   }
-
   /**
-   * @param array $data
+   *
    */
-  public function index(array $data)
+  public function index()
   {
+		$apiHost = App::getApiHost();
     $this->navbarArticle();
-
-    $listTable = CmsFactory::response()->fragment()->listTable();
-    $listTable->caption(_("List of articles"))
-      ->labels(_('Title'), _("Date modified"),_("Date published"))
-      ->rows($data['itemListElement'],['headline','dateModified','datePublished'])
-      ->setEditButton("/admin/article/edit/");
-
-    CmsFactory::webSite()->addMain($listTable->ready());
+		//
+	  CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='article' data-apihost='$apiHost' data-columnsTable='{\"edit\":\"Edit\",\"headline\":\"Título\",\"datePublished\":\"Publicado\",\"dateModified\":\"Modificado\"}'></div>");
   }
-
   /**
    * @param array $data
    * @throws Exception
    */
   public function edit(array $data)
   {
+		$apiHost = App::getApiHost();
+		$useToken = CmsFactory::request()->user()->userLogged()->getToken();
     if (!empty($data)) {
       $value = $data[0];
       $this->navbarArticle($value['headline'] ?? null);
       if (empty($value)) {
         $content[] = CmsFactory::response()->fragment()->noContent();
       } else {
-        $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+				$id = $value['idarticle'];
         $content[] = CmsFactory::response()->fragment()->box()->simpleBox( self::formArticle("edit", $value, $id), _("Article"));
         // author
         $content[] = CmsFactory::response()->fragment()->box()->expandingBox( _("Author"), CmsFactory::response()->fragment()->form()->relationshipOneToOne("Article", (string) $id, "author", "Person", $value['author']));
         // images
-        $content[] = CmsFactory::response()->fragment()->box()->expandingBox( _("Images"), (new ImageObjectView())->getForm("article", $id, $value['image']));
+	      $content[] = "<div class='plinct-shell' data-type='imageObject' data-tablehaspart='article' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$useToken'></div>";
       }
     } else {
       $this->navbarArticle();
       $content[] = CmsFactory::response()->fragment()->noContent(_("No articles were found!"));
     }
-
     CmsFactory::webSite()->addMain($content);
   }
-
   /**
    * @param
    */
@@ -75,7 +63,6 @@ class ArticleView
     $this->navbarArticle();
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
   }
-
   /**
    * @param string $case
    * @param null $value
@@ -85,7 +72,6 @@ class ArticleView
   static private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
     $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
-
     $form = CmsFactory::response()->fragment()->form([ "name" => "article-form--$case", "id" => 'article-form', "class"=>"formPadrao form-article"]);
     $form->action("/admin/article/$case")->method('post');
     // id
@@ -121,7 +107,6 @@ class ArticleView
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/article/erase");
-
     return $form->ready();
   }
 }

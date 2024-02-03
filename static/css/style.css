@@ -293,6 +293,12 @@ a.white {
   text-decoration: underline;
 }
 
+/* TABLE INDEX
+======================================================================= */
+.tableIndex .titr-gray {
+  background-color: rgba(30, 22, 22, 0.6) !important;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -1023,19 +1029,6 @@ a.white {
   .form-offer fieldset:nth-of-type(3) {
     width: calc(26% - 80px);
   }
-}
-
-/* ORGANIZATION
-====================================================== */
-.form-organization {
-  display: flex;
-  flex-wrap: wrap;
-}
-.form-organization fieldset:nth-of-type(5) {
-  width: 100%;
-}
-.form-organization fieldset:nth-of-type(6) {
-  width: 100%;
 }
 
 /* ORDER FORM
