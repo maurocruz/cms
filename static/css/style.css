@@ -614,6 +614,51 @@ a.white {
   cursor: pointer;
 }
 
+/** BASIC
+====================================================== */
+.form-basic {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #444444;
+  padding: 5px;
+}
+.form-basic fieldset {
+  margin: 0 0 8px 0;
+  padding: 0;
+  border: 0;
+  line-height: normal;
+}
+.form-basic legend {
+  margin: 0 0 2px 5px;
+}
+.form-basic input[type=text], .form-basic textarea {
+  padding: 4px 6px;
+  border-style: none;
+  border-radius: 4px;
+  width: calc(100% - 15px);
+  background-color: #ccc;
+}
+.form-basic textarea {
+  min-height: 10em;
+  background-color: #bbb;
+}
+.form-basic button {
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+}
+.form-basic button svg {
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: #40d377;
+}
+
 /** BOOK
 ====================================================== */
 .form-book {
@@ -1175,6 +1220,12 @@ a.white {
   .form-taxon textarea {
     height: 100px;
   }
+}
+
+/* THING
+====================================================== */
+.form-thing fieldset:nth-of-type(n) {
+  width: 100%;
 }
 
 /* TRIP

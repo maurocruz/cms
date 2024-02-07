@@ -5,6 +5,7 @@ namespace Plinct\Cms\WebSite\Type\Taxon;
 use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\WebSite\Type\Thing\ThingView;
 
 class TaxonView
 {
@@ -49,7 +50,7 @@ class TaxonView
       // form taxon
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Taxon"), self::formTaxon('edit', $value, $data['parentTaxonList'])));
       // images
-      CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$usertoken'></div>");
+      CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
     } else {
       $this->navbarTaxon();
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent(_("No item found!")));
@@ -59,7 +60,7 @@ class TaxonView
    */
   public function new() {
     $this->navbarTaxon();
-    CmsFactory::webSite()->addMain(self::formTaxon());
+		CmsFactory::webSite()->addMain(ThingView::new('taxon'));
   }
   /**
    * @param string $case
