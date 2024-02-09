@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms;
 
+use Gitonomy\Git\Repository;
 use Plinct\Tool\Locale;
 use Slim\App as Slim;
 
@@ -11,6 +12,7 @@ use Slim\App as Slim;
  */
 class App
 {
+	private static string $BASE_DIR;
   /**
    * @var string
    */
@@ -93,6 +95,7 @@ class App
   public function __construct(Slim $slim)
   {
     $this->slim = $slim;
+		self::$BASE_DIR = realpath(__DIR__.'/../');
 		$host = filter_input(INPUT_SERVER, 'HTTP_HOST');
     self::$URL = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
 		$this->setTitle($host);
@@ -113,6 +116,15 @@ class App
 	{
 		return self::$logdir;
 	}
+
+	/**
+	 * @return string
+	 */
+	public static function getBASEDIR(): string
+	{
+		return self::$BASE_DIR;
+	}
+
   /**
    * @return string
    */
@@ -225,15 +237,36 @@ class App
    */
   public static function setVersion()
   {
-    $version = "developer version";
-    $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
-    $packages = json_decode(file_get_contents($installedFile));
-    foreach ($packages->packages as $package) {
-      if ($package->name && $package->name == "plinct/cms") {
-        $version = $package->version;
-      }
-    }
-    self::$VERSION = $version;
+		$version = 'NAN';
+
+	  $gitDirectory = realpath(__DIR__.'/../');
+
+	  if (file_exists($gitDirectory.'/.git')) {
+		  $repository = new Repository($gitDirectory);
+		  $head = $repository->getHead();
+		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
+		  $commit = $head->getCommitHash();
+
+		  $references = $repository->getReferences();
+		  $tags = $references->resolveTags($commit);
+		  if (!empty($tags)) {
+			  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+		  } else {
+			  $versionTag = substr($commit,0,8);
+		  }
+		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+
+	  } else {
+		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
+		  $packages = json_decode(file_get_contents($installedFile));
+		  foreach ($packages->packages as $package) {
+			  if ($package->name && $package->name == "plinct/cms") {
+				  $version = $package->version;
+			  }
+		  }
+	  }
+
+	  self::$VERSION = $version;
   }
 
   /**
@@ -320,15 +353,6 @@ class App
   }
 
   /**
-   * @return ?int
-   */
-  public static function getUserLoginId(): ?int
-  {
-    return isset($_SESSION['userLogin']['uid']) ? (int) $_SESSION['userLogin']['uid'] : null;
-  }
-
-
-  /**
    * @param string|null $mailHost
    * @return App
    */
@@ -405,7 +429,6 @@ class App
    */
   final public function run()
   {
-    $route = include __DIR__ . '/routes.php';
-    return $route($this->slim);
+		return CmsFactory::request()->routes()->home($this->slim);
   }
 }

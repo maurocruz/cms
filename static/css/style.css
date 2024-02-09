@@ -67,10 +67,6 @@ dd {
   margin-left: 20px;
 }
 
-button {
-  padding: 2px 5px;
-}
-
 /* WRAPPER
 ================================================================= */
 .wrapper {
@@ -188,31 +184,31 @@ button {
 
 /* COMPONENT _ navbar-search
 ====================================================================== */
-.navbar-search {
+.search-box {
   margin: 0 5px;
   position: relative;
 }
-.navbar-search .navbar-search-form {
+.search-box .search-box-form {
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: hidden;
 }
-.navbar-search .navbar-search-form button {
+.search-box .search-box-form button {
   margin: 0;
   padding: 0;
   line-height: 0;
   border-width: 1px;
   height: 27px;
 }
-.navbar-search .navbar-search-form button svg {
+.search-box .search-box-form button svg {
   font-size: 26px;
   color: #444444;
 }
-.navbar-search .navbar-search-form-input {
+.search-box .search-box-form-input {
   height: 20px;
   border-width: 3px;
 }
-.navbar-search .navbar-search-form-image {
+.search-box .search-box-form-image {
   height: 25px;
   vertical-align: middle;
 }
@@ -285,6 +281,22 @@ a.white {
   padding: 0;
   border: none;
   font-size: 1.2em;
+}
+
+.button-link {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+  position: relative;
+  text-decoration: underline;
+}
+
+/* TABLE INDEX
+======================================================================= */
+.tableIndex .titr-gray {
+  background-color: rgba(30, 22, 22, 0.6) !important;
 }
 
 /* COMPONENT _ form padrao
@@ -363,8 +375,6 @@ a.white {
 .formPadrao button[type=submit] {
   display: inline-block;
   overflow: hidden;
-  height: 50px;
-  width: 50px;
   vertical-align: middle;
   cursor: pointer;
   background-color: transparent;
@@ -396,10 +406,9 @@ a.white {
 }
 .formPadrao .form-submit-button {
   overflow: hidden;
-  height: 40px;
-  width: 40px;
+  width: 30px;
+  height: 30px;
   display: inline-block;
-  margin-left: 5px;
   vertical-align: middle;
   cursor: pointer;
   background-color: transparent;
@@ -525,7 +534,7 @@ a.white {
 }
 
 .form-back-white input {
-  background-color: white !important;
+  background-color: rgb(255, 255, 255) !important;
 }
 
 /* ARTICLE
@@ -603,6 +612,108 @@ a.white {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+/** BASIC
+====================================================== */
+.form-basic {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #444444;
+  padding: 5px;
+}
+.form-basic fieldset {
+  margin: 0 0 8px 0;
+  padding: 0;
+  border: 0;
+  line-height: normal;
+}
+.form-basic legend {
+  margin: 0 0 2px 5px;
+}
+.form-basic input[type=text], .form-basic textarea {
+  padding: 4px 6px;
+  border-style: none;
+  border-radius: 4px;
+  width: calc(100% - 15px);
+  background-color: #ccc;
+}
+.form-basic textarea {
+  min-height: 10em;
+  background-color: #bbb;
+}
+.form-basic button {
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+}
+.form-basic button svg {
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: #40d377;
+}
+
+/** BOOK
+====================================================== */
+.form-book {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-book fieldset:nth-of-type(n) {
+  flex-basis: 50%;
+}
+.form-book fieldset:nth-of-type(1) {
+  flex-basis: 100%;
+}
+.form-book fieldset:nth-of-type(8) {
+  flex-basis: 100%;
+}
+.form-book fieldset:nth-of-type(9) {
+  flex-basis: 100%;
+}
+@media (min-width: 768px) {
+  .form-book fieldset:nth-of-type(n) {
+    flex-basis: 25%;
+  }
+  .form-book fieldset:nth-of-type(2) {
+    flex-basis: 20%;
+  }
+  .form-book fieldset:nth-of-type(3) {
+    flex-basis: 15%;
+  }
+  .form-book fieldset:nth-of-type(4) {
+    flex-basis: 50%;
+  }
+  .form-book fieldset:nth-of-type(5) {
+    flex-basis: 15%;
+  }
+  .form-book fieldset:nth-of-type(6) {
+    flex-basis: 20%;
+  }
+  .form-book fieldset:nth-of-type(7) {
+    flex-basis: 20%;
+  }
+  .form-book fieldset:nth-of-type(8) {
+    flex-basis: 60%;
+  }
+  .form-book fieldset:nth-of-type(9) {
+    flex-basis: 60%;
+  }
+  .form-book fieldset:nth-of-type(10) {
+    flex-basis: 20%;
+  }
+  .form-book fieldset:nth-of-type(11) {
+    flex-basis: 20%;
+  }
+}
+.form-book fieldset:nth-of-type(1) {
+  flex-basis: 100%;
 }
 
 /* CONTACT POINT
@@ -965,19 +1076,6 @@ a.white {
   }
 }
 
-/* ORGANIZATION
-====================================================== */
-.form-organization {
-  display: flex;
-  flex-wrap: wrap;
-}
-.form-organization fieldset:nth-of-type(5) {
-  width: 100%;
-}
-.form-organization fieldset:nth-of-type(6) {
-  width: 100%;
-}
-
 /* ORDER FORM
 ====================================================== */
 .form-order {
@@ -1073,36 +1171,6 @@ a.white {
 .form-place fieldset:nth-of-type(n) {
   width: 100%;
 }
-@media (min-width: 380px) {
-  .form-place fieldset:nth-of-type(3) {
-    width: 50%;
-  }
-  .form-place fieldset:nth-of-type(4) {
-    width: 50%;
-  }
-}
-@media (min-width: 520px) {
-  .form-place fieldset:nth-of-type(3) {
-    width: 33.3%;
-  }
-  .form-place fieldset:nth-of-type(4) {
-    width: 33.3%;
-  }
-  .form-place fieldset:nth-of-type(5) {
-    width: 33.3%;
-  }
-}
-@media (min-width: 576px) {
-  .form-place fieldset:nth-of-type(1) {
-    width: 50%;
-  }
-  .form-place fieldset:nth-of-type(2) {
-    width: 50%;
-  }
-  .form-place .form-place-map {
-    margin: 5px 0;
-  }
-}
 
 /* PRODUCT
 ======================================================= */
@@ -1152,6 +1220,12 @@ a.white {
   .form-taxon textarea {
     height: 100px;
   }
+}
+
+/* THING
+====================================================== */
+.form-thing fieldset:nth-of-type(n) {
+  width: 100%;
 }
 
 /* TRIP
@@ -1204,34 +1278,72 @@ a.white {
 }
 
 /* USER
-====================================================== */
+===================================================== */
 .form-user {
   display: flex;
   flex-wrap: wrap;
 }
+.form-user fieldset:nth-of-type(n) {
+  width: 100%;
+}
 .form-user fieldset:nth-of-type(1) {
-  width: 60px;
+  width: 40px;
 }
 .form-user fieldset:nth-of-type(2) {
-  width: calc(100% - 60px);
-}
-.form-user fieldset:nth-of-type(3) {
-  flex-basis: 100%;
+  width: calc(100% - 40px);
 }
 .form-user fieldset:nth-of-type(4) {
-  flex-basis: 110px;
+  width: 50%;
 }
 .form-user fieldset:nth-of-type(5) {
-  flex-basis: calc(100% - 212px);
-  max-width: 150px;
+  width: 50%;
+}
+@media (min-width: 576px) {
+  .form-user fieldset:nth-of-type(2) {
+    width: calc(50% - 40px);
+  }
+  .form-user fieldset:nth-of-type(3) {
+    width: 50%;
+  }
 }
 @media (min-width: 768px) {
   .form-user fieldset:nth-of-type(2) {
-    width: calc(50% - 60px);
+    width: calc(32% - 40px);
   }
   .form-user fieldset:nth-of-type(3) {
-    flex-basis: 50%;
+    width: calc(68% - 276px);
   }
+  .form-user fieldset:nth-of-type(4) {
+    width: 138px;
+  }
+  .form-user fieldset:nth-of-type(5) {
+    width: 138px;
+  }
+}
+@media (min-width: 992px) {
+  .form-user fieldset:nth-of-type(2) {
+    width: calc(32% - 80px);
+  }
+  .form-user fieldset:nth-of-type(3) {
+    width: calc(68% - 336px);
+  }
+}
+
+.form-user-privileges {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-user-privileges fieldset:nth-of-type(n) {
+  width: 50%;
+}
+.form-user-privileges fieldset:nth-of-type(1) {
+  width: 110px;
+}
+.form-user-privileges fieldset:nth-of-type(2) {
+  width: calc(40% - 96px);
+}
+.form-user-privileges fieldset:nth-of-type(3) {
+  width: calc(60% - 96px);
 }
 
 /* WEBSITE
@@ -1344,31 +1456,49 @@ table .table-delete-button {
   font-size: 1.3em;
 }
 
+.plcm-section {
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+.plcm-section .plcmsc-main {
+  padding: 3px 8px;
+}
+
+.pl-form legend {
+  margin: 0 0 2px 5px;
+}
+.pl-form input[type=text], .pl-form textarea {
+  padding: 4px 6px;
+  border-style: none;
+  border-radius: 4px;
+  width: calc(100% - 12px);
+}
+
+.plth-additionalTypeList {
+  max-height: 500px;
+  overflow: auto;
+  background-color: rgba(250, 250, 250, 0.1);
+}
+
 @media (min-width: 576px) {
   .menu2 {
     padding-left: 6px;
   }
-
   .menu3 {
     padding-left: 12px;
   }
-
   .menu4 {
     padding-left: 18px;
   }
-
   .menu5 {
     padding-left: 24px;
   }
-
   .form-postalAddress fieldset:nth-of-type(1) {
     width: 100%;
   }
-
   .form-propertyValue fieldset {
     width: calc(50% - 60px);
   }
-
   .form-invoice fieldset:nth-of-type(1) {
     width: calc(100% - 452px);
     max-width: 120px;
@@ -1429,11 +1559,9 @@ table .table-delete-button {
   .admin-bar-top {
     display: none;
   }
-
   .menu {
     display: none;
   }
-
   table {
     border: 1px black solid;
   }

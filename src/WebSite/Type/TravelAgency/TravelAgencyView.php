@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\TravelAgency;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
-use Plinct\Cms\WebSite\WebSite;
+use Plinct\Cms\CmsFactory;
 
 class TravelAgencyView
 {
@@ -20,13 +19,14 @@ class TravelAgencyView
 	 */
 	private function navbar($title = null)
 	{
-		WebSite::addHeader(Fragment::navbar()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
 			->title(_('Travel agencies'))
 			->ready()
 		);
 
 		if($title) {
-			WebSite::addHeader(Fragment::navbar()
+			CmsFactory::webSite()->addHeader(CmsFactory::response()->fragment()->navbar()
 				->title($title)
 				->newTab("/admin/organization/edit/$this->idorganization", sprintf(_("View %s"), 'organization'))
 				->newTab("/admin/trip?provider=$this->idorganization", sprintf(_("View all %s"), _("trips")))
@@ -35,7 +35,6 @@ class TravelAgencyView
 				->ready()
 			);
 		}
-
 	}
 
   public function index(array $data)
@@ -43,7 +42,7 @@ class TravelAgencyView
     // NAVBAR
 	  $this->navbar();
 		// CONTENT
-	  WebSite::addMain('<h4>Under development!</h4>');
+	  CmsFactory::webSite()->addMain('<h4>Under development!</h4>');
 		// LIST
 	}
 
@@ -58,6 +57,6 @@ class TravelAgencyView
 		// NAVBAR
 	  $this->navbar($name);
 		// VIEW
-	  WebSite::addMain('<h4>Under development!</h4>');
+	  CmsFactory::webSite()->addMain('<h4>Under development!</h4>');
   }
 }

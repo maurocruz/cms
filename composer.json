@@ -1,29 +1,30 @@
 {
-    "name": "plinct/cms",
-    "description": "Cms for Plinct app",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Mauro Cruz",
-            "email": "maurocruz@pirenopolis.tur.br"
-        }
-    ],
-    "require": {
-      "php": "^7.4|^8.0",
-      "slim/slim": "4.*",
-      "slim/psr7": "1.*",
-      "tuupola/slim-jwt-auth": "3.*",
-      "plinct/api": "^1.7",
-      "plinct/middleware": "*",
-      "ext-json": "*",
-      "ext-gettext": "*"
-    },
-    "require-dev" : {
-        "ext-intl": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Plinct\\Cms\\": "src"
-        }
+  "name": "plinct/cms",
+  "description": "Cms for Plinct app",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Mauro Cruz",
+      "email": "maurocruz@pirenopolis.tur.br"
     }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "slim/slim": "^4.0",
+    "slim/psr7": "^1.0",
+    "tuupola/slim-jwt-auth": "^3.0",
+    "plinct/middleware": "*",
+    "plinct/tool": "^1.4",
+    "gitonomy/gitlib": "^1.3",
+    "ext-json": "*"
+  },
+  "require-dev" : {
+    "ext-intl": "*",
+    "ext-gettext": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Plinct\\Cms\\": "src"
+    }
+  }
 }

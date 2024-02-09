@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Trip;
 
-use Plinct\Cms\WebSite\Fragment\Fragment;
-use Plinct\Cms\WebSite\Type\View;
-use Plinct\Cms\WebSite\WebSite;
+use Plinct\Cms\CmsFactory;
 
 class TripAbstract
 {
@@ -15,11 +13,12 @@ class TripAbstract
 	 */
 	protected function navbarIndex()
 	{
-		WebSite::addHeader(Fragment::navbar()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
 			->type('trip')
 			->title('Trips')
-			->newTab('/admin/trip', Fragment::icon()->home())
-			->newTab('/admin/trip/new', Fragment::icon()->plus())
+			->newTab('/admin/trip', CmsFactory::response()->fragment()->icon()->home())
+			->newTab('/admin/trip/new', CmsFactory::response()->fragment()->icon()->plus())
 			->search('/admin/trip')
 			->level(2)
 			->ready()
@@ -34,10 +33,11 @@ class TripAbstract
 	protected function navBarProvider($name, $id)
 	{
 		self::navbarIndex();
-		View::contentHeader(Fragment::navbar()
+		CmsFactory::webSite()->addHeader(
+			CmsFactory::response()->fragment()->navbar()
 			->title($name)
-			->newTab("/admin/trip?provider=$id", Fragment::icon()->home())
-			->newTab("/admin/trip?provider=$id&action=new", Fragment::icon()->plus())
+			->newTab("/admin/trip?provider=$id", CmsFactory::response()->fragment()->icon()->home())
+			->newTab("/admin/trip?provider=$id&action=new", CmsFactory::response()->fragment()->icon()->plus())
 			->level(3)
 			->ready()
 		);
@@ -52,7 +52,7 @@ class TripAbstract
 	protected function navbarTrip($providerName, $providerId, $tripName)
   {
 		self::navBarProvider($providerName, $providerId);
-    WebSite::addHeader(Fragment::navbar()
+    CmsFactory::webSite()->addHeader(CmsFactory::response()->fragment()->navbar()
       ->title($tripName)
 	    ->level(4)
       ->ready()
@@ -65,7 +65,7 @@ class TripAbstract
 	 */
 	protected function listOfProviderTrips($data)
 	{
-		$table = Fragment::listTable();
+		$table = CmsFactory::response()->fragment()->listTable();
 		$table->labels(_('Name'),_('Date modified'));
 
 		foreach ($data['trips']['itemListElement'] as $item) {
@@ -74,7 +74,7 @@ class TripAbstract
 			$table->buttonEdit("/admin/trip/edit/$id");
 			$table->addRow($trip['name'], $trip['dateModified']);
 		}
-		View::main($table->ready());
+		CmsFactory::webSite()->addMain($table->ready());
 	}
 
 	/**
@@ -95,10 +95,10 @@ class TripAbstract
 		$provider= $value['provider'] ?? null;
 
     // FORM
-    $form = Fragment::form();
+    $form = CmsFactory::response()->fragment()->form();
     $form->action("/admin/trip/$case")->method('post')->attributes(['class'=>'formPadrao form-trip']);
     // HIDDENS
-    if ($idtrip) $form->input('id', $idtrip, 'hidden');
+    if ($idtrip) $form->input('idtrip', $idtrip, 'hidden');
     // NAME
     $form->fieldsetWithInput('name', $name, _('Name'));
 	  // PROVIDER

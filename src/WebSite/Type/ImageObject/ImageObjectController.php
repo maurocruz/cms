@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Plinct\Cms\App;
-use Plinct\Cms\Server\Api;
-use Plinct\Cms\Server\Type\ImageObjectServer;
-use Plinct\Cms\WebSite\Type\ControllerInterface;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Request\Server\Type\ImageObjectServer;
 use Plinct\Tool\Sitemap;
 
-class ImageObjectController implements ControllerInterface
+class ImageObjectController
 {
   /**
    * @param null $params
@@ -30,20 +28,19 @@ class ImageObjectController implements ControllerInterface
     $value = [];
     $params2 = [ "properties" => "*,author" ];
     $params3 = array_merge($params2, $params);
-    $data = Api::get("imageObject", $params3);
+    $data = CmsFactory::request()->api()->get("imageObject", $params3)->ready();
     if (isset($data[0])) {
       $value = $data[0];
-      $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-      $value['info'] = (new ImageObjectServer())->getImageHasPartOf($id);
+      $value['info'] = (new ImageObjectServer())->getImageHasPartOf($value['idimageObject']);
     }
     return $value;
   }
 
   public function saveSitemap() {
     $dataSitemap = null;
-    $data = Api::get("imageObject", [ "properties" => "license", "orderBy" => "uploadDate" ]);
+    $data = CmsFactory::request()->api()->get("imageObject", ['properties'=>'license','orderBy'=>'uploadDate','limit'=>'none'])->ready();
     foreach ($data as $value) {
-      $id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
+      $id = $value['idimageObject'];
       $imageLoc = App::getURL() . str_replace(" ", "%20", $value['contentUrl']);
       $dataSitemap[] = [
         "loc" => App::getURL() . "/t/imageObject/$id",
@@ -52,6 +49,6 @@ class ImageObjectController implements ControllerInterface
         ]
       ];
     }
-    (new Sitemap("sitemap-imageObject.xml"))->saveSitemap($dataSitemap);
+    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-imageObject.xml"))->saveSitemap($dataSitemap);
   }
 }

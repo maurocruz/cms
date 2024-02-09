@@ -89,8 +89,6 @@
   button[type=submit] {
     display: inline-block;
     overflow: hidden;
-    height: 50px;
-    width: 50px;
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
@@ -129,21 +127,24 @@
 
   .form-submit-button {
     overflow: hidden;
-    height: 40px;
-    width: 40px;
+    width: 30px;
+    height: 30px;
     display: inline-block;
-    margin-left: 5px;
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
     border: 0;
   }
 
-  .form-submit-button-send{ color: #40d377; }
+  .form-submit-button-send{
+    color: #40d377;
+  }
   
   .form-submit-button-send:hover { color: #84f7ba; }
 
-  .form-submit-button-delete { color: #cc0000; }
+  .form-submit-button-delete {
+    color: #cc0000;
+  }
 
   .form-submit-button-delete:hover {
     color: #ff5555;
@@ -295,6 +296,90 @@
         cursor: pointer;
       }
     }
+  }
+}
+
+/** BASIC
+====================================================== */
+.form-basic {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #444444;
+  padding: 5px;
+
+  fieldset {
+    margin: 0 0 8px 0;
+    padding: 0;
+    border: 0;
+    line-height: normal;
+  }
+
+  legend {
+    margin: 0 0 2px 5px;
+  }
+
+  input[type="text"], textarea {
+    padding: 4px 6px;
+    border-style: none;
+    border-radius: 4px;
+    width: calc(100% - 15px);
+    background-color: #ccc;
+  }
+
+  textarea {
+    min-height: 10em;
+    background-color: #bbb;
+  }
+
+  button {
+    cursor: pointer;
+    border: 0;
+    background-color: transparent;
+
+    svg {
+      overflow: hidden;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: transparent;
+      border: 0;
+      color: #40d377;
+    }
+  }
+}
+
+/** BOOK
+====================================================== */
+.form-book {
+  display: flex;
+  flex-wrap: wrap;
+
+  fieldset:nth-of-type(n) { flex-basis: 50%; }
+  fieldset:nth-of-type(1) { flex-basis: 100%; }
+  fieldset:nth-of-type(8) { flex-basis: 100%; }
+  fieldset:nth-of-type(9) { flex-basis: 100%; }
+
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(n) { flex-basis: 25%; }
+    fieldset:nth-of-type(2) { flex-basis: 20%; }
+    fieldset:nth-of-type(3) { flex-basis: 15%; }
+    fieldset:nth-of-type(4) { flex-basis: 50%; }
+    fieldset:nth-of-type(5) { flex-basis: 15%; }
+
+    fieldset:nth-of-type(6) { flex-basis: 20%; }
+    fieldset:nth-of-type(7) { flex-basis: 20%; }
+    fieldset:nth-of-type(8) { flex-basis: 60%; }
+
+    fieldset:nth-of-type(9) { flex-basis: 60%; }
+    fieldset:nth-of-type(10) { flex-basis: 20%; }
+    fieldset:nth-of-type(11) { flex-basis: 20%; }
+  }
+
+  fieldset:nth-of-type(1)
+  {
+    flex-basis: 100%;
   }
 }
 
@@ -511,15 +596,6 @@
   }
 }
 
-/* ORGANIZATION
-====================================================== */
-.form-organization {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(5) { width: 100%; }
-  fieldset:nth-of-type(6) { width: 100%; }
-}
-
 /* ORDER FORM
 ====================================================== */
 .form-order {
@@ -578,21 +654,6 @@
   display: flex;
   flex-wrap: wrap;
   fieldset:nth-of-type(n) { width: 100%; }
-
-  @media (min-width: 380px) {
-    fieldset:nth-of-type(3) { width: 50% }
-    fieldset:nth-of-type(4) { width: 50% }
-  }
-  @media (min-width: 520px) {
-    fieldset:nth-of-type(3) { width: 33.3% }
-    fieldset:nth-of-type(4) { width: 33.3% }
-    fieldset:nth-of-type(5) { width: 33.3% }
-  }
-  @media (min-width: 576px) {
-    fieldset:nth-of-type(1) { width: 50% }
-    fieldset:nth-of-type(2) { width: 50% }
-    .form-place-map { margin: 5px 0; }
-  }
 }
 
 /* PRODUCT
@@ -646,6 +707,12 @@
   }
 }
 
+/* THING
+====================================================== */
+.form-thing {
+  fieldset:nth-of-type(n) { width: 100%; }
+}
+
 /* TRIP
 ====================================================== */
 .form-trip {
@@ -670,19 +737,40 @@
 }
 
 /* USER
-====================================================== */
+===================================================== */
 .form-user {
   display: flex;
   flex-wrap: wrap;
-  fieldset:nth-of-type(1) { width: 60px; }
-  fieldset:nth-of-type(2) { width: calc(100% - 60px); }
-  fieldset:nth-of-type(3) { flex-basis: 100%; }
-  fieldset:nth-of-type(4) { flex-basis: 110px; }
-  fieldset:nth-of-type(5) { flex-basis: calc(100% - 212px); max-width: 150px; }
-  @media (min-width: 768px) {
-    fieldset:nth-of-type(2) { width: calc(50% - 60px); }
-    fieldset:nth-of-type(3) { flex-basis: 50%; }
+  fieldset:nth-of-type(n) { width: 100%; }
+  fieldset:nth-of-type(1) { width: 40px; }
+  fieldset:nth-of-type(2) { width: calc(100% - 40px); }
+  fieldset:nth-of-type(4) { width: 50%; }
+  fieldset:nth-of-type(5) { width: 50%; }
+
+  @media (min-width: 576px) {
+    fieldset:nth-of-type(2) { width: calc(50% - 40px); }
+    fieldset:nth-of-type(3) { width: 50%; }
   }
+  @media (min-width: 768px) {
+    fieldset:nth-of-type(2) { width: calc(32% - 40px); }
+    fieldset:nth-of-type(3) { width: calc(68% - 276px); }
+    fieldset:nth-of-type(4) { width: 138px; }
+    fieldset:nth-of-type(5) { width: 138px; }
+  }
+  @media (min-width: 992px) {
+    fieldset:nth-of-type(2) { width: calc(32% - 80px); }
+    fieldset:nth-of-type(3) { width: calc(68% - 336px); }
+  }
+}
+
+.form-user-privileges {
+
+  display: flex;
+  flex-wrap: wrap;
+  fieldset:nth-of-type(n) { width: 50%; }
+  fieldset:nth-of-type(1) { width: 110px; }
+  fieldset:nth-of-type(2) { width: calc(40% - 96px); }
+  fieldset:nth-of-type(3) { width: calc(60% - 96px); }
 }
 
 /* WEBSITE

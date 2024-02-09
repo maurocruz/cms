@@ -1,93 +1,95 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebSite;
 
-use Plinct\Cms\Server\Api;
-use Plinct\Cms\Server\Sitemap;
-use Plinct\Cms\WebSite\Type\ControllerInterface;
+use Plinct\Cms\App;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Request\Server\Sitemap;
 use Plinct\Tool\ArrayTool;
+use Plinct\Tool\DateTime;
 
-class WebSiteController implements ControllerInterface
+class WebSiteController
 {
-    /**
-     * @param null $params
-     * @return array
-     */
-    public function index($params = null): array
-    {
-        return Api::get('webSite',['format'=>'ItemList','properties'=>'name,url']);
+  /**
+   * @param null $params
+   * @return null
+   */
+  public function index($params = null)
+  {
+		return null;
+  }
+  /**
+   * @param array $params
+   * @return array
+   */
+  public function edit(array $params): array
+  {
+    $id = $params['id'] ?? $params['idwebSite'] ?? null;
+    $data = CmsFactory::request()->api()->get('webSite',['id'=>$id])->ready();
+    if (isset($data[0]['identifier'])) {
+      $idSite = ArrayTool::searchByValue($data[0]['identifier'], 'id', 'value');
+      //$data[0]['hasPart'] = CmsFactory::request()->api()->get('webPage', ['isPartOf' => $idSite, 'orderBy' => 'dateModified desc'])->ready();
     }
-
-    /**
-     * @param array $params
-     * @return array
-     */
-    public function edit(array $params): array
-    {
-        $id = $params['id'] ?? $params['idwebSite'] ?? null;
-        $data = Api::get('webSite',['id'=>$id, 'properties'=>'hasPart']);
-        if (isset($data[0]['identifier'])) {
-            $idSite = ArrayTool::searchByValue($data[0]['identifier'], 'id', 'value');
-            $data[0]['hasPart'] = Api::get('webPage', ['isPartOf' => $idSite, 'orderBy' => 'dateModified desc']);
-        }
-
-        return $data;
+    return $data;
+  }
+  /**
+   * @param null $params
+   * @return array
+   */
+  public function new($params = null): array {
+    return [];
+  }
+  /**
+   * @param null $params
+   * @return array
+   */
+  public function webPage($params = null): array
+  {
+    // vars
+    $id = $params['id'];
+    $action = $params['action'] ?? null;
+    $item = $params['item'] ?? null;
+    $search = $params['q'] ?? $params['search'] ?? null;
+    // ITEM
+    if ($item) {
+      $dataWebPage = CmsFactory::request()->api()->get('webPage',['id'=>$item,'properties'=>'*,isPartOf,identifier'])->ready()[0];
+      $idwebPage = $dataWebPage['idwebPage'];
+      $dataWebPage['hasPart'] = CmsFactory::request()->api()->get('webPageElement', ['isPartOf'=>$idwebPage, 'properties'=>'image'])->ready();
+      return $dataWebPage;
     }
-
-    /**
-     * @param null $params
-     * @return array
-     */
-    public function new($params = null): array
-    {
-        return [];
+    // ALL and NEW
+    $dataWebSite = CmsFactory::request()->api()->get('webSite',['id'=>$id,'properties'=>'*'])->ready();
+    $data = $dataWebSite[0];
+    $idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
+    // list all webpages if not isset action
+    if (!$action) {
+      $data['hasPart'] = [];//CmsFactory::request()->api()->get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified desc'])->ready();
+    } elseif ($action == 'sitemap') {
+      $data['sitemaps'] = (new Sitemap())->getSitemaps();
+    } elseif ($action == 'search') {
+      $data['hasPart']  = CmsFactory::request()->api()->get('webPage', [
+        'format'=>'ItemList',
+        'isPartOf'=>$idwebSite,
+        'properties'=>'isPartOf,dateModified',
+        'nameLike' => $search,
+        'orderBy'=>'dateModified desc'
+      ])->ready();
     }
-
-    /**
-     * @param null $params
-     * @return array
-     */
-    public function webPage($params = null): array
-    {
-        // vars
-        $id = $params['id'];
-        $action = $params['action'] ?? null;
-        $item = $params['item'] ?? null;
-        $search = $params['q'] ?? $params['search'] ?? null;
-
-        // ITEM
-        if ($item) {
-            $dataWebPage = Api::get('webPage',['id'=>$item,'properties'=>'*,isPartOf,identifier'])[0];
-
-            $idwebPage = $dataWebPage['idwebPage'];
-            $dataWebPage['hasPart'] = Api::get('webPageElement', ['isPartOf'=>$idwebPage, 'properties'=>'image']);
-            return $dataWebPage;
-        }
-
-        // ALL and NEW
-        $dataWebSite = Api::get('webSite',['id'=>$id,'properties'=>'*']);
-        $data = $dataWebSite[0];
-        $idwebSite = ArrayTool::searchByValue($data['identifier'],'id','value');
-
-        // list all webpages if not isset action
-        if (!$action) {
-            $data['hasPart'] = Api::get('webPage', ['format'=>'ItemList','isPartOf'=>$idwebSite,'properties'=>'isPartOf,dateModified','orderBy'=>'dateModified desc']);
-
-        } elseif ($action == 'sitemap') {
-            $data['sitemaps'] = (new Sitemap())->getSitemaps();
-
-        } elseif ($action == 'search') {
-            $data['hasPart']  = Api::get('webPage', [
-                'format'=>'ItemList',
-                'isPartOf'=>$idwebSite,
-                'properties'=>'isPartOf,dateModified',
-                'nameLike' => $search,
-                'orderBy'=>'dateModified desc'
-            ]);
-        }
-        // response
-        return $data;
-    }
+    // response
+    return $data;
+  }
+	/**
+	 */
+	public function saveSitemap()
+	{
+		$dataSitemap = null;
+		$data = CmsFactory::request()->api()->get('webPage', ['orderBy'=>'dateModified desc', 'limit'=>'none'])->ready();
+		foreach ($data as $value) {
+			$dataSitemap[] = [
+				"loc" => App::getURL() . $value['url'],
+				"lastmod" => DateTime::formatISO8601($value['dateModified'])
+			];
+		}
+		(new \Plinct\Tool\Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-webSite.xml"))->saveSitemap($dataSitemap);
+	}
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\WebSite\Type\Intangible\Invoice;
 
-use Plinct\Cms\Server\Api;
+use Plinct\Cms\CmsFactory;
 
 class InvoiceController
 {
@@ -16,7 +16,7 @@ class InvoiceController
     {
         $params2 = [ "format" => "ItemList", "properties" => "customer,provider", "orderBy" => "paymentDueDate desc" ];
         $params3 = array_merge($params2, $params);
-        return Api::get("invoice", $params3);
+        return CmsFactory::request()->api()->get("invoice", $params3)->ready();
     }
 
     /**
@@ -27,6 +27,6 @@ class InvoiceController
     {
         $params2 = [ "properties" => "customer, provider" ];
         $params3 = array_merge($params2, $params);
-        return Api::get("invoice", $params3);
+        return CmsFactory::request()->api()->get("invoice", $params3)->ready();
     }
 }

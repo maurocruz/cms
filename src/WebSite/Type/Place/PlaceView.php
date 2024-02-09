@@ -1,149 +1,83 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Place;
 
 use Exception;
-use Plinct\Cms\WebSite\Fragment\Fragment;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\WebSite\Type\Intangible\PostalAddressView;
-use Plinct\Cms\WebSite\Type\TypeViewInterface;
-use Plinct\Cms\WebSite\Type\View;
-use Plinct\Tool\ArrayTool;
-use Plinct\Web\Widget\OpenStreetMap;
+use Plinct\Cms\App;
+use Plinct\Cms\CmsFactory;
 
-class PlaceView implements TypeViewInterface
+class PlaceView
 {
-    /**
-     * @var int
-     */
-    protected int $placeId;
+  /**
+   * @var string
+   */
+  protected string $placeId;
 
-    /**
-     *
-     */
-    public function navbarPlace(string $title = null)
-    {
-        View::navbar(_("Place"), [
-            "/admin/place" => Fragment::icon()->home(),
-            "/admin/place/new" => Fragment::icon()->plus()
-        ], 2, ['table'=>'place']);
+  /**
+   *
+   */
+  public function navbarPlace(string $title = null)
+  {
+    CmsFactory::webSite()->navbar(_("Place"), [
+        "/admin/place" => CmsFactory::response()->fragment()->icon()->home(),
+        "/admin/place/new" => CmsFactory::response()->fragment()->icon()->plus()
+    ], 2, ['table'=>'place']);
 
-        if ($title) {
-            View::navbar($title, [], 3);
-        }
+    if ($title) {
+        CmsFactory::webSite()->navbar($title, [], 3);
     }
+  }
 
-    /**
-     * @param array $data
-     */
-    public function index(array $data)
-    {
-        $this->navbarPlace();
+	/**
+	 */
+  public function index()
+  {
+    $this->navbarPlace();
+		CmsFactory::webSite()->addMain('<div class="plinct-shell" data-type="place" data-tablehaspart="place" data-apihost="'.App::getApiHost().'"></div>');
+  }
 
-        $listTable = Fragment::listTable()
-            ->caption(sprintf(_("List of %s"),_("places")))
-            ->labels('id', _("Name"), _("AdditionalType"), _("Date modified"))
-            ->rows($data['itemListElement'], ['idplace', 'name', 'additionalType', 'dateModified'])
-            ->setEditButton('/admin/place/edit/');
-        View::main($listTable->ready());
-    }
+  /**
+   * @param null $data
+   */
+  public function new($data = null)
+  {
+    $this->navbarPlace();
+    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));
+  }
 
-    /**
-     * @param null $data
-     */
-    public function new($data = null)
-    {
-        $this->navbarPlace();
-        View::main(Fragment::box()->simpleBox(self::formPlace(null, null), _("Add new")));
-    }
+  /**
+   * @param array $data
+   * @throws Exception
+   */
+  public function edit(array $data)
+  {
+		if (empty($data)) {
+			CmsFactory::webSite()->addMain("<p>"._("Nothing found!")."</p>");
+		} else {
+			$value = $data[0];
+			$apiHost = App::getApiHost();
+			$userToken = CmsFactory::request()->user()->userLogged()->getToken();
+			$this->placeId = isset($value) ? $value['idplace'] : null;
+			// NAVBAR
+			$this->navbarPlace($value['name']);
+			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='place' data-idIsPartOf='{$value['idplace']}' data-apiHost='$apiHost' data-userToken='$userToken' data-openSection='true'></div>");
+		}
+  }
 
-    /**
-     * @param array $data
-     * @throws Exception
-     */
-    public function edit(array $data)
-    {
-        $value = $data[0];
-        $this->placeId = isset($value) ? (int)ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
-        // NAVBAR
-        $this->navbarPlace($value['name']);
-        // WARNINGS
-        if (!$value['address']) View::main(Fragment::miscellaneous()->message(_("Is important that you define place 'address'"),['class'=>'warning']));
-        //place
-        $place[] = self::formPlace(null, null, 'edit', $value);
-        // address
-        $place[] = Fragment::box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("Place", $this->placeId, $value['address']));
-        // images
-        $place[] = Fragment::box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("place", $this->placeId, $value['image']));
-        // append
-        View::main(Fragment::box()->simpleBox($place,$value['name']));
-    }
-
-    /**
-     * @param $tableHasPart
-     * @param $idHasPart
-     * @param null $value
-     * @return array
-     */
-    public function getForm($tableHasPart, $idHasPart, $value = null): array
-    {
-        $content[] = $value ? self::formPlace($tableHasPart, $idHasPart, 'edit', $value) :  self::formPlace($tableHasPart, $idHasPart);
-        return $content;
-    }
-
-    /**
-     * @param $tableHasPart
-     * @param $idHasPart
-     * @param string $case
-     * @param null $value
-     * @return array
-     */
-    private function formPlace($tableHasPart, $idHasPart, string $case = "new", $value = null): array
-    {
-        $latitude = $value['latitude'] ?? null;
-        $longitude = $value['longitude'] ?? null;
-
-        $form = Fragment::form([ "id" => "form-place-$case", "name" => "place-form-".$case, "class" => "formPadrao form-place" ]);
-        $form->action("/admin/place/$case")->method("post");
-        // hiddens
-        if ($tableHasPart) $form->input("tableHasPart", $tableHasPart, "hidden");
-        if ($idHasPart) $form->input("idHasPart", $idHasPart, 'hidden');
-        if ($case == "edit") $form->input("id", (string) $this->placeId, 'hidden');
-
-        if ($case == "new" && $tableHasPart && $idHasPart) {
-            $form->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => "place" ] ]);
-        } else {
-            // name
-            $form->fieldsetWithInput("name", $value['name'] ?? null, _("Place"));
-            // ADDITIONAL TYPE
-            $form->fieldset(Fragment::form()->selectAdditionalType('place',$value['additionalType'] ?? null), _("Additional type"));
-            // Geo
-            $form->fieldsetWithInput("latitude", $latitude, _("Latitude"))
-                ->fieldsetWithInput("longitude", $longitude,_("Longitude"));
-            // elevation
-            $form->fieldsetWithInput("elevation", $value['elevation'] ?? null, _("Elevation (meters)"));
-            // description
-            $form->fieldsetWithTextarea("description", $value['description'] ?? null, _("Description"));
-            // disambiguating description
-            $form->fieldsetWithTextarea("disambiguatingDescription", $value['disambiguatingDescription'] ?? null, _("Disambiguating description"));
-            // submit
-            $form->submitButtonSend();
-            if ($case == "edit") {
-                $formaction = $tableHasPart ? "/admin/place/deleteRelationship" : "/admin/place/erase";
-                $form->submitButtonDelete($formaction);
-            }
-            // map
-            if ($latitude && $longitude) {
-                $form->content(
-                    (new OpenStreetMap((float)$latitude, (float)$longitude))
-                        ->attributes(['class'=>'form-place-map','width' => '100%', "height" => "300px"])
-                        ->embedInIframe()
-                );
-            }
-        }
-
-        return $form->ready();
-    }
+	/**
+	 * @return array
+	 */
+  private function formPlace(): array
+  {
+    $form = CmsFactory::response()->fragment()->form([ "id" => "form-place-new", "name" => "place-form-new", "class" => "formPadrao form-place" ]);
+    $form->action("/admin/place/new")->method("post");
+    // name
+    $form->fieldsetWithInput("name", $value['name'] ?? null, _("Place"));
+    $form->fieldsetWithTextarea("description", $value['description'] ?? null, _("Description"));
+    // disambiguating description
+    $form->fieldsetWithTextarea("disambiguatingDescription", $value['disambiguatingDescription'] ?? null, _("Disambiguating description"));
+    // submit
+    $form->submitButtonSend();
+    return $form->ready();
+  }
 }
