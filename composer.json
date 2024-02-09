@@ -9,17 +9,17 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "slim/slim": "4.*",
-        "slim/psr7": "1.*",
-        "tuupola/slim-jwt-auth": "3.*",
-        "plinct/api": "^1.7",
-        "plinct/middleware": "*"
+      "php": "^7.4|^8.0",
+      "slim/slim": "4.*",
+      "slim/psr7": "1.*",
+      "tuupola/slim-jwt-auth": "3.*",
+      "plinct/api": "^1.7",
+      "plinct/middleware": "*",
+      "ext-json": "*",
+      "ext-gettext": "*"
     },
     "require-dev" : {
-        "ext-intl": "*",
-        "ext-gettext": "*",
-        "ext-json": "*"
+        "ext-intl": "*"
     },
     "autoload": {
         "psr-4": {

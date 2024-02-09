@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms;
 
 use Plinct\Tool\Locale;
@@ -85,18 +83,36 @@ class App
 	 * @var string|null
 	 */
   private static ?string $urlToResetPassword = null;
-
+	/**
+	 * @var string|null
+	 */
+	private static ?string $logdir = null;
   /**
    * @param Slim $slim
    */
   public function __construct(Slim $slim)
   {
     $this->slim = $slim;
+		$host = filter_input(INPUT_SERVER, 'HTTP_HOST');
     self::$URL = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
+		$this->setTitle($host);
     self::setVersion();
     self::$LANGUAGE = Locale::getServerLanguage();
   }
-
+	/**
+	 * @param string|null $logdir
+	 */
+	public function setLogdir(?string $logdir): void
+	{
+		self::$logdir = $logdir;
+	}
+	/**
+	 * @return string|null
+	 */
+	public static function getLogdir(): ?string
+	{
+		return self::$logdir;
+	}
   /**
    * @return string
    */
@@ -225,7 +241,10 @@ class App
    */
   public static function getApiHost(): ?string
   {
-    return substr(self::$API_HOST,-1) === "/" ? self::$API_HOST : self::$API_HOST. "/";
+		if (self::$API_HOST) {
+			return substr(self::$API_HOST,-1) === "/" ? self::$API_HOST : self::$API_HOST. "/";
+		}
+		return null;
   }
 
   /**

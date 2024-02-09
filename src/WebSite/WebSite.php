@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite;
 
 use Plinct\Cms\App;
@@ -37,7 +35,7 @@ class WebSite extends WebSiteAbstract
     if ($userLogin) {
       parent::addHeader(Structure::userBar($userLogin), true);
     }
-    if (isset($_SESSION['userLogin']['admin'])) {
+    if (isset($_SESSION['userLogin'])) {
 			parent::addHeader(Structure::mainMenu());
     }
   }
@@ -90,9 +88,9 @@ class WebSite extends WebSiteAbstract
     parent::$CONTENT['content'][] = self::$FOOTER;
     parent::$BODY['content'][] = self::$CONTENT;
 
-    parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
-    parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
-    parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/relationship.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+    //parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
+    //parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
+    //parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/relationship.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 
     parent::$HTML['content'][] = self::$HEAD;
     parent::$HTML['content'][] = self::$BODY;

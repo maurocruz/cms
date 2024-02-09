@@ -572,8 +572,8 @@ msgstr "Estabelecimento Alimentar"
 msgid "Control Panel"
 msgstr "Painel de Controle"
 
-msgid "Hello, %s. You logged with %s!"
-msgstr "Olá, %s. Você entrou no sistema como %s!"
+msgid "Hello, %s."
+msgstr "Olá, %s."
 
 msgid "Visit us"
 msgstr "Visite-nos"

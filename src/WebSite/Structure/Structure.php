@@ -25,7 +25,7 @@ class Structure
       <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
       <script src="/admin/assets/js/scripts"></script>
       <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
-      <title>Plinct CMS [' . App::getTitle() . ']</title>';
+      <title>Plinct CMS [ '.App::getTitle().' ]</title>';
   }
 
   /**
@@ -34,7 +34,7 @@ class Structure
    */
   public static function userBar($userLogin): string
   {
-    $helloText = sprintf(_("Hello, %s. You logged with %s!"), $userLogin['name'], $userLogin['admin'] ? "admin" : "user");
+    $helloText = sprintf(_("Hello, %s."), $userLogin['name']);
     return "<div class='admin admin-bar-top'>
       <p>$helloText</p>
       <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
@@ -46,9 +46,16 @@ class Structure
    */
   public static function header(): string
   {
-    $apiHost = App::getApiHost();
+	  $apiHost = App::getApiHost();
+	  $title = App::getTitle();
+	  $url = App::getURL();
+	  $version = App::getVersion();
+
     $apiLocation = $apiHost && filter_var($apiHost, FILTER_VALIDATE_URL) ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "localhost";
-    return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
+    return (
+			'<p style="display: inline;">
+				<a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">'.$title.'</a> '._("Control Panel").' '.$url.'. Api: '.$apiLocation.'. ' . _("Version") . ': '.$version.' </p>'
+    );
   }
 
   public static function mainMenu(): array

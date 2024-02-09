@@ -1,12 +1,10 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\Server;
 
-use Plinct\Api\Auth\AuthController;
-use Plinct\Api\User\User;
+use Plinct\Api\ApiFactory;
 use Plinct\Cms\App;
+use Plinct\Cms\logger\Logger;
 use Plinct\Tool\Curl;
 use Plinct\Tool\ToolBox;
 
@@ -113,10 +111,28 @@ class Api
 		  $url = $apiHost."auth/login";
 		  $params = ['email'=>$email, 'password'=>$password ];
 			$curl = ToolBox::Curl()->setUrl($url)->post($params);
-	    return json_decode($curl->ready(), true);
-
+			$data = json_decode($curl->ready(), true);
+			// LOGGER auth
+			if (isset($data['status'])) {
+				$logger = new Logger('auth', 'auth.log');
+				if ($data['status'] === 'error') {
+					if (isset($data['data']['message'])) {
+						$logger->error("LOGIN ERROR from api host", $data['data']);
+					} else {
+						$logger->error("LOGIN ERROR in ". __FILE__." - ".__LINE__, $data);
+					}
+				}
+			  if ($data['status'] === 'fail') {
+				  $logger->info("LOGIN FAILED: " . $data['message'], ["email" => $email]);
+			  }
+				if ($data['status'] === 'success') {
+					$logger->info("LOGIN SUCCESSFULLY: ".$data['message'], ["email" => $email]);
+				}
+		  }
+			// RETURN
+	    return $data;
 	  } else {
-	    return (new AuthController())->login([ "email" => $email, "password" => $password ]);
+			return ApiFactory::server()->user()->authentication()->login([ "email" => $email, "password" => $password ]);
 	  }
   }
 
@@ -126,17 +142,29 @@ class Api
    */
   public static function register($params)
   {
-    unset($params['passwordRepeat']);
+		$data = null;
     unset($params['submit']);
-
-    if (App::getURL() == pathinfo(App::getApiHost())['dirname']) {
-      return (new User())->post($params);
-
-    } elseif(filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-      return json_decode((new Curl(App::getApiHost()))->post("register", $params), true);
+    if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
+			$curl = ToolBox::Curl(App::getApiHost().'auth/register');
+			$dataCurl = $curl->post($params)->ready();
+      $data = json_decode($dataCurl, true);
     }
-
-    return null;
+		// LOGGED
+		if (isset($data['status'])) {
+			$logger = new Logger('auth', 'auth.log');
+			if ($data['status'] === 'fail') {
+				$logger->info("REGISTER FAILED: " . $data['message'], ['email' => $params['email']]);
+			}
+			if ($data['status'] === 'error') {
+				$message = isset($data['data']['error']) ? $data['data']['error']['message'] : $data['message'];
+				$logger->info("REGISTER ERROR: ".$message);
+			}
+			if ($data['status'] === 'success') {
+				$logger->info("REGISTER SUCCESS: ".$data['message'], $data['data']);
+			}
+		}
+		// RETURN
+    return $data;
   }
 
   /**
@@ -152,7 +180,8 @@ class Api
     $params['mailUsername'] = App::getMailUsername();
     $params['mailPassword'] = App::getMailpassword();
     $params['urlToResetPassword'] = App::getUrlToResetPassword();
-
+		var_dump($url);
+		var_dump($params);
     $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
 
     return $handleCurl->ready();

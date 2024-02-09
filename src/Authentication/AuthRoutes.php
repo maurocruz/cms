@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Firebase\JWT\JWT;
 use Plinct\Cms\App;
 use Plinct\Cms\Authentication\AuthenticationMiddleware;
+use Plinct\Cms\logger\Logger;
 use Plinct\Cms\Server\Api;
 use Plinct\Cms\WebSite\Fragment\Fragment;
 use Plinct\Cms\WebSite\WebSite;
@@ -19,7 +20,10 @@ return function (Route $route)
    */
   $route->get('/logout',  function (Request $request, Response $response)
   {
-    session_start();
+	  // log
+	  (new Logger('session','auth.log'))->info("SESSION UNSET", $_SESSION['userLogin']);
+	  (new Logger('auth','auth.log'))->info("LOGIN FINISHED", $_SESSION['userLogin']);
+		//
     unset($_SESSION['userLogin']);
     setcookie("API_TOKEN", "", time() - 3600);
     return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
@@ -33,26 +37,27 @@ return function (Route $route)
     $parseBody = $request->getParsedBody();
     $authentication = Api::login($parseBody['email'], $parseBody['password']);
     // AUTHORIZED
-    if ($authentication['status'] == "success") {
-      $token = $authentication['token'];
-      $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
-
-      if ($tokenDecode->admin) {
+    if ($authentication && $authentication['status'] == "success") {
+      $token = $authentication['data']['token'] ?? null;
+      if ($token) {
+	      $tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
 				// cookie
         setcookie('API_TOKEN', $token, $tokenDecode->exp);
 				// session
 	      $_SESSION['userLogin']['name'] = $tokenDecode->name;
-	      $_SESSION['userLogin']['admin'] = $tokenDecode->admin;
 	      $_SESSION['userLogin']['uid'] = $tokenDecode->uid;
 				// redirect
         $location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
+				// LOGGER
+	      $logger = new Logger('session','auth.log');
+				$logger->info("SESSION START: user logged", $_SESSION['userLogin']);
+				// RETURN
         return $response->withHeader("Location", $location)->withStatus(302);
-      } else {
+      } /*else {
         $authentication['status'] = 'fail';
         $authentication['message'] = "Sorry. The user exists but is not authorized. Contact administrator.";
-      }
+      }*/
     }
-
     // UNAUTHORIZED
     WebSite::addMain(Fragment::auth()->login($authentication));
     $response->getBody()->write(WebSite::ready());

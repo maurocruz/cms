@@ -27,7 +27,7 @@ class AuthFragment
     $message = null;
     $form = self::formRegister();
     if ($authentication) {
-      $message = $authentication['message'];
+      $message = isset($authentication['error']) ? $authentication['error']['message'] : $authentication['message'];
       if ($message == "Duplicate entry for key 'email'") {
         return "<p class='warning'>"._("This email already exists in our database!") . "</p>" . self::formLogin();
       }

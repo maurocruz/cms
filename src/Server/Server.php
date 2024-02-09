@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\Server;
 
+use Plinct\Api\Type\User;
 use Plinct\Cms\Enclave\Enclave;
 
 class Server
@@ -99,14 +100,19 @@ class Server
       }
     }
 
-    /**
-     * @param $type
-     */
-    public function createSqlTable($type)
-    {
-        $classname = "Plinct\\Api\\Type\\".ucfirst($type);
-        (new $classname())->createSqlTable($type);
-    }
+  /**
+   * @param $type
+   */
+  public function createSqlTable($type)
+  {
+    $classname = "Plinct\\Api\\Type\\".ucfirst($type);
+		if (class_exists($classname)) {
+			$classObject = new $classname();
+			if (method_exists($classObject,'createSqlTable')) {
+				(new $classname())->createSqlTable($type);
+			}
+		}
+  }
 
     /**
      * @param $type

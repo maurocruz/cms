@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Section\User;
 
 use Plinct\Api\User\User;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Server\Api;
 
 class UserController extends UserView
 {
@@ -17,7 +19,8 @@ class UserController extends UserView
 
     $search = filter_input(INPUT_GET,'search');
     if ($search) $params['nameLike'] = $search;
-
+		$data = CmsFactory::request()->api()->get('user', $params);
+var_dump($data);
 		parent::indexView((new User())->get($params));
   }
 

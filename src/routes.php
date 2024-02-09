@@ -159,10 +159,10 @@ return function (Route $route)
     /**
      * DEFAULT
      */
-    $route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
+    $route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
     {
 			$type = $args['type'] ?? null;
-      if (isset($_SESSION['userLogin']['admin'])) {
+      if (isset($_SESSION['userLogin'])) {
 				if ($type == 'login') {
 					return $response->withHeader('Location', '/admin')->withStatus(301);
 				}
@@ -170,10 +170,8 @@ return function (Route $route)
       } else {
         if ($request->getAttribute('status') !== "fail") WebSite::addMain(Fragment::auth()->login());
       }
-
       $response->getBody()->write(WebSite::ready());
       return $response;
-
     })->addMiddleware(new AuthenticationMiddleware());
 
     /**
@@ -182,7 +180,7 @@ return function (Route $route)
     $route->post('/{type}/{action}[/{paramsUrl:.*}]', function (Request $request, Response $response, $args)
     {
 	    // CHECK AUTHENTICATION
-	    if (!isset($_SESSION['userLogin']['admin'])) {
+	    if (!isset($_SESSION['userLogin']['admin']) && !($args['type'] === 'user' && $args['action'] === "createSqlTable")) {
 		    WebSite::addMain(Fragment::auth()->login());
 		    $response->getBody()->write(WebSite::ready());
 		    return $response;

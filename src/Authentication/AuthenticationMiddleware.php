@@ -26,7 +26,6 @@ class AuthenticationMiddleware implements MiddlewareInterface
       $tokenDecode = $token ? JWT::decode($token, App::getApiSecretKey(), ["HS256"]) : null;
       if ($token) {
         $_SESSION['userLogin']['name'] = $tokenDecode->name ?? null;
-        $_SESSION['userLogin']['admin'] = $tokenDecode->admin ?? null;
         $_SESSION['userLogin']['uid'] = $tokenDecode->uid ?? null;
       } else {
         unset($_SESSION['userLogin']);
