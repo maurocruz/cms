@@ -1,12 +1,10 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\Controller\Request\Server;
 
-namespace Plinct\Cms\Request\Server;
-
-use Plinct\Cms\App;
+use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\logger\Logger;
+use Plinct\Cms\View\logger\Logger;
 use Plinct\Tool\ToolBox;
 
 class Auth
@@ -53,7 +51,7 @@ class Auth
    */
   public function register($params) {
     unset($params['submit']);
-    return CmsFactory::request()->server()->api()->post('auth/register',$params)->ready();
+    return CmsFactory::request()->api()->post('auth/register',$params)->ready();
   }
 
   /**

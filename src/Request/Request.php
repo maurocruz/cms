@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request;
+namespace Plinct\Cms\Controller\Request;
 
-use Plinct\Cms\Request\Api\Api;
-use Plinct\Cms\Request\Server\Server;
-use Plinct\Cms\Request\Type\Type;
-use Plinct\Cms\Request\User\User;
-use Plinct\Cms\Routing\Routes;
+use Plinct\Cms\Controller\Request\Api\Api;
+use Plinct\Cms\Controller\Request\Server\Server;
+use Plinct\Cms\Controller\Request\Type\Type;
+use Plinct\Cms\Controller\Request\User\User;
+use Plinct\Cms\Controller\Routes\Routes;
 
 class Request
 {

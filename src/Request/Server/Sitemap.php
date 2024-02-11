@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Request\Server;
+namespace Plinct\Cms\Controller\Request\Server;
 
-use Plinct\Cms\App;
+use Plinct\Cms\Controller\App;
 use Plinct\PDO\PDOConnect;
 
 class Sitemap

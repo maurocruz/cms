@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Type;
+namespace Plinct\Cms\Controller\Request\Type;
 
-use Plinct\Cms\WebSite\Type\Article\ArticleController;
+use Plinct\Cms\Controller\WebSite\Type\Article\ArticleController;
 
 class Type
 {

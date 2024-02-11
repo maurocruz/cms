@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Server\Type;
+namespace Plinct\Cms\Controller\Request\Server\Type;
 
-use Plinct\Cms\App;
-use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
+use Plinct\Cms\Controller\CmsFactory;
 
 class OrganizationServer
 {

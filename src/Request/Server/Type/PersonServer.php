@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Server\Type;
+namespace Plinct\Cms\Controller\Request\Server\Type;
 
 class PersonServer
 {

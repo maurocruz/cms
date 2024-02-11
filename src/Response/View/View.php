@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Response\View;
+namespace Plinct\Cms\Controller\Response\View;
 
-use Plinct\Cms\Response\View\User\User;
+use Plinct\Cms\Controller\Response\View\User\User;
 
 class View
 {

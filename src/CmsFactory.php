@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace Plinct\Cms;
 
-use Plinct\Cms\api\Api;
-use Plinct\Cms\Request\Request;
-use Plinct\Cms\Response\Response;
-use Plinct\Cms\WebSite\WebSite;
+use Plinct\Cms\Controller\App;
+use Plinct\Cms\Controller\Controller;
+use Plinct\Cms\Model\Model;
+use Plinct\Cms\View\View;
 
 use Slim\App as Slim;
 
@@ -18,36 +18,22 @@ class CmsFactory
   public static function create(Slim $slim): App {
 		return new App($slim);
   }
-
 	/**
-	 * @return Api
+	 * @return Controller
 	 */
-	public static function api(): Api
-	{
-		return new Api();
+	public static function controller(): Controller {
+		return new Controller();
 	}
 	/**
-	 * @return Request
+	 * @return Model
 	 */
-	public static function request(): Request
-	{
-		return new Request();
+	public static function model(): Model {
+		return new Model();
 	}
-
 	/**
-	 * @return Response
+	 * @return View
 	 */
-	public static function response(): Response
-	{
-		return new Response();
-	}
-
-
-	/**
-	 * @return WebSite
-	 */
-	public static function webSite(): WebSite
-	{
-		return new WebSite();
+	public static function view(): View {
+		return new View();
 	}
 }

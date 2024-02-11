@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Server\Helpers;
+namespace Plinct\Cms\Controller\Request\Server\Helpers;
 
 class Helper
 {

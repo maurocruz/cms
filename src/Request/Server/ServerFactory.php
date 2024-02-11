@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Server;
+namespace Plinct\Cms\Controller\Request\Server;
 
 class ServerFactory
 {

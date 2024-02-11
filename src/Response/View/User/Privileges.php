@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Response\View\User;
+namespace Plinct\Cms\Controller\Response\View\User;
 
-use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\CmsFactory;
 
 class Privileges
 {
-	const FUNCTIONS = [
+	private array $functionOptions = [
 		'1'=>'visitor',
 		'2'=>'collaborator',
 		'3'=>'moderator',
@@ -23,6 +23,9 @@ class Privileges
 	public function getPrivileges($value): array
 	{
 		$privileges = $value['privileges'] ?? null;
+		$maxPrivilege = $privileges[0]['function'];
+		$this->functionOptions = array_slice($this->functionOptions, 0, $maxPrivilege, true);
+
 		if ($privileges) {
 			foreach ($privileges as $valuePrivileges) {
 				$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('edit', $valuePrivileges), _('Edit'));
@@ -55,7 +58,7 @@ class Privileges
 			$form->input('iduser_privileges', (string) $iduser_privileges, 'hidden');
 		}
 		// function
-		$form->fieldsetWithSelect('function', $function, self::FUNCTIONS, _('Function') );
+		$form->fieldsetWithSelect('function', $function, $this->functionOptions, _('Function') );
 		// actions
 		$form->fieldsetWithInput('actions', $actions, _('Actions'));
 		// namespace

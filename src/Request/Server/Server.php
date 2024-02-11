@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Request\Server;
+namespace Plinct\Cms\Controller\Request\Server;
 
-use Plinct\Cms\App;
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Enclave\Enclave;
-use Plinct\Cms\Request\Api\Api;
-use Plinct\Cms\Request\Server\Type\Type;
+use Plinct\Cms\Controller\App;
+use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\Controller\Enclave\Enclave;
+use Plinct\Cms\Controller\Request\Api\Api;
+use Plinct\Cms\Controller\Request\Server\Type\Type;
 
 class Server
 {
 	/**
 	 * @return Api
 	 */
-	public function api(): Api
+	public function api(string $url = null): Api
 	{
-		return new Api();
+		return new Api($url);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Enclave;
+namespace Plinct\Cms\Controller\Enclave;
 
 interface EnclaveInterface
 {

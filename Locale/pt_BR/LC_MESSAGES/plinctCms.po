@@ -11,6 +11,18 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "You need to create the database before starting the application."
+msgstr "Você precisa criar o banco de dados antes para iniciar a aplicação."
+
+msgid "Launch application?"
+msgstr "Iniciar aplicação?"
+
+msgid "Database was not found!"
+msgstr "Base de dados não encontrada!"
+
+msgid "Tables do not exist!"
+msgstr "Tabelas não existem!"
+
 msgid "Category"
 msgstr "Categoria"
 

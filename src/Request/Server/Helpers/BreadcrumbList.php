@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Request\Server\Helpers;
+namespace Plinct\Cms\Controller\Request\Server\Helpers;
 
-use Plinct\Cms\App;
-use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
+use Plinct\Cms\Controller\CmsFactory;
 
 class BreadcrumbList
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Response;
+namespace Plinct\Cms\Controller\Response;
 
-use Plinct\Cms\Response\Fragment\Fragment;
-use Plinct\Cms\Response\Message\Message;
-use Plinct\Cms\Response\View\View;
-use Plinct\Cms\WebSite\WebSite;
+use Plinct\Cms\Controller\Response\Fragment\Fragment;
+use Plinct\Cms\Controller\Response\Message\Message;
+use Plinct\Cms\Controller\Response\View\View;
+use Plinct\Cms\Controller\WebSite\WebSite;
 use Psr\Http\Message\ResponseInterface;
 
 class Response

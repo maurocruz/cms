@@ -49,7 +49,7 @@ table tbody tr:nth-child(even) {
 
 .footer { background-color: #2e2e2e; color: inherit; }
 
-.button a { color: #222; }
+.button a { color: #222; text-decoration: none; }
 
 .button-dropdown-contracted::after { border-top-color: #777; }
 .button-dropdown-expanded::after { border-bottom-color: #777; }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Enclave;
+namespace Plinct\Cms\Controller\Enclave;
 
-use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\CmsFactory;
 
 class Enclave
 {

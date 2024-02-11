@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\Request\Server;
+namespace Plinct\Cms\Controller\Request\Server;
 
 class SchemaorgData {
     private static $SCHEMAORG_DATA;

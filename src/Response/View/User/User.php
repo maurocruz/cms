@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Response\View\User;
+namespace Plinct\Cms\Controller\Response\View\User;
 
-use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\CmsFactory;
 
 class User
 {
@@ -62,7 +62,7 @@ class User
 	}
 	/**
 	 */
-	public function new($params = null)
+	public function new()
 	{
 		$this->navbarUser(_("Add new"));
 		CmsFactory::webSite()->addMain(
@@ -74,7 +74,11 @@ class User
 	 */
 	public function edit(array $data = null)
 	{
-		if($data) {
+		if (isset($data['status']) && $data['status'] === 'fail') {
+			$message = $data['message'];
+			$this->navbarUser();
+			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent($message));
+		} elseif ($data) {
 			$value = $data[0];
 			$this->navbarUser($value['name']);
 			// FORM USER
