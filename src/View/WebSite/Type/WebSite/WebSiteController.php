@@ -2,8 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\Controller\WebSite\Type\WebSite;
 
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Sitemap;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;

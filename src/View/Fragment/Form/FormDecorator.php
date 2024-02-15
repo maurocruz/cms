@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\Response\Fragment\ElementDecorator;
 use Plinct\Cms\Controller\Request\Server\ServerFactory;
+use Plinct\Cms\View\Fragment\ElementDecorator;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\Form\FormInterface;
 

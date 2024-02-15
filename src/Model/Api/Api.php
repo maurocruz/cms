@@ -4,7 +4,6 @@ namespace Plinct\Cms\Model\Api;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\View\logger\Logger;
 use Plinct\Tool\Curl\v1\Curl;
 use Plinct\Tool\ToolBox;
 
@@ -79,11 +78,16 @@ class Api
 			$this->curl->authorizationBear($token);
 		}
 		$info = $this->curl->getInfo();
+		$method = $info['effective_method'];
 		$data = $this->curl->ready();
 		$returns = json_decode($data, true);
 		if ($returns === null) {
-			(new Logger('apihost','error.log'))->critical("Get api failed", ["url"=>$info['url']]);
-			return ['status'=>'fail', 'message' => 'User not authorized for this operation'];
+			ToolBox::Logger('apihost',App::getLogdir().'error.log')->critical("$method: Api failed", ["url"=>$info['url']]);
+			return ['status'=>'fail', 'message' => 'Get api failed'];
+		} elseif (isset($returns['status'])) {
+			if ($returns['status'] === 'fail') {
+				ToolBox::Logger('apiHost', App::getLogdir().'error.log')->critical("$method: Api failed", $returns);
+			}
 		}
 		return $returns;
 	}
@@ -91,7 +95,7 @@ class Api
    * @param $params
    * @return false|mixed|string|null
    */
-  public function register($params)
+  /*public function register($params)
   {
 		$data = null;
     unset($params['submit']);
@@ -101,7 +105,7 @@ class Api
       $data = json_decode($dataCurl, true);
     }
 	  // LOGGED
-	  $logger = new Logger('auth', 'auth.log');
+	  $logger = CmsFactory::view()->Logger('auth', 'auth.log');
 		if (isset($data['status'])) {
 			if ($data['status'] === 'fail') {
 				$logger->info("REGISTER FAILED: " . $data['message'], ['email' => $params['email']]);
@@ -118,13 +122,13 @@ class Api
 		}
 		// RETURN
     return $data;
-  }
+  }*/
 
   /**
    * @param string $email
    * @return string
    */
-  public function resetPassword(string $email): string
+  /*public function resetPassword(string $email): string
   {
     $url = App::getApiHost() . "auth/reset_password";
 
@@ -138,9 +142,9 @@ class Api
     $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
 
     return $handleCurl->ready();
-  }
+  }*/
 
-  public function changePassword(array $params): string
+  /*public function changePassword(array $params): string
   {
 		unset($params['submit']);
 		$base = substr(App::getApiHost(),-1) !== '/' ? App::getApiHost() . 'Api.php/' : App::getApiHost();
@@ -149,5 +153,5 @@ class Api
     // for localhost
     if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
     return $handleCurl->ready();
-  }
+  }*/
 }

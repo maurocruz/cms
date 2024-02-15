@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\Controller\WebSite\Type\ImageObject;
 
 use Exception;
-use Plinct\Cms\Controller\Interfaces\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class ImageObject extends ImageObjectView implements TypeInterface
 {

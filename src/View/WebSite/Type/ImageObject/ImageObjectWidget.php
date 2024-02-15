@@ -1,16 +1,13 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\ImageObject;
+namespace Plinct\Cms\View\WebSite\Type\ImageObject;
 
 use Exception;
 use Plinct\Tool\Image\Image;
 use Plinct\Web\Element\Element;
 
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\Request\Server\Type\ImageObjectServer;
+use Plinct\Cms\CmsFactory;
 
 class ImageObjectWidget
 {
@@ -19,9 +16,9 @@ class ImageObjectWidget
    */
   protected string $tableHasPart;
   /**
-   * @var string
+   * @var int
    */
-  protected string $idHasPart;
+  protected int $idHasPart;
 
 	protected int $limit = 40;
 
@@ -36,8 +33,8 @@ class ImageObjectWidget
 			CmsFactory::response()->fragment()->navbar()
 				->title(_('Images'))
 				->level(2)
-				->newTab("/admin/imageObject", CmsFactory::response()->fragment()->icon()->home())
-				->newTab("/admin/imageObject/new", CmsFactory::response()->fragment()->icon()->plus())
+				->newTab("/admin/imageObject", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/imageObject/new", CmsFactory::view()->fragment()->icon()->plus())
 				->newTab("/admin/imageObject?listBy=keywords", _("Keywords"))
 				->newTab("/admin/imageObject?listBy=groups", _("Groups"))
 				->ready()
@@ -48,7 +45,7 @@ class ImageObjectWidget
 	{
 		self::navBarLevel1();
 		CmsFactory::webSite()->addHeader(
-			CmsFactory::response()->fragment()->navbar()
+			CmsFactory::view()->fragment()->navbar()
 			->title($title)
 			->level(3)
 			->ready()
@@ -97,7 +94,7 @@ class ImageObjectWidget
     $imageHeight = $value['height'] ?? (string) $image->getHeight();
     $imageType = $value['encodingFormat'] ?? $image->getEncodingFormat();
 
-    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-imageObject", "name" => "form-imageObject", "enctype" => "multipart/form-data" ]);
+    $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-imageObject", "name" => "form-imageObject", "enctype" => "multipart/form-data" ]);
     $form->action("/admin/imageObject/edit")->method("post");
     // figure
     $form->content(['object'=>'figure','src'=>$value['contentUrl']]);
@@ -134,11 +131,11 @@ class ImageObjectWidget
 	{
 		$idimageObject = $value['idimageObject'];
 
-    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$idimageObject", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
+    $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-imageObject-edit", "id" => "form-images-edit-$idimageObject", "name" => "form-imageObject-edit", "enctype" => "multipart/form-data"]);
     $form->action("/admin/imageObject/edit")->method('post');
     // hiddens
     $form->input('tableHasPart', $this->tableHasPart, 'hidden');
-    $form->input('idHasPart', $this->idHasPart, 'hidden');
+    $form->input('idHasPart', (string) $this->idHasPart, 'hidden');
     $form->input('idIsPartOf', $idimageObject, 'hidden');
     $form->input('tableIsPartOf', 'imageObject', 'hidden');
     $form->input('idimageObject', $idimageObject, 'hidden');
@@ -210,7 +207,7 @@ class ImageObjectWidget
           $content[] = "<p style='color: yellow;'>". _("This item is not part of any other.") . "</p>";
       }
 
-      return CmsFactory::response()->fragment()->box()->simpleBox($content);
+      return CmsFactory::view()->fragment()->box()->simpleBox($content);
   }
 
   /**
@@ -221,7 +218,7 @@ class ImageObjectWidget
    */
   protected function upload($tableHasPart = null, $idHasPart = null): array
   {
-      $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
+      $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-imageObject-upload box','enctype'=>'multipart/form-data']);
       $form->action('/admin/imageObject/new')->method('post');
       // TITLE
       $form->content("<h4>"._("Upload images")."</h4>");
@@ -248,7 +245,7 @@ class ImageObjectWidget
   private static function locationsOnUpload(): array
   {
       $imageDir = App::getImagesFolder();
-      $datalist = ImageObjectServer::listLocation($imageDir, true);
+      $datalist = $imageDir ? CmsFactory::controller()->type()->imageObject()->listLocation($imageDir, true) : null;
       // FIELDSET
       $fieldset = new Element('fieldset');
       // legend
@@ -258,7 +255,7 @@ class ImageObjectWidget
       // input
       $fieldset->content("<input name='location' type='text' list='listlocations' autocomplete='off'/>");
       // data list
-      $fieldset->content(CmsFactory::response()->fragment()->form()->datalist('listlocations',$datalist));
+      $fieldset->content(CmsFactory::view()->fragment()->form()->datalist('listlocations',$datalist));
       // response
       return $fieldset->ready();
   }
@@ -268,7 +265,7 @@ class ImageObjectWidget
    */
   private static function keywordsOnUpload(): array
   {
-      $listKeywords = ImageObjectServer::listKeywords();
+      $listKeywords = CmsFactory::controller()->type()->imageObject()->listKeywords();
       // FIELDSET
       $fieldset = new Element('fieldset');
       // LEGEND
@@ -276,7 +273,7 @@ class ImageObjectWidget
       // INPUT
       $fieldset->content('<input name="keywords" type="text" value="" list="keywords" autocomplete="off">');
       // DATA LIST
-      $fieldset->content(CmsFactory::response()->fragment()->form()->datalist('keywords',$listKeywords));
+      $fieldset->content(CmsFactory::view()->fragment()->form()->datalist('keywords',$listKeywords));
       // RESPONSE
       return $fieldset->ready();
 	}

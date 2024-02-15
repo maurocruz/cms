@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteCollectorProxy as Route;
 
-
 return function (Route $route)
 {
 	/**
@@ -18,7 +17,7 @@ return function (Route $route)
 	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
 	{
 		if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
-			CmsFactory::webSite()->getContent($args, $request->getQueryParams());
+			CmsFactory::controller()->typeController($request)->ready();
 		}
 		return CmsFactory::view()->writeBody($response);
 	});
@@ -31,37 +30,33 @@ return function (Route $route)
 		if (!CmsFactory::controller()->user()->userLogged()->getIduser()) {
 			return CmsFactory::view()->writeBody($response);
 		}
-
 		$type = $args['type'];
 		$action = $args['action'];
 		$params = $request->getParsedBody();
-
 		unset($params['submit']);
 		unset($params['submit_x']);
 		unset($params['submit_y']);
 		unset($params['x']);
 		unset($params['y']);
-
 		//  EDIT / PUT
 		if ($action == "edit" || $action == "put") {
 			$returns = CmsFactory::controller()->server()->edit($type, $params);
 			// sitemap
-			Sitemap::create($type, $params);
+			//Sitemap::create($type, $params);
 		}
-
 		// NEW / POST
 		elseif ($action == "new" || $action == "post" || $action == "add") {
-			$returns = CmsFactory::controller()->server()->new($type, $params);
+			$returns = CmsFactory::model()->type($type)->post($params);
 			// sitemap
-			Sitemap::create($type, $params);
+			//Sitemap::create($type, $params);
 		}
-
 		// DELETE
 		elseif ($action == "delete" || $action == "erase") {
 			// delete data
-			$returns = CmsFactory::controller()->server()->erase($type, $params);
+			//$returns = CmsFactory::controller()->server()->erase($type, $params);
+			$returns = CmsFactory::model()->type($type)->erase($params);
 			// sitemap
-			Sitemap::create($type, $params);
+			//Sitemap::create($type, $params);
 		}
 
 		// CREATE SQL TABLE
@@ -92,8 +87,7 @@ return function (Route $route)
 		if (is_string($returns)) {
 			return $response->withHeader('Location', $returns)->withStatus(301);
 		} else {
-			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->message()->warning($returns['message']));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($returns['message']));
 			return CmsFactory::view()->writeBody($response);
 		}
 

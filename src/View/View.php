@@ -3,8 +3,10 @@ declare(strict_types=1);
 namespace Plinct\Cms\View;
 
 use Plinct\Cms\View\Fragment\Fragment;
-use Plinct\Cms\View\logger\Logger;
+use Plinct\Cms\View\User\User;
 use Plinct\Cms\View\WebSite\WebSite;
+use Plinct\Cms\View\WebSite\WebSiteFactory;
+use Plinct\Tool\Logger\Logger;
 use Psr\Http\Message\ResponseInterface;
 
 class View
@@ -13,7 +15,7 @@ class View
 	 * @return null
 	 */
 	public function createWebSite() {
-		return (new WebSite())->create();
+		return (new WebSiteFactory())->create();
 	}
 
 	/**
@@ -21,7 +23,17 @@ class View
 	 * @return null
 	 */
 	public function addMain($content) {
-		return WebSite::addMain($content);
+		return WebSiteFactory::addMain($content);
+	}
+
+	public function addHeader($content, bool $firstChild = false)
+	{
+		return WebSiteFactory::addHeader($content, $firstChild);
+	}
+
+	public function addBundle($bundle)
+	{
+		return WebSiteFactory::addBundle($bundle);
 	}
 
 	/**
@@ -32,6 +44,10 @@ class View
 		return new Fragment();
 	}
 
+	public function clearMain()
+	{
+		WebSiteFactory::clearMain();
+	}
 	/**
 	 * @param string $channel
 	 * @param string $filename
@@ -41,14 +57,31 @@ class View
 	{
 		return new Logger($channel, $filename);
 	}
+
+	/**
+	 * @return User
+	 */
+	public function user(): User
+	{
+		return new User();
+	}
+
+	/**
+	 * @return WebSite
+	 */
+	public function webSite(): WebSite
+	{
+		return new WebSite();
+	}
+
 	/**
 	 * @param ResponseInterface $response
 	 * @return ResponseInterface
 	 */
 	public function writeBody(ResponseInterface $response): ResponseInterface
 	{
-		WebSite::buildBodyStructure();
-		$response->getBody()->write(WebSite::ready());
+		WebSiteFactory::buildBodyStructure();
+		$response->getBody()->write(WebSiteFactory::ready());
 		return $response;
 	}
 }

@@ -1,40 +1,25 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\WebSite\Type\Person;
+namespace Plinct\Cms\Controller\Type\Person;
 
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
-class PersonController
+class Person
 {
-  /**
-   * @param null $params
-   * @return array
-   */
-  public function index($params = null): array
-  {
-    $params2 = [ "format" => "ItemList", "orderBy" => "dateModified", "ordering" => "desc", "properties" => "dateModified" ];
-    $params3 = $params ? array_merge($params2, $params) : $params2;
-    return CmsFactory::request()->api()->get("person", $params3)->ready();
-  }
-  /**
-   * @param array $params
-   * @return array
-   */
-  public function edit(array $params): array
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+  public function edit(array $params): bool
   {
     $params = array_merge($params, [ "properties" => "*,contactPoint,address,image" ]);
-    return CmsFactory::request()->api()->get("person", $params)->ready();
+    $data = CmsFactory::model()->api()->get("person", $params)->ready();
+		return CmsFactory::view()->webSite()->type('person')->setData($data)->setMethodName('edit')->ready();
   }
-  /**
-   * @param null $params
-   * @return bool
-   */
-  public function new($params = null): bool {
-    return true;
-  }
+
   /**
    * @param null $params
    * @return array

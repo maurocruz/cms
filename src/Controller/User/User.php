@@ -11,7 +11,7 @@ class User
 	 * @return mixed|string[]
 	 */
 	public function get(array $params = []) {
-		return CmsFactory::request()->server()->api()->get('user', $params)->ready();
+		return CmsFactory::model()->api()->get('user', $params)->ready();
 	}
 
 	/**
@@ -29,15 +29,16 @@ class User
 	{
 		$params['orderBy'] = $params['orderBy'] ?? 'dateModified';
 		$params['ordering'] = $params['ordering'] ?? 'desc';
-		$params['apiToken'] = CmsFactory::request()->user()->userLogged()->getToken();
+		$params['apiToken'] = CmsFactory::controller()->user()->userLogged()->getToken();
 		// DATA
-		$data = CmsFactory::request()->server()->api()->get('user', $params)->ready();
+		$data = CmsFactory::model()->api()->get('user', $params)->ready();
+
 		if (isset($data['status']) && $data['status'] == 'fail') {
 			// fail
-			CmsFactory::response()->webSite()->addMain(CmsFactory::response()->message()->warning($data['message']));
+			CmsFactory::view()->addMain(CmsFactory::response()->message()->warning($data['message']));
 		} else {
 			// view
-			CmsFactory::response()->view()->user()->index($data, $params['orderBy'], $params['ordering']);
+			CmsFactory::view()->user()->index($data, $params['orderBy'], $params['ordering']);
 		}
 	}
 
@@ -47,8 +48,8 @@ class User
 	 */
 	public function edit($iduser)	{
 		// DATA
-		$data = CmsFactory::request()->user()->get(['iduser' => $iduser]);
+		$data = CmsFactory::controller()->user()->get(['iduser' => $iduser]);
 		// VIEW
-		CmsFactory::response()->view()->user()->edit($data);
+		CmsFactory::view()->user()->edit($data);
 	}
 }

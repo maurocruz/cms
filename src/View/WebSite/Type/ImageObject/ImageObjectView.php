@@ -1,11 +1,9 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\ImageObject;
+namespace Plinct\Cms\View\WebSite\Type\ImageObject;
 
 use Exception;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
 
 class ImageObjectView extends ImageObjectWidget
@@ -21,7 +19,7 @@ class ImageObjectView extends ImageObjectWidget
 		parent::navBarLevel1();
 		if ($listBy === 'groups') {
 			// TODO UNDER DEVELOPMENT
-			CmsFactory::webSite()->addMain('<p>Under development!</p>');
+			CmsFactory::view()->addMain('<p>Under development!</p>');
 		} else {
 			//$apiHost = App::getApiHost();
 			//CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-imageObject/main.cb79621f47fd3a6ac896.js'></script>");
@@ -69,7 +67,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @throws Exception
    */
-  public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
+  public function getForm(string $tableHasPart, int $idHasPart, array $data = null): array
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;

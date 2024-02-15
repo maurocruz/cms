@@ -73,7 +73,7 @@ class UserLogged
 	public function getPrivileges(): ?array
 	{
 		if (self::$iduser && !self::$privileges) {
-			$data = CmsFactory::request()->user()->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
+			$data = CmsFactory::controller()->user()->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
 			self::$privileges = $data[0]['privileges'];
 		}
 

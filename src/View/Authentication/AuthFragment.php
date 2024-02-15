@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\Fragment\Authentication;
+namespace Plinct\Cms\View\Authentication;
 
 use Plinct\Cms\CmsFactory;
 

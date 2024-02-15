@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class ContactPoint
 {
@@ -37,7 +35,7 @@ class ContactPoint
    */
   static private function formContactPoint($tableHasPart, $idHasPart, string $case = 'new', $value = null, $key = null): array
   {
-    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-contactPoint"]);
+    $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
     $form->input('tableHasPart', $tableHasPart, "hidden");
@@ -45,7 +43,7 @@ class ContactPoint
       $form->input('idHasPart', (string) $idHasPart, "hidden");
       $form->content("<h4>"._('New').": </h4>");
     } else {
-      $form->input('idcontactPoint', $value['idcontactPoint'], 'hidden');
+      $form->input('idcontactPoint', (string) $value['idcontactPoint'], 'hidden');
     }
     // POSITION
     $form->fieldsetWithInput("position", (isset($value['position']) ? (string) $value['position'] : (string) $key), "#", "number", null, [ "min" => "1"]);

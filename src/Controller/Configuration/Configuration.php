@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\Controller\Configuration;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
 
 class Configuration
 {
@@ -20,5 +21,14 @@ class Configuration
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_($data['message'])));
 			return ['status'=>'fail', 'message'=>'SQL schema basic was not builded'];
 		}
+	}
+
+	public function index()
+	{
+		CmsFactory::view()->webSite()->configuration()->index();
+	}
+
+	public function installMethod() {
+
 	}
 }

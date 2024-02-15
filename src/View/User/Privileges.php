@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\User;
 
-namespace Plinct\Cms\Controller\Response\View\User;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class Privileges
 {
@@ -23,16 +21,20 @@ class Privileges
 	public function getPrivileges($value): array
 	{
 		$privileges = $value['privileges'] ?? null;
-		$maxPrivilege = $privileges[0]['function'];
-		$this->functionOptions = array_slice($this->functionOptions, 0, $maxPrivilege, true);
-
+		$userLoggedPrivileges = CmsFactory::controller()->user()->userLogged()->getPrivileges()[0]['function'];
+		$functionOptions = array_slice($this->functionOptions, 0, $userLoggedPrivileges, true);
+		// TRANSLATE
+		foreach ($functionOptions as $key => $item) {
+			$this->functionOptions[$key] = _($item);
+		}
+		// USER PRIVILEGES
 		if ($privileges) {
 			foreach ($privileges as $valuePrivileges) {
-				$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('edit', $valuePrivileges), _('Edit'));
+				$content[] = CmsFactory::view()->fragment()->box()->simpleBox($this->privilegesForm('edit', $valuePrivileges), _('Edit'));
 			}
 		}
 		// new
-		$content[] = CmsFactory::response()->fragment()->box()->simpleBox($this->privilegesForm('new', $value), _('Add new'));
+		$content[] = CmsFactory::view()->fragment()->box()->simpleBox($this->privilegesForm('new', $value), _('Add new'));
 		// return
 		return $content;
 	}
@@ -47,10 +49,10 @@ class Privileges
 		$iduser_privileges = $value['iduser_privileges'] ?? null;
 		$iduser = $value['iduser'] ?? null;
 		$function = $value['function'] ?? '1';
-		$actions = $value['actions'] ?? null;
-		$namespace = $value['namespace'] ?? null;
+		$actions = $value['actions'] ?? 'r';
+		$namespace = $value['namespace'] ?? 'public';
 
-		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
+		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
 			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
 		$form->input('iduser', (string) $iduser, 'hidden');

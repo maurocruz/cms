@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\Response\View\User;
+namespace Plinct\Cms\View\User;
 
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class User
 {
@@ -12,19 +12,19 @@ class User
 	 */
 	public function navbarUser(string $title = null)
 	{
-		CmsFactory::webSite()->addHeader(
-			CmsFactory::response()->fragment()->navbar()
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
 				->type('user')
 				->title(_("Users"))
-				->newTab("/admin/user",CmsFactory::response()->fragment()->icon()->home())
-				->newTab("/admin/user/new", CmsFactory::response()->fragment()->icon()->plus())
+				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus())
 				->level(2)
 				->search('/admin/user')
 				->ready()
 		);
 		if ($title) {
-			CmsFactory::webSite()->addHeader(
-				CmsFactory::response()->fragment()->navbar()
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()
 					->title($title)
 					->level(3)
 					->ready()
@@ -41,11 +41,10 @@ class User
 	{
 		// navbar
 		$this->navbarUser();
-
 		// showing
-		CmsFactory::webSite()->addMain(['tag'=>'p','content'=>sprintf(_("Showing %s items order by %s %s!"), count($data), $orderBy, $ordering )]);
+		CmsFactory::view()->addMain(['tag'=>'p','content'=>sprintf(_("Showing %s items order by %s %s!"), count($data), $orderBy, $ordering )]);
 
-		$list = CmsFactory::response()->fragment()->listTable()
+		$list = CmsFactory::view()->fragment()->listTable()
 			->caption(_("Users"))
 			->labels(_("Name"), _('Email'), _('Date modified'))
 			->setOrderBy($orderBy)
@@ -53,12 +52,12 @@ class User
 			->setProperties(['name','email','dateModified']);
 
 		foreach ($data as $item) {
-			$edit = "<a href='/admin/user/edit/{$item['iduser']}'>" . CmsFactory::response()->fragment()->icon()->edit() . "</a>";
+			$edit = "<a href='/admin/user/edit/{$item['iduser']}'>" . CmsFactory::view()->fragment()->icon()->edit() . "</a>";
 			$list->addRow($edit, $item['name'],$item['email'], $item['dateModified']);
 		}
 		$list->setEditButton('/admin/user/edit/');
 
-		CmsFactory::webSite()->addMain($list->ready());
+		CmsFactory::view()->addMain($list->ready());
 	}
 	/**
 	 */
@@ -82,20 +81,21 @@ class User
 			$value = $data[0];
 			$this->navbarUser($value['name']);
 			// FORM USER
-			CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->simpleBox(self::formUser("edit", $value), _("Edit user"))
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->simpleBox(self::formUser("edit", $value), _("Edit user"))
 			);
 			// PRIVILEGES
-			CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->box()->expandingBox(_('Privileges'),
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(_('Privileges'),
 					$this->privileges()->getPrivileges($value)
 				)
 			);
 		} else {
 			$this->navbarUser();
-			CmsFactory::response()->message()->noContent();
+			CmsFactory::view()->fragment()->message()->noContent();
 		}
 	}
+
 	/**
 	 * @param string $case
 	 * @param null $value
@@ -104,7 +104,7 @@ class User
 	static private function formUser(string $case = 'new', $value = null): array
 	{
 		$id = isset($value) ? $value['iduser'] : null;
-		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user']);
+		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-user']);
 		$form->action("/admin/user/$case")->method('post');
 		// ID
 		if ($case == "edit") $form->fieldsetWithInput('iduser',(string) $id, 'ID', 'text', null, ['readonly']);
@@ -124,6 +124,7 @@ class User
 		// ready
 		return $form->ready();
 	}
+
 	/**
 	 * @return Privileges
 	 */

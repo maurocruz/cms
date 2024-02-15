@@ -11,6 +11,21 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "'This module does not exist!'"
+msgstr "Este módulo não existe!"
+
+msgid "visitor"
+msgstr "visitante"
+
+msgid "collaborator"
+msgstr "colaborador"
+
+msgid "moderator"
+msgstr "moderador"
+
+msgid "user does not exist"
+msgstr "Usuário inexistente"
+
 msgid "You need to create the database before starting the application."
 msgstr "Você precisa criar o banco de dados antes para iniciar a aplicação."
 
@@ -254,6 +269,9 @@ msgstr "Enviar"
 
 msgid "Password"
 msgstr "Senha"
+
+msgid "User does not exist!"
+msgstr "Usuário inexistente"
 
 msgid "Forgot password?"
 msgstr "Esqueceu a senha?"

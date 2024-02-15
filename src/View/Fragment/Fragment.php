@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment;
 
-use Plinct\Cms\View\Fragment\Authentication\AuthFragment;
+use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
 use Plinct\Cms\View\Fragment\Button\Buttons;
@@ -16,6 +16,7 @@ use Plinct\Cms\View\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\View\Fragment\Miscellaneous\MiscellaneousInterface;
 use Plinct\Cms\View\Fragment\Navbar\NavbarFragment;
 use Plinct\Cms\View\Fragment\Navbar\NavbarFragmentInterface;
+use Plinct\Cms\View\Fragment\ReactShell\ReactShell;
 use Plinct\Web\Fragment\Icons\IconsFragment;
 use Plinct\Web\Fragment\PageNavigation\PageNavigation;
 
@@ -107,5 +108,15 @@ class Fragment
 	 */
 	public function PageNavigation(array $attributes = null): PageNavigation {
 		return new PageNavigation($attributes);
+	}
+
+	/**
+	 * @param string $type
+	 * @param array $attributes
+	 * @return ReactShell
+	 */
+	public function reactShell(string $type, array $attributes = []): ReactShell
+	{
+		return new ReactShell($type, $attributes);
 	}
 }

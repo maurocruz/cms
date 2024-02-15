@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Navbar;
 
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class NavbarFragment extends NavbarFragmentAbstract
 {
@@ -64,7 +64,7 @@ class NavbarFragment extends NavbarFragmentAbstract
   public function search(string $action, string $searchBy = 'name', string $params = null, string $linkList = null): NavbarFragmentInterface
   {
     $this->content("<div class='search-box' data-type='$this->type' data-action='$action' data-searchBy='$searchBy' data-params='$params' data-linkList='$linkList'></div>");
-		CmsFactory::webSite()->addBundle('searchbox');
+		CmsFactory::view()->addBundle('searchbox');
     return $this;
   }
 

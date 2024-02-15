@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite;
 
-class WebSiteAbstract
+class WebSiteFactoryAbstract
 {
   /**
    * @var array|string[]
@@ -48,7 +48,7 @@ class WebSiteAbstract
   /**
    * @param $content
    * @param bool $firstChild
-   * @return void
+   * @return void|null
    */
   public static function addHeader($content, bool $firstChild = false) {
     if ($firstChild) {
@@ -56,21 +56,37 @@ class WebSiteAbstract
     } else {
       self::$HEADER['content'][] = $content;
     }
+		return null;
   }
 
-  /**
-   * @param $content
-   * @return void
-   */
+	/**
+	 * @param $content
+	 * @return null
+	 */
   public static function addMain($content) {
     self::$MAIN['content'][] = $content;
+		return null;
   }
 
   /**
    * @param $content
-   * @return void
+   * @return null
    */
   protected static function addFooter($content) {
     self::$FOOTER['content'][] = $content;
+		return null;
   }
+
+
+	/**
+	 * @param string $bundle
+	 * @return null
+	 */
+	public static function addBundle(string $bundle)
+	{
+		if (in_array($bundle,self::$BUNDLES) === false) {
+			self::$BUNDLES[] = $bundle;
+		}
+		return null;
+	}
 }

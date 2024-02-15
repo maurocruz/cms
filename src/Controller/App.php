@@ -15,9 +15,9 @@ class App
 {
 	private static string $BASE_DIR;
   /**
-   * @var string
+   * @var ?string
    */
-  private static string $IMAGES_FOLDER = "/public/images/";
+  private static ?string $IMAGES_FOLDER = null;
   /**
    * @var string
    */
@@ -61,7 +61,7 @@ class App
   /**
    * @var string
    */
-  private static string $STATIC_FOLDER = "/App/static/cms/";
+  private static string $STATIC_FOLDER = "https://plinct.com.br/static/dist/";
   /**
    * @var
    */

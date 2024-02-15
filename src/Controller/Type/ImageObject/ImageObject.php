@@ -1,8 +1,6 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\Request\Server\Type;
+namespace Plinct\Cms\Controller\Type\ImageObject;
 
 use Exception;
 use FilesystemIterator;
@@ -12,9 +10,9 @@ use Plinct\PDO\PDOConnect;
 use Plinct\Tool\FileSystem\FileSystem;
 
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
-class ImageObjectServer
+class ImageObject
 {
   /**
    * @var array
@@ -178,7 +176,7 @@ class ImageObjectServer
    * @param null $relative
    * @return array
    */
-  public static function listLocation($directory, $relative = null): array
+  public function listLocation($directory, $relative = null): array
   {
     self::$LIST_LOCATIONS = self::$LIST_LOCATIONS ?? FileSystem::listDirectories($directory);
     if ($relative) {
@@ -198,9 +196,9 @@ class ImageObjectServer
   /**
    * @return array
    */
-  public static function listKeywords(): array
+  public function listKeywords(): array
   {
-    self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? CmsFactory::request()->api()->get("ImageObject", [ "fields"=>"distinct(keywords)", "groupBy" => "keywords", "orderBy" => "keywords" ])->ready();
+    self::$KEYWORDS_LIST = self::$KEYWORDS_LIST ?? CmsFactory::model()->api()->get("ImageObject", [ "fields"=>"distinct(keywords)", "groupBy" => "keywords", "orderBy" => "keywords" ])->ready();
 
     if(self::$KEYWORDS === []) {
       foreach (self::$KEYWORDS_LIST as $value) {

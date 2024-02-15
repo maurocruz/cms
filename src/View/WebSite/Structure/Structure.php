@@ -32,10 +32,10 @@ class Structure
    */
   public static function userBar(): string
   {
-    $helloText = sprintf(_("Hello, %s."), CmsFactory::request()->user()->userLogged()->getName());
+    $helloText = sprintf(_("Hello, %s."), CmsFactory::controller()->user()->userLogged()->getName());
     return "<div class='admin admin-bar-top'>
       <p>$helloText</p>
-      <button class='button-link' onclick='navigator.clipboard.writeText(\"". CmsFactory::request()->user()->userLogged()->getToken()."\")'>Copy token</button>
+      <button class='button-link' onclick='navigator.clipboard.writeText(\"". CmsFactory::controller()->user()->userLogged()->getToken()."\")'>Copy token</button>
       <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
     </div>";
   }
@@ -52,8 +52,9 @@ class Structure
 
   public static function mainMenu(): array
   {
-		$navbar = CmsFactory::response()->fragment()->navbar()
-			->newTab("/admin", CmsFactory::response()->fragment()->icon()->home())
+		$navbar = CmsFactory::view()->fragment()->navbar()
+			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"));
 
     if (App::getTypesEnabled()) {

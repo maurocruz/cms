@@ -1,21 +1,19 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\Person;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Person;
+use Plinct\Cms\CmsFactory;
 
-use Plinct\Cms\Controller\CmsFactory;
-
-abstract class PersonViewAbstract
+abstract class PersonAbstract
 {
   /**
    * @var array
    */
   protected array $content;
   /**
-   * @var string
+   * @var int
    */
-  protected string $id;
+  protected int $id;
   /**
    * @var string
    */
@@ -26,12 +24,12 @@ abstract class PersonViewAbstract
    */
   protected function navbarPerson()
   {
-		CmsFactory::webSite()->addHeader(
-			CmsFactory::response()->fragment()->navbar()
+		CmsFactory::View()->addHeader(
+			CmsFactory::View()->fragment()->navbar()
         ->type('person')
         ->title(_("Person"))
-        ->newTab('/admin/person', CmsFactory::response()->fragment()->icon()->home())
-        ->newTab('/admin/person/new', CmsFactory::response()->fragment()->icon()->plus())
+        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home())
+        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus())
         ->level(2)
         ->search('/admin/person')
         ->ready()
@@ -43,12 +41,12 @@ abstract class PersonViewAbstract
     // LEVEL 1
     $this->navbarPerson();
     // LEVEL 2
-    CmsFactory::webSite()->addHeader(
-			CmsFactory::response()->fragment()->navbar()
+    CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
       ->type('person')
       ->title($this->name)
       ->level(3)
-      ->newTab("/admin/person?id=$this->id", CmsFactory::response()->fragment()->icon()->home())
+      ->newTab("/admin/person?id=$this->id", CmsFactory::view()->fragment()->icon()->home())
       ->newTab("/admin/person?id=$this->id&action=service", _("Services"))
       ->newTab("/admin/person?id=$this->id&action=product", _("Products"))
       ->ready()
@@ -56,9 +54,9 @@ abstract class PersonViewAbstract
   }
 
   /**
-   * @param string $id
+   * @param int $id
    */
-  public function setId(string $id) {
+  public function setId(int $id) {
       $this->id = $id;
   }
 
@@ -128,7 +126,7 @@ abstract class PersonViewAbstract
       [ "tag" => "input", "attributes" => [ "name"=>"hasOccupation", "type" => "text", "value" => $value['hasOccupation'] ?? null ] ]
     ]];
 
-    $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-person"]);
+    $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-person"]);
     $form->action("/admin/person/$case")->method('post');
     $form->content($content);
     $form->submitButtonSend();

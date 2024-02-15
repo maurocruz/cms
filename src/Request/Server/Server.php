@@ -42,7 +42,7 @@ class Server
 	 * @param array $params
 	 * @return string | array
 	 */
-  public function new(string $type, array $params)
+  /*public function new(string $type, array $params)
   {
 		// GET PARAMS
 		$returns = CmsFactory::request()->server()->type($type)->setParams('new', $params)->getParams();
@@ -65,7 +65,7 @@ class Server
 		}
 		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 
-  }
+  }*/
 
   /**
    * @param $type

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use Firebase\JWT\JWT;
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\View\logger\Logger;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -18,9 +17,9 @@ return function (Route $route)
   {
 	  // log
 	  if (isset($_SESSION['userLogin'])) {
-		  (new Logger('auth', 'auth.log'))->info("LOGIN FINISHED", $_SESSION['userLogin']);
+		  CmsFactory::view()->Logger('auth', 'auth.log')->info("LOGIN FINISHED", $_SESSION['userLogin']);
 	  } else {
-		  (new Logger('warning', 'warn.log'))->info("This session not found");
+		  CmsFactory::view()->Logger('warning', 'warn.log')->info("This session not found");
 	  }
     unset($_SESSION['userLogin']);
     setcookie("API_TOKEN", "", time() - 3600);
@@ -31,7 +30,7 @@ return function (Route $route)
 	 */
 	$route->post('/login', function (Request $request, Response $response) {
 		$parseBody = $request->getParsedBody();
-		$authentication = CmsFactory::request()->server()->auth()->login($parseBody['email'], $parseBody['password']);
+		$authentication = CmsFactory::model()->auth()->login($parseBody['email'], $parseBody['password']);
 		// AUTHORIZED
 		if ($authentication && $authentication['status'] == "success") {
 			$token = $authentication['data']['token'] ?? null;
@@ -48,10 +47,10 @@ return function (Route $route)
 			}
 		}
 		// UNAUTHORIZED
-		CmsFactory::webSite()->clearMain();
-		CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login($authentication));
+		CmsFactory::view()->clearMain();
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login($authentication));
 		// RESPONSE
-		return CmsFactory::response()->writeBody($response);
+		return CmsFactory::view()->writeBody($response);
 	});
   /**
    *  GROUP AUTH
@@ -65,11 +64,11 @@ return function (Route $route)
       if (CmsFactory::request()->user()->userLogged()->getIduser()) {
         return $response->withHeader("Location", "/admin")->withStatus(302);
       } else {
-	      CmsFactory::webSite()->clearMain();
-				CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login());
+	      CmsFactory::view()->clearMain();
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login());
       }
 			// RESPONSE
-	    return CmsFactory::response()->writeBody($response);
+	    return CmsFactory::view()->writeBody($response);
     });
 
     if(!CmsFactory::controller()->user()->userLogged()->getIduser()) {
@@ -81,23 +80,23 @@ return function (Route $route)
 				 * register get
 				 */
 				$route->get('', function (Request $request, Response $response) {
-					CmsFactory::webSite()->clearMain();
-					CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->auth()->register());
-					return CmsFactory::response()->writeBody($response);
+					CmsFactory::view()->clearMain();
+					CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->register());
+					return CmsFactory::view()->writeBody($response);
 				});
 				/**
 				 * register post
 				 */
 				$route->post('', function (Request $request, Response $response)
 				{
-					$data = CmsFactory::model()->Api()->register($request->getParsedBody());
-					CmsFactory::webSite()->clearMain();
+					$data = CmsFactory::controller()->Authentication()->register($request);
+					CmsFactory::view()->clearMain();
 					if (isset($data['status']) && $data['status'] == "success") {
-						CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login($data));
+						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login($data));
 					} else {
-						CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->auth()->register($data));
+						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->register($data));
 					}
-					return CmsFactory::response()->writeBody($response);
+					return CmsFactory::view()->writeBody($response);
 				});
 			});
 
@@ -110,13 +109,13 @@ return function (Route $route)
 				 */
 				$route->get('', function (Request $request, Response $response) {
 					if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
-						CmsFactory::webSite()->clearMain();
-						CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->auth()->resetPassword());
+						CmsFactory::view()->clearMain();
+						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->resetPassword());
 					} else {
-						CmsFactory::response()->webSite()->addMain("<p class='warning'>"._("No email server data")."</p>");
+						CmsFactory::view()->addMain("<p class='warning'>"._("No email server data")."</p>");
 					}
 					// RESPONSE
-					return CmsFactory::response()->writeBody($response);
+					return CmsFactory::view()->writeBody($response);
 				});
 
 				/**
@@ -125,12 +124,10 @@ return function (Route $route)
 				$route->post('', function (Request $request, Response $response)
 				{
 					$email = $request->getParsedBody()['email'];
-					$data = CmsFactory::request()->server()->auth()->resetPassword($email);
-					CmsFactory::response()->webSite()->addMain(
-						CmsFactory::response()->fragment()->auth()->resetPassword($data, $email)
-					);
+					$data = CmsFactory::model()->auth()->resetPassword($email);
+					CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->resetPassword($data, $email));
 					// RESPONSE
-					return CmsFactory::response()->writeBody($response);
+					return CmsFactory::view()->writeBody($response);
 				});
 			});
 
@@ -147,22 +144,22 @@ return function (Route $route)
 					$selector = $request->getQueryParams()['selector'] ?? null;
 					$validator = $request->getQueryParams()['validator'] ?? null;
 					if ($selector && $validator) {
-						CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->auth()->changePassword($request->getQueryParams()));
+						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->changePassword($request->getQueryParams()));
 					} else {
-						CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->noContent(_("Missing data!")));
+						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Missing data!")));
 					}
 					// RESPONSE
-					return CmsFactory::response()->writeBody($response);
+					return CmsFactory::view()->writeBody($response);
 				});
 				/**
 				 * change password post
 				 */
 				$route->post('', function (Request $request, Response $response) {
 					$params = $request->getParsedBody();
-					$data = CmsFactory::request()->server()->auth()->changePassword($params);
-					CmsFactory::response()->webSite()->addMain(CmsFactory::response()->fragment()->auth()->changePassword($params, $data));
+					$data = CmsFactory::model()->auth()->changePassword($params);
+					CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->changePassword($params, $data));
 					// RESPONSE
-					return CmsFactory::response()->writeBody($response);
+					return CmsFactory::view()->writeBody($response);
 				});
 			});
     } else {

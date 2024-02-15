@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\Request\Server;
+namespace Plinct\Cms\Model\Authentication;
 
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\logger\Logger;
 use Plinct\Tool\ToolBox;
 
 class Auth
@@ -17,41 +16,41 @@ class Auth
   public function login(string $email, string $password): ?array
   {
 	  if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
-			$apiHost = substr(App::getApiHost(),-1) !== "/" ? App::getApiHost() . "Auth.php/" : App::getApiHost();
-		  $url = $apiHost."auth/login";
 		  $params = ['email'=>$email, 'password'=>$password ];
-			$curl = ToolBox::Curl()->setUrl($url)->post($params);
-			$data = json_decode($curl->ready(), true);
-		  // LOGGER auth
-		  if (isset($data['status'])) {
-			  $logger = new Logger('auth', 'auth.log');
-			  if ($data['status'] === 'error') {
-				  if (isset($data['data']['message'])) {
-					  $logger->error("LOGIN ERROR from api host", $data['data']);
-				  } else {
-					  $logger->error("LOGIN ERROR in ". __FILE__." - ".__LINE__, $data);
+		  $responseData = CmsFactory::model()->api()->post("auth/login", $params)->ready();
+		  $logger = CmsFactory::view()->Logger('auth', 'auth.log');
+			if (is_string($responseData)) {
+				$data = json_decode($responseData, true);
+			  if (isset($data['status'])) {
+				  if ($data['status'] === 'error') {
+					  if (isset($data['data']['message'])) {
+						  $logger->error("LOGIN ERROR from api host", $data['data']);
+					  } else {
+						  $logger->error("LOGIN ERROR in ". __FILE__." - ".__LINE__, $data);
+					  }
 				  }
+				  if ($data['status'] === 'fail') {
+					  $logger->info("LOGIN FAILED: " . $data['message'], ["email" => $email]);
+				  }
+				  if ($data['status'] === 'success') {
+					  $logger->info("LOGIN SUCCESSFULLY: ".$data['message'], ["email" => $email]);
+				  }
+			  } else if ($data === null) {
+					$logger->setChannel('error');
+					$logger->critical('Get api failed', ['url'=>App::getApiHost()."auth/login", 'method'=>'post']);
 			  }
-			  if ($data['status'] === 'fail') {
-				  $logger->info("LOGIN FAILED: " . $data['message'], ["email" => $email]);
-			  }
-			  if ($data['status'] === 'success') {
-				  $logger->info("LOGIN SUCCESSFULLY: ".$data['message'], ["email" => $email]);
-			  }
-		  }
+			} else if (is_array($responseData)) {
+				$data = $responseData;
+				if (isset($responseData['status']) && $responseData['status'] === 'fail') {
+					$logger->error("Get error from api", array_merge($responseData,  ['url'=>App::getApiHost()."auth/login", 'method'=>'post']));
+				}
+			} else {
+				$data = false;
+			}
 		  // RETURN
 	    return $data;
 	  }
 		return null;
-  }
-
-  /**
-   * @param $params
-   * @return false|mixed|string|null
-   */
-  public function register($params) {
-    unset($params['submit']);
-    return CmsFactory::request()->api()->post('auth/register',$params)->ready();
   }
 
   /**
@@ -60,17 +59,12 @@ class Auth
    */
   public function resetPassword(string $email): array
   {
-    $url = App::getApiHost() . "auth/reset_password";
-
     $params['email'] = $email;
     $params['mailHost'] = App::getMailHost();
     $params['mailUsername'] = App::getMailUsername();
     $params['mailPassword'] = App::getMailpassword();
     $params['urlToResetPassword'] = App::getUrlToResetPassword();
-
-    $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
-
-    return json_decode($handleCurl->ready(), true);
+		return CmsFactory::model()->api()->post('auth/reset_password', $params)->ready();
   }
 
 	/**

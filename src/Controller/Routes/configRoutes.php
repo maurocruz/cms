@@ -18,5 +18,15 @@ return function (Route $route) {
 				return CmsFactory::view()->writeBody($response);
 			}
 		});
+
+		$route->get('[/{method}]', function (Request $request, Response $response) {
+			$method = $request->getAttribute('method') ?? null;
+			$controller = CmsFactory::controller()->configuration();
+			switch ($method) {
+				case 'installModule': $controller->installMethod(); break;
+				default: $controller->index();
+			}
+			return CmsFactory::view()->writeBody($response);
+		});
 	});
 };

@@ -2,97 +2,41 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite;
 
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\Enclave\Enclave;
-use Plinct\Cms\Controller\WebSite\Type\Controller;
-use Plinct\Cms\Controller\WebSite\Type\Type;
-use Plinct\Cms\Controller\WebSite\Type\View;
-use Plinct\Cms\View\WebSite\Structure\Structure;
-use Plinct\Tool\Locale;
-use Plinct\Web\Render;
-use ReflectionException;
+use Plinct\Cms\View\WebSite\Configuration\Configuration;
+use Plinct\Cms\View\WebSite\Index\Index;
+use Plinct\Cms\View\WebSite\Type\Type;
 
-class WebSite extends WebSiteAbstract
+class WebSite extends WebSiteFactoryAbstract
 {
-  /**
-   * @return void
-   */
-  public function create()
-  {
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    // LANGUAGE
-    self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
-    // TRANSLATE BY GETTEXT
-    Locale::translateByGettext(App::getLanguage(), "plinctCms", __DIR__ . "/../../Locale");
-    // HEAD
-    parent::addHead(Structure::head());
-  }
+	/**
+	 * @return Configuration
+	 */
+	public function configuration(): Configuration
+	{
+		return new Configuration();
+	}
 
 	/**
-	 * @return void
+	 * @return Index
 	 */
-	public static function buildBodyStructure()
+	public function index(): Index
 	{
-		// HEADER
-		if (CmsFactory::controller()->user()->userLogged()->getIduser()) { parent::addHeader(Structure::mainMenu(), true); }
-		parent::addHeader(Structure::header(), true);
-		if (CmsFactory::controller()->user()->userLogged()->getIduser()) { parent::addHeader(Structure::userBar(), true);}
-		// FOOTER
-		parent::addFooter(Structure::footer());
+		return new Index();
 	}
+
 	/**
-	 * @param string $bundle
-	 * @return void
+	 * @return Type
 	 */
-	final public function addBundle(string $bundle)
+	public function type(string $type): Type
 	{
-		if (in_array($bundle,parent::$BUNDLES) === false) {
-			parent::$BUNDLES[] = $bundle;
-		}
+		return new Type($type);
 	}
-
-	public function clearMain()
-	{
-		parent::$MAIN['content'] = null;
-	}
-
 	/**
 	 * @return Enclave
 	 */
-	public static function enclave(): Enclave {
+	/*public static function enclave(): Enclave {
 		return new Enclave();
-	}
-
-	/**
-	 * @throws ReflectionException
-	 */
-	public function getContent(array $params = null, array $queryStrings = null)
-	{
-		$type = $queryStrings['type'] ?? $params['type'] ?? null;
-		$methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
-		$id = $queryStrings['id'] ?? $params['id'] ?? null;
-
-		if($id && $methodName == 'index') $methodName = 'edit';
-
-		if ($type) {
-			$controller = new Controller();
-			$data = $controller->getData($type, $methodName, $id, $queryStrings);
-
-			if (isset($data['status']) && $data['status'] == 'fail') {
-				CmsFactory::response()->webSite()->addMain(
-					CmsFactory::response()->message()->warning($data['message'])
-				);
-			} else {
-				$view = new View();
-				$allParams = array_merge($params, $queryStrings);
-				$view->view($type, $methodName, $data, $allParams);
-			}
-
-		} else {
-			parent::addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>" );
-		}
-	}
+	}*/
 
 	/**
 	 * @param string|null $title
@@ -100,7 +44,7 @@ class WebSite extends WebSiteAbstract
 	 * @param int|null $level
 	 * @param array|null $searchInput
 	 */
-	public function navbar(string $title = null, array $list = null, int $level = null, array $searchInput = null)
+	/*public function navbar(string $title = null, array $list = null, int $level = null, array $searchInput = null)
 	{
 		$fragment = CmsFactory::response()->fragment()
 			->navbar()
@@ -119,47 +63,24 @@ class WebSite extends WebSiteAbstract
 		}
 
 		$this->addHeader($fragment->ready());
-	}
+	}*/
 
 
-  /**
-   * @return string
-   */
-  public static function ready(): string
-  {
-    parent::$CONTENT['content'][] = self::$HEADER;
-    parent::$CONTENT['content'][] = self::$MAIN;
-    parent::$CONTENT['content'][] = self::$FOOTER;
-    parent::$BODY['content'][] = self::$CONTENT;
-		// HEAD
-    parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
-
-		// BODY BUNDLES
-	  parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
-	  foreach (parent::$BUNDLES as $bundle) {
-		  parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'js/dist/'.$bundle.'.bundle.js"></script>';
-	  }
-
-    parent::$HTML['content'][] = self::$HEAD;
-    parent::$HTML['content'][] = self::$BODY;
-    // RETURN
-    return "<!DOCTYPE html>" . Render::arrayToString(parent::$HTML);
-  }
 
 	/**
 	 * @param string $type
 	 * @return Type
 	 */
-	public function type(string $type): Type
+	/*public function type(string $type): Type
 	{
 		return new Type($type);
-	}
+	}*/
 
 	/**
 	 * @param string $message
 	 * @return void
 	 */
-	public function warning(string $message) {
+	/*public function warning(string $message) {
 		$this->addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
-	}
+	}*/
 }
