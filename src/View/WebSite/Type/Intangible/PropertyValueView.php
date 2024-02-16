@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class PropertyValueView
 {
@@ -34,7 +32,7 @@ class PropertyValueView
 	 */
   protected function formPropertyValue(string $tableHasPart, string $idHasPart, string $case = "new", array $value = null): array
   {
-	  $form = CmsFactory::response()->fragment()->form(["id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "class" => "formPadrao form-propertyValue"])->action("/admin/PropertyValue/$case")->method('post');
+	  $form = CmsFactory::view()->fragment()->form(["id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "class" => "formPadrao form-propertyValue"])->action("/admin/PropertyValue/$case")->method('post');
 	  // HIDDENS
 	  $form->input('tableHasPart', $tableHasPart, 'hidden');
 	  // NEW

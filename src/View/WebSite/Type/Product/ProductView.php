@@ -6,7 +6,7 @@ namespace Plinct\Cms\Controller\WebSite\Type\Product;
 
 use Exception;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Offer\OfferView;
+use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
 use Plinct\Cms\Controller\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\Controller\WebSite\Type\Organization\OrganizationView;
 use Plinct\Tool\ArrayTool;

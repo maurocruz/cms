@@ -1,13 +1,11 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\WebPageElement;
+namespace Plinct\Cms\View\WebSite\Type\WebPageElement;
 
 use Exception;
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\PropertyValueView;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\ImageObject\ImageObjectView;
+use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Tool\ArrayTool;
 
 class WebPageElementView
@@ -17,9 +15,9 @@ class WebPageElementView
    */
   protected string $idwebPage;
   /**
-   * @var ?string
+   * @var ?int
    */
-  protected ?string $idwebPageElement = null;
+  protected ?int $idwebPageElement = null;
 
   /**
    * @param $title
@@ -64,7 +62,7 @@ class WebPageElementView
     $webPageEditHref = "/admin/webPage/edit/".$data['isPartOf'];
     CmsFactory::webSite()->addMain("<p>"._("Is part of: ")."<a href='$webPageEditHref'>$webPageEditHref</a></p>");
     // FORM
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::editForms($data), _("Web page element")));
+    CmsFactory::webSite()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::editForms($data), _("Web page element")));
   }
 
   /**
@@ -77,9 +75,9 @@ class WebPageElementView
     // FORM CONTENT
     $content[] = self::formWebPageElement("edit", $value);
     // ATTRIBUTES
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", $this->idwebPageElement, $value['identifier']));
+    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
     // IMAGES
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("webPageElement", $this->idwebPageElement, $value['image']));
+    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("webPageElement",(int) $this->idwebPageElement, $value['image']));
 		// RETURN
     return $content;
   }
@@ -87,12 +85,12 @@ class WebPageElementView
   /**
    * @throws Exception
    */
-  public function getForm(string $idHasPart, array $value): array
+  public function getForm(string $idHasPart, ?array $value): array
   {
     $this->idwebPage = $idHasPart;
 
     // add new WebPagElement
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Add new"), self::formWebPageElement());
+    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new"), self::formWebPageElement());
 
     // WebPageElements hasPart
     if ($value) {
@@ -104,7 +102,7 @@ class WebPageElementView
         $title = $name ? strip_tags(str_replace("<br>"," ",$name))
 	        : ($text ? substr(strip_tags($text),0,40).'...' : "");
 
-        $content[] = CmsFactory::response()->fragment()->box()->expandingBox("[" . $this->idwebPageElement . "] " . $title , self::editForms($valueWebPageElement));
+        $content[] = CmsFactory::view()->fragment()->box()->expandingBox("[" . $this->idwebPageElement . "] " . $title , self::editForms($valueWebPageElement));
       }
     }
     return $content;
@@ -118,8 +116,9 @@ class WebPageElementView
   private function formWebPageElement(string $case = "new", $value = null): array
   {
     $id = $this->idwebPageElement;
+		$position = $value['position'] ?? null;
 
-    $form = CmsFactory::response()->fragment()->form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
+    $form = CmsFactory::view()->fragment()->form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
 
     // HIDDEN
@@ -131,7 +130,7 @@ class WebPageElementView
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Title'));
 
     // POSITION
-    $form->fieldsetWithInput('position', $value['position'] ?? null, _('Position'));
+    $form->fieldsetWithInput('position', $position ? (string) $position : null, _('Position'));
 
     // TEXT
     $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaWebPageElement$id"]);

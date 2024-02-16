@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\Invoice;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\Invoice;
 
 use DateTime;
 use Exception;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\OrderItem\OrderItemView;
+use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\Table;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\Offer;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\Offer;
 
 use Plinct\Cms\Controller\CmsFactory;
 

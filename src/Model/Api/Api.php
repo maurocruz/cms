@@ -8,9 +8,19 @@ use Plinct\Tool\Curl\v1\Curl;
 use Plinct\Tool\ToolBox;
 
 class Api
-{private string $apiHost;
+{
+	/**
+	 * @var string|null
+	 */
+	private string $apiHost;
+	/**
+	 * @var Curl
+	 */
 	private Curl $curl;
 
+	/**
+	 * @param string|null $apiHost
+	 */
 	public function __construct(string $apiHost = null)	{
 		$this->apiHost = $apiHost ?? App::getApiHost();
 		$this->curl = new Curl();

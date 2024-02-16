@@ -7,11 +7,26 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class TypeController
 {
+	/**
+	 * @var string|mixed|null
+	 */
 	private ?string $type;
+	/**
+	 * @var string|mixed
+	 */
 	private string $methodName;
+	/**
+	 * @var string|mixed|null
+	 */
 	private ?string $id;
+	/**
+	 * @var array|null
+	 */
 	private ?array $queryParams;
 
+	/**
+	 * @param ServerRequestInterface $request
+	 */
 	public function __construct(ServerRequestInterface $request)
 	{
 		$this->type = $request->getAttributes()['type'] ?? null;
@@ -35,6 +50,7 @@ class TypeController
 			if ($data['message'] === "table not exists") {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
+				// if moduyle has controller class
 				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type);
 				if (class_exists($className)) {
 					$object = new $className();
@@ -42,10 +58,11 @@ class TypeController
 						$returns = $object->{$this->methodName}($this->queryParams);
 					}
 				}
+				// if not module controller class
 				if (!$returns) {
-					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->ready();
+					$dataType = $this->methodName === 'edit' ? CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready() : null;
+					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
 				}
-
 			}
 			return $returns;
 		} else {

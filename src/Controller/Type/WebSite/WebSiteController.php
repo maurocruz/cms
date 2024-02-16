@@ -10,18 +10,10 @@ use Plinct\Tool\DateTime;
 class WebSiteController
 {
   /**
-   * @param null $params
-   * @return null
-   */
-  public function index($params = null)
-  {
-		return null;
-  }
-  /**
    * @param array $params
    * @return array
    */
-  public function edit(array $params): array
+  /*public function edit(array $params): array
   {
     $id = $params['id'] ?? $params['idwebSite'] ?? null;
     $data = CmsFactory::request()->api()->get('webSite',['id'=>$id])->ready();
@@ -30,14 +22,14 @@ class WebSiteController
       //$data[0]['hasPart'] = CmsFactory::request()->api()->get('webPage', ['isPartOf' => $idSite, 'orderBy' => 'dateModified desc'])->ready();
     }
     return $data;
-  }
+  }*/
   /**
    * @param null $params
    * @return array
    */
-  public function new($params = null): array {
+  /*public function new($params = null): array {
     return [];
-  }
+  }*/
   /**
    * @param null $params
    * @return array

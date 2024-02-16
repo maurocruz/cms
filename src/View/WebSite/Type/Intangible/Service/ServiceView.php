@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\Service;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Offer\OfferView;
+use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
 use Plinct\Tool\ArrayTool;
 
 class ServiceView extends ServiceAbstract

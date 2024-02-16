@@ -11,8 +11,11 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
-msgid "'This module does not exist!'"
-msgstr "Este módulo não existe!"
+msgid "The module %s does not exist!"
+msgstr "O módulo %s não existe!"
+
+msgid "Do you want to install it?"
+msgstr "Deseja instalá-lo?"
 
 msgid "visitor"
 msgstr "visitante"

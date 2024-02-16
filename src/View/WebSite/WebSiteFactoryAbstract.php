@@ -63,9 +63,10 @@ class WebSiteFactoryAbstract
 	 * @param $content
 	 * @return null
 	 */
-  public static function addMain($content) {
+  public static function addMain($content): ?bool
+  {
     self::$MAIN['content'][] = $content;
-		return null;
+		return true;
   }
 
   /**

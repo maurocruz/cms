@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\Invoice;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\Invoice;
 
 class InvoiceView extends InvoiceAbstract
 {

@@ -28,7 +28,7 @@ class Configuration
 		CmsFactory::view()->webSite()->configuration()->index();
 	}
 
-	public function installMethod() {
-
+	public function installMethod(array $params) {
+		var_dump($params);
 	}
 }

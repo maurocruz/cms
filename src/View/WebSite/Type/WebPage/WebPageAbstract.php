@@ -1,21 +1,58 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\WebPage;
 
-namespace Plinct\Cms\Controller\WebSite\Type\WebPage;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\WebSite\WebSite;
 
-use Plinct\Cms\Controller\CmsFactory;
-
-class WebPageAbstract
+abstract class WebPageAbstract
 {
-  /**
-   * @var string|null
-   */
-  protected static ?string $idwebPage = null;
-  /**
-   * @var ?string
-   */
-  protected static ?string $idwebSite = null;
+	/**
+	 * @var int
+	 */
+	public int $id;
+	/**
+	 * @var int|null
+	 */
+  protected ?int $idwebPage = null;
+	/**
+	 * @var int|null
+	 */
+  protected ?int $idwebSite = null;
+
+	/**
+	 *
+	 */
+	protected function navbarWebPage(string $title = null)
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('webPage')
+				->level(4)
+				->title("WebPage")
+				->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus())
+				->search("/admin/webPage/search")
+				->ready()
+		);
+
+		if ($title) CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->level(5)
+				->title($title)
+				->ready()
+		);
+	}
+
+	protected function navbarWebSite(array $value = null)
+	{
+		if (isset($value['idwebSite'])) {
+			$this->idwebSite = (int)$value['idwebSite'] ?? null;
+			$webSite = new WebSite();
+			$webSite->setIdwebSite($this->idwebSite);
+			$webSite->navbarWebSite($value['name']);
+		}
+	}
 
   /**
    * * * * * FORM * * * *
@@ -23,29 +60,26 @@ class WebPageAbstract
    * @param array|null $value
    * @return array
    */
-  protected static function formWebPage(array $value = null): array
+  protected function formWebPage(array $value = null): array
   {
     // VARS
-    $idwebPage = self::$idwebPage;
     $name = $value['name'] ?? null;
     $url = $value['url'] ?? null;
     $description = $value['description'] ?? null;
     $alternativeHeadline = $value['alternativeHeadline'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
-    $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-webPage']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-webPage']);
     $form->action("/admin/webPage/$case")->method('post');
     // hidden
-    $form->input('isPartOf',self::$idwebSite,'hidden');
-    if ($case == "edit") $form->input('idwebPage', $idwebPage,'hidden');
+    $form->input('isPartOf', (string) $this->idwebSite ,'hidden');
+    if ($case == "edit") $form->input('idwebPage', (string) $this->idwebPage,'hidden');
     // title
     $form->fieldsetWithInput('name',$name,_('Title'));
     // url
     $form->fieldsetWithInput('url',$url,'Url');
-
     // DESCRIPTION
-    $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$idwebPage"]);
-
+    $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$this->idwebPage"]);
     // alternativeHeadline
     $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));
     // submit

@@ -61,7 +61,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 				$item = $itemList['item'] ?? $itemList;
 				$id = $item['id'.lcfirst($item['@type'])];
 				if ($this->editButton || $this->buttonEdit) {
-					$this->table->bodyCell(CmsFactory::response()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], ($this->buttonEdit ?? $this->pathToEditButton) . $id);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], ($this->buttonEdit ?? $this->pathToEditButton) . $id);
 				}
 				foreach ($this->properties as $property) {
 					$explode = explode(":",$property);
@@ -74,7 +74,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 					$this->table->bodyCell($bodyCell);
 				}
 				if ($this->buttonDelete) {
-					$this->table->bodyCell(CmsFactory::response()->fragment()->icon()->delete(), ['style' => 'text-align: center;'], $this->buttonDelete . $id);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->delete(), ['style' => 'text-align: center;'], $this->buttonDelete . $id);
 				}
 				$this->table->closeRow();
 			}
@@ -92,7 +92,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 				}
 				// delete buttom
 				if ($this->buttonDelete) {
-					$this->table->bodyCell(CmsFactory::response()->fragment()->buttons()->buttonDelete($this->idIsPartOf, $this->tableIsPartOf, $this->idHasPart, $this->tableHasPart),['style' => 'text-align: center;']);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($this->idIsPartOf, $this->tableIsPartOf, $this->idHasPart, $this->tableHasPart),['style' => 'text-align: center;']);
 				}
 				// close
 				$this->table->closeRow();

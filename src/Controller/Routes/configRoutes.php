@@ -28,5 +28,10 @@ return function (Route $route) {
 			}
 			return CmsFactory::view()->writeBody($response);
 		});
+
+		$route->post('/installModule', function (Request $request, Response $response) {
+			CmsFactory::controller()->configuration()->installMethod($request->getParsedBody());
+			return CmsFactory::view()->writeBody($response);
+		});
 	});
 };

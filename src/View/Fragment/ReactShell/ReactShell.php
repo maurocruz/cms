@@ -11,6 +11,10 @@ class ReactShell
 	 * @var array
 	 */
 	private array $attributes = ['class'=>'plinct-shell'];
+	/**
+	 * @var array|string[]
+	 */
+	private array $columnsTable = ["edit"=>"Edit","id"=>"id","name"=>"Nome",'dateModified'=>"Modificado"];
 
 	/**
 	 * @param string $type
@@ -33,6 +37,22 @@ class ReactShell
 	}
 
 	/**
+	 * @param array $columnsTable
+	 * @param bool $merge
+	 * @return ReactShell
+	 */
+	public function setColumnsTable(array $columnsTable, bool $merge = true): ReactShell
+	{
+		if($merge) {
+			$dateModified = array_slice($this->columnsTable, -1);
+			$this->columnsTable = array_merge(array_slice($this->columnsTable,0,-1), $columnsTable);
+			$this->columnsTable = array_merge($this->columnsTable, $dateModified);
+		} else {
+			$this->columnsTable = $columnsTable;
+		}
+		return $this;
+	}
+	/**
 	 * @param string $tableName
 	 * @return $this
 	 */
@@ -53,11 +73,20 @@ class ReactShell
 	}
 
 	/**
-	 * @return string[]
+	 * @return string
 	 */
-	public final function ready(): array {
+	public final function ready(): string {
 		$this->setAttribute('data-apihost', App::getApiHost());
 		$this->attributes['data-usertoken'] = CmsFactory::controller()->user()->userLogged()->getToken();
-		return ['tag'=>'div', 'attributes'=>$this->attributes];
+		$div = "<div";
+		foreach ($this->attributes as $key => $value) {
+			$div .= " $key='$value'";
+		}
+		if ($this->columnsTable) {
+			$columnsTable = htmlspecialchars(json_encode($this->columnsTable), ENT_QUOTES, 'UTF-8');
+			$div .= " data-columnsTable='$columnsTable'";
+		}
+		$div .= "></div>";
+		return $div;
 	}
 }

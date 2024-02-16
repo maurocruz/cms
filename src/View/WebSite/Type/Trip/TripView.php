@@ -7,7 +7,7 @@ namespace Plinct\Cms\Controller\WebSite\Type\Trip;
 use Exception;
 use Plinct\Cms\Controller\CmsFactory;
 use Plinct\Cms\Controller\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\PropertyValueView;
+use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 
 class TripView extends TripAbstract
 {

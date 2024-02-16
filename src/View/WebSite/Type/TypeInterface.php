@@ -4,11 +4,9 @@ namespace Plinct\Cms\View\WebSite\Type;
 
 interface TypeInterface
 {
-	public function index(?array $data);
+	public function index(?array $value);
 
-	public function edit(?array $data);
+	public function edit(?array $value);
 
-	public function new(?array $data);
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array;
+	public function new(?array $value);
 }

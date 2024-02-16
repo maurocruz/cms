@@ -5,8 +5,8 @@ namespace Plinct\Cms\Controller\WebSite\Type\Organization;
 use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Service\ServiceView;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Order\OrderView;
+use Plinct\Cms\View\WebSite\Type\Intangible\Service\ServiceView;
+use Plinct\Cms\View\WebSite\Type\Intangible\Order\OrderView;
 use Plinct\Cms\Controller\WebSite\Type\Product\ProductView;
 
 class OrganizationView extends OrganizationAbstract

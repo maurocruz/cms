@@ -14,8 +14,7 @@ return function (Route $route)
 	/**
 	 * GET
 	 */
-	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
-	{
+	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response) {
 		if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
 			CmsFactory::controller()->typeController($request)->ready();
 		}
@@ -40,7 +39,7 @@ return function (Route $route)
 		unset($params['y']);
 		//  EDIT / PUT
 		if ($action == "edit" || $action == "put") {
-			$returns = CmsFactory::controller()->server()->edit($type, $params);
+			$returns = CmsFactory::model()->type($type)->put($params);
 			// sitemap
 			//Sitemap::create($type, $params);
 		}
@@ -52,8 +51,6 @@ return function (Route $route)
 		}
 		// DELETE
 		elseif ($action == "delete" || $action == "erase") {
-			// delete data
-			//$returns = CmsFactory::controller()->server()->erase($type, $params);
 			$returns = CmsFactory::model()->type($type)->erase($params);
 			// sitemap
 			//Sitemap::create($type, $params);

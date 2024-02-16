@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\Order;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\ToolBox;
 
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\HistoryView;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Invoice\InvoiceView;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\OrderItem\OrderItemView;
+use Plinct\Cms\View\WebSite\Type\Intangible\HistoryView;
+use Plinct\Cms\View\WebSite\Type\Intangible\Invoice\InvoiceView;
+use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
 
 class OrderView extends OrderAbstract
 {

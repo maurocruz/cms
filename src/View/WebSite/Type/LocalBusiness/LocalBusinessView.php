@@ -7,7 +7,7 @@ namespace Plinct\Cms\Controller\WebSite\Type\LocalBusiness;
 use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 
 class LocalBusinessView
 {

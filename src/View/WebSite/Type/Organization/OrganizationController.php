@@ -4,7 +4,7 @@ namespace Plinct\Cms\Controller\WebSite\Type\Organization;
 
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Order\OrderController;
+use Plinct\Cms\View\WebSite\Type\Intangible\Order\OrderController;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 

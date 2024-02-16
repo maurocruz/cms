@@ -19,10 +19,10 @@ class Configuration
 	{
 		return CmsFactory::view()->addMain("
 <div class='warning'>
-	<p>".('This module does not exist!')."</p>
+	<p>".sprintf(_('The module %s does not exist!'), $type)."</p>
 	<form action='/admin/config/installModule' method='post'>
 		<input type='hidden' name='module' value='$type'/>
-		<input type='submit' value='"._("Do you want to install it?")."' >	
+		<input type='submit' value='"._("Do you want to install it?")."' style='padding: 3px 8px;' >	
 	</form>
 </div>");
 	}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible\OrderItem;
+namespace Plinct\Cms\View\WebSite\Type\Intangible\OrderItem;
 
 use Plinct\Cms\Controller\CmsFactory;
 use Plinct\Tool\ArrayTool;

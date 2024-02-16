@@ -2,15 +2,24 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type;
 
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Intangible\Intangible;
-
 class Type
 {
+	/**
+	 * @var TypeInterface|mixed
+	 */
 	private TypeInterface $object;
-	private ?string $methodName = null;
-	private array $data = [];
+	/**
+	 * @var string|null
+	 */
+	private ?string $methodName = 'index';
+	/**
+	 * @var array|null
+	 */
+	private ?array $data = [];
 
+	/**
+	 * @param string $typeName
+	 */
 	public function __construct(string $typeName) {
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
 		if (class_exists($className)) {
@@ -29,36 +38,39 @@ class Type
 	}
 
 	/**
-	 * @param array $data
+	 * @param ?array $data
 	 * @return Type
 	 */
-	public function setData(array $data): Type
+	public function setData(?array $data): Type
 	{
 		$this->data = $data;
 		return $this;
 	}
 
+	/**
+	 * @param string $tableHasPart
+	 * @param string $idHasPart
+	 * @param array|null $data
+	 * @return array
+	 */
 	public function getForm(string $tableHasPart, string $idHasPart, array $data = null) : array {
 		return $this->object->getForm($tableHasPart, $idHasPart, $data);
 	}
 
-	public function ready()
+	/**
+	 * @return bool
+	 */
+	public function ready(): bool
 	{
 		if (isset($this->object)) {
 			switch ($this->methodName) {
-				case 'edit': CmsFactory::view()->addMain($this->object->edit($this->data)); break;
-				case 'new': CmsFactory::view()->addMain($this->object->new($this->data)); break;
-				default: CmsFactory::view()->addMain($this->object->index($this->data));
+				case 'edit': $this->object->edit($this->data); break;
+				case 'new': $this->object->new($this->data); break;
+				default: $this->object->{$this->methodName}($this->data);
 			}
+		} else {
+			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * @return Intangible
-	 */
-	public function intangible(): Intangible
-	{
-		return new Intangible();
 	}
 }

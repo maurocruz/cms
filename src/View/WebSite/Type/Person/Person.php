@@ -12,9 +12,9 @@ use Plinct\Tool\ArrayTool;
 class Person extends PersonAbstract implements TypeInterface
 {
   /**
-   * @param ?array $data
+   * @param ?array $value
    */
-  public function index(?array $data)
+  public function index(?array $value)
   {
     $this->navbarPerson();
 		CmsFactory::view()->addMain("
@@ -28,10 +28,10 @@ class Person extends PersonAbstract implements TypeInterface
   }
 
   /**
-   * @param array|null $data
+   * @param array|null $value
    * @param
    */
-  public function new(?array $data) {
+  public function new(?array $value) {
       $this->navbarPerson();
       CmsFactory::View()->addMain(
 				CmsFactory::View()->fragment()->box()->simpleBox(self::formPerson(),_("Add new"))
@@ -39,12 +39,12 @@ class Person extends PersonAbstract implements TypeInterface
   }
 
   /**
-   * @param ?array $data
+   * @param ?array $value
    * @throws Exception
    */
-  public function edit(?array $data) {
-    if (!empty($data)) {
-      $value = $data[0];
+  public function edit(?array $value) {
+    if (!empty($value)) {
+      $value = $value[0];
 
       $this->id = $value['idperson'];
       $this->setName($value['name']);

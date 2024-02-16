@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\WebSite;
 
-namespace Plinct\Cms\Controller\WebSite\Type\WebSite;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 class WebSiteAbstract
 {
@@ -13,29 +11,47 @@ class WebSiteAbstract
    */
   protected array $content = [];
   /**
-   * @var string
+   * @var int
    */
-  protected string $idwebSite;
+  protected int $idwebSite;
 
-  protected function navbarWebSite($title = null)
+	public function __construct(?array $data = null)
+	{
+		if($data) {
+			var_dump($data);
+		}
+	}
+
+	/**
+	 * @param int $idwebSite
+	 */
+	public function setIdwebSite(int $idwebSite): void {
+		$this->idwebSite = $idwebSite;
+	}
+
+	/**
+	 * @param $title
+	 * @return void
+	 */
+  public function navbarWebSite($title = null)
   {
-    CmsFactory::webSite()->addHeader(
-      CmsFactory::response()->fragment()->navbar()
+    CmsFactory::view()->addHeader(
+      CmsFactory::view()->fragment()->navbar()
         ->type('webSite')
         ->title("WebSite")
         ->level(2)
-        ->newTab('/admin/webSite', CmsFactory::response()->fragment()->icon()->home())
-        ->newTab('/admin/webSite/new', CmsFactory::response()->fragment()->icon()->plus())
+        ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
+        ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
         ->search("/admin/webSite")
         ->ready()
     );
 
-    if ($title) CmsFactory::webSite()->addHeader(
-      CmsFactory::response()->fragment()->navbar()
+    if ($title) CmsFactory::view()->addHeader(
+      CmsFactory::view()->fragment()->navbar()
         ->title(_($title))
         ->level(3)
-        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::response()->fragment()->icon()->home())
-        ->newTab("/admin/webSite/webPage?id=$this->idwebSite", _("List of web pages"))
+        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+        ->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("List of web pages"))
         ->ready()
     );
   }
@@ -44,7 +60,7 @@ class WebSiteAbstract
    * @return array
    */
   protected static function newView(): array {
-    return CmsFactory::response()->fragment()->box()->simpleBox(self::formWebSite(), _('Add new'));
+    return CmsFactory::view()->fragment()->box()->simpleBox(self::formWebSite(), _('Add new'));
   }
 
   /**
@@ -52,14 +68,14 @@ class WebSiteAbstract
    * @return array
    */
   protected static function editView($value): array {
-    return CmsFactory::response()->fragment()->box()->simpleBox(self::formWebSite($value), $value['name']);
+    return CmsFactory::view()->fragment()->box()->simpleBox(self::formWebSite($value), $value['name']);
   }
 
   /**
    * @param array|null $value
    * @return array
    */
-  private static function formWebSite(array $value = null): array
+  protected static function formWebSite(array $value = null): array
   {
     //vars
     $id = $value['idwebSite'] ?? null;
@@ -69,10 +85,10 @@ class WebSiteAbstract
     $case = $id ? 'edit' : 'new';
 
     // form
-    $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-webSite']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-webSite']);
     $form->action("/admin/webSite/$case")->method('post');
     // hidden
-    if ($id) $form->input('idwebSite',$id,'hidden');
+    if ($id) $form->input('idwebSite',(string) $id,'hidden');
     // name
     $form->fieldsetWithInput('name',$name,_('Name'));
     // url

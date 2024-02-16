@@ -53,4 +53,9 @@ class Type
 		}
 		return !array_search($this->type, App::getTypesEnabled()) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 	}
+
+	public function put(array $params)
+	{
+		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+	}
 }
