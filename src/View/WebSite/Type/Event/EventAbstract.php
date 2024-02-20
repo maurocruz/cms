@@ -1,17 +1,15 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\Event;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Event;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 abstract class EventAbstract
 {
   /**
-   * @var ?string
+   * @var ?int
    */
-  protected ?string $idevent = null;
+  protected ?int $idevent = null;
 
   /**
    * @param string $case
@@ -26,9 +24,8 @@ abstract class EventAbstract
     $endDate = isset($value) ? strstr($value['endDate'], " ", true) : null;
     $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
     $description = isset($value['description']) ? stripslashes($value['description']) : null;
-
     // FROM
-    $form = CmsFactory::response()->fragment()->form(["class"=>"formPadrao form-event"]);
+    $form = CmsFactory::view()->fragment()->form(["class"=>"formPadrao form-event"]);
     $form->action("/admin/event/$case")->method("post");
     $form->content("<h4>"._("Event")."</h4>");
     // HIDDENS

@@ -36,18 +36,18 @@ class WebPage extends WebPageAbstract implements TypeInterface
 	/**
 	 * @throws Exception
 	 */
-	public function edit(?array $value): bool {
-		$webSite = $value['isPartOf'];
+	public function edit(?array $data): bool {
+		$webSite = $data['isPartOf'];
 	  $this->idwebSite = $webSite['idwebSite'];
-	  $this->idwebPage = $value['idwebPage'];
+	  $this->idwebPage = $data['idwebPage'];
 		parent::navbarWebSite($webSite);
-    self::navbarWebPage($value['name']);
+    self::navbarWebPage($data['name']);
     // FORM EDIT
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($value), ("Edit")));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
     // PROPERTIES
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $value['identifier'])));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
     // WEB ELEMENTS
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView())->getForm((string) $this->idwebPage, $value['hasPart'])));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView())->getForm((string) $this->idwebPage, $data['hasPart'])));
 	  return true;
   }
   /**
@@ -70,4 +70,9 @@ class WebPage extends WebPageAbstract implements TypeInterface
 		//
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->sitemap($data['sitemaps']));
   }
+
+	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
+	{
+		return [];
+	}
 }

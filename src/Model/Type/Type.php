@@ -32,10 +32,28 @@ class Type
 				$data['status'] = 'error';
 			}
 			return $data;
+		} else {
+			$id = $data['id'];
+			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
 		}
 		// REDIRECT TO EDIT PAGE
 		if (isset($data['id']) && !isset($params['tableHasPart'])) {
 			return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+		}
+		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+	}
+
+	/**
+	 * @param array $params
+	 * @return mixed
+	 */
+	public function put(array $params) {
+		$id = $params["id$this->type"];
+		$data = CmsFactory::model()->api()->put($this->type, $params)->ready();
+		if ($data['status'] === "success") {
+			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
+		} elseif($data['status'] === 'fail') {
+			CmsFactory::view()->Logger('type')->info("UPDATE FAIL: $this->type", array_merge(['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser()],$data));
 		}
 		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
@@ -49,13 +67,8 @@ class Type
 		$id = $params["id$this->type"];
 		$data = CmsFactory::model()->api()->delete($this->type, ["id$this->type" => $id])->ready();
 		if ($data['status'] === 'success') {
-			CmsFactory::view()->Logger('type',App::getLogdir().'info.log')->info("ITEM DELETED", ['type'=>$this->type, 'id'=>$id]);
+			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
 		}
 		return !array_search($this->type, App::getTypesEnabled()) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-	}
-
-	public function put(array $params)
-	{
-		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
 }

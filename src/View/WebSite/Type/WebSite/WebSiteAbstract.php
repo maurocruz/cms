@@ -33,7 +33,7 @@ class WebSiteAbstract
 	 * @param $title
 	 * @return void
 	 */
-  public function navbarWebSite($title = null)
+  public function navbarWebSite($title = null): void
   {
     CmsFactory::view()->addHeader(
       CmsFactory::view()->fragment()->navbar()
@@ -42,7 +42,7 @@ class WebSiteAbstract
         ->level(2)
         ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
         ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
-        ->search("/admin/webSite")
+	      ->search("/admin/webSite")
         ->ready()
     );
 

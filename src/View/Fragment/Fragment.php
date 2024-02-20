@@ -6,16 +6,14 @@ use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
 use Plinct\Cms\View\Fragment\Button\Buttons;
-use Plinct\Cms\View\Fragment\Error\Error;
-use Plinct\Cms\View\Fragment\Error\ErrorInterface;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\Fragment\ListTable\ListTable;
 use Plinct\Cms\View\Fragment\ListTable\ListTableInterface;
 use Plinct\Cms\View\Fragment\Message\Message;
 use Plinct\Cms\View\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\View\Fragment\Miscellaneous\MiscellaneousInterface;
-use Plinct\Cms\View\Fragment\Navbar\NavbarFragment;
-use Plinct\Cms\View\Fragment\Navbar\NavbarFragmentInterface;
+use Plinct\Cms\View\Fragment\Navbar\Navbar;
+use Plinct\Cms\View\Fragment\Navbar\NavbarInterface;
 use Plinct\Cms\View\Fragment\ReactShell\ReactShell;
 use Plinct\Web\Fragment\Icons\IconsFragment;
 use Plinct\Web\Fragment\PageNavigation\PageNavigation;
@@ -42,12 +40,6 @@ class Fragment
 	 */
   public function buttons(): Buttons {
     return new Buttons();
-  }
-  /**
-   * @return ErrorInterface
-   */
-  public function error(): ErrorInterface {
-    return new Error();
   }
 
   /**
@@ -86,10 +78,10 @@ class Fragment
   }
 
   /**
-   * @return NavbarFragmentInterface
+   * @return NavbarInterface
    */
-  public function navbar(): NavbarFragmentInterface {
-    return new NavbarFragment();
+  public function navbar(string $title = null, array $list = null, int $level = 2, array $searchInput = null): NavbarInterface {
+    return new Navbar($title, $list, $level, $searchInput);
   }
 
   /**

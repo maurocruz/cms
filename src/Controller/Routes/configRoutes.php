@@ -22,16 +22,24 @@ return function (Route $route) {
 		$route->get('[/{method}]', function (Request $request, Response $response) {
 			$method = $request->getAttribute('method') ?? null;
 			$controller = CmsFactory::controller()->configuration();
-			switch ($method) {
-				case 'installModule': $controller->installMethod(); break;
-				default: $controller->index();
-			}
+			$controller->index();
 			return CmsFactory::view()->writeBody($response);
 		});
 
 		$route->post('/installModule', function (Request $request, Response $response) {
-			CmsFactory::controller()->configuration()->installMethod($request->getParsedBody());
-			return CmsFactory::view()->writeBody($response);
+			$module = $request->getParsedBody()['module'] ?? null;
+			if ($module) {
+				$data = CmsFactory::controller()->configuration()->installModule($module);
+
+				if ($data['status'] === 'success') {
+					return $response->withHeader("Location", "/admin/$module")->withStatus(302);
+				} else {
+					return CmsFactory::view()->writeBody($response);
+				}
+			} else {
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('Module name is null')));
+				return CmsFactory::view()->writeBody($response);
+			}
 		});
 	});
 };

@@ -12,7 +12,7 @@ class ImageObjectView extends ImageObjectWidget
 	 * @param array $data
 	 * @param $params
 	 */
-  public function index(array $data, $params)
+  /*public function index(array $data, $params)
   {
 		$listBy = $params['listBy'] ?? null;
 
@@ -20,23 +20,23 @@ class ImageObjectView extends ImageObjectWidget
 		if ($listBy === 'groups') {
 			// TODO UNDER DEVELOPMENT
 			CmsFactory::view()->addMain('<p>Under development!</p>');
-		}/* else {
-			//$apiHost = App::getApiHost();
-			//CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-imageObject/main.cb79621f47fd3a6ac896.js'></script>");
-			//CmsFactory::webSite()->addMain("<div id='plinctImageObject' data-apiHost='$apiHost'></div>");
-			//CmsFactory::webSite()->addMain('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
-		}*/
-  }
+		} else {
+			$apiHost = App::getApiHost();
+			CmsFactory::webSite()->addMain("<script src='https://plinct.com.br/static/dist/plinct-imageObject/main.cb79621f47fd3a6ac896.js'></script>");
+			CmsFactory::webSite()->addMain("<div id='plinctImageObject' data-apiHost='$apiHost'></div>");
+			CmsFactory::webSite()->addMain('<div id="imageGrid"></div><script src="/App/static/cms/js/dist/imageObject.bundle.js"></script>');
+		}
+  }*/
 
   /**
    * @param null $data
    */
-  public function new($data = null)
+  /*public function new($data = null)
   {
 		// NAVBAR
 		parent::navBarLevel2(_('Add'));
     CmsFactory::webSite()->addMain(self::upload($data['listLocation'] ?? null, $data['listKeywords'] ?? null));
-  }
+  }*/
 
   /**
    * @throws Exception
@@ -67,7 +67,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @throws Exception
    */
-  public function getForm(string $tableHasPart, int $idHasPart, array $data = null): array
+ /* public function getForm(string $tableHasPart, int $idHasPart, array $data = null): array
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;
@@ -80,6 +80,6 @@ class ImageObjectView extends ImageObjectWidget
     $content[] = self::addImagesFromDatabase($tableHasPart, $idHasPart);
 
     return $content;
-  }
+  }*/
 
 }

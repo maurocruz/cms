@@ -26,10 +26,10 @@ class WebSite extends WebSiteAbstract implements TypeInterface
   }
 
   /**
-   * @param ?array $value
+   * @param ?array $data
    */
-  public function edit(?array $value) {
-    $value = $value[0] ?? null;
+  public function edit(?array $data) {
+    $value = $data[0] ?? null;
 		if ($value) {
 			$this->setIdwebSite($value['idwebSite']);
 			// navbar

@@ -7,6 +7,7 @@ use Plinct\Tool\ArrayTool;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\ElementInterface;
 use Plinct\Web\Element\Form\Form as WebForm;
+use Plinct\Web\Element\Form\FormInterface;
 
 class Form extends FormDecorator implements FormInterface, RelationshipInterface, ElementInterface
 {
@@ -45,15 +46,17 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
       return parent::selectReady('additionalType', parent::getData(['class'=>$class]), $value);
   }
 
-  /**
-   * WRITE <SELECT> ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
-   *
-   * @param string $class
-   * @param string|null $value
-   */
+	/**
+	 * WRITE <SELECT> ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
+	 *
+	 * @param string $class
+	 * @param string|null $value
+	 * @return WebForm|FormInterface
+	 */
   public function selectCategory(string $class = "thing", string $value = null)
   {
       $this->form->fieldset(self::selectReady('category', self::getData(['class'=>$class,'source'=>'category']), $value), _("Category"));
+			return $this->form;
   }
 
   /**
@@ -128,7 +131,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 				->submitButtonDelete("/admin/$this->tableHasPart/edit");
 		} else {
 			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-tableHasPart='$this->tableHasPart' data-idHasPart='$this->idHasPart'  data-orderBy='$orberBy'></div>");
-			CmsFactory::webSite()->addBundle('relationship');
+			CmsFactory::view()->addBundle('relationship');
 		}
 
 		return $this->ready();
@@ -180,7 +183,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
      */
     public function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
-	    $this->tableHasPart = $tableHasPart;
+	    $this->tableHasPart = lcfirst($tableHasPart);
 	    $this->idHasPart = $idHasPart;
 	    $this->tableIsPartOf = $tableIsPartOf;
 			return $this->oneToOne($propertyName, $value);

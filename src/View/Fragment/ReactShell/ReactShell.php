@@ -14,7 +14,7 @@ class ReactShell
 	/**
 	 * @var array|string[]
 	 */
-	private array $columnsTable = ["edit"=>"Edit","id"=>"id","name"=>"Nome",'dateModified'=>"Modificado"];
+	private ?array $columnsTable = null;
 
 	/**
 	 * @param string $type
@@ -23,6 +23,16 @@ class ReactShell
 	public function __construct(string $type, array $attributes = [])	{
 		$this->attributes['data-type'] = $type;
 		$this->attributes = array_merge($this->attributes, $attributes);
+	}
+
+	/**
+	 * @param bool $openSection
+	 */
+	public function setOpenSection(bool $openSection): void
+	{
+		if ($openSection) {
+			$this->setAttribute('openSection','true');
+		}
 	}
 
 	/**
@@ -44,9 +54,7 @@ class ReactShell
 	public function setColumnsTable(array $columnsTable, bool $merge = true): ReactShell
 	{
 		if($merge) {
-			$dateModified = array_slice($this->columnsTable, -1);
-			$this->columnsTable = array_merge(array_slice($this->columnsTable,0,-1), $columnsTable);
-			$this->columnsTable = array_merge($this->columnsTable, $dateModified);
+			$this->columnsTable = array_merge(["edit"=>"Edit","id"=>"id","name"=>"Nome"], $columnsTable, ['dateModified'=>"Modificado"]);
 		} else {
 			$this->columnsTable = $columnsTable;
 		}
@@ -77,7 +85,7 @@ class ReactShell
 	 */
 	public final function ready(): string {
 		$this->setAttribute('data-apihost', App::getApiHost());
-		$this->attributes['data-usertoken'] = CmsFactory::controller()->user()->userLogged()->getToken();
+		//$this->attributes['data-usertoken'] = CmsFactory::controller()->user()->userLogged()->getToken();
 		$div = "<div";
 		foreach ($this->attributes as $key => $value) {
 			$div .= " $key='$value'";

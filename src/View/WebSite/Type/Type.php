@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type;
 
+use Plinct\Cms\CmsFactory;
+
 class Type
 {
 	/**
@@ -66,7 +68,10 @@ class Type
 			switch ($this->methodName) {
 				case 'edit': $this->object->edit($this->data); break;
 				case 'new': $this->object->new($this->data); break;
-				default: $this->object->{$this->methodName}($this->data);
+				default:
+					method_exists($this->object, $this->methodName)
+						? $this->object->{$this->methodName}($this->data)
+						: CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('Method does not exist')));
 			}
 		} else {
 			return false;

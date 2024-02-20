@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\WebSite\Type\Organization;
+namespace Plinct\Cms\View\WebSite\Type\Organization;
 
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
 
 abstract class OrganizationAbstract
@@ -42,10 +42,12 @@ abstract class OrganizationAbstract
    */
   protected function navbarIndex()
   {
-    CmsFactory::webSite()->navbar(_("Organization"), [
-      "/admin/organization"=> CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/organization/new" => CmsFactory::response()->fragment()->icon()->plus()
-    ], 2, ['table'=>'organization']);
+		CmsFactory::view()->addHeader(
+	    CmsFactory::view()->fragment()->navbar()->setTitle(_("Organization"))->setTabs([
+	      "/admin/organization"=> CmsFactory::view()->fragment()->icon()->home(),
+	      "/admin/organization/new" => CmsFactory::view()->fragment()->icon()->plus()
+	    ])->level(2)->search('organization')->ready()
+		);
   }
   /**
    *
@@ -53,20 +55,25 @@ abstract class OrganizationAbstract
   protected function navbarNew()
   {
     $this->navbarIndex();
-    CmsFactory::webSite()->navbar(_("Add new"), [], 3);
+    CmsFactory::view()->fragment()->navbar()->title(_("Add new"))->content([])->level(3)->ready();
   }
   /**
    *
    */
   protected function navbarEdit()
   {
-    CmsFactory::webSite()->navbar($this->name, [
-      "/admin/organization/edit?id=$this->id" => CmsFactory::response()->fragment()->icon()->home(),
+    CmsFactory::view()->fragment()->navbar($this->name, [
+      "/admin/organization/edit?id=$this->id" => CmsFactory::view()->fragment()->icon()->home(),
       "/admin/organization?id=$this->id&action=service" => _("Services"),
       "/admin/organization/product?id=$this->id" => _("Products"),
       "/admin/organization/order?id=$this->id" => _("Orders")
     ], 3);
   }
+
+	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
+	{
+		return [];
+	}
   /**
    * FORM EDIT AND NEW
    * @param string $case
@@ -75,11 +82,13 @@ abstract class OrganizationAbstract
    */
   protected function formOrganization(string $case = 'new', $value = null): array
   {
-    $form = CmsFactory::response()->fragment()->form(["name" => "form-organization", "id" => "form-organization", "class" => "formPadrao form-organization"]);
+    $form = CmsFactory::view()->fragment()->form(["name" => "form-organization", "id" => "form-organization", "class" => "formPadrao form-organization"]);
     $form->action("/admin/organization/$case")->method("post");
     $form->content([ "tag" => "h3", "content" => $value['name'] ?? null ]);
-    if ($case == "edit") $form->input("idorganization", $value['idorganization'], 'hidden');
-    // legal name
+    if ($case == "edit") $form->input("idorganization", (string) $value['idorganization'], 'hidden');
+    // name
+    $form->fieldsetWithInput("name", $value['name'] ?? null, _("Name"));
+		// legal name
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id
     $form->fieldsetWithInput("taxId", $value['taxId'] ?? null, _("Tax Id"));

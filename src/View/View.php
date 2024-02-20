@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View;
 
+use Plinct\Cms\Controller\App;
 use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\User\User;
+use Plinct\Cms\View\WebSite\Configuration\Configuration;
 use Plinct\Cms\View\WebSite\WebSite;
 use Plinct\Cms\View\WebSite\WebSiteFactory;
 use Plinct\Tool\Logger\Logger;
@@ -26,11 +28,20 @@ class View
 		return WebSiteFactory::addMain($content);
 	}
 
+	/**
+	 * @param $content
+	 * @param bool $firstChild
+	 * @return null
+	 */
 	public function addHeader($content, bool $firstChild = false)
 	{
 		return WebSiteFactory::addHeader($content, $firstChild);
 	}
 
+	/**
+	 * @param $bundle
+	 * @return null
+	 */
 	public function addBundle($bundle)
 	{
 		return WebSiteFactory::addBundle($bundle);
@@ -53,9 +64,9 @@ class View
 	 * @param string $filename
 	 * @return Logger
 	 */
-	public function Logger(string $channel, string $filename = 'plinctCms.log'): Logger
+	public function Logger(string $channel, string $filename = 'plinctCmsLogs.log'): Logger
 	{
-		return new Logger($channel, $filename);
+		return new Logger($channel, App::getLogdir().$filename);
 	}
 
 	/**

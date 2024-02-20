@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\Type\ImageObject;
+namespace Plinct\Cms\Model\Type\ImageObject;
 
 use Exception;
 use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
 use Plinct\PDO\PDOConnect;
 use Plinct\Tool\FileSystem\FileSystem;
-
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\CmsFactory;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class ImageObject
 {

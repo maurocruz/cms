@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
+namespace Plinct\Cms\View\WebSite\Type\Product;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Product;
-
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 
 abstract class ProductAbstract
 {
@@ -35,7 +33,7 @@ abstract class ProductAbstract
    */
   protected function formProduct(string $case = "new", $value = null): array
   {
-    $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-product']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-product']);
     $form->action("/admin/product/$case")->method("post");
 
     $form->content("<h4>" . _(ucfirst($case)) . "</h4>");
@@ -46,9 +44,9 @@ abstract class ProductAbstract
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('name'));
     // ADDITIONAL TYPE
-    $form->fieldset(CmsFactory::response()->fragment()->form()->selectAdditionalType('Product', $value['additionalType'] ?? null), _('Additional Type'));
+    $form->fieldset(CmsFactory::view()->fragment()->form()->selectAdditionalType('Product', $value['additionalType'] ?? null), _('Additional Type'));
     // CATEGORY
-    $form->fieldset(CmsFactory::response()->fragment()->form()->selectCategory('Product', $value['category'] ?? null), _("Category"));
+    $form->fieldset(CmsFactory::view()->fragment()->form()->selectCategory('Product', $value['category'] ?? null), _("Category"));
     // DESCRIPTION
     $form->fieldsetWithTextarea('description', $value['description'] ?? null, _("Description"));
     // DISAMBIGUATING DESCRIPTION

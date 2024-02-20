@@ -39,25 +39,20 @@ class Person extends PersonAbstract implements TypeInterface
   }
 
   /**
-   * @param ?array $value
+   * @param ?array $data
    * @throws Exception
    */
-  public function edit(?array $value) {
-    if (!empty($value)) {
-      $value = $value[0];
-
+  public function edit(?array $data) {
+    if (!empty($data)) {
+      $value = $data[0];
       $this->id = $value['idperson'];
       $this->setName($value['name']);
-
       // NAVBAR
       $this->navbarPersonEdit();
-
       // FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPerson('edit', $value), _("Edit person")));
       // CONTACT POINT
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->id, $value['contactPoint'])));
-      // ADDRESS
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Postal address"), (new PostalAddressView())->getForm("person", $this->id, $value['address'])));
       // IMAGE
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('person')->setIdHasPart($this->id)->ready());
 

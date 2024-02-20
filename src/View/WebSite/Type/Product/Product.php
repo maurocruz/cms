@@ -1,17 +1,15 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\Product;
+namespace Plinct\Cms\View\WebSite\Type\Product;
 
 use Exception;
 use Plinct\Cms\Controller\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
 use Plinct\Cms\Controller\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\Controller\WebSite\Type\Organization\OrganizationView;
+use Plinct\Cms\Controller\WebSite\Type\Organization\Organization;
 use Plinct\Tool\ArrayTool;
 
-class ProductView extends ProductAbstract
+class Product extends ProductAbstract
 {
   /**
    * @param string|null $title
@@ -38,7 +36,7 @@ class ProductView extends ProductAbstract
       $organization = $value['manufacturer'];
       $organization['action'] = 'edit';
       $organization['product'] = $value;
-      (new OrganizationView())->product($organization);
+      (new Organization())->product($organization);
     }
   }
 

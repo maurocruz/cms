@@ -23,7 +23,7 @@ class Structure
       <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
       <script src="/admin/assets/js/scripts"></script>
       <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
-      <script src="https://plinct.com.br/static/dist/plinct-shell/main.js"></script>
+      <script src="https://plinct.local/static/dist/plinct-shell/main(v3).js"></script>
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 

@@ -14,23 +14,23 @@ class OrganizationController
    * @param null $params
    * @return array
    */
-  public function index($params = null): array
+  /*public function index($params = null): array
   {
     $paramsSet = [ "format" => "ItemList", "properties" => "name,additionalType,dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
     $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
     return CmsFactory::request()->api()->get("organization", $paramsGet)->ready();
-  }
+  }*/
   /**
    * @param array $params
    * @param bool $allProperties
    * @return array
    */
-  public function edit(array $params, bool $allProperties = true): array
+  /*public function edit(array $params, bool $allProperties = true): array
   {
     $paramsGet['idorganization'] = $params['idorganization'] ?? $params['id'] ?? null;
     if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member";
     return CmsFactory::request()->server()->api()->get("organization", $paramsGet)->ready();
-  }
+  }*/
   /**
    * @return bool
    */

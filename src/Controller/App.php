@@ -17,7 +17,7 @@ class App
   /**
    * @var ?string
    */
-  private static ?string $IMAGES_FOLDER = null;
+  private static ?string $IMAGES_FOLDER = "/public/images/";
   /**
    * @var string
    */

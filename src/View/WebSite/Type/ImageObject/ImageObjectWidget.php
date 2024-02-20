@@ -24,33 +24,7 @@ class ImageObjectWidget
 
 	protected int $offset = 0;
 
-	/**
-	 * @return void
-	 */
-	protected function navBarLevel1()
-	{
-		CmsFactory::webSite()->addHeader(
-			CmsFactory::response()->fragment()->navbar()
-				->title(_('Images'))
-				->level(2)
-				->newTab("/admin/imageObject", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/imageObject/new", CmsFactory::view()->fragment()->icon()->plus())
-				->newTab("/admin/imageObject?listBy=keywords", _("Keywords"))
-				->newTab("/admin/imageObject?listBy=groups", _("Groups"))
-				->ready()
-		);
-	}
 
-	protected function navBarLevel2($title)
-	{
-		self::navBarLevel1();
-		CmsFactory::webSite()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-			->title($title)
-			->level(3)
-			->ready()
-		);
-	}
 
   /**
    *
