@@ -17,7 +17,7 @@ abstract class PersonAbstract
   /**
    * @var string
    */
-  protected string $name;
+  protected string $name = '';
 
   /**
    *
@@ -46,25 +46,11 @@ abstract class PersonAbstract
       ->type('person')
       ->title($this->name)
       ->level(3)
-      ->newTab("/admin/person?id=$this->id", CmsFactory::view()->fragment()->icon()->home())
-      ->newTab("/admin/person?id=$this->id&action=service", _("Services"))
-      ->newTab("/admin/person?id=$this->id&action=product", _("Products"))
+      ->newTab("/admin/person/edit/$this->id", CmsFactory::view()->fragment()->icon()->home())
+      //->newTab("/admin/person?id=$this->id&action=service", _("Services"))
+     // ->newTab("/admin/person?id=$this->id&action=product", _("Products"))
       ->ready()
     );
-  }
-
-  /**
-   * @param int $id
-   */
-  public function setId(int $id) {
-      $this->id = $id;
-  }
-
-  /**
-   * @param mixed $name
-   */
-  public function setName($name): void {
-      $this->name = $name;
   }
 
   /**
@@ -74,9 +60,9 @@ abstract class PersonAbstract
    * @param null $idHasPart
    * @return array
    */
-  protected static function formPerson(string $case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array
+  protected function formPerson(string $case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array
   {
-    $id = isset($value) ? $value['idperson'] : null;
+    $id = isset($value) ? $this->id : null;
 
     $content[] = $case == "edit" ? [ "tag" => "input", "attributes" => [ "name"=>"idperson", "type" => "hidden", "value" => $id ] ] : null ;
     if ($tableHasPart) {

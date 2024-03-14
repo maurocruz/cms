@@ -24,6 +24,9 @@ class TypeController
 	 */
 	private ?array $queryParams;
 
+	private string $namespace;
+
+
 	/**
 	 * @param ServerRequestInterface $request
 	 */
@@ -34,8 +37,9 @@ class TypeController
 		$this->id = $request->getAttributes()['id'] ?? null;
 		$this->queryParams = $request->getQueryParams();
 		if ($this->id) {
-			$this->queryParams['id'] = $this->id;
+			$this->queryParams['id'.lcfirst($this->type)] = $this->id;
 		}
+		$this->namespace = implode("\\",array_slice(explode("/",$request->getUri()->getPath()),2));
 	}
 
 	/**
@@ -59,12 +63,12 @@ class TypeController
 					}
 				}
 				// if not module controller class
-				if (!$returns) {
+				if ($returns === null) {
 					// debug logger
-					CmsFactory::view()->Logger('debug','debug.log')->debug("Controller Module not exist", ['type'=>$this->type,'method'=>__METHOD__]);
+					CmsFactory::view()->Logger('debug')->debug("Controller Module not exist", ['type'=>$this->type,'method'=>__METHOD__]);
 					// generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
-					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
+					$returns = CmsFactory::view()->webSite()->type($this->type)->setNamespace($this->namespace)->setMethodName($this->methodName)->setData($dataType)->ready();
 				}
 			}
 			return $returns;

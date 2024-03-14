@@ -58,9 +58,9 @@ return function (Route $route)
 		$iduser = $args['iduser'] ?? null;
 		$params = $request->getQueryParams();
 		if ($action == 'new') {
-			CmsFactory::view()->user()->new($params);
+			CmsFactory::view()->user()->new();
 		} elseif($iduser && $action == 'edit') {
-			CmsFactory::controller()->user()->edit($iduser, $params);
+			CmsFactory::controller()->user()->edit($iduser);
 		} else {
 			CmsFactory::controller()->user()->index($params);
 		}

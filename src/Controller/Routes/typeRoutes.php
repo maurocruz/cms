@@ -11,6 +11,9 @@ use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route)
 {
+	$route->get('/favicon.ico', function (Request $request, Response $response) {
+		return null;
+	});
 	/**
 	 * GET
 	 */

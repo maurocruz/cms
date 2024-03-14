@@ -5,7 +5,7 @@ namespace Plinct\Cms\Controller\WebSite\Type\Taxon;
 use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Thing\ThingView;
+use Plinct\Cms\Controller\WebSite\Type\Thing\Thing;
 
 class TaxonView
 {
@@ -60,7 +60,7 @@ class TaxonView
    */
   public function new() {
     $this->navbarTaxon();
-		CmsFactory::webSite()->addMain(ThingView::new('taxon'));
+		CmsFactory::webSite()->addMain(Thing::new('taxon'));
   }
   /**
    * @param string $case

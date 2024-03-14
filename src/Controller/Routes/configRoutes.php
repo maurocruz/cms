@@ -20,7 +20,7 @@ return function (Route $route) {
 		});
 
 		$route->get('[/{method}]', function (Request $request, Response $response) {
-			$method = $request->getAttribute('method') ?? null;
+		//	$method = $request->getAttribute('method') ?? null;
 			$controller = CmsFactory::controller()->configuration();
 			$controller->index();
 			return CmsFactory::view()->writeBody($response);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\WebSite;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 
 class WebSiteAbstract
 {
@@ -30,11 +31,14 @@ class WebSiteAbstract
 	}
 
 	/**
-	 * @param $title
+	 * @param null $title
+	 * @param int $level
 	 * @return void
 	 */
-  public function navbarWebSite($title = null): void
+  public function navbarWebSite($title = null, int $level = 3): void
   {
+		$navbarCreativeWork = new CreativeWork();
+		$navbarCreativeWork->navbar();
     CmsFactory::view()->addHeader(
       CmsFactory::view()->fragment()->navbar()
         ->type('webSite')
@@ -49,7 +53,7 @@ class WebSiteAbstract
     if ($title) CmsFactory::view()->addHeader(
       CmsFactory::view()->fragment()->navbar()
         ->title(_($title))
-        ->level(3)
+        ->level($level)
         ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
         ->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("List of web pages"))
         ->ready()
@@ -81,6 +85,8 @@ class WebSiteAbstract
     $id = $value['idwebSite'] ?? null;
     $name = $value['name'] ?? null;
     $description = $value['description'] ?? null;
+    $copyrightHolder = $value['copyrightHolder'] ?? null;
+    $author = $value['author'] ?? null;
     $url = $value['url'] ?? null;
     $case = $id ? 'edit' : 'new';
 
@@ -95,6 +101,10 @@ class WebSiteAbstract
     $form->fieldsetWithInput('url',$url,'Url');
     // description
     $form->fieldsetWithTextarea('description', $description, _("Description"));
+		// copyrightHolder
+	  $form->fieldsetWithInput('copyrightHolder', $copyrightHolder, _('Copyright holder'));
+	  // author
+	  $form->fieldsetWithInput('author', $author, _('Author'));
     // submit
     $form->submitButtonSend(['class'=>'form-submit-button form-submit-button-send']);
     if ($id) {

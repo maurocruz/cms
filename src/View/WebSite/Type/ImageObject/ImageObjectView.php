@@ -67,7 +67,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @throws Exception
    */
- /* public function getForm(string $tableHasPart, int $idHasPart, array $data = null): array
+  public function getForm(string $tableHasPart, int $idHasPart, array $data = null): array
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;
@@ -80,6 +80,5 @@ class ImageObjectView extends ImageObjectWidget
     $content[] = self::addImagesFromDatabase($tableHasPart, $idHasPart);
 
     return $content;
-  }*/
-
+  }
 }

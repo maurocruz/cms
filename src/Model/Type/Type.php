@@ -34,10 +34,13 @@ class Type
 			return $data;
 		} else {
 			$id = $data['id'];
-			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
+			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
 		}
 		// REDIRECT TO EDIT PAGE
-		if (isset($data['id']) && !isset($params['tableHasPart'])) {
+		if (isset($data['id'])) {
+			if ($this->type === "webPageElement") {
+				return filter_input(INPUT_SERVER, 'HTTP_REFERER');		
+			}
 			return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
 		}
 		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
@@ -69,6 +72,6 @@ class Type
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
 		}
-		return !array_search($this->type, App::getTypesEnabled()) ? filter_input(INPUT_SERVER, 'HTTP_REFERER') : dirname(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+		return !array_search($this->type, App::getTypesEnabled()) ? '/admin/'.$params['type'] : filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
 }

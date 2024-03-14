@@ -4,8 +4,8 @@ namespace Plinct\Cms\View\WebSite\Type\WebPageElement;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\ImageObject\ImageObjectView;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Tool\ArrayTool;
 
 class WebPageElementView
@@ -18,8 +18,14 @@ class WebPageElementView
    * @var ?int
    */
   protected ?int $idwebPageElement = null;
+	private int $isPartOf;
 
-  /**
+	public function __construct(int $isPartOf)
+	{
+		$this->isPartOf = $isPartOf;
+	}
+
+	/**
    * @param $title
    */
   private function navBarWebPageElement($title)
@@ -72,12 +78,14 @@ class WebPageElementView
    */
   public function editForms(array $value): array
   {
+		$typeBuilder = new TypeBuilder('webPageElement', $value);
+		$idthing = $typeBuilder->getPropertyValue('idthing');
     // FORM CONTENT
     $content[] = self::formWebPageElement("edit", $value);
     // ATTRIBUTES
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
     // IMAGES
-    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("webPageElement",(int) $this->idwebPageElement, $value['image']));
+	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
 		// RETURN
     return $content;
   }
@@ -88,14 +96,13 @@ class WebPageElementView
   public function getForm(string $idHasPart, ?array $value): array
   {
     $this->idwebPage = $idHasPart;
-
     // add new WebPagElement
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new"), self::formWebPageElement());
-
     // WebPageElements hasPart
     if ($value) {
       foreach ($value as $valueWebPageElement) {
-				$this->idwebPageElement = $valueWebPageElement['idwebPageElement'];
+				$typeBuilder = new TypeBuilder('webPageElement', $valueWebPageElement);
+				$this->idwebPageElement = $typeBuilder->getId();
 				$name = $valueWebPageElement['name'];
 				$text = $valueWebPageElement['text'];
 
@@ -117,29 +124,21 @@ class WebPageElementView
   {
     $id = $this->idwebPageElement;
 		$position = $value['position'] ?? null;
-
     $form = CmsFactory::view()->fragment()->form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
-
     // HIDDEN
-    $form->input('tableHasPart','webPage','hidden')->input('idHasPart', $this->idwebPage,'hidden');
     if ($case == 'edit') $form->input('idwebPageElement', (string)$this->idwebPageElement, 'hidden');
-    if($case == 'new') $form->input('isPartOf', $this->idwebPage, 'hidden');
-
+    if($case == 'new') $form->input('isPartOf',(string) $this->isPartOf, 'hidden');
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Title'));
-
     // POSITION
     $form->fieldsetWithInput('position', $position ? (string) $position : null, _('Position'));
-
     // TEXT
     $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaWebPageElement$id"]);
     $form->setEditor("textareaWebPageElement$id", "editor$case$id");
-
     // SUBMIT BUTTONS
     $form->submitButtonSend();
     if ($case=='edit') $form->submitButtonDelete("/admin/webPageElement/erase");
-
     // READY
     return $form->ready();
   }

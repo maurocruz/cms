@@ -38,7 +38,6 @@
     fieldset:nth-of-type(5) { width: 33.3%; }
   }
 }
-
 // Dispositivos médios (tablets com menos de 992px)
 @media (min-width: 992px) {
   // OFFER FORM
@@ -48,7 +47,6 @@
     fieldset:nth-of-type(3) { width: calc(24% - 50px); }
   }
 }
-
 // Dispositivos large (desktops com menos de 1200px)
 @media (min-width: 1024px) {
   .form-postalAddress {

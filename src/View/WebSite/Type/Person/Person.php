@@ -6,6 +6,7 @@ use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 use Plinct\Tool\ArrayTool;
 
@@ -14,7 +15,7 @@ class Person extends PersonAbstract implements TypeInterface
   /**
    * @param ?array $value
    */
-  public function index(?array $value)
+  public function index(?array $value): void
   {
     $this->navbarPerson();
 		CmsFactory::view()->addMain("
@@ -45,8 +46,9 @@ class Person extends PersonAbstract implements TypeInterface
   public function edit(?array $data) {
     if (!empty($data)) {
       $value = $data[0];
-      $this->id = $value['idperson'];
-      $this->setName($value['name']);
+	    $typeBuilder = new TypeBuilder('person', $value);
+      $this->id = $typeBuilder->getId();
+			$idthing = $typeBuilder->getPropertyValue('idthing');
       // NAVBAR
       $this->navbarPersonEdit();
       // FORM
@@ -54,7 +56,7 @@ class Person extends PersonAbstract implements TypeInterface
       // CONTACT POINT
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->id, $value['contactPoint'])));
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('person')->setIdHasPart($this->id)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
 
     } else {
       $this->navbarPerson();

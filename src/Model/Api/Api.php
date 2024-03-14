@@ -53,8 +53,7 @@ class Api
 	 * @param array|null $FILES
 	 * @return $this
 	 */
-	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
-	{
+	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api {
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
@@ -89,14 +88,17 @@ class Api
 		}
 		$info = $this->curl->getInfo();
 		$method = $info['effective_method'];
+		// log debug
+		CmsFactory::view()->Logger('debug')->debug("$method request", ['url'=>$info['url']]);
+		// ready curl
 		$data = $this->curl->ready();
 		$returns = json_decode($data, true);
 		if ($returns === null) {
-			ToolBox::Logger('apihost',App::getLogdir().'error.log')->critical("$method: Api failed", ["url"=>$info['url']]);
+			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed", ["url"=>$info['url']]);
 			return ['status'=>'fail', 'message' => 'Get api failed'];
 		} elseif (isset($returns['status'])) {
 			if ($returns['status'] === 'fail') {
-				ToolBox::Logger('apiHost', App::getLogdir().'error.log')->critical("$method: Api failed", $returns);
+				CmsFactory::view()->Logger('apiHost')->critical("$method: Api failed", $returns);
 			}
 		}
 		return $returns;

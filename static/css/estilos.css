@@ -35,8 +35,16 @@
 .list-folder-figure img { width: 110px; height: 75px; border-radius: 5px; margin-bottom: 3px; }
 
 .posts-box { max-height: 110px; overflow: hidden; }
-.box-expanding { max-height: 1rem; overflow: hidden; }
-.box-expanding--text { font-weight: normal; font-size: 0.85rem; }
+
+.box-expanding {
+    max-height: 1rem;
+    overflow: hidden;
+}
+.box-expanding--text {
+    font-weight: normal;
+    font-size: 0.85rem;
+}
+
 .button-dropdown { color: inherit; text-decoration: none; cursor: pointer; }
 .button-dropdown::after { 
     content: "";

@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\WebPage;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\WebSite\WebSite;
 
 abstract class WebPageAbstract
@@ -44,13 +45,15 @@ abstract class WebPageAbstract
 		);
 	}
 
-	protected function navbarWebSite(array $value = null)
-	{
-		if (isset($value['idwebSite'])) {
-			$this->idwebSite = (int)$value['idwebSite'] ?? null;
+	protected function navbarWebSite(array $value = null) {
+		$typeBuilder = new TypeBuilder('webSite', $value);
+		$idwebSite = $typeBuilder->getId();
+		$name = $typeBuilder->getValue('name');
+		if ($idwebSite) {
+			$this->idwebSite = $idwebSite;
 			$webSite = new WebSite();
 			$webSite->setIdwebSite($this->idwebSite);
-			$webSite->navbarWebSite($value['name']);
+			$webSite->navbarWebSite($name);
 		}
 	}
 

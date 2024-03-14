@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\Place;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class Place implements TypeInterface
@@ -25,7 +26,9 @@ class Place implements TypeInterface
 	    ], 2, ['table'=>'place'])->ready()
 		);
     if ($title) {
-        CmsFactory::view()->fragment()->navbar($title, [], 3)->ready();
+	    CmsFactory::view()->addHeader(
+        CmsFactory::view()->fragment()->navbar($title, [], 3)->ready()
+	    );
     }
   }
 
@@ -59,20 +62,20 @@ class Place implements TypeInterface
 			CmsFactory::view()->addMain("<p>"._("Nothing found!")."</p>");
 		} else {
 			$value = $data[0];
-			$this->placeId = isset($value) ? $value['idplace'] : null;
+			$typeBuilder = new TypeBuilder('place',$value);
+			$idplace = $typeBuilder->getId();
+			$this->placeId = isset($value) ? $idplace : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
-			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('place')->setOpenSection(true)->ready()
-			);
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('place')->setIsPartOf($idplace)->ready());
 		}
   }
 
 	/**
+	 * @param array|null $value
 	 * @return array
 	 */
-  private function formPlace(): array
-  {
+  private function formPlace(array $value = null): array {
     $form = CmsFactory::view()->fragment()->form([ "id" => "form-place-new", "name" => "place-form-new", "class" => "formPadrao form-place" ]);
     $form->action("/admin/place/new")->method("post");
     // name

@@ -27,12 +27,14 @@ class ReactShell
 
 	/**
 	 * @param bool $openSection
+	 * @return ReactShell
 	 */
-	public function setOpenSection(bool $openSection): void
+	public function setOpenSection(bool $openSection): ReactShell
 	{
 		if ($openSection) {
 			$this->setAttribute('openSection','true');
 		}
+		return $this;
 	}
 
 	/**
@@ -74,9 +76,9 @@ class ReactShell
 	 * @param int $idHasPart
 	 * @return $this
 	 */
-	public function setIdHasPart(int $idHasPart): ReactShell
+	public function setIsPartOf(int $idHasPart): ReactShell
 	{
-		$this->setAttribute('data-idhaspart',(string) $idHasPart);
+		$this->setAttribute('data-ispartof',(string) $idHasPart);
 		return $this;
 	}
 

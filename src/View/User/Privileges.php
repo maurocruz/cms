@@ -21,7 +21,8 @@ class Privileges
 	public function getPrivileges($value): array
 	{
 		$privileges = $value['privileges'] ?? null;
-		$userLoggedPrivileges = CmsFactory::controller()->user()->userLogged()->getPrivileges()[0]['function'];
+		$userLoggedPrivilegesArray = CmsFactory::controller()->user()->userLogged()->getPrivileges();
+		$userLoggedPrivileges = isset($userLoggedPrivilegesArray[0]) ? $userLoggedPrivilegesArray[0]['function'] : 1;
 		$functionOptions = array_slice($this->functionOptions, 0, $userLoggedPrivileges, true);
 		// TRANSLATE
 		foreach ($functionOptions as $key => $item) {

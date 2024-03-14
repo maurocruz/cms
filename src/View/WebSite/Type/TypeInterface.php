@@ -9,6 +9,4 @@ interface TypeInterface
 	public function edit(?array $data);
 
 	public function new(?array $value);
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null) : array;
 }

@@ -5,6 +5,7 @@ namespace Plinct\Cms\View\WebSite\Type\WebPage;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\WebPageElement\WebPageElementView;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
@@ -37,9 +38,12 @@ class WebPage extends WebPageAbstract implements TypeInterface
 	 * @throws Exception
 	 */
 	public function edit(?array $data): bool {
-		$webSite = $data['isPartOf'];
-	  $this->idwebSite = $webSite['idwebSite'];
-	  $this->idwebPage = $data['idwebPage'];
+		$typeBuilder = new TypeBuilder('webPage', $data);
+		$webSite = $typeBuilder->getValue("isPartOf");
+		$idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
+		$typeBuilderWebSite = new TypeBuilder('webSite', $webSite);
+	  $this->idwebSite = $typeBuilderWebSite->getId();
+	  $this->idwebPage = $typeBuilder->getId();
 		parent::navbarWebSite($webSite);
     self::navbarWebPage($data['name']);
     // FORM EDIT
@@ -47,7 +51,7 @@ class WebPage extends WebPageAbstract implements TypeInterface
     // PROPERTIES
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
     // WEB ELEMENTS
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView())->getForm((string) $this->idwebPage, $data['hasPart'])));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView($idcreativeWork))->getForm((string) $this->idwebPage, $data['hasPart'])));
 	  return true;
   }
   /**

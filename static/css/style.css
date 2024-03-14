@@ -159,8 +159,8 @@ dd {
   margin-bottom: 1px;
   border: 1px gray solid;
   /*background-color: #E0F9FF;*/
-  background-color: #3a3a3a;
-  padding: 4px;
+  background-color: #444444;
+  padding: 10px;
   border-radius: 3px;
 }
 .box h1 {
@@ -627,6 +627,7 @@ a.white {
   padding: 0;
   border: 0;
   line-height: normal;
+  flex-basis: 100%;
 }
 .form-basic legend {
   margin: 0 0 2px 5px;
@@ -657,6 +658,9 @@ a.white {
   background-color: transparent;
   border: 0;
   color: #40d377;
+}
+.form-basic .form-submit-button-delete svg {
+  color: #cc0000;
 }
 
 /** BOOK

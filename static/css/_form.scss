@@ -312,6 +312,7 @@
     padding: 0;
     border: 0;
     line-height: normal;
+    flex-basis: 100%;
   }
 
   legend {
@@ -347,6 +348,9 @@
       border: 0;
       color: #40d377;
     }
+  }
+  .form-submit-button-delete {
+    color: #e61919;// cc0000
   }
 }
 

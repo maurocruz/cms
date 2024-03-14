@@ -15,8 +15,7 @@ class Person
 	 */
   public function edit(array $params): bool
   {
-    $params = array_merge($params, [ "properties" => "*,contactPoint,address,image" ]);
-    $data = CmsFactory::model()->api()->get("person", $params)->ready();
+    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint'] + $params)->ready();
 		return CmsFactory::view()->webSite()->type('person')->setData($data)->setMethodName('edit')->ready();
   }
 

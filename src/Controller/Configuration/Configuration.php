@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\Controller\Configuration;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\App;
 
 class Configuration
 {
@@ -13,11 +12,13 @@ class Configuration
 	public function initApplication(): array
 	{
 		$data = CmsFactory::model()->api()->get('config/database', ['schema'=>'basic'])->ready();
-		if ($data['status'] === 'success') {
-			CmsFactory::view()->Logger('config')->info('SUCCESS: Created Schema', $data);
+		if ($data['status'] === 'complete') {
+			foreach ($data['data'] as $item) {
+				CmsFactory::view()->Logger('database')->info('SUCCESS: Created table', $item);
+			}
 			return ['status'=>'success', 'message'=>'SQL schema basic has been builded' ];
 		} else {
-			CmsFactory::view()->Logger('config')->info('FAIL: SQL Schema fail', $data);
+			CmsFactory::view()->Logger('database')->info('FAIL: SQL Schema fail', $data);
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_($data['message'])));
 			return ['status'=>'fail', 'message'=>'SQL schema basic was not builded'];
 		}
@@ -30,7 +31,7 @@ class Configuration
 
 	public function installModule(string $module): array
 	{
-		$data = CmsFactory::model()->api()->post('config/database',['createModule'=>$module])->ready();
+		$data = CmsFactory::model()->api()->post('config/database',['installModule'=>$module])->ready();
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('config')->info("SUCCESS: Module $module created", $data);
 			return ['status'=>'success', 'message'=>"Module $module created" ];

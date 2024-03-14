@@ -31,8 +31,12 @@ class WebPage
 	 * @return bool
 	 */
   public function edit(array $params): bool {
-    $params2 = array_merge($params, [ "properties" => "*,hasPart,isPartOf" ]);
+    $params2 = array_merge($params, [ "properties" => "image,hasPart,isPartOf" ]);
     $data = CmsFactory::model()->api()->get("webPage", $params2)->ready();
+		if (isset($data['status']) && $data['status'] === 'fail') {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
+			return false;
+		}
 		return CmsFactory::view()->webSite()->type('webPage')->setMethodName('edit')->setData($data[0])->ready();
   }
   /**

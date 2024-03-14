@@ -9,7 +9,7 @@ class Type
 	/**
 	 * @var TypeInterface|mixed
 	 */
-	private TypeInterface $object;
+	private ?TypeInterface $object = null;
 	/**
 	 * @var string|null
 	 */
@@ -47,16 +47,6 @@ class Type
 	{
 		$this->data = $data;
 		return $this;
-	}
-
-	/**
-	 * @param string $tableHasPart
-	 * @param string $idHasPart
-	 * @param array|null $data
-	 * @return array
-	 */
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null) : array {
-		return $this->object->getForm($tableHasPart, $idHasPart, $data);
 	}
 
 	/**

@@ -69,7 +69,7 @@ class Event extends EventAbstract implements TypeInterface
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationship("event", (string) $this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
       // IMAGE
 	    CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('event')->setIdHasPart($value['idevent'])->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('event')->setIsPartOf($value['idevent'])->ready()
 	    );
     }
   }

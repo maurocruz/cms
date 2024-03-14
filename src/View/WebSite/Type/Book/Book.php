@@ -1,46 +1,60 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\Book;
+namespace Plinct\Cms\View\WebSite\Type\Book;
 
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
+use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
-class BookView
+class Book implements TypeInterface
 {
+	private ?int $idbook;
+
 	public function __construct()
 	{
-		CmsFactory::webSite()->navbar(_("Books"), [
-			"/admin/book" => CmsFactory::response()->fragment()->icon()->home(),
-			"/admin/book/new" => CmsFactory::response()->fragment()->icon()->plus()
-		], 3, ["table"=>"book"]);
+		(new CreativeWork())->navbar();
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('book')
+				->setTitle(_('Book'))
+				->newTab("/admin/book", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/book/new", CmsFactory::view()->fragment()->icon()->plus())
+
+				->ready()
+		);
 	}
 
-	public function index()
+	public function index(?array $value)
 	{
-		CmsFactory::webSite()->addMain("
-			<div 
-				class='plinct-shell' 
-				data-type='Book'
-				data-apihost='".App::getApiHost()."' 
-				data-usertoken='".CmsFactory::request()->user()->userLogged()->getToken()."'
-				data-columnsTable='{\"edit\":\"Edit\",\"name\":\"Nome\",\"author\":\"Autor\",\"dateModified\":\"Modificado\"}'
-			></div>");
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('book')->setColumnsTable(['name'=>_('Name'),'author'=>_('Author')])->ready()
+		);
 	}
 
-	public function new()
+	public function new(?array $value)
 	{
-		CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox($this->form(), _("Add new")));
+		CmsFactory::view()->addMain(
+			CmsFactory::response()->fragment()->box()->simpleBox($this->form(), _("Add new"))
+		);
 	}
 
-	public function edit(array $value = null)
+	public function edit(array $data = null)
 	{
-		if ($value) {
-			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox($this->form('edit', $value), _("Edit")));
-			CmsFactory::webSite()->addMain('<div class="plinct-shell" data-type="imageObject" data-tableHasPart="book" data-idHasPart="'.$value['idbook'].'" data-apiHost="'.App::getApiHost().'" data-userToken="'.	CmsFactory::request()->user()->userLogged()->getToken().'"></div>');
+		if (isset($data[0])) {
+			$value = $data[0];
+			$typeBuilder = new TypeBuilder('book',$value);
+			$this->idbook = $typeBuilder->getId();
+			$idthing = $typeBuilder->getPropertyValue('idthing');
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->simpleBox($this->form('edit', $data[0]), _("Edit"))
+			);
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready()
+			);
 		} else {
-			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent(_('No items found!')));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_('No items found!')));
 		}
 	}
 
@@ -51,13 +65,13 @@ class BookView
 	 */
 	private function form(string $case = 'new', array $value = null ): array
 	{
-		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-book'])->method('post');
+		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-book'])->method('post');
 		//action
 		$form->action('/admin/book/'.$case);
 		$form->content("<h4>"._("Book")."</h4>");
 		// id
 		if ($case == 'edit') {
-			$form->input('idbook', $value['idbook'], 'hidden');
+			$form->input('idbook', (string) $this->idbook, 'hidden');
 		}
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
@@ -92,5 +106,10 @@ class BookView
 		}
 		//return
 		return $form->ready();
+	}
+
+	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
+	{
+		return [];
 	}
 }

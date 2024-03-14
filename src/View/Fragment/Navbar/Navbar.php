@@ -31,6 +31,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 	 */
   public function level(int $level): NavbarInterface
   {
+		$this->level = $level;
     $this->setAttributes("class", "menu menu$level");
     return $this;
   }

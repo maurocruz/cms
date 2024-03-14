@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
 class ContactPoint
 {
@@ -35,6 +36,10 @@ class ContactPoint
    */
   static private function formContactPoint($tableHasPart, $idHasPart, string $case = 'new', $value = null, $key = null): array
   {
+		if ($value) {
+			$typeBuilder = new TypeBuilder('contactPoint', $value);
+			$idcontactPoint = $typeBuilder->getId();
+		}
     $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
@@ -43,7 +48,7 @@ class ContactPoint
       $form->input('idHasPart', (string) $idHasPart, "hidden");
       $form->content("<h4>"._('New').": </h4>");
     } else {
-      $form->input('idcontactPoint', (string) $value['idcontactPoint'], 'hidden');
+      $form->input('idcontactPoint', (string) $idcontactPoint, 'hidden');
     }
     // POSITION
     $form->fieldsetWithInput("position", (isset($value['position']) ? (string) $value['position'] : (string) $key), "#", "number", null, [ "min" => "1"]);

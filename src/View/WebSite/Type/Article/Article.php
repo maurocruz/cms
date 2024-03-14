@@ -5,6 +5,8 @@ namespace Plinct\Cms\View\WebSite\Type\Article;
 use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class Article implements TypeInterface
@@ -15,6 +17,7 @@ class Article implements TypeInterface
 	 */
   protected function navbarArticle(string $title = null): void
   {
+	  CreativeWork::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
 		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(),
@@ -34,9 +37,10 @@ class Article implements TypeInterface
    */
   public function index(?array $value): void
   {
-		$apiHost = App::getApiHost();
     $this->navbarArticle();
-	  CmsFactory::view()->addMain("<div class='plinct-shell' data-type='article' data-apihost='$apiHost' data-columnsTable='{\"edit\":\"Edit\",\"headline\":\"Título\",\"datePublished\":\"Publicado\",\"dateModified\":\"Modificado\"}'></div>");
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('article')->ready()
+		);
   }
   /**
    * @param ?array $data
@@ -44,20 +48,20 @@ class Article implements TypeInterface
    */
   public function edit(?array $data): void
   {
-		$apiHost = App::getApiHost();
-		$useToken = CmsFactory::controller()->user()->userLogged()->getToken();
-    if (!empty($data)) {
+		if (isset($data[0])) {
       $value = $data[0];
+			$typeBuilder = new TypeBuilder('article', $value);
+			$idarticle = $typeBuilder->getId();
+			$idthing = $typeBuilder->getPropertyValue('idthing');
       $this->navbarArticle($value['headline'] ?? null);
       if (empty($value)) {
         $content[] = CmsFactory::view()->fragment()->noContent();
       } else {
-				$id = $value['idarticle'];
-        $content[] = CmsFactory::view()->fragment()->box()->simpleBox( self::formArticle("edit", $value, $id), _("Article"));
+        $content[] = CmsFactory::view()->fragment()->box()->simpleBox( self::formArticle("edit", $value, $idarticle), _("Article"));
         // author
-        $content[] = CmsFactory::view()->fragment()->box()->expandingBox( _("Author"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("Article", (string) $id, "author", "Person", $value['author']));
+        $content[] = CmsFactory::view()->fragment()->box()->expandingBox( _("Author"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("Article", (string) $idarticle, "author", "Person", $value['author']));
         // images
-	      $content[] = "<div class='plinct-shell' data-type='imageObject' data-tablehaspart='article' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$useToken'></div>";
+	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
       }
     } else {
       $this->navbarArticle();
