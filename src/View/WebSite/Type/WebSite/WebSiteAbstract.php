@@ -16,13 +16,6 @@ class WebSiteAbstract
    */
   protected int $idwebSite;
 
-	public function __construct(?array $data = null)
-	{
-		if($data) {
-			var_dump($data);
-		}
-	}
-
 	/**
 	 * @param int $idwebSite
 	 */
@@ -37,8 +30,7 @@ class WebSiteAbstract
 	 */
   public function navbarWebSite($title = null, int $level = 3): void
   {
-		$navbarCreativeWork = new CreativeWork();
-		$navbarCreativeWork->navbar();
+		CreativeWork::navbar();
     CmsFactory::view()->addHeader(
       CmsFactory::view()->fragment()->navbar()
         ->type('webSite')

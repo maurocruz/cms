@@ -24,9 +24,6 @@ class TypeController
 	 */
 	private ?array $queryParams;
 
-	private string $namespace;
-
-
 	/**
 	 * @param ServerRequestInterface $request
 	 */
@@ -39,7 +36,6 @@ class TypeController
 		if ($this->id) {
 			$this->queryParams['id'.lcfirst($this->type)] = $this->id;
 		}
-		$this->namespace = implode("\\",array_slice(explode("/",$request->getUri()->getPath()),2));
 	}
 
 	/**
@@ -68,7 +64,7 @@ class TypeController
 					CmsFactory::view()->Logger('debug')->debug("Controller Module not exist", ['type'=>$this->type,'method'=>__METHOD__]);
 					// generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
-					$returns = CmsFactory::view()->webSite()->type($this->type)->setNamespace($this->namespace)->setMethodName($this->methodName)->setData($dataType)->ready();
+					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
 				}
 			}
 			return $returns;

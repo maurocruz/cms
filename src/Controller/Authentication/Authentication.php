@@ -3,8 +3,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\Controller\Authentication;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\App;
-use Plinct\Tool\ToolBox;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Authentication
@@ -17,7 +15,7 @@ class Authentication
 		if (isset($data['status'])) {
 			if ($data['status'] === 'error') {
 				if (isset($data['data'])) {
-					ToolBox::Logger('auth', App::getLogdir().'auth.log')->notice('REGISTER FAILED: duplicate email', $data['data']);
+					CmsFactory::view()->Logger('auth')->notice('REGISTER FAILED: duplicate email', $data['data']);
 				}
 			}
 		}

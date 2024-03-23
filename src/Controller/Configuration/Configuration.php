@@ -11,7 +11,7 @@ class Configuration
 	 */
 	public function initApplication(): array
 	{
-		$data = CmsFactory::model()->api()->get('config/database', ['schema'=>'basic'])->ready();
+		$data = CmsFactory::model()->api()->get('config/database', ['schema'=>'init'])->ready();
 		if ($data['status'] === 'complete') {
 			foreach ($data['data'] as $item) {
 				CmsFactory::view()->Logger('database')->info('SUCCESS: Created table', $item);
@@ -31,7 +31,11 @@ class Configuration
 
 	public function installModule(string $module): array
 	{
-		$data = CmsFactory::model()->api()->post('config/database',['installModule'=>$module])->ready();
+		if ($module === "ImageObject") {
+			CmsFactory::model()->api()->post('config/install',['module'=>'MediaObject'])->ready();
+		}
+		$data = CmsFactory::model()->api()->post('config/install',['module'=>$module])->ready();
+
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('config')->info("SUCCESS: Module $module created", $data);
 			return ['status'=>'success', 'message'=>"Module $module created" ];

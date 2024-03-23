@@ -30,7 +30,6 @@ return function (Route $route) {
 			$module = $request->getParsedBody()['module'] ?? null;
 			if ($module) {
 				$data = CmsFactory::controller()->configuration()->installModule($module);
-
 				if ($data['status'] === 'success') {
 					return $response->withHeader("Location", "/admin/$module")->withStatus(302);
 				} else {

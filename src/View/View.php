@@ -5,7 +5,6 @@ namespace Plinct\Cms\View;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\User\User;
-use Plinct\Cms\View\WebSite\Configuration\Configuration;
 use Plinct\Cms\View\WebSite\WebSite;
 use Plinct\Cms\View\WebSite\WebSiteFactory;
 use Plinct\Tool\Logger\Logger;
@@ -64,7 +63,7 @@ class View
 	 * @param string $filename
 	 * @return Logger
 	 */
-	public function Logger(string $channel, string $filename = 'plinctCmsLogs.log'): Logger
+	public function Logger(string $channel, string $filename = 'logs.log'): Logger
 	{
 		return new Logger($channel, App::getLogdir().$filename);
 	}

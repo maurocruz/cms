@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Book;
 
-use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
@@ -14,7 +13,7 @@ class Book implements TypeInterface
 
 	public function __construct()
 	{
-		(new CreativeWork())->navbar();
+		CreativeWork::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('book')
@@ -36,7 +35,7 @@ class Book implements TypeInterface
 	public function new(?array $value)
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::response()->fragment()->box()->simpleBox($this->form(), _("Add new"))
+			CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new"))
 		);
 	}
 
@@ -106,10 +105,5 @@ class Book implements TypeInterface
 		}
 		//return
 		return $form->ready();
-	}
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return [];
 	}
 }

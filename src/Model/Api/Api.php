@@ -5,7 +5,6 @@ namespace Plinct\Cms\Model\Api;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Plinct\Tool\Curl\v1\Curl;
-use Plinct\Tool\ToolBox;
 
 class Api
 {
@@ -17,6 +16,8 @@ class Api
 	 * @var Curl
 	 */
 	private Curl $curl;
+
+	private ?array $data = null;
 
 	/**
 	 * @param string|null $apiHost
@@ -54,6 +55,7 @@ class Api
 	 * @return $this
 	 */
 	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api {
+		$this->data = $data;
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
@@ -89,13 +91,13 @@ class Api
 		$info = $this->curl->getInfo();
 		$method = $info['effective_method'];
 		// log debug
-		CmsFactory::view()->Logger('debug')->debug("$method request", ['url'=>$info['url']]);
+		//CmsFactory::view()->Logger('debug')->debug("$method request", ['url'=>$info['url']]);
 		// ready curl
 		$data = $this->curl->ready();
 		$returns = json_decode($data, true);
 		if ($returns === null) {
-			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed", ["url"=>$info['url']]);
-			return ['status'=>'fail', 'message' => 'Get api failed'];
+			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed (api.php 97)", ["url"=>$info['url'], "data"=>$this->data]);
+			return ['status'=>'fail', 'message' => "Get api failed: url=".$info['url'].' params='.json_encode($this->data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)];
 		} elseif (isset($returns['status'])) {
 			if ($returns['status'] === 'fail') {
 				CmsFactory::view()->Logger('apiHost')->critical("$method: Api failed", $returns);

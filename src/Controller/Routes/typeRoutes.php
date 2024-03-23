@@ -11,7 +11,7 @@ use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route)
 {
-	$route->get('/favicon.ico', function (Request $request, Response $response) {
+	$route->get('/favicon.ico', function () {
 		return null;
 	});
 	/**
@@ -87,7 +87,7 @@ return function (Route $route)
 		if (is_string($returns)) {
 			return $response->withHeader('Location', $returns)->withStatus(301);
 		} else {
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($returns['message']));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($returns));
 			return CmsFactory::view()->writeBody($response);
 		}
 
