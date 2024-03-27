@@ -31,7 +31,7 @@ class WebPageElementView
   private function navBarWebPageElement($title)
   {
     if ($title) {
-      CmsFactory::webSite()->navbar($title, [], 2);
+      CmsFactory::view()->fragment()->navbar($title, []);
     }
   }
 
@@ -66,9 +66,9 @@ class WebPageElementView
     $this->navBarWebPageElement(_("Web page element"));
     // IS PART OF
     $webPageEditHref = "/admin/webPage/edit/".$data['isPartOf'];
-    CmsFactory::webSite()->addMain("<p>"._("Is part of: ")."<a href='$webPageEditHref'>$webPageEditHref</a></p>");
+    CmsFactory::view()->addMain("<p>"._("Is part of: ")."<a href='$webPageEditHref'>$webPageEditHref</a></p>");
     // FORM
-    CmsFactory::webSite()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::editForms($data), _("Web page element")));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::editForms($data), _("Web page element")));
   }
 
   /**
