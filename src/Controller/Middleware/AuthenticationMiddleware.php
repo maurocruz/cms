@@ -42,6 +42,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
     } else {
       $request = $request->withAttribute("ApiSecretKey", false);
     }
+		session_write_close();
 	  $request = $request->withAttribute("auth", $authAttr);
     return $handler->handle($request);
   }
