@@ -15,7 +15,6 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 	 */
 	public function create()
 	{
-		if (session_status() === PHP_SESSION_NONE) session_start();
 		// LANGUAGE
 		self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
 		// TRANSLATE BY GETTEXT
