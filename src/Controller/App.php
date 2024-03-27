@@ -239,10 +239,8 @@ class App
   public static function setVersion()
   {
 		$version = 'NAN';
-
-	  $gitDirectory = realpath(__DIR__ . '/cms/');
-
-	  if (file_exists($gitDirectory.'/.git')) {
+	  $gitDirectory = realpath(__DIR__ . '/../../.git');
+	  if ($gitDirectory) {
 		  $repository = new Repository($gitDirectory);
 		  $head = $repository->getHead();
 		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
