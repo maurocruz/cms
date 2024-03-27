@@ -17,13 +17,14 @@ class Structure
       <meta name="viewport" content="width=device-width">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link href="/admin/assets/css/reset" type="text/css" rel="stylesheet">
-      <link href="/admin/assets/css/estilos" type="text/css" rel="stylesheet">
+      <link href="/admin/static/css/reset.css" type="text/css" rel="stylesheet">
+      <link href="/admin/static/css/estilos.css" type="text/css" rel="stylesheet">
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
-      <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
-      <script src="/admin/assets/js/scripts"></script>
+      <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
+      <script src="/admin/static/js/scripts.js"></script>
       <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
-      <script src="https://plinct.local/static/dist/plinct-shell/main(v3).js"></script>
+      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
+      
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 

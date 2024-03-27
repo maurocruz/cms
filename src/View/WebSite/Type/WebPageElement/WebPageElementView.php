@@ -123,6 +123,7 @@ class WebPageElementView
   private function formWebPageElement(string $case = "new", $value = null): array
   {
     $id = $this->idwebPageElement;
+		$headline = $value['headline'] ?? null;
 		$position = $value['position'] ?? null;
     $form = CmsFactory::view()->fragment()->form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
@@ -130,9 +131,11 @@ class WebPageElementView
     if ($case == 'edit') $form->input('idwebPageElement', (string)$this->idwebPageElement, 'hidden');
     if($case == 'new') $form->input('isPartOf',(string) $this->isPartOf, 'hidden');
     // NAME
-    $form->fieldsetWithInput('name', $value['name'] ?? null, _('Title'));
+    $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
     // POSITION
     $form->fieldsetWithInput('position', $position ? (string) $position : null, _('Position'));
+		// headline
+	  $form->fieldsetWithInput('headline', $headline, _('Title'));
     // TEXT
     $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaWebPageElement$id"]);
     $form->setEditor("textareaWebPageElement$id", "editor$case$id");

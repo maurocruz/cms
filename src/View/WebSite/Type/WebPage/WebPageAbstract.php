@@ -68,7 +68,9 @@ abstract class WebPageAbstract
     // VARS
     $name = $value['name'] ?? null;
     $url = $value['url'] ?? null;
+    $headline = $value['headline'] ?? null;
     $description = $value['description'] ?? null;
+	  $disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
     $alternativeHeadline = $value['alternativeHeadline'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
@@ -77,14 +79,18 @@ abstract class WebPageAbstract
     // hidden
     $form->input('isPartOf', (string) $this->idwebSite ,'hidden');
     if ($case == "edit") $form->input('idwebPage', (string) $this->idwebPage,'hidden');
-    // title
-    $form->fieldsetWithInput('name',$name,_('Title'));
+    // name
+    $form->fieldsetWithInput('name',$name,_('Name'));
     // url
     $form->fieldsetWithInput('url',$url,'Url');
+	  // headline
+	  $form->fieldsetWithInput('headline',$headline,_('Title'));
+	  // alternativeHeadline
+	  $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));
     // DESCRIPTION
     $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$this->idwebPage"]);
-    // alternativeHeadline
-    $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));
+    // DISAMBIGUATING DESCRIPTION
+    $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('disambiguatingDescription'), null, ['id'=>"textarea2$case$this->idwebPage"]);
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete('/admin/webPage/erase');

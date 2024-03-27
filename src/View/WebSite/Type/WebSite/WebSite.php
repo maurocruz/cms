@@ -44,36 +44,4 @@ class WebSite extends WebSiteAbstract implements TypeInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('Nothing found!'));
 		}
   }
-
-  /*public function webPage(?array $value)
-  {
-		if(!$value) {
-			parent::navbarWebSite();
-			return CmsFactory::view()->fragment()->noContent();
-		}
-		$webPage = CmsFactory::view()->webSite()->type('webPage');
-    // ITEM
-	  $this->idwebSite = $value['idwebSite'];
-	  if ($value['@type'] == "WebPage") {
-		  parent::navbarWebSite($value['isPartOf']['name']);
-      WebPage::edit($value);
-    } else {
-		  // navbar
-      parent::navbarWebSite($value['name']);
-      if (isset($value['hasPart'])) {
-				return $webPage->setMethodName('index')->setData($value)->ready();
-        // LIST ALL
-      } elseif(isset($value['sitemaps'])) {
-        WebPage::sitemap($value);
-      } else {
-        // NEW WEB PAGE
-	      return $webPage->setMethodName('new')->setData($value)->ready();
-      }
-    }
-  }*/
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return [];
-	}
 }
