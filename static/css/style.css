@@ -158,9 +158,7 @@ dd {
 .box {
   margin-bottom: 1px;
   border: 1px gray solid;
-  /*background-color: #E0F9FF;*/
-  background-color: #444444;
-  padding: 10px;
+  padding: 5px;
   border-radius: 3px;
 }
 .box h1 {
@@ -659,8 +657,8 @@ a.white {
   border: 0;
   color: #40d377;
 }
-.form-basic .form-submit-button-delete svg {
-  color: #cc0000;
+.form-basic .form-submit-button-delete {
+  color: #e61919;
 }
 
 /** BOOK
@@ -1346,7 +1344,7 @@ a.white {
 .form-user-privileges fieldset:nth-of-type(2) {
   width: calc(40% - 96px);
 }
-.form-user-privileges fieldset:nth-of-type(3) {
+.form-user-privileges fieldset:nth-of-type(4) {
   width: calc(60% - 96px);
 }
 
@@ -1360,10 +1358,10 @@ a.white {
 
 /* WEB PAGE
 ====================================================== */
-.form-webPage fieldset:nth-of-type(3) {
+.form-webPage fieldset:nth-of-type(5) {
   width: 100%;
 }
-.form-webPage fieldset:nth-of-type(4) {
+.form-webPage fieldset:nth-of-type(6) {
   width: 100%;
 }
 
@@ -1380,6 +1378,9 @@ a.white {
   width: 60px;
 }
 .form-webPageElement fieldset:nth-of-type(3) {
+  width: 100%;
+}
+.form-webPageElement fieldset:nth-of-type(4) {
   width: 100%;
 }
 
