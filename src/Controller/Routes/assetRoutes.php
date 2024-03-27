@@ -13,14 +13,16 @@ return function (Route $route)
 	{
 		$filename = $args['filename'];
 		$type = $args['type'];
-
 		$file = realpath(App::getBASEDIR() . "/static/$type/$filename" .".".$type);
-		$script = file_get_contents($file);
-		$contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html" );
-
-		$newResponse = $response->withHeader("Content-type", $contentType);
+		if ($file) {
+			$script = file_get_contents($file);
+			$contentType = $type == 'js' ? "application/javascript" : ($type == 'css' ? "text/css" : "text/html");
+			$newResponse = $response->withHeader("Content-type", $contentType);
+		} else {
+			$newResponse = $response->withHeader("Content-type", "text/html");
+			$script = '';
+		}
 		$newResponse->getBody()->write($script);
-
 		return $newResponse;
 	});
 };
