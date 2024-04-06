@@ -4,6 +4,7 @@ namespace Plinct\Cms\Model\Type;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
 class Type
 {
@@ -26,24 +27,36 @@ class Type
 	 */
 	public function post(array $params) {
 		$data = CmsFactory::model()->api()->post($this->type, $params)->ready();
+		// ERROR OR FAIL
 		if ((isset($data['status']) && $data['status'] == 'fail') || (isset($data['error']))) {
 			if(isset($data['error'])) {
 				$data = $data['error'];
 				$data['status'] = 'error';
 			}
 			return $data;
-		} else {
-			$id = $data['id'];
-			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
 		}
-		// REDIRECT TO EDIT PAGE
-		if (isset($data['id'])) {
-			if ($this->type === "webPageElement") {
-				return filter_input(INPUT_SERVER, 'HTTP_REFERER');		
+		// SUCCESS
+		else if (isset($data[0])) {
+			$value = $data[0];
+			$typeBuilder = new TypeBuilder($this->type, $value);
+			$id = $typeBuilder->getId();
+			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
+			// REDIRECT
+			if ($this->type === "webPageElement" || $this->type === "programMembership") {
+				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
-			return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $data['id'];
+			// REDIRECT TO EDIT PAGE
+			if ($id) {
+				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $id;
+			} else {
+				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+			}
 		}
-		return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+		// UNKNOW RESPONSE
+		else {
+			CmsFactory::view()->Logger('type')->error("An error ocurred in Model/Type/type.php method post");
+			return false;
+		}
 	}
 
 	/**
@@ -72,6 +85,11 @@ class Type
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
 		}
-		return !array_search($this->type, App::getTypesEnabled()) ? '/admin/'.$params['type'] : filter_input(INPUT_SERVER, 'HTTP_REFERER');
+		// REDIRECT
+		if ($this->type === "webPageElement" || $this->type === "programMembership") {
+			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
+		}
+		//
+		return !array_search($this->type, App::getTypesEnabled()) ? '/admin/'.$this->type : filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
 }

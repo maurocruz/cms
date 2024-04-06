@@ -87,9 +87,4 @@ class Place implements TypeInterface
     $form->submitButtonSend();
     return $form->ready();
   }
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return [];
-	}
 }

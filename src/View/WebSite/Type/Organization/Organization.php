@@ -9,21 +9,21 @@ use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\Intangible\Service\Service;
 use Plinct\Cms\View\WebSite\Type\Intangible\Order\Order;
 use Plinct\Cms\View\WebSite\Type\Product\Product;
+use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class Organization extends OrganizationAbstract implements TypeInterface
 {
-  /**
-   * @param ?array $value
-   */
-  public function index(?array $value)
-  {
-		$apiHost = App::getApiHost();
-		// NAVBAR
-	  parent::navbarIndex();
-		// index
-	  CmsFactory::view()->addMain("<div class='plinct-shell' data-type='organization' data-apihost='$apiHost'></div>");
-  }
+	/**
+	 * @param ?array $value
+	 */
+	public function index(?array $value): void
+	{
+		$this->navbarIndex();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('organization')->ready()
+		);
+	}
   /**
    * @param array|null $value
    * @param
@@ -45,46 +45,27 @@ class Organization extends OrganizationAbstract implements TypeInterface
   {
 	  // NAVBAR
 	  parent::navbarIndex();
-		// NOT Autohorization
-		if (isset($data['status']) && $data['status'] == 'fail') {
+		if (!empty($data)) {
+			$value = $data[0];
+			$typeBuilder = new TypeBuilder('organization', $value);
+			$this->idorganization = $typeBuilder->getId();
+			$this->name = $value['name'];
+			$idthing = $typeBuilder->getPropertyValue('idthing');
+			// NAVBAR
+			parent::navbarEdit();
+			// ORGANIZATION
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->message()->warning('Cms warn: The user is do not authorized for this operation')
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value), true)
 			);
-		}
-		// DATA EMPTY
-		elseif (empty($data)) {
+			// CONTACT POINT
 			CmsFactory::view()->addMain(
-        CmsFactory::view()->fragment()->message()->noContent(_("No item founded!")));
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idorganization, $value['contactPoint'] ?? null))
+			);
+			// IMAGE
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
+		} else {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
-		// VIEW
-		else {
-			$apiHost = App::getApiHost();
-			$userToken = CmsFactory::controller()->user()->userLogged()->getToken();
-      $value = parent::setValues($data[0]);
-      // NAVBAR
-      parent::navbarEdit();
-			// THING
-			CmsFactory::view()->addMain("<div class='plinct-shell' data-type='organization' data-idispartof='{$value['idorganization']}' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
-      // ORGANIZATION
-      CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value))
-      );
-      // LOCATION
-      CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("organization", $this->id, "location", "place", $value['location']))
-      );
-      // CONTACT POINT
-
-      CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->id, $value['contactPoint'] ?? null))
-      );
-      // MEMBER
-      CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Persons"), CmsFactory::view()->fragment()->form()->relationshipOneToMany("organization", $this->id, "person", $value['member'] ?? null)));
-      // IMAGE
-      CmsFactory::view()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='organization' data-idhaspart='{$value['idorganization']}'data-apihost='$apiHost' data-usertoken='$userToken'></div>"
-      );
-    }
   }
   /**
    * @throws Exception

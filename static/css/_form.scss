@@ -350,7 +350,9 @@
     }
   }
   .form-submit-button-delete {
-    color: #e61919;// cc0000
+    svg {
+      color: #e61919; // cc0000
+    }
   }
 }
 
@@ -631,9 +633,9 @@
 .form-person {
   display: flex;
   flex-wrap: wrap;
-  fieldset:nth-child(n) { width: 50%; }
+  /*fieldset:nth-child(n) { width: 50%; }
   fieldset:nth-child(4) { width: 100%; }
-  fieldset:nth-child(9) { width: 100%; }
+  fieldset:nth-child(9) { width: 100%; }*/
 
   @media (min-width: 576px) {
     fieldset:nth-child(n) { width: 50%; }

@@ -36,7 +36,7 @@
 
 .posts-box { max-height: 110px; overflow: hidden; }
 
-.box-expanding {
+/*.box-expanding {
     max-height: 1rem;
     overflow: hidden;
 }
@@ -62,7 +62,7 @@
 .button-dropdown-expanded::after { 
     vertical-align: text-top; 
     border-bottom-width: 0.6em; border-bottom-color: #555; border-bottom-style: solid; 
-}
+}*/
 /* PAGE _ clientes
 ============================================================================= */
 .table-clientes{ font-size: 0.85em; }

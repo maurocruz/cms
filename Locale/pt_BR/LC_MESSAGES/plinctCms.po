@@ -11,6 +11,24 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Program membership"
+msgstr "Associação ao programa"
+
+msgid "Add new program membership"
+msgstr "Adicionar nova associação ao programa"
+
+msgid "Program name"
+msgstr "Nome do programa"
+
+msgid "Organization hosting"
+msgstr "Hospedagem da organização"
+
+msgid "Membership number"
+msgstr "Número de membro"
+
+msgid "Membership points earned"
+msgstr "Pontos de associação ganhos"
+
 msgid "The module %s does not exist!"
 msgstr "O módulo %s não existe!"
 

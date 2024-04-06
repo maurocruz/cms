@@ -16,9 +16,9 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	 */
 	private string $tableHasPart;
 	/**
-	 * @var string
+	 * @var int
 	 */
-	private string $idHasPart;
+	private int $idHasPart;
 	/**
 	 * @var string
 	 */
@@ -96,11 +96,11 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	/**
 	 * For print forms of the relationships tables
 	 * @param string $tableHasPart
-	 * @param string $idHasPart
+	 * @param int $idHasPart
 	 * @param string $tableIsPartOf
 	 * @return RelationshipInterface
 	 */
-	public function relationship(string $tableHasPart, string $idHasPart, string $tableIsPartOf): RelationshipInterface
+	public function relationship(string $tableHasPart, int $idHasPart, string $tableIsPartOf): RelationshipInterface
 	{
 		$this->tableHasPart = $tableHasPart;
 		$this->idHasPart = $idHasPart;
@@ -125,7 +125,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 			$value = array_key_exists(0,$value) ? $value[0] : $value;
 			$id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
 
-			$this->input("id$this->tableHasPart", $this->idHasPart, "hidden")
+			$this->input("id$this->tableHasPart", (string) $this->idHasPart, "hidden")
 				->fieldsetWithInput('name',$value['name'],_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "text", null, [ "disabled" ])
 				->input($propertyName, '', 'hidden')
 				->submitButtonDelete("/admin/$this->tableHasPart/edit");
@@ -150,10 +150,10 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 		if ($value) {
 			foreach ($value as $item) {
 				$id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
-				$form = CmsFactory::response()->fragment()->form(["class" => "formPadrao"])
+				$form = CmsFactory::view()->fragment()->form(["class" => "formPadrao"])
 					->action("/admin/$table/edit")->method("post");
 				$form->input("tableHasPart", $this->tableHasPart, "hidden")
-					->input("idHasPart", $this->idHasPart, "hidden")
+					->input("idHasPart", (string) $this->idHasPart, "hidden")
 					->input("tableIsPartOf", $this->tableIsPartOf, "hidden")
 					->input("idIsPartOf", $id, "hidden")
 					->fieldsetWithInput("name", $item['name'], _($item['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "text", null, ["disabled"])
@@ -164,7 +164,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 		$this->form->attributes(["class" => "formPadrao form-relationship"]);
 		$this->form->action("/admin/" . lcfirst($this->tableIsPartOf) . "/new")->method("post");
 		$this->form->input("tableHasPart", $this->tableHasPart, "hidden")
-			->input("idHasPart", $this->idHasPart, "hidden")
+			->input("idHasPart", (string) $this->idHasPart, "hidden")
 			->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => $table, "data-idHasPart" => $this->idHasPart, "data-orderBy" => $orberBy  ] ]);
 
 		$return[] = $this->form->ready();
@@ -192,13 +192,13 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	/**
 	 * DEPRECATED
 	 * @param string $tableHasPart
-	 * @param string $idHasPart
+	 * @param int $idHasPart
 	 * @param string $tableIsPartOf
 	 * @param array|null $value
 	 * @param string|null $orberBy
 	 * @return array
 	 */
-    public function relationshipOneToMany(string $tableHasPart, string $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
+    public function relationshipOneToMany(string $tableHasPart, int $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
     {
 	    $this->tableHasPart = $tableHasPart;
 	    $this->idHasPart = $idHasPart;

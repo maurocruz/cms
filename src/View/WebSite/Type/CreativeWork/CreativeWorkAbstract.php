@@ -35,13 +35,8 @@ abstract class CreativeWorkAbstract
 		if ($case == 'edit') {
 			$form->input('idcreativeWork', (string) $this->idcreativeWork, 'hidden');
 		}
-		// thing content
-		if ($case === 'new') {
-			$form = Thing::formContent($form, $value);
-		}
 		// creative properties
 		$form = self::formContent($case, $form, $value);
-
 		//button
 		$form->submitButtonSend();
 		if ($case == 'edit') {
@@ -53,6 +48,8 @@ abstract class CreativeWorkAbstract
 
 	public static function formContent(string $case, FormInterface $form, array $value = null): FormInterface
 	{
+		// thing
+		$form = Thing::formContent($form, $value);
 		// alternativeHeadline
 		$form->fieldsetWithInput('alternativeHeadline', $value['alternativeHeadline'] ?? null, _('Alternative headline'));
 		// text
@@ -70,7 +67,7 @@ abstract class CreativeWorkAbstract
 		// headline
 		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));
 		// isPartOf
-		$form->fieldsetWithInput('isPartOf', $value['isPartOf'] ?? null, _('Is part of'));
+		$form->fieldsetWithInput('isPartOf', (string) $value['isPartOf'] ?? null, _('Is part of'));
 		// keywords
 		$form->fieldsetWithInput('keywords', $value['keywords'] ?? null, _('Keywords'));
 		// license

@@ -15,7 +15,7 @@ class Person
 	 */
   public function edit(array $params): bool
   {
-    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint'] + $params)->ready();
+    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint,homeLocation,image,memberOf'] + $params)->ready();
 		return CmsFactory::view()->webSite()->type('person')->setData($data)->setMethodName('edit')->ready();
   }
 
@@ -29,14 +29,14 @@ class Person
     $action = $params['action'] ?? null;
     $item = $params['item'] ?? null;
     if ($item) {
-      $data = CmsFactory::request()->api()->get('service',['provider'=>$id,'providerType'=>'person','id'=>$item,'properties'=>'provider,offer'])->ready();
+      $data = CmsFactory::model()->api()->get('service',['provider'=>$id,'providerType'=>'person','id'=>$item,'properties'=>'provider,offer'])->ready();
     } else {
-      $data = CmsFactory::request()->api()->get('person', ['idperson' => $id])->ready();
+      $data = CmsFactory::model()->api()->get('person', ['idperson' => $id])->ready();
     }
     if ($action == 'new') {
       $data[0]['action'] = "new";
     } else {
-      $data[0]['services'] = CmsFactory::request()->api()->get('service', ['format' => 'ItemList', 'provider' => $id, 'providerType' => 'person','orderBy'=>'dateModified desc'])->ready();
+      $data[0]['services'] = CmsFactory::model()->api()->get('service', ['format' => 'ItemList', 'provider' => $id, 'providerType' => 'person','orderBy'=>'dateModified desc'])->ready();
     }
     return $data[0];
   }
@@ -51,11 +51,11 @@ class Person
     $id = $params['idperson'] ?? null;
     $action = $params['action'] ?? null;
     // LIST PRODUCTS BY PERSON
-    $data = CmsFactory::request()->api()->get('person',['idperson'=>$id])->ready();
+    $data = CmsFactory::model()->api()->get('person',['idperson'=>$id])->ready();
     if($action=='new') {
       $data[0]['action'] = 'new';
     } else {
-      $data[0]['products'] = CmsFactory::request()->api()->get('product', ['format' => 'ItemList', 'manufacturer' => $id, 'manufacturerType' => 'person', 'orderBy' => 'dateModified desc'])->ready();
+      $data[0]['products'] = CmsFactory::model()->api()->get('product', ['format' => 'ItemList', 'manufacturer' => $id, 'manufacturerType' => 'person', 'orderBy' => 'dateModified desc'])->ready();
     }
     return $data[0];
   }
@@ -65,7 +65,7 @@ class Person
   public function saveSitemap()
   {
     $dataSitemap = null;
-    $data = CmsFactory::request()->api()->get("person", [ "orderBy" => "dateModified desc", "properties" => "dateModified,image",'limit'=>'none'])->ready();
+    $data = CmsFactory::model()->api()->get("person", [ "orderBy" => "dateModified desc", "properties" => "dateModified,image",'limit'=>'none'])->ready();
     $loc = App::getURL() ."/t/Person/";
     foreach ($data as $value) {
       $id = $value['idperson'];

@@ -32,9 +32,9 @@ class ThingAbstract
 		// alternateName
 		$form->fieldsetWithInput('alternateName', $value['alternateName'] ?? null, _('Alternate name'));
 		// alternateName
-		$form->fieldsetWithInput('type', $value['@type'] ?? null, _('Type'), 'text', null, ['readonly']);
+		//$form->fieldsetWithInput('type', $value['@type'] ?? null, _('Type'), 'text', null, ['readonly']);
 		// additional type
-		$form->fieldsetWithInput('additionalType', $value['additionalType'] ?? null, _('Additional type'), 'text', null, ['readonly']);
+		//$form->fieldsetWithInput('additionalType', $value['additionalType'] ?? null, _('Additional type'), 'text', null, ['readonly']);
 		// description
 		$form->fieldsetWithTextarea('description', $value['description'] ?? null, _('Description'));
 		// disambiguatingDescription

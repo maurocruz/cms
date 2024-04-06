@@ -2,41 +2,21 @@
 declare(strict_types=1);
 namespace Plinct\Cms\Controller\WebSite\Type\Organization;
 
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\Order\OrderController;
-use Plinct\Tool\DateTime;
-use Plinct\Tool\Sitemap;
 
-class OrganizationController
+class Organization
 {
   /**
-   * @param null $params
-   * @return array
-   */
-  /*public function index($params = null): array
-  {
-    $paramsSet = [ "format" => "ItemList", "properties" => "name,additionalType,dateModified", "orderBy" => "dateModified", "ordering" => "desc" ];
-    $paramsGet = $params ? array_merge($paramsSet, $params) : $paramsSet;
-    return CmsFactory::request()->api()->get("organization", $paramsGet)->ready();
-  }*/
-  /**
    * @param array $params
-   * @param bool $allProperties
-   * @return array
-   */
-  /*public function edit(array $params, bool $allProperties = true): array
-  {
-    $paramsGet['idorganization'] = $params['idorganization'] ?? $params['id'] ?? null;
-    if ($allProperties ) $paramsGet['properties'] = "*,address,location,contactPoint,member";
-    return CmsFactory::request()->server()->api()->get("organization", $paramsGet)->ready();
-  }*/
-  /**
    * @return bool
    */
-  public function new(): bool {
-    return true;
+  public function edit(array $params): bool
+  {
+	  $data = CmsFactory::model()->api()->get("organization",['properties'=>'contactPoint,location,image'] + $params)->ready();
+	  return CmsFactory::view()->webSite()->type('organization')->setData($data)->setMethodName('edit')->ready();
   }
+
   /**
    * SERVICE IS PART OF
    * @param array $params
@@ -107,21 +87,5 @@ class OrganizationController
       $data[0]['orders'] = (new OrderController())->indexWithPartOf($customerName, $id);
     endif;
     return $data[0];
-  }
-	/**
-	 */
-	public function saveSitemap()
-  {
-    $dataSitemap = null;
-    $data = CmsFactory::request()->api()->get('organization', ['properties'=>'image,dateModified','orderBy'=>'dateModified desc','limit'=>'none'])->ready();
-    foreach ($data as $value) {
-      $id = $value['idorganization'];
-      $dataSitemap[] = [
-        "loc" => App::getURL() . "/t/organization/$id",
-        "lastmod" => DateTime::formatISO8601($value['dateModified']),
-        "image" => $value['image']
-      ];
-    }
-    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-organization.xml"))->saveSitemap($dataSitemap);
   }
 }

@@ -15,7 +15,7 @@ class Box implements BoxInterface
   public function simpleBox($content, string $caption = null, array $attributes = ['class'=>'box']): array
   {
    $div = new Element('div', $attributes);
-    if ($caption) $div->content("<h4>$caption</h4>");
+    if ($caption) $div->content("<p>$caption</p>");
     $div->content($content);
     return $div->ready();
   }
@@ -25,13 +25,14 @@ class Box implements BoxInterface
    * @param $content
    * @return array
    */
-  public function expandingBox(string $caption, $content): array
+  public function expandingBox(string $caption, $content, bool $open = false, string $style = null): array
   {
     $id = "form-expanding-". mt_rand(111,999);
-
-    $div = new Element('div',['id'=> $id, 'class'=>'box box-expanding']);
+		$className = $open ? "button-dropdown button-dropdown-expanded" : "button-dropdown button-dropdown-contracted";
+		$classBox = $open ? "box" : "box box-expanding";
+    $div = new Element('div',['id'=> $id, 'class'=>$classBox, 'style'=>$style]);
     // CAPTION
-    $div->content("<h4 class='button-dropdown button-dropdown-contracted' onclick='expandBox(this,\"$id\");'>$caption</h4>");
+    $div->content("<p class='$className' onclick='expandBox(this,\"$id\");'>$caption</p>");
     // CONTENT
     $div->content($content);
     // READY

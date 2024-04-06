@@ -6,6 +6,8 @@ use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\Intangible\ProgramMembership;
+use Plinct\Cms\View\WebSite\Type\Intangible\Service\ServiceView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 use Plinct\Tool\ArrayTool;
@@ -18,14 +20,9 @@ class Person extends PersonAbstract implements TypeInterface
   public function index(?array $value): void
   {
     $this->navbarPerson();
-		CmsFactory::view()->addMain("
-			<div
-				class='plinct-shell'
-				data-type='person'
-				data-apihost='".App::getApiHost()."'
-				data-userToken='".CmsFactory::controller()->user()->userLogged()->getToken()."'
-				data-columnsTable='{\"edit\":\"Edit\",\"idperson\":\"ID\",\"name\":\"Nome\",\"dateModified\":\"Modificação\"}'
-			></div>");
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('person')->ready()
+		);
   }
 
   /**
@@ -47,14 +44,19 @@ class Person extends PersonAbstract implements TypeInterface
     if (!empty($data)) {
       $value = $data[0];
 	    $typeBuilder = new TypeBuilder('person', $value);
-      $this->id = $typeBuilder->getId();
+      $this->idperson = $typeBuilder->getId();
+			$this->name = $value['name'];
 			$idthing = $typeBuilder->getPropertyValue('idthing');
       // NAVBAR
       $this->navbarPersonEdit();
       // FORM
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPerson('edit', $value), _("Edit person")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Edit person"), self::formPerson('edit', $value), true));
       // CONTACT POINT
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->id, $value['contactPoint'])));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
+			//  MEMBER OF
+	    CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Program membership"), ProgramMembership::edit($value))
+	    );
       // IMAGE
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
 

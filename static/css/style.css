@@ -158,12 +158,10 @@ dd {
 .box {
   margin-bottom: 1px;
   border: 1px gray solid;
-  padding: 5px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
-.box h1 {
-  margin: 0;
-  font-size: 1.4em;
+.box p {
+  margin: 10px;
 }
 .box form fieldset {
   display: block;
@@ -172,6 +170,53 @@ dd {
 .box form fieldset textarea {
   display: block;
   min-height: 80px;
+}
+
+.box-expanding {
+  max-height: 39px;
+  overflow: hidden;
+}
+
+.box-expanding--text {
+  font-weight: normal;
+  font-size: 0.85rem;
+}
+
+.button-dropdown {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.button-dropdown::after {
+  content: "";
+  margin-left: 5px;
+  display: inline-block;
+  width: 1.5em;
+  height: 1em;
+  background-color: transparent;
+  box-sizing: border-box;
+  border-left-width: 0.75em;
+  border-left-color: transparent;
+  border-left-style: solid;
+  border-right-width: 0.75em;
+  border-right-color: transparent;
+  border-right-style: solid;
+}
+
+.button-dropdown-contracted::after {
+  vertical-align: text-bottom;
+  border-top-width: 0.6em;
+  border-top-color: #555;
+  border-top-style: solid;
+}
+
+.button-dropdown-expanded::after {
+  vertical-align: text-top;
+  border-bottom-width: 0.6em;
+  border-bottom-color: #555;
+  border-bottom-style: solid;
 }
 
 /* COMPONENT _ material icons
@@ -657,7 +702,7 @@ a.white {
   border: 0;
   color: #40d377;
 }
-.form-basic .form-submit-button-delete {
+.form-basic .form-submit-button-delete svg {
   color: #e61919;
 }
 
@@ -1124,15 +1169,9 @@ a.white {
 .form-person {
   display: flex;
   flex-wrap: wrap;
-}
-.form-person fieldset:nth-child(n) {
-  width: 50%;
-}
-.form-person fieldset:nth-child(4) {
-  width: 100%;
-}
-.form-person fieldset:nth-child(9) {
-  width: 100%;
+  /*fieldset:nth-child(n) { width: 50%; }
+  fieldset:nth-child(4) { width: 100%; }
+  fieldset:nth-child(9) { width: 100%; }*/
 }
 @media (min-width: 576px) {
   .form-person fieldset:nth-child(n) {

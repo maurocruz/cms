@@ -21,7 +21,7 @@ class Structure
       <link href="/admin/static/css/estilos.css" type="text/css" rel="stylesheet">
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
       <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
-      <script src="/admin/static/js/scripts.js"></script>
+      <script src="/admin/assets/js/scripts"></script>
       <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
       <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
       
@@ -56,7 +56,8 @@ class Structure
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home())
 			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
-			->newTab("/admin/user",_("Users"));
+			->newTab("/admin/user",_("Users"))
+			->level(1);
 
     if (App::getTypesEnabled()) {
       $attributes = null;

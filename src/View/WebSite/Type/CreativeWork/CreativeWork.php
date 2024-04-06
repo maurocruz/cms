@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
@@ -19,10 +18,10 @@ class CreativeWork extends CreativeWorkAbstract implements TypeInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function index(?array $value)
+	public function index(?array $value): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['additionalType'=>_('Additional types')])->ready()
+			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['type'=>_('Types')])->ready()
 		);
 	}
 
@@ -33,8 +32,7 @@ class CreativeWork extends CreativeWorkAbstract implements TypeInterface
 			$typeBuilder = new TypeBuilder('creativeWork', $value);
 			$this->idcreativeWork = $typeBuilder->getId();
 			$idthing = $typeBuilder->getPropertyValue('idthing');
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(Thing::form('edit', $value)));
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value)));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value), true));
 			// images
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready()
