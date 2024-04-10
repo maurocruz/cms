@@ -6,6 +6,7 @@ use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
@@ -42,6 +43,14 @@ class Article implements TypeInterface
 			CmsFactory::view()->fragment()->reactShell('article')->ready()
 		);
   }
+	/**
+	 * @param array|null $value
+	 * @param
+	 */
+	public function new(?array $value) {
+		$this->navbarArticle();
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
+	}
   /**
    * @param ?array $data
    * @throws Exception
@@ -52,14 +61,14 @@ class Article implements TypeInterface
       $value = $data[0];
 			$typeBuilder = new TypeBuilder('article', $value);
 			$idarticle = $typeBuilder->getId();
-			$idthing = $typeBuilder->getPropertyValue('idthing');
+			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
       $this->navbarArticle($value['headline'] ?? null);
       if (empty($value)) {
         $content[] = CmsFactory::view()->fragment()->noContent();
       } else {
-        $content[] = CmsFactory::view()->fragment()->box()->simpleBox( self::formArticle("edit", $value, $idarticle), _("Article"));
+        $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
         // author
-        $content[] = CmsFactory::view()->fragment()->box()->expandingBox( _("Author"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("Article", (string) $idarticle, "author", "Person", $value['author']));
+        //$content[] = CmsFactory::view()->fragment()->box()->expandingBox( _("Author"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("Article", (string) $idarticle, "author", "Person", $value['author']));
         // images
 	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
       }
@@ -70,14 +79,6 @@ class Article implements TypeInterface
     CmsFactory::view()->addMain($content);
   }
   /**
-   * @param array|null $value
-   * @param
-   */
-  public function new(?array $value) {
-    $this->navbarArticle();
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
-  }
-  /**
    * @param string $case
    * @param null $value
    * @param null $ID
@@ -85,11 +86,18 @@ class Article implements TypeInterface
    */
   static private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
+		$typeBuilder = new TypeBuilder('article', $value);
+		$dateCreated = $typeBuilder->getPropertyValue('dateCreated');
+		$dateModified = $typeBuilder->getPropertyValue('dateModified');
     $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
-    $form = CmsFactory::view()->fragment()->form([ "name" => "article-form--$case", "id" => 'article-form', "class"=>"formPadrao form-article"]);
+		$author = $value['author'] ?? null;
+		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
+		// FORM
+    $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-article"]);
     $form->action("/admin/article/$case")->method('post');
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
+		$form = Thing::formContent($form, $value);
     // title
     $form->fieldsetWithInput("headline", $value['headline'] ?? null, _("Title"));
     // article body
@@ -97,27 +105,20 @@ class Article implements TypeInterface
     $form->setEditor("articleText$ID", "editor$case$ID");
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
+		// author
+	  $form->fieldsetWithInput('author', $author, _("Author"));
+	  // creative work status
+	  $form->fieldsetWithInput('creativeWorkStatus', $creativeWorkStatus, _("Creative Work status"));
     // dates
     if ($case == "edit") {
       // date created
-      $form->fieldsetWithInput("dateCreated", $value['dateCreated'] ?? null, _("Date created"), 'text', null, [ "disabled" ]);
+      $form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), 'text', null, [ "disabled" ]);
       // date modified
-      $form->fieldsetWithInput("dateModified", $value['dateModified'] ?? null, _("Date modified"),  "text", null, [ "disabled" ]);
+      $form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"),  "text", null, [ "disabled" ]);
       // date published
       $form->fieldsetWithInput("datePublished", $value['datePublished'] ?? null, _("Date published"), "text", null, [ "readonly" ]);
     }
-    // published
-    $form->content([ "tag" => "fieldset", "content" => [
-      [ "tag" =>"legend", "content" => _("Publishied") ],
-      [ "tag" => "label", "content" => [
-        [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 1, isset($value['publishied']) && $value['publishied'] == 1 ? "checked" : null ] ],
-          " "._("Yes")
-      ]],
-      [ "tag" => "label", "content" => [
-        [ "tag" => "input", "attributes" => [ "name" => "publishied", "type" => "radio", "value" => 0, isset($value['publishied']) && $value['publishied'] == 0 ? "checked" : null ] ],
-          " "._("No")
-      ]]
-    ]]);
+
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/article/erase");
