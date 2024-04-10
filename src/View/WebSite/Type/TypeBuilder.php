@@ -21,7 +21,7 @@ class TypeBuilder
 
 	public function getId(): ?int
 	{
-		return $this->getPropertyValue($this->idname);
+		return (int) $this->getPropertyValue($this->idname);
 	}
 
 	public function getValue(string $property) {
@@ -31,7 +31,7 @@ class TypeBuilder
 	public function getPropertyValue(string $property)	{
 		foreach ($this->identifier as $propertyValue) {
 			if ($propertyValue['name'] === $property) {
-				return (int) $propertyValue['value'];
+				return $propertyValue['value'];
 			}
 		}
 	}

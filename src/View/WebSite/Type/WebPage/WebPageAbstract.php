@@ -3,15 +3,13 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\WebPage;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\WebSite\WebSite;
 
 abstract class WebPageAbstract
 {
-	/**
-	 * @var int
-	 */
-	public int $id;
+	protected ?string $idthing = null;
 	/**
 	 * @var int|null
 	 */
@@ -66,31 +64,21 @@ abstract class WebPageAbstract
   protected function formWebPage(array $value = null): array
   {
     // VARS
-    $name = $value['name'] ?? null;
-    $url = $value['url'] ?? null;
-    $headline = $value['headline'] ?? null;
-    $description = $value['description'] ?? null;
-	  $disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
-    $alternativeHeadline = $value['alternativeHeadline'] ?? null;
+		$text = $value['text'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
-    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-webPage']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPage']);
     $form->action("/admin/webPage/$case")->method('post');
     // hidden
     $form->input('isPartOf', (string) $this->idwebSite ,'hidden');
-    if ($case == "edit") $form->input('idwebPage', (string) $this->idwebPage,'hidden');
-    // name
-    $form->fieldsetWithInput('name',$name,_('Name'));
-    // url
-    $form->fieldsetWithInput('url',$url,'Url');
-	  // headline
-	  $form->fieldsetWithInput('headline',$headline,_('Title'));
-	  // alternativeHeadline
-	  $form->fieldsetWithInput('alternativeHeadline',$alternativeHeadline,_('Alternative headline'));
-    // DESCRIPTION
-    $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textarea$case$this->idwebPage"]);
-    // DISAMBIGUATING DESCRIPTION
-    $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('disambiguatingDescription'), null, ['id'=>"textarea2$case$this->idwebPage"]);
+    if ($case == "edit") {
+			$form->input('thing', (string) $this->idthing,'hidden');
+			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
+    }
+		// THING
+	  $form = Thing::formContent($form, $value);
+	  // TEXT
+	  $form->fieldsetWithTextarea('text',$text, _("Content"));
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete('/admin/webPage/erase');

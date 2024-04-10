@@ -31,14 +31,12 @@ class ThingAbstract
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name')." <span style='color: #eecc77;'>*</span>");
 		// alternateName
 		$form->fieldsetWithInput('alternateName', $value['alternateName'] ?? null, _('Alternate name'));
-		// alternateName
-		//$form->fieldsetWithInput('type', $value['@type'] ?? null, _('Type'), 'text', null, ['readonly']);
-		// additional type
-		//$form->fieldsetWithInput('additionalType', $value['additionalType'] ?? null, _('Additional type'), 'text', null, ['readonly']);
 		// description
-		$form->fieldsetWithTextarea('description', $value['description'] ?? null, _('Description'));
+		$form->fieldsetWithInput('description', $value['description'] ?? null, _('Description'));
 		// disambiguatingDescription
 		$form->fieldsetWithTextarea('disambiguatingDescription', $value['disambiguatingDescription'] ?? null, _('Disambiguating description'));
+		// main entity of page
+		//$form->fieldsetWithInput('mainEntityOfPage', $value['mainEntityOfPage'] ?? null, _('Main entity of page'));
 		// url
 		$form->fieldsetWithInput('url', $value['url'] ?? null, _('url'));
 		//

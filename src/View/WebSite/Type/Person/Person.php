@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
-use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\Intangible\ProgramMembership;
@@ -44,9 +43,9 @@ class Person extends PersonAbstract implements TypeInterface
     if (!empty($data)) {
       $value = $data[0];
 	    $typeBuilder = new TypeBuilder('person', $value);
-      $this->idperson = $typeBuilder->getId();
+      $this->idperson = (int) $typeBuilder->getId();
 			$this->name = $value['name'];
-			$idthing = $typeBuilder->getPropertyValue('idthing');
+			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
       // NAVBAR
       $this->navbarPersonEdit();
       // FORM

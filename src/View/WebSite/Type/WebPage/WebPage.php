@@ -6,7 +6,7 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\WebPageElement\WebPageElementView;
+use Plinct\Cms\View\WebSite\Type\WebPageElement\WebPageElement;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class WebPage extends WebPageAbstract implements TypeInterface
@@ -44,6 +44,8 @@ class WebPage extends WebPageAbstract implements TypeInterface
 		$typeBuilderWebSite = new TypeBuilder('webSite', $webSite);
 	  $this->idwebSite = $typeBuilderWebSite->getId();
 	  $this->idwebPage = $typeBuilder->getId();
+		$this->idthing = $typeBuilder->getPropertyValue('idthing');
+
 		parent::navbarWebSite($webSite);
     self::navbarWebPage($data['name']);
     // FORM EDIT
@@ -51,7 +53,7 @@ class WebPage extends WebPageAbstract implements TypeInterface
     // PROPERTIES
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
     // WEB ELEMENTS
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElementView($idcreativeWork))->getForm((string) $this->idwebPage, $data['hasPart'])));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElement($idcreativeWork))->getForm((string) $this->idwebPage, $data['hasPart'])));
 	  return true;
   }
 }

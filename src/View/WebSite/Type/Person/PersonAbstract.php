@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 
 abstract class PersonAbstract
 {
@@ -56,42 +57,29 @@ abstract class PersonAbstract
   /**
    * @param string $case
    * @param null $value
-   * @param null $tableHasPart
-   * @param null $idHasPart
    * @return array
    */
-  protected function formPerson(string $case = 'new', $value = null, $tableHasPart = null, $idHasPart = null): array
+  protected function formPerson(string $case = 'new', $value = null): array
   {
-		$name = $value['name'] ?? null;
-		$description = $value['description'] ?? null;
-		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
-		$url = $value['url'] ?? null;
 		$givenName = $value['givenName'] ?? null;
 		$familyName = $value['familyName'] ?? null;
 		$additionalName = $value['additionalName'] ?? null;
-		$taxId = $value['familyName'] ?? null;
+		$taxId = $value['taxId'] ?? null;
 		$birthDate = $value['birthDate'] ?? null;
 		$birthPlace = $value['birthPlace'] ?? null;
 		$deathDate = $value['deathDate'] ?? null;
 		$deathPlace = $value['deathPlace'] ?? null;
 		$gender = $value['gender'] ?? null;
 		$hasOccupation = $value['hasOccupation'] ?? null;
-		$homeLocation = $value['homeLocation'] ?? null;
-
+		// FORM
     $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-person"]);
     $form->action("/admin/person/$case")->method('post');
 		// HIDDEN
 		if ($case === 'edit') {
 			$form->input('idperson', (string) $this->idperson, 'hidden');
 		}
-		// NAME
-	  $form->fieldsetWithInput('name',$name,_("Name").'*');
-		// DESCRIPTION
-	  $form->fieldsetWithTextarea('description', $description, _('Description'));
-		// DISAMBIGUATING DESCRIPTION
-	  $form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Disambiguating description'));
-		// URL
-	  $form->fieldsetWithInput('url', $url, "Url");
+		// THING
+		$form = Thing::formContent($form, $value);
 		// GIVEN NAME
 	  $form->fieldsetWithInput('givenName', $givenName, _("Given Name") );
 	  // FAMILY NAME

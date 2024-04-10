@@ -8,7 +8,7 @@ use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Tool\ArrayTool;
 
-class WebPageElementView
+class WebPageElement
 {
   /**
    * @var string
@@ -18,9 +18,9 @@ class WebPageElementView
    * @var ?int
    */
   protected ?int $idwebPageElement = null;
-	private int $isPartOf;
+	private string $isPartOf;
 
-	public function __construct(int $isPartOf)
+	public function __construct(string $isPartOf)
 	{
 		$this->isPartOf = $isPartOf;
 	}
@@ -85,7 +85,7 @@ class WebPageElementView
     // ATTRIBUTES
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
     // IMAGES
-	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
+	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $idthing)->ready();
 		// RETURN
     return $content;
   }
@@ -129,7 +129,7 @@ class WebPageElementView
     $form->action("/admin/webPageElement/$case")->method('post');
     // HIDDEN
     if ($case == 'edit') $form->input('idwebPageElement', (string)$this->idwebPageElement, 'hidden');
-    if($case == 'new') $form->input('isPartOf',(string) $this->isPartOf, 'hidden');
+    if($case == 'new') $form->input('isPartOf', $this->isPartOf, 'hidden');
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
     // POSITION
