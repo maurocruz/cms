@@ -6,7 +6,7 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Web\Element\Form\FormInterface;
 
-class ThingAbstract
+class ThingElements
 {
 	public static function form(string $case = 'new', array $value = null): array
 	{
@@ -27,6 +27,7 @@ class ThingAbstract
 
 	public static function formContent(FormInterface $form, array $value = null): FormInterface
 	{
+		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name')." <span style='color: #eecc77;'>*</span>");
 		// alternateName
@@ -34,7 +35,8 @@ class ThingAbstract
 		// description
 		$form->fieldsetWithInput('description', $value['description'] ?? null, _('Description'));
 		// disambiguatingDescription
-		$form->fieldsetWithTextarea('disambiguatingDescription', $value['disambiguatingDescription'] ?? null, _('Disambiguating description'));
+		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
+		//$form->fieldsetWithTextarea('disambiguatingDescription', $value['disambiguatingDescription'] ?? null, _('Disambiguating description'));
 		// main entity of page
 		//$form->fieldsetWithInput('mainEntityOfPage', $value['mainEntityOfPage'] ?? null, _('Main entity of page'));
 		// url

@@ -12,10 +12,12 @@ interface BoxInterface
 	 */
     public function simpleBox($content, string $caption = null, array $attributes = ['class'=>'box']): array;
 
-  /**
-   * @param string $caption
-   * @param $content
-   * @return array
-   */
-  public function expandingBox(string $caption, $content): array;
+	/**
+	 * @param string $caption
+	 * @param $content
+	 * @param bool $open
+	 * @param string|null $style
+	 * @return array
+	 */
+  public function expandingBox(string $caption, $content, bool $open = false, string $style = null): array;
 }

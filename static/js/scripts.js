@@ -81,8 +81,8 @@ function setHistory(obj){
 // EXPANDIR BOX DE EDIÇÃO DE POSTAGEM
 function expandBox(object, objectId)
 {
-    var target = objectId ? document.getElementById(objectId) : target = object.parentNode;
-    
+    let target = objectId ? document.getElementById(objectId) : target = object.parentNode;
+
     if (object.className === 'button-dropdown button-dropdown-contracted') {
         target.className = "box";
         object.className = 'button-dropdown button-dropdown-expanded'

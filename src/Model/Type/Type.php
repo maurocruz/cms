@@ -4,7 +4,6 @@ namespace Plinct\Cms\Model\Type;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
 class Type
 {
@@ -38,16 +37,16 @@ class Type
 		// SUCCESS
 		else if (isset($data[0])) {
 			$value = $data[0];
-			$typeBuilder = new TypeBuilder($this->type, $value);
-			$id = $typeBuilder->getId();
+			$idname = "id$this->type";
+			$idvalue = $value[$idname];
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
 			if ($this->type === "webPageElement" || $this->type === "programMembership") {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
 			// REDIRECT TO EDIT PAGE
-			if ($id) {
-				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $id;
+			if ($idvalue) {
+				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $idvalue;
 			} else {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}

@@ -1,19 +1,17 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type;
 
 class TypeBuilder
 {
-
-	private string $type;
+	/**
+	 * @var array
+	 */
 	private array $data;
 	private string $idname;
 	private $identifier;
 
 	public function __construct(string $type, array $value) {
-		$this->type = $type;
 		$this->idname = "id".lcfirst($type);
 		$this->data = $value;
 		$this->identifier = $value['identifier'];
@@ -34,5 +32,6 @@ class TypeBuilder
 				return $propertyValue['value'];
 			}
 		}
+		return false;
 	}
 }

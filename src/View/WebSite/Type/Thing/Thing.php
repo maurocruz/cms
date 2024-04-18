@@ -6,7 +6,7 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
-class Thing extends ThingAbstract implements TypeInterface
+class Thing extends ThingElements implements TypeInterface
 {
 
 	public function new(?array $value)

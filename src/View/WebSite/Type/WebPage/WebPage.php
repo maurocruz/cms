@@ -52,6 +52,8 @@ class WebPage extends WebPageAbstract implements TypeInterface
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
     // PROPERTIES
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
+		// IMAGES
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $this->idthing)->ready());
     // WEB ELEMENTS
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElement($idcreativeWork))->getForm((string) $this->idwebPage, $data['hasPart'])));
 	  return true;
