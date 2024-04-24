@@ -700,6 +700,33 @@ a.white {
 .form-basic .form-submit-button-delete svg {
   color: #e61919;
 }
+.form-basic .plinct-shell {
+  width: 100%;
+}
+.form-basic .plinct-shell .plinct-getItemType {
+  position: relative;
+  width: 100%;
+}
+.form-basic .plinct-shell .plinct-getItemType input {
+  padding: 4px 6px;
+  border-style: none;
+  border-radius: 4px;
+  width: calc(100% - 15px);
+  background-color: #ccc;
+}
+.form-basic .plinct-shell .plinct-getItemType .plinct-getItemType-listItem {
+  position: absolute;
+  background-color: #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #333;
+}
+.form-basic .plinct-shell .plinct-getItemType .plinct-getItemType-listItem li {
+  padding: 3px 5px;
+  cursor: pointer;
+  border: 1px solid gray;
+}
 
 /** BOOK
 ====================================================== */

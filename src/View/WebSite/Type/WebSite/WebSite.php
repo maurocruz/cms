@@ -39,6 +39,8 @@ class WebSite extends WebSiteAbstract implements TypeInterface
 			parent::navbarWebSite($value['name']);
 			// form
 			CmsFactory::view()->addMain(parent::editView($value));
+			// list of webPages
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setAttribute('data-ispartof', (string) $value['idwebSite'])->ready());
 		} else {
 			parent::navbarWebSite();
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('Nothing found!'));

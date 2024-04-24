@@ -62,20 +62,15 @@ class Event extends EventAbstract implements TypeInterface
       // EVENT FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
 			// SUPER EVENTS
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Super Event"), CmsFactory::view()->fragment()->form()->relationship("event", (string)$this->idevent, "event")->oneToOne('superEvent', $value['superEvent'], 'startDate desc') ));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Super Event"), CmsFactory::view()->fragment()->form()->relationship("event", (int)$this->idevent, "event")->oneToOne('superEvent', $value['superEvent'], 'startDate desc') ));
 			// SUB EVENTS
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Sub Events"), CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", (string) $this->idevent, 'event', $value['subEvent'], "idevent desc")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Sub Events"), CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", (int)$this->idevent, 'event', $value['subEvent'], "idevent desc")));
       // PLACE
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationship("event", (string) $this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationship("event", (int)$this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
       // IMAGE
 	    CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('event')->setIsPartOf($value['idevent'])->ready()
 	    );
     }
   }
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return [];
-	}
 }

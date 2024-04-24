@@ -65,6 +65,7 @@ abstract class WebPageAbstract
   {
     // VARS
 		$text = $value['text'] ?? null;
+		$author = $value['author'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPage']);
@@ -79,6 +80,13 @@ abstract class WebPageAbstract
 	  $form = Thing::formContent($form, $value);
 	  // TEXT
 	  $form->fieldsetWithTextarea('text',$text, _("Content"));
+		// AUTHOR
+	  $form->content(CmsFactory::view()->fragment()->reactShell('person')
+		  ->setAttribute('data-action','getItemType')
+		  ->setAttribute('data-legend',_("Author"))
+		  ->setAttribute('data-propertyName','author')
+		  ->setAttribute('data-value',$author ?? '')
+		  ->ready());
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete('/admin/webPage/erase');

@@ -349,6 +349,36 @@
       color: #e61919; // cc0000
     }
   }
+
+  .plinct-shell {
+    width: 100%;
+    .plinct-getItemType {
+      position: relative;
+      width: 100%;
+      input {
+        padding: 4px 6px;
+        border-style: none;
+        border-radius: 4px;
+        width: calc(100% - 15px);
+        background-color: #ccc;
+      }
+      .plinct-getItemType-listItem {
+        position: absolute;
+        background-color: #ccc;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        color: #333;
+
+        li {
+          padding: 3px 5px;
+          cursor: pointer;
+          border: 1px solid gray;
+        }
+      }
+    }
+  }
+
 }
 
 /** BOOK

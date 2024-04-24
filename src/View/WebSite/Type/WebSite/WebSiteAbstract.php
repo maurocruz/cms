@@ -47,7 +47,8 @@ class WebSiteAbstract
         ->title(_($title))
         ->level($level)
         ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
-        ->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("List of web pages"))
+        ->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("List of webpages"))
+        ->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", _("Add new webpage"))
         ->ready()
     );
   }

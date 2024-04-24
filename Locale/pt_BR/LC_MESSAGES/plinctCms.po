@@ -1464,16 +1464,16 @@ msgstr "Deseja mesmo excluir este item?"
 
 ############################   WEBSITE   #################################################
 
-msgid "View web pages"
+msgid "View webpages"
 msgstr "Ver página web"
 
-msgid "Add new web page"
+msgid "Add new webpage"
 msgstr "Adicionar nova página web"
 
-msgid "New web page"
+msgid "New webpage"
 msgstr "Nova página web"
 
-msgid "List of web pages"
+msgid "List of webpages"
 msgstr" Lista de páginas web"
 
 msgid "View website"
@@ -1482,8 +1482,8 @@ msgstr "Veja website"
 msgid "Alternative headline"
 msgstr "Título alternativo"
 
-msgid "Edit web page"
+msgid "Edit webpage"
 msgstr "Editar página web"
 
-msgid "Web page elements"
+msgid "Webpage elements"
 msgstr "Elementos da página web"
