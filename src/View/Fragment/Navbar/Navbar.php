@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Navbar;
 
-use Plinct\Cms\CmsFactory;
-
 class Navbar extends NavbarAbstract implements NavbarInterface
 {
   public function __construct(string $title = null, array $tabs = null, int $level = 2, array $searchInput = null)
@@ -84,17 +82,15 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 	  $this->setAttributes("class", "menu menu$this->level");
 		// TABS
 		if ($this->tabs) {
-			foreach ($this->tabs as $link => $value) {
+			foreach ($this->tabs as $value) {
 				$this->content($value);
 			}
 		}
 		if ($this->search) {
-			$action = $this->search['action'] ?? null;
 			$searchBy = $this->search['searchBy'] ?? null;
 			$params = $this->search['params'] ?? null;
 			$linkList = $this->search['linkList'] ?? null;
-			$this->content("<div class='search-box' data-type='$this->type' data-action='$action' data-searchBy='$searchBy' data-params='$params' data-linkList='$linkList'></div>");
-			CmsFactory::view()->addBundle('searchbox');
+			$this->content("<div class='search-box plinct-shell' data-action='searchNavbar' data-type='$this->type' data-searchBy='$searchBy' data-params='$params' data-linkList='$linkList'></div>");
 		}
     return $this->wrapper;
   }
