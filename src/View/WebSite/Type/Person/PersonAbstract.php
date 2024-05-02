@@ -86,6 +86,8 @@ abstract class PersonAbstract
 	  $form->fieldsetWithInput('familyName', $familyName, _("Family name"));
 		// ADDITIONAL NAME
 	  $form->fieldsetWithInput('additionalName', $additionalName, _("Additional name"));
+	  // GENDER
+	  $form->fieldsetWithInput('gender', $gender, _("Gender"));
 		// TAX ID
 	  $form->fieldsetWithInput('taxId', $taxId, _("Tax ID"));
 		// BIRTH DATA
@@ -96,8 +98,6 @@ abstract class PersonAbstract
 	  $form->fieldsetWithInput('deathDate', $deathDate, _("Death data"), 'date');
 	  // DEATH PLACE
 	  $form->fieldsetWithInput('deathPlace', $deathPlace, _("Death place"));
-	  // GENDER
-	  $form->fieldsetWithInput('gender', $gender, _("Gender"));
 	  // HAS OCCUPATION
 	  $form->fieldsetWithInput('hasOccupation', $hasOccupation, _("Has occupation"). " <span style='font-size: 85%;'>("._("Separate with semicolons if there are many").")</span>");
 		// SUBMIT

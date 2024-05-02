@@ -35,7 +35,7 @@ class ProgramMembership
 		$member = $value['member'] ?? null;
 		$membershipNumber = $value['membershipNumber'] ?? null;
 		$membershipPointsEarned = $value['membershipPointsEarned'] ?? null;
-		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-programMembership']);
+		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-programMembership']);
 		$form->action("/admin/programMembership/$case")->method('post');
 		if ($case === 'new') {
 			$typeBuilder = new TypeBuilder('person', $value);
@@ -50,9 +50,19 @@ class ProgramMembership
 		}
 		// program name
 		$form->fieldsetWithInput('programName', $programName, _("Program name"));
-		$form->fieldsetWithInput('hostingOrganization', (string) $hostingOrganization, _("Hosting organization"), 'text', null, ['class'=>'chooseItemOfType', 'data-type'=>'organization']);
+
+		// HOSTING ORGANIZATION
+		$form->content(CmsFactory::view()->fragment()->reactShell('organization')
+			->setAttribute('data-action','getItemType')
+			->setAttribute('data-legend',_("Hosting organization"))
+			->setAttribute('data-propertyName','hostingOrganization')
+			->setAttribute('data-value',(string) $hostingOrganization ?? '')
+			->ready());
+
+		//$form->fieldsetWithInput('hostingOrganization', (string) $hostingOrganization, _("Hosting organization"), 'text', null, ['class'=>'chooseItemOfType', 'data-type'=>'organization']);
+
 		$form->fieldsetWithInput('membershipNumber', $membershipNumber, _("Membership number"));
-		$form->fieldsetWithInput('membershipPointsEarned', $membershipPointsEarned, _("Membership points earned"));
+		$form->fieldsetWithInput('membershipPointsEarned', $membershipPointsEarned, _("Points earned"));
 		// SUBMIT BUTTONS
 		$form->submitButtonSend();
 		if ($case === 'edit') {

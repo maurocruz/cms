@@ -33,12 +33,9 @@ class ThingElements
 		// alternateName
 		$form->fieldsetWithInput('alternateName', $value['alternateName'] ?? null, _('Alternate name'));
 		// description
-		$form->fieldsetWithInput('description', $value['description'] ?? null, _('Description'));
+		$form->fieldsetWithTextarea('description', $value['description'] ?? null, _('Description'),['class'=>'thing-description']);
 		// disambiguatingDescription
-		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
-		//$form->fieldsetWithTextarea('disambiguatingDescription', $value['disambiguatingDescription'] ?? null, _('Disambiguating description'));
-		// main entity of page
-		//$form->fieldsetWithInput('mainEntityOfPage', $value['mainEntityOfPage'] ?? null, _('Main entity of page'));
+		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription' class='thing-disambiguatingDescription'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
 		// url
 		$form->fieldsetWithInput('url', $value['url'] ?? null, _('url'));
 		//

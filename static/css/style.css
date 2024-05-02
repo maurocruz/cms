@@ -167,10 +167,6 @@ dd {
   display: block;
   margin-right: 0;
 }
-.box form fieldset textarea {
-  display: block;
-  min-height: 80px;
-}
 
 .box-expanding {
   max-height: 39px;
@@ -657,6 +653,7 @@ a.white {
 .form-basic {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   background-color: #444444;
   padding: 5px;
 }
@@ -678,13 +675,14 @@ a.white {
   background-color: #ccc;
 }
 .form-basic textarea {
-  min-height: 10em;
   background-color: #bbb;
 }
 .form-basic button {
+  display: inline-grid;
   cursor: pointer;
   border: 0;
   background-color: transparent;
+  align-items: center;
 }
 .form-basic button svg {
   overflow: hidden;
@@ -697,8 +695,17 @@ a.white {
   border: 0;
   color: #40d377;
 }
+.form-basic .form-submit-button-delete {
+  margin-right: auto;
+}
 .form-basic .form-submit-button-delete svg {
   color: #e61919;
+}
+.form-basic .thing-description textarea {
+  height: 16ch;
+}
+.form-basic .thing-disambiguatingDescription {
+  min-height: 30ch;
 }
 .form-basic .plinct-shell {
   width: 100%;
@@ -726,6 +733,21 @@ a.white {
   padding: 3px 5px;
   cursor: pointer;
   border: 1px solid gray;
+}
+@media (min-width: 576px) {
+  .form-basic .thing-description textarea {
+    height: 10ch;
+  }
+}
+@media (min-width: 768px) {
+  .form-basic .thing-description textarea {
+    height: 7ch;
+  }
+}
+@media (min-width: 1024px) {
+  .form-basic .thing-description textarea {
+    height: 5ch;
+  }
 }
 
 /** BOOK
@@ -1191,40 +1213,50 @@ a.white {
 .form-person {
   display: flex;
   flex-wrap: wrap;
-  /*fieldset:nth-child(n) { width: 50%; }
-  fieldset:nth-child(4) { width: 100%; }
-  fieldset:nth-child(9) { width: 100%; }*/
+}
+.form-person fieldset:nth-of-type(8) {
+  flex-basis: 49%;
+}
+.form-person fieldset:nth-of-type(9) {
+  flex-basis: 50%;
+}
+.form-person fieldset:nth-of-type(10) {
+  flex-basis: 130px;
+}
+.form-person fieldset:nth-of-type(11) {
+  flex-basis: calc(100% - 130px);
+}
+.form-person fieldset:nth-of-type(12) {
+  flex-basis: 130px;
+}
+.form-person fieldset:nth-of-type(13) {
+  flex-basis: calc(100% - 130px);
 }
 @media (min-width: 576px) {
-  .form-person fieldset:nth-child(n) {
-    width: 50%;
+  .form-person fieldset:nth-of-type(5) {
+    flex-basis: 49%;
+  }
+  .form-person fieldset:nth-of-type(6) {
+    flex-basis: 50%;
   }
 }
 @media (min-width: 768px) {
-  .form-person fieldset:nth-of-type(n) {
-    width: 33.33%;
+  .form-person fieldset:nth-of-type(1) {
+    flex-basis: 49%;
+  }
+  .form-person fieldset:nth-of-type(2) {
+    flex-basis: 50%;
   }
   .form-person fieldset:nth-of-type(7) {
-    width: 50%;
+    flex-basis: 33%;
   }
   .form-person fieldset:nth-of-type(8) {
-    width: 50%;
+    flex-basis: 33%;
+  }
+  .form-person fieldset:nth-of-type(9) {
+    flex-basis: 33%;
   }
 }
-@media (min-width: 992px) {
-  .form-person fieldset:nth-child(n) {
-    width: 25%;
-  }
-}
-@media (min-width: 1024px) {
-  .form-person fieldset:nth-child(n) {
-    width: 20%;
-  }
-  .form-person fieldset:nth-of-type(8) {
-    width: 40%;
-  }
-}
-
 /* PLACE
 ====================================================== */
 .form-place {
@@ -1249,6 +1281,26 @@ a.white {
 }
 .form-product fieldset:nth-of-type(5) {
   width: 100%;
+}
+
+/* PROGRAM MEMBERSHIP
+====================================================== */
+.form-programMembership {
+  color: inherit;
+}
+.form-programMembership fieldset:nth-of-type(2) {
+  flex-basis: 49%;
+}
+.form-programMembership fieldset:nth-of-type(3) {
+  flex-basis: 50%;
+}
+@media (min-width: 576px) {
+  .form-programMembership fieldset:nth-of-type(2) {
+    flex-basis: 150px;
+  }
+  .form-programMembership fieldset:nth-of-type(3) {
+    flex-basis: 150px;
+  }
 }
 
 /* SERVICE

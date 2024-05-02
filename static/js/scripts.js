@@ -1,5 +1,5 @@
 
-function checkStartApplicationForm(form) {
+function checkStartApplicationForm(form){
     const userAdmin = form.userAdmin.value;
     const emailAdmin = form.emailAdmin.value;
     const passwordAdmin = form.passwordAdmin.value;
@@ -102,4 +102,50 @@ function expandTextarea(objectId,increase = 100)
     // configura nova altura
     textarea.style.height = (atualHeight+increase)+'px';
 }
+
+/**
+ *  WINDOW ON LOAD
+ */
+window.onload = () => {
+
+  /**
+   * contagem de caracteres no campos description do thing type
+   * @type {HTMLCollectionOf<Element>}
+   */
+  const thingDescriptions = document.getElementsByClassName('thing-description');
+  if (thingDescriptions) {
+    for (let i=0; i < thingDescriptions.length; i++) {
+      const maxLenght = 255;
+      const legend = thingDescriptions[i].firstChild;
+      const input = thingDescriptions[i].lastChild;
+      const spanCount = document.createElement('span');
+      spanCount.style.fontSize = "0.9em";
+      const textCount = document.createTextNode(" Max: 255 ch");
+      spanCount.appendChild(textCount);
+      spanCount.innerHTML = setCount(maxLenght - input.value.length);
+      legend.appendChild(spanCount);
+      //
+      input.addEventListener('keyup', () => {
+        spanCount.innerHTML = setCount(maxLenght - input.value.length);
+      })
+
+      function setCount(charsRemaining) {
+        const color = charsRemaining < 0 ? '#ff6161' : 'inherit';
+        return " max chars: <span style='color:"+color+"'>"+charsRemaining+"</span>"
+      }
+    }
+  }
+  /**   *    */
+  const buttonDropdown = document.getElementsByClassName('button-dropdown');
+  if (buttonDropdown) {
+    for (let i=0; i < buttonDropdown.length; i++) {
+      const element = buttonDropdown[i];
+      element.addEventListener('click', () => {
+        const top = element.getBoundingClientRect().top - 10;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      })
+    }
+  }
+}
+
 
