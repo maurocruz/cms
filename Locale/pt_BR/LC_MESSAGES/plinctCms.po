@@ -11,6 +11,60 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Draft"
+msgstr "Rascunho"
+
+msgid "In production"
+msgstr "Em produção"
+
+msgid "Waiting for review"
+msgstr "Esperando por revisão"
+
+msgid "Published"
+msgstr "Publicado"
+
+msgid "Article sections"
+msgstr "Seções de artigos"
+
+msgid "Creative work status"
+msgstr "Status do trabalho"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "Issued by"
+msgstr "Emitida por"
+
+msgid "Certification status"
+msgstr "Status de certificação"
+
+msgid "active"
+msgstr "ativo"
+
+msgid "inactive"
+msgstr "inativo"
+
+msgid "Alternate name"
+msgstr "Nome alternativo"
+
+msgid "No %s were found!"
+msgstr "Nenhum %s encontrado!"
+
+msgid "CreativeWork"
+msgstr "Trabalho criativo"
+
+msgid "Creative work"
+msgstr "Trabalho criativo"
+
+msgid "Certification"
+msgstr "Certificação"
+
+msgid "certification"
+msgstr "certificação"
+
+msgid "Book"
+msgstr "Livro"
+
 msgid "Program membership"
 msgstr "Associação ao programa"
 
