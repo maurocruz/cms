@@ -15,7 +15,6 @@ use Plinct\Cms\View\Fragment\Miscellaneous\MiscellaneousInterface;
 use Plinct\Cms\View\Fragment\Navbar\Navbar;
 use Plinct\Cms\View\Fragment\Navbar\NavbarInterface;
 use Plinct\Cms\View\Fragment\ReactShell\ReactShell;
-use Plinct\Web\Element\Form\FormInterface;
 use Plinct\Web\Fragment\Icons\IconsFragment;
 use Plinct\Web\Fragment\PageNavigation\PageNavigation;
 
@@ -47,7 +46,7 @@ class Fragment
    * @param array|null $attributes
    * @return Form
    */
-  public function form(array $attributes = null): FormInterface {
+  public function form(array $attributes = null): Form {
     return new Form($attributes);
   }
 

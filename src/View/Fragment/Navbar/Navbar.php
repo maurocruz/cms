@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Navbar;
 
+use Plinct\Cms\Controller\App;
+
 class Navbar extends NavbarAbstract implements NavbarInterface
 {
   public function __construct(string $title = null, array $tabs = null, int $level = 2, array $searchInput = null)
@@ -74,6 +76,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
    */
   public function ready(): array
   {
+		$apiHost = App::getApiHost();
 		// TITULO
 		if ($this->title) {
 			$this->content("<h1>$this->title</h1>");
@@ -90,7 +93,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 			$searchBy = $this->search['searchBy'] ?? null;
 			$params = $this->search['params'] ?? null;
 			$linkList = $this->search['linkList'] ?? null;
-			$this->content("<div class='search-box plinct-shell' data-action='searchNavbar' data-type='$this->type' data-searchBy='$searchBy' data-params='$params' data-linkList='$linkList'></div>");
+			$this->content("<div class='search-box plinct-shell' data-action='searchNavbar' data-type='$this->type' data-searchBy='$searchBy' data-params='$params' data-linkList='$linkList' data-apihost='$apiHost'></div>");
 		}
     return $this->wrapper;
   }

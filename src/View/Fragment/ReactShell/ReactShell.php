@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\ReactShell;
 
-use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 
 class ReactShell
@@ -79,6 +78,15 @@ class ReactShell
 	public function setIsPartOf(int $idHasPart): ReactShell
 	{
 		$this->setAttribute('data-ispartof',(string) $idHasPart);
+		return $this;
+	}
+
+	public function getItemType(string $legend, string $propertyName, int $value = null): ReactShell
+	{
+		$this->setAttribute('data-action','getItemType')
+			->setAttribute('data-legend',$legend)
+			->setAttribute('data-propertyName',$propertyName)
+			->setAttribute('data-value',(string) $value ?? '');
 		return $this;
 	}
 

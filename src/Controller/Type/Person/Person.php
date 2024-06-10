@@ -15,7 +15,7 @@ class Person
 	 */
   public function edit(array $params): bool
   {
-    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint,homeLocation,image,memberOf'] + $params)->ready();
+    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint,homeLocation,image,memberOf,hasCertification'] + $params)->ready();
 		return CmsFactory::view()->webSite()->type('person')->setData($data)->setMethodName('edit')->ready();
   }
 

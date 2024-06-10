@@ -4,12 +4,11 @@ namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\Certification;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\Intangible\ProgramMembership;
-use Plinct\Cms\View\WebSite\Type\Intangible\Service\ServiceView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
-use Plinct\Tool\ArrayTool;
 
 class Person extends PersonAbstract implements TypeInterface
 {
@@ -50,73 +49,22 @@ class Person extends PersonAbstract implements TypeInterface
       $this->navbarPersonEdit();
       // FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Edit person"), self::formPerson('edit', $value), true));
-      // CONTACT POINT
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
 			//  MEMBER OF
-	    CmsFactory::view()->addMain(
+	    /*CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Program membership"), ProgramMembership::edit($value))
+	    );*/
+			// HAS CERTIFICATION
+	    CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
 	    );
       // IMAGE
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
+	    // CONTACT POINT
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
 
     } else {
       $this->navbarPerson();
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Person is not exists!")));
     }
   }
-
-  /**
-   * @param $value
-   */
-  public function service($value)
-  {
-    if ($value['@type'] == 'Service') {
-      $this->id = ArrayTool::searchByValue($value['provider']['identifier'], 'id', 'value');
-      $this->name = $value['provider']['name'];
-
-      // NAVBAR
-      $this->navbarPersonEdit();
-
-      $service = new ServiceView();
-      $service->editWithPartOf($value);
-
-    } else {
-      $this->id = ArrayTool::searchByValue($value['identifier'], 'id', 'value');
-      $this->name = $value['name'];
-
-      // NAVBAR
-      $this->navbarPersonEdit();
-
-      $service = new ServiceView();
-
-      if (isset($value['action']) && $value['action'] ==  "new") {
-        $service->newWithPartOf($value);
-      } else {
-        $service->listServices($value);
-      }
-    }
-  }
-
-  public function product($value)
-  {
-    $action = $value['action'] ?? null;
-    $this->name = $value['name'];
-    $this->id = ArrayTool::searchByValue($value['identifier'],'id','value');
-
-    // NAVBAR
-    $this->navbarPersonEdit();
-
-    // MAIN
-    $product = new ProductView();
-    if ($action == 'new') {
-      $product->newWithPartOf($value);
-    } else {
-      $product->indexWithPartOf($value);
-    }
-  }
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return parent::formPerson();
-	}
 }

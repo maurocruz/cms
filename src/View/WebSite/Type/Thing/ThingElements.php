@@ -3,21 +3,21 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Thing;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Web\Element\Form\FormInterface;
 
 class ThingElements
 {
 	public static function form(string $case = 'new', array $value = null): array
 	{
-		$typeBuilder = new TypeBuilder('thing',$value);
-		$idthing = $typeBuilder->getId();
 		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-thing']);
 		$form->method('post')->action("/admin/thing/$case");
 		$form = self::formContent($form, $value);
 		//button
 		$form->submitButtonSend();
 		if ($case === 'edit') {
+			$typeBuilder = new TypeBuilder('thing',$value);
+			$idthing = $typeBuilder->getId();
 			$form->input('idthing', (string) $idthing, 'hidden');
 			$form->submitButtonDelete("/admin/thing/erase");
 		}
@@ -25,7 +25,7 @@ class ThingElements
 		return $form->ready();
 	}
 
-	public static function formContent(FormInterface $form, array $value = null): FormInterface
+	public static function formContent(Form $form, array $value = null): Form
 	{
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		// name

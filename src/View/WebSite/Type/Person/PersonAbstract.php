@@ -29,8 +29,8 @@ abstract class PersonAbstract
 			CmsFactory::View()->fragment()->navbar()
         ->type('person')
         ->title(_("Person"))
-        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home())
-        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus())
+        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home(18,18))
+        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus(18,18))
         ->level(2)
         ->search('/admin/person')
         ->ready()
@@ -47,9 +47,7 @@ abstract class PersonAbstract
       ->type('person')
       ->title($this->name)
       ->level(3)
-      ->newTab("/admin/person/edit/$this->idperson", CmsFactory::view()->fragment()->icon()->home())
-      //->newTab("/admin/person?id=$this->id&action=service", _("Services"))
-     // ->newTab("/admin/person?id=$this->id&action=product", _("Products"))
+      ->newTab("/admin/person/edit/$this->idperson", CmsFactory::view()->fragment()->icon()->home(18,18))
       ->ready()
     );
   }

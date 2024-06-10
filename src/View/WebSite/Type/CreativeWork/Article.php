@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\Article;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Exception;
-use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
@@ -21,8 +19,8 @@ class Article implements TypeInterface
 	  CreativeWork::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
-		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(),
-		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus()
+		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(18,18),
+		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
 	      ], 2, ['table'=>'article','searchBy'=>'headline'] )->ready()
 		);
 		//
@@ -39,15 +37,14 @@ class Article implements TypeInterface
   public function index(?array $value): void
   {
     $this->navbarArticle();
-		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('article')->ready()
-		);
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->ready());
   }
 	/**
 	 * @param array|null $value
 	 * @param
 	 */
-	public function new(?array $value) {
+	public function new(?array $value): void
+	{
 		$this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
 	}
@@ -67,8 +64,6 @@ class Article implements TypeInterface
         $content[] = CmsFactory::view()->fragment()->noContent();
       } else {
         $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
-        // author
-        //$content[] = CmsFactory::view()->fragment()->box()->expandingBox( _("Author"), CmsFactory::view()->fragment()->form()->relationshipOneToOne("Article", (string) $idarticle, "author", "Person", $value['author']));
         // images
 	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
       }
@@ -86,9 +81,7 @@ class Article implements TypeInterface
    */
   static private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
-		$typeBuilder = new TypeBuilder('article', $value);
-		$dateCreated = $typeBuilder->getPropertyValue('dateCreated');
-		$dateModified = $typeBuilder->getPropertyValue('dateModified');
+		$about = $value['about'] ?? null;
     $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
 		$author = $value['author'] ?? null;
 		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
@@ -98,6 +91,9 @@ class Article implements TypeInterface
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		$form = Thing::formContent($form, $value);
+	  // about
+	  $form->relationshipOneToOne('thing',_('About'),'about',$about);
+	  //$form->content(CmsFactory::view()->fragment()->reactShell('thing')->getItemType(_("About"),'about',$about)->ready());
     // title
     $form->fieldsetWithInput("headline", $value['headline'] ?? null, _("Title"));
     // article body
@@ -106,17 +102,26 @@ class Article implements TypeInterface
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
 		// author
-	  $form->fieldsetWithInput('author', $author, _("Author"));
+	  $form->relationshipOneToOne('person',_("Author"),'author',(int) $author);
 	  // creative work status
-	  $form->fieldsetWithInput('creativeWorkStatus', $creativeWorkStatus, _("Creative Work status"));
+		$form->fieldsetWithSelect('creativeWorkStatus', $creativeWorkStatus,[
+			"draft"=>_("Draft"),
+			"in production"=>_("In production"),
+			"suspended"=>_("Suspended"),
+			"Waiting for review"=>_("Waiting for review"),
+			"published"=>_("Published")
+		],_("Creative work status"), ['class'=>'form-article-creativeWorkStatus']);
     // dates
-    if ($case == "edit") {
+    if ($case == "edit" && is_array($value)) {
+	    $typeBuilder = new TypeBuilder('article', $value);
+	    $dateCreated = $typeBuilder->getPropertyValue('dateCreated');
+	    $dateModified = $typeBuilder->getPropertyValue('dateModified');
       // date created
-      $form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), 'text', null, [ "disabled" ]);
+      $form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), 'datetime-local', ['class'=>'form-article-dateCreated' ], ['disabled']);
       // date modified
-      $form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"),  "text", null, [ "disabled" ]);
+      $form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"),  "datetime-local", ['class'=>'form-article-dateModified'], ['disabled']);
       // date published
-      $form->fieldsetWithInput("datePublished", $value['datePublished'] ?? null, _("Date published"), "text", null, [ "readonly" ]);
+      $form->fieldsetWithInput("datePublished", $value['datePublished'] ?? null, _("Date published"), "datetime-local", ['class'=>'form-article-datePublished'], ['readonly']);
     }
 
     // submit
@@ -124,9 +129,4 @@ class Article implements TypeInterface
     if ($case == "edit") $form->submitButtonDelete("/admin/article/erase");
     return $form->ready();
   }
-
-	public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
-	{
-		return [];
-	}
 }

@@ -578,56 +578,76 @@ a.white {
 
 /* ARTICLE
 ======================================================= */
-.form-article {
-  display: flex;
-  flex-wrap: wrap;
-}
-.form-article fieldset:nth-child(n) {
-  width: 100%;
-}
-.form-article fieldset:nth-of-type(4) {
+.form-article .form-article-creativeWorkStatus select {
   width: 50%;
 }
-.form-article fieldset:nth-of-type(5) {
+.form-article .form-article-dateCreated input {
   width: 50%;
 }
-.form-article fieldset:nth-of-type(6) {
+.form-article .form-article-dateModified input {
+  width: 50%;
+}
+.form-article .form-article-datePublished input {
   width: 50%;
 }
 @media (min-width: 480px) {
-  .form-article fieldset:nth-of-type(3) {
+  .form-article .form-article-creativeWorkStatus {
+    flex-basis: 50%;
+  }
+  .form-article .form-article-creativeWorkStatus select {
+    width: 95%;
+  }
+  .form-article .form-article-dateCreated {
+    flex-basis: 50%;
+  }
+  .form-article .form-article-dateCreated input {
+    width: 95%;
+  }
+  .form-article .form-article-dateModified {
+    flex-basis: 50%;
+  }
+  .form-article .form-article-dateModified input {
+    width: 95%;
+  }
+  .form-article .form-article-datePublished {
+    flex-basis: 50%;
+  }
+  .form-article .form-article-datePublished input {
+    width: 95%;
+  }
+}
+@media (min-width: 640px) {
+  .form-article .form-article-creativeWorkStatus {
+    flex-basis: 33%;
+  }
+  .form-article .form-article-dateCreated {
+    flex-basis: 33%;
+  }
+  .form-article .form-article-dateModified {
+    flex-basis: 33%;
+  }
+  .form-article .form-article-datePublished {
+    flex-basis: 100%;
+  }
+  .form-article .form-article-datePublished input {
     width: 50%;
   }
 }
-@media (min-width: 580px) {
-  .form-article fieldset:nth-of-type(3) {
-    width: 25%;
+@media (min-width: 840px) {
+  .form-article .form-article-creativeWorkStatus {
+    flex-basis: 25%;
   }
-  .form-article fieldset:nth-of-type(4) {
-    width: 25%;
+  .form-article .form-article-dateCreated {
+    flex-basis: 25%;
   }
-  .form-article fieldset:nth-of-type(5) {
-    width: 25%;
+  .form-article .form-article-dateModified {
+    flex-basis: 25%;
   }
-  .form-article fieldset:nth-of-type(6) {
-    width: 25%;
+  .form-article .form-article-datePublished {
+    flex-basis: 25%;
   }
-}
-@media (min-width: 860px) {
-  .form-article fieldset:nth-of-type(3) {
-    width: 17%;
-  }
-  .form-article fieldset:nth-of-type(4) {
-    width: 17%;
-  }
-  .form-article fieldset:nth-of-type(5) {
-    width: 17%;
-  }
-  .form-article fieldset:nth-of-type(6) {
-    width: 17%;
-  }
-  .form-article fieldset:nth-of-type(7) {
-    width: 17%;
+  .form-article .form-article-datePublished input {
+    width: 95%;
   }
 }
 
@@ -728,6 +748,7 @@ a.white {
   padding: 0;
   margin: 0;
   color: #333;
+  z-index: 100;
 }
 .form-basic .plinct-shell .plinct-getItemType .plinct-getItemType-listItem li {
   padding: 3px 5px;

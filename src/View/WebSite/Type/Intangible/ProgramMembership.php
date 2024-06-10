@@ -59,8 +59,6 @@ class ProgramMembership
 			->setAttribute('data-value',(string) $hostingOrganization ?? '')
 			->ready());
 
-		//$form->fieldsetWithInput('hostingOrganization', (string) $hostingOrganization, _("Hosting organization"), 'text', null, ['class'=>'chooseItemOfType', 'data-type'=>'organization']);
-
 		$form->fieldsetWithInput('membershipNumber', $membershipNumber, _("Membership number"));
 		$form->fieldsetWithInput('membershipPointsEarned', $membershipPointsEarned, _("Points earned"));
 		// SUBMIT BUTTONS

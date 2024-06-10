@@ -21,7 +21,7 @@ class CreativeWork extends CreativeWorkAbstract implements TypeInterface
 	public function index(?array $value): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['type'=>_('Types')])->ready()
+			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['@type'=>_('Types')])->ready()
 		);
 	}
 
@@ -35,7 +35,7 @@ class CreativeWork extends CreativeWorkAbstract implements TypeInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value), true));
 			// images
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int)$idthing)->ready()
 			);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No creative work were found!")));

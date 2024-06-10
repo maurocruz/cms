@@ -43,20 +43,14 @@ return function (Route $route)
 		//  EDIT / PUT
 		if ($action == "edit" || $action == "put") {
 			$returns = CmsFactory::model()->type($type)->put($params);
-			// sitemap
-			//Sitemap::create($type, $params);
 		}
 		// NEW / POST
 		elseif ($action == "new" || $action == "post" || $action == "add") {
 			$returns = CmsFactory::model()->type($type)->post($params);
-			// sitemap
-			//Sitemap::create($type, $params);
 		}
 		// DELETE
 		elseif ($action == "delete" || $action == "erase") {
 			$returns = CmsFactory::model()->type($type)->erase($params);
-			// sitemap
-			//Sitemap::create($type, $params);
 		}
 
 		// CREATE SQL TABLE

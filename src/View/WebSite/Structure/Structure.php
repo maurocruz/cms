@@ -22,9 +22,7 @@ class Structure
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
       <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
       <script src="/admin/assets/js/scripts"></script>
-      <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
-      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
-      
+      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>      
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 
@@ -51,17 +49,18 @@ class Structure
     return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
   }
 
+	/**
+	 * @return array
+	 */
   public static function mainMenu(): array
   {
 		$navbar = CmsFactory::view()->fragment()->navbar()
-			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(18,18))
 			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
-
     if (App::getTypesEnabled()) {
       $attributes = null;
-
       foreach (App::getTypesEnabled() as $key => $value) {
         if (is_string($key) && is_string($value)) {
           $link = $key;
@@ -73,18 +72,23 @@ class Structure
           $text = ucfirst($value->getMenuText());
           $attributes['style'] = "background-color: #574141;";
         }
-        else {
+				// if array
+        elseif (is_array($value)) {
+	        $text = ucfirst($key);
+	        $link = "/admin/$text";
+        } else {
           $link = "/admin/$value";
-        $text = ucfirst($value);
+          $text = ucfirst($value);
         }
-
-        $navbar->newTab($link, $text, $attributes);
+        $navbar->newTab($link, _($text), $attributes);
       }
     }
-
     return $navbar->ready();
   }
 
+	/**
+	 * @return string
+	 */
   public static function footer(): string
   {
     return "<p>Copyright by Mauro Cruz</p>";

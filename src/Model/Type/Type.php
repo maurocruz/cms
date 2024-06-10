@@ -25,6 +25,7 @@ class Type
 	 * @return mixed|string|string[]
 	 */
 	public function post(array $params) {
+		$action = $params['action'] ?? null;
 		$data = CmsFactory::model()->api()->post($this->type, $params)->ready();
 		// ERROR OR FAIL
 		if ((isset($data['status']) && $data['status'] == 'fail') || (isset($data['error']))) {
@@ -38,10 +39,10 @@ class Type
 		else if (isset($data[0])) {
 			$value = $data[0];
 			$idname = "id$this->type";
-			$idvalue = $value[$idname];
+			$idvalue = $value[$idname] ?? null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			if ($this->type === "webPageElement" || $this->type === "programMembership") {
+			if ($this->type === "webPageElement" || $this->type === "programMembership" || $action === 'redirectToSamePage') {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
 			// REDIRECT TO EDIT PAGE
@@ -64,6 +65,13 @@ class Type
 	 */
 	public function put(array $params) {
 		$id = $params["id$this->type"];
+		$namespaceClass = "Plinct\\Cms\\Controller\\Type\\".ucfirst($this->type)."\\".ucfirst($this->type);
+		if (class_exists($namespaceClass)) {
+			$classType = new $namespaceClass();
+			if (method_exists($classType, 'update')) {
+			$params =	$classType->update($params);
+			}
+		}
 		$data = CmsFactory::model()->api()->put($this->type, $params)->ready();
 		if ($data['status'] === "success") {
 			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);

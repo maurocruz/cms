@@ -2,9 +2,10 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
+use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
-use Plinct\Web\Element\Form\FormInterface;
 
 abstract class CreativeWorkAbstract
 {
@@ -12,18 +13,20 @@ abstract class CreativeWorkAbstract
 
 	public static function navbar()
 	{
-		CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-				->type('creativeWork')
-				->setTitle(_('Creative work'))
-				->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home())
-				->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus())
-				->newTab('/admin/webSite',  _("WebSite"))
-				->newTab('/admin/Article',  _('Article'))
-				->newTab('/admin/Book',  _('Book'))
-				->newTab('/admin/ImageObject',  _('Images'))
-				->ready()
-		);
+		$navbar = CmsFactory::view()->fragment()->navbar()
+			->type('creativeWork')
+			->setTitle(_('Creative work'))
+			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home(18,18))
+			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(18,18))
+			->search('/admin/creativeWork')
+		;
+		$subclass = App::getTypesEnabled()['CreativeWork'] ?? null;
+		if ($subclass) {
+			foreach ($subclass as $type) {
+				$navbar->newTab("/admin/".lcfirst($type), _($type));
+			}
+		}
+		CmsFactory::view()->addHeader($navbar->ready());
 	}
 
 	protected function form(string $case = 'new', array $value = null): array
@@ -46,7 +49,7 @@ abstract class CreativeWorkAbstract
 		return $form->ready();
 	}
 
-	public static function formContent(string $case, FormInterface $form, array $value = null): FormInterface
+	public static function formContent(string $case, Form $form, array $value = null): Form
 	{
 		// thing
 		$form = Thing::formContent($form, $value);

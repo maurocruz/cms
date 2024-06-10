@@ -24,8 +24,11 @@ class Type
 	 */
 	public function __construct(string $typeName) {
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
+		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
 		if (class_exists($className)) {
 			$this->object = new $className();
+		} elseif (class_exists($classNameCreativeWork)) {
+			$this->object = new $classNameCreativeWork();
 		}
 	}
 

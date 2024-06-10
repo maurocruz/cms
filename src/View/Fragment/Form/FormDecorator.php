@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Form;
 
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\Request\Server\ServerFactory;
 use Plinct\Cms\View\Fragment\ElementDecorator;
@@ -115,7 +116,20 @@ class FormDecorator extends ElementDecorator implements FormInterface
       return $this;
   }
 
-  /**
+	/**
+	 * @param string $name
+	 * @param array $items
+	 * @param $valueChecked
+	 * @param string|null $legend
+	 * @return FormInterface
+	 */
+	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
+		return $this;
+	}
+
+	/**
    * GET A DATA FROM SOLOINE SERVER
    * @param array $params
    * @return mixed
@@ -124,6 +138,19 @@ class FormDecorator extends ElementDecorator implements FormInterface
       $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
       return json_decode((ServerFactory::soloine())->get($params), true);
   }
+
+	/**
+	 * @param string $type
+	 * @param string $legend
+	 * @param string $propertyName
+	 * @param int|null $value
+	 * @return FormInterface
+	 */
+	public function relationshipOneToOne(string $type, string $legend, string $propertyName, int $value = null): FormInterface
+	{
+		$this->content(CmsFactory::view()->fragment()->reactShell($type)->getItemType($legend, $propertyName, $value)->ready());
+		return $this;
+	}
 
   /**
    * WRITE A <SELECT> ELEMENT
