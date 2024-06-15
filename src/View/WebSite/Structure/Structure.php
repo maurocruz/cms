@@ -22,7 +22,14 @@ class Structure
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
       <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
       <script src="/admin/assets/js/scripts"></script>
-      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>      
+      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
+      <link rel="stylesheet" href="https://plinct.com.br/static/dist/richtexteditor/rte_theme_default.css">
+      <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/rte.js"></script>
+      <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/plugins/all_plugins.js"></script>
+      <script>
+				const config = { toolbar: "mytoolbar", skin: "gray", url_base: "https://plinct.com.br/static/dist/richtexteditor", toggleBorder: false, showFloatParagraph: false };
+        config.toolbar_mytoolbar = "{bold,italic,underline,strike,superscript,subscript}|{fontsize}|{forecolor,backcolor}|{justifyleft,justifycenter,justifyright,justifyfull}|{insertorderedlist,insertunorderedlist}|{insertlink,unlink,insertimage}|removeformat|insertdocument"+"#{undo,redo,fullscreenenter,fullscreenexit,code}";
+			</script> 
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 
@@ -75,9 +82,9 @@ class Structure
 				// if array
         elseif (is_array($value)) {
 	        $text = ucfirst($key);
-	        $link = "/admin/$text";
+	        $link = "/admin/$key";
         } else {
-          $link = "/admin/$value";
+          $link = "/admin/".lcfirst($value);
           $text = ucfirst($value);
         }
         $navbar->newTab($link, _($text), $attributes);

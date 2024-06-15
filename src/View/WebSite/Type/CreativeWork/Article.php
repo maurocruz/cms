@@ -93,12 +93,15 @@ class Article implements TypeInterface
 		$form = Thing::formContent($form, $value);
 	  // about
 	  $form->relationshipOneToOne('thing',_('About'),'about',$about);
-	  //$form->content(CmsFactory::view()->fragment()->reactShell('thing')->getItemType(_("About"),'about',$about)->ready());
     // title
     $form->fieldsetWithInput("headline", $value['headline'] ?? null, _("Title"));
     // article body
-    $form->fieldsetWithTextarea("articleBody", $articleBody, _("Text"), null, ["id"=>"articleText$ID"]);
-    $form->setEditor("articleText$ID", "editor$case$ID");
+
+	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(
+			_('Article body'),
+			"<textarea name='articleBody' class='article-articleBody' id='articleBody$ID'>$articleBody</textarea>", false, 'width: 100%;'));
+    $form->setEditor("articleBody$ID", "editor$case$ID");
+
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
 		// author

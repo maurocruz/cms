@@ -27,13 +27,21 @@ class Certification implements TypeInterface
 		);
 	}
 
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
 	public function index(?array $value)
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['about'=>_('About'),'certificationIdentification'=>_("Certification identification")])->ready()
+			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternamte name'),'certificationIdentification'=>_("Certification identification")])->ready()
 		);
 	}
 
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
 	public function edit(?array $data)
 	{
 		if (!empty($data)) {

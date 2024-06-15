@@ -188,15 +188,16 @@ class FormDecorator extends ElementDecorator implements FormInterface
       return $element->ready();
   }
 
-
-  /**
-   * @param string $id
-   * @param string $editorName
-   * @return void
-   */
+	/**
+	 * @param string $id
+	 * @param string $editorName
+	 * @return void
+	 */
   public function setEditor(string $id, string $editorName = 'editor')
   {
-      if(App::getRichTextEditor())   $this->form->setEditor($id, $editorName, App::getStaticFolder());
+    if(App::getRichTextEditor()) {
+			$this->form->content("<script>const $editorName = new RichTextEditor('#$id', config );</script>");
+    }
   }
 
   /**

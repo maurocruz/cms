@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\Place;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
@@ -21,8 +22,8 @@ class Place implements TypeInterface
   {
 		CmsFactory::view()->addHeader(
 	    CmsFactory::View()->fragment()->navbar(_("Place"), [
-	        "/admin/place" => CmsFactory::view()->fragment()->icon()->home(),
-	        "/admin/place/new" => CmsFactory::view()->fragment()->icon()->plus()
+	        "/admin/place" => CmsFactory::view()->fragment()->icon()->home(18,18),
+	        "/admin/place/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
 	    ], 2, ['table'=>'place'])->ready()
 		);
     if ($title) {
@@ -72,17 +73,13 @@ class Place implements TypeInterface
   }
 
 	/**
-	 * @param array|null $value
 	 * @return array
 	 */
-  private function formPlace(array $value = null): array {
-    $form = CmsFactory::view()->fragment()->form([ "id" => "form-place-new", "name" => "place-form-new", "class" => "formPadrao form-place" ]);
+  private function formPlace(): array
+  {
+    $form = CmsFactory::view()->fragment()->form([ "id" => "form-place-new", "name" => "place-form-new", "class" => "form-basic form-place" ]);
     $form->action("/admin/place/new")->method("post");
-    // name
-    $form->fieldsetWithInput("name", $value['name'] ?? null, _("Place"));
-    $form->fieldsetWithTextarea("description", $value['description'] ?? null, _("Description"));
-    // disambiguating description
-    $form->fieldsetWithTextarea("disambiguatingDescription", $value['disambiguatingDescription'] ?? null, _("Disambiguating description"));
+    $form = Thing::formContent($form);
     // submit
     $form->submitButtonSend();
     return $form->ready();

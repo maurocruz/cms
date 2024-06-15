@@ -25,17 +25,11 @@ class WebSite extends WebSiteFactoryAbstract
 	}
 
 	/**
+	 * @param string $type
 	 * @return Type
 	 */
 	public function type(string $type): Type
 	{
 		return new Type($type);
 	}
-	/**
-	 * @return Enclave
-	 */
-	/*public static function enclave(): Enclave {
-		return new Enclave();
-	}*/
-
 }

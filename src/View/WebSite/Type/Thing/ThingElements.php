@@ -27,6 +27,13 @@ class ThingElements
 
 	public static function formContent(Form $form, array $value = null): Form
 	{
+		$case = 'new';
+		$idthing = null;
+		if ($value) {
+			$typeBuilder = new \Plinct\Tool\TypeBuilder($value);
+			$idthing = $typeBuilder->getPropertyValue('idthing') ?? null;
+			$case = 'edit';
+		}
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name')." <span style='color: #eecc77;'>*</span>");
@@ -35,7 +42,8 @@ class ThingElements
 		// description
 		$form->fieldsetWithTextarea('description', $value['description'] ?? null, _('Description'),['class'=>'thing-description']);
 		// disambiguatingDescription
-		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription' class='thing-disambiguatingDescription'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
+		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription' class='thing-disambiguatingDescription' id='disambiguatingDescription$idthing'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
+		$form->setEditor("disambiguatingDescription$idthing", "editor$case$idthing");
 		// url
 		$form->fieldsetWithInput('url', $value['url'] ?? null, _('url'));
 		//

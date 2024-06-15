@@ -15,8 +15,8 @@ class Event extends EventAbstract implements TypeInterface
   {
 		CmsFactory::view()->addHeader(
 	    CmsFactory::view()->fragment()->navbar(_("Events"), [
-	      "/admin/event" => CmsFactory::view()->fragment()->icon()->home(),
-	      "/admin/event/new" => CmsFactory::view()->fragment()->icon()->plus()
+	      "/admin/event" => CmsFactory::view()->fragment()->icon()->home(18,18),
+	      "/admin/event/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
 	    ], 3, ["table"=>"event"])->ready()
 		);
   }

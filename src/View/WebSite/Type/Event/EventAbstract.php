@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Event;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 
 abstract class EventAbstract
 {
@@ -19,30 +20,27 @@ abstract class EventAbstract
   protected function formEvent(string $case = "new", array $value = null): array
   {
     // VARS
-    $startDate = isset($value) ? strstr($value['startDate'], " ", true) : null;
-    $startTime = isset($value) ? substr(strstr($value['startDate'], " "), 1) : null;
-    $endDate = isset($value) ? strstr($value['endDate'], " ", true) : null;
-    $endTime = isset($value) ? substr(strstr($value['endDate'], " "), 1) : null;
-    $description = isset($value['description']) ? stripslashes($value['description']) : null;
+    $startDate = $value['startDate'] ?? null;
+    $endDate = $value['endDate'] ??  null;
+		$organizer = $value['organizer'] ?? null;
+		$location = $value['location'] ?? null;
     // FROM
-    $form = CmsFactory::view()->fragment()->form(["class"=>"formPadrao form-event"]);
+    $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
-    $form->content("<h4>"._("Event")."</h4>");
     // HIDDENS
-    if ($case == "edit") $form->input('idevent', (string)$this->idevent, 'hidden');
-    // TITLE
-    $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
+    if ($case == "edit") {
+			$form->input('idevent', (string)$this->idevent, 'hidden');
+    }
+		// THING
+		$form = Thing::formContent($form, $value);
     // START DATE
-    $form->fieldsetWithInput('startDate', $startDate, _("Start date"), "date");
-    // START TIME
-    $form->fieldsetWithInput('startTime', $startTime, _("Start time"), "time");
+    $form->fieldsetWithInput('startDate', $startDate, _("Start date"), "datetime-local");
     // END DATE
-    $form->fieldsetWithInput('endDate', $endDate, _("End date"), "date");
-    // END TIME
-    $form->fieldsetWithInput('endTime', $endTime, _("End time"), "time");
-    // DESCRIPTION
-    $form->fieldsetWithTextarea('description', $description, _('Description'), null, ['id'=>"textareaDescritionEvent$case"]);
-    $form->setEditor("textareaDescritionEvent$case");
+    $form->fieldsetWithInput('endDate', $endDate, _("End date"), "datetime-local");
+		// LOCATION
+	  $form->relationshipOneToOne('place', _('Place'),'location', $location);
+		// ORGANIZER
+	  $form->relationshipOneToOne('thing',_('Organizer'),'organizer',$organizer);
     // BUTTONS
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/event/erase");
