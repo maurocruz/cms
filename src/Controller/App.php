@@ -69,7 +69,7 @@ class App
   /**
    * @var bool
    */
-  private static bool $richTextEditor = false;
+  private static bool $richTextEditor = true;
 	/**
 	 * @var string|null
 	 */
