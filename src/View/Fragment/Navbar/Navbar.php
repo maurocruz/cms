@@ -29,7 +29,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 	 * @param int $level
 	 * @return NavbarInterface
 	 */
-  public function level(int $level): NavbarInterface
+  public function level(int $level = 2): NavbarInterface
   {
 		$this->level = $level;
     $this->setAttributes("class", "menu menu$level");
@@ -58,16 +58,16 @@ class Navbar extends NavbarAbstract implements NavbarInterface
     return $this;
   }
 
-  /**
-   * @param string $action
-   * @param string $searchBy
-   * @param string|null $params
-   * @param string|null $linkList
-   * @return NavbarInterface
-   */
-  public function search(string $action, string $searchBy = 'name', string $params = null, string $linkList = null): NavbarInterface
+	/**
+	 * @param string|null $action
+	 * @param string $searchBy
+	 * @param string|null $params
+	 * @param string|null $linkList
+	 * @return NavbarInterface
+	 */
+  public function search(string $action = null, string $searchBy = 'name', string $params = null, string $linkList = null): NavbarInterface
   {
-		$this->setSearch(['action'=>$action,'searchBy'=>$searchBy,'params','linkList'=>$linkList]);
+		$this->setSearch(['searchBy'=>$searchBy,'params','linkList'=>$linkList]);
     return $this;
   }
 

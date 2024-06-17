@@ -31,7 +31,7 @@ abstract class WebPageAbstract
 				->title("WebPage")
 				->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus())
-				->search("/admin/webPage/search")
+				->search()
 				->ready()
 		);
 

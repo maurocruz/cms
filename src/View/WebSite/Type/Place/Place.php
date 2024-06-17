@@ -21,10 +21,13 @@ class Place implements TypeInterface
   public function navbarPlace(string $title = null)
   {
 		CmsFactory::view()->addHeader(
-	    CmsFactory::View()->fragment()->navbar(_("Place"), [
-	        "/admin/place" => CmsFactory::view()->fragment()->icon()->home(18,18),
-	        "/admin/place/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
-	    ], 2, ['table'=>'place'])->ready()
+	    CmsFactory::View()->fragment()->navbar()
+		    ->type('place')
+		    ->title(_('Place'))
+		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home(18,18))
+		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus(18,18))
+		    ->search()
+		    ->ready()
 		);
     if ($title) {
 	    CmsFactory::view()->addHeader(

@@ -22,7 +22,7 @@ class Certification implements TypeInterface
 				->level(3)
 				->newTab('/admin/certification',  CmsFactory::view()->fragment()->icon()->home(18,18))
 				->newTab('/admin/certification/new',  CmsFactory::view()->fragment()->icon()->plus(18,18))
-				->search('/admin/certification')
+				->search()
 				->ready()
 		);
 	}

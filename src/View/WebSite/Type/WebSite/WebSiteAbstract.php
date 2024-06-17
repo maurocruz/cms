@@ -38,7 +38,7 @@ class WebSiteAbstract
         ->level(2)
         ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
         ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
-	      ->search("/admin/webSite")
+	      ->search()
         ->ready()
     );
 

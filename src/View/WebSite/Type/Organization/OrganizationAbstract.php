@@ -40,10 +40,10 @@ abstract class OrganizationAbstract
 		CmsFactory::view()->addHeader(
 	    CmsFactory::view()->fragment()->navbar()
 		    ->setTitle(_("Organization"))
-		    ->setTabs([
-	      "/admin/organization"=> CmsFactory::view()->fragment()->icon()->home(),
-	      "/admin/organization/new" => CmsFactory::view()->fragment()->icon()->plus()
-	    ])->level(2)->search('organization')->ready()
+		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home(18,18))
+		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus(18,18))
+		    ->search()
+		    ->ready()
 		);
   }
   /**

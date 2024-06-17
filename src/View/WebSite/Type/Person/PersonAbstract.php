@@ -31,8 +31,7 @@ abstract class PersonAbstract
         ->title(_("Person"))
         ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home(18,18))
         ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus(18,18))
-        ->level(2)
-        ->search('/admin/person')
+        ->search()
         ->ready()
       );
   }

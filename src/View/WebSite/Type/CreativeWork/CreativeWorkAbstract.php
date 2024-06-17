@@ -18,7 +18,7 @@ abstract class CreativeWorkAbstract
 			->setTitle(_('Creative work'))
 			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home(18,18))
 			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(18,18))
-			->search('/admin/creativeWork')
+			->search()
 		;
 		$subclass = App::getTypesEnabled()['CreativeWork'] ?? null;
 		if ($subclass) {

@@ -21,12 +21,15 @@ class Action implements TypeInterface
 				->title(_("Action"))
 				->newTab('/admin/action', CmsFactory::view()->fragment()->icon()->home(18,18))
 				->newTab('/admin/action/new', CmsFactory::view()->fragment()->icon()->plus(18,18))
-				->search('admin/action')
+				->search()
 				->ready()
 		);
 		if ($title !== null) {
 			CmsFactory::view()->addHeader(
-				CmsFactory::view()->fragment()->navbar($title)->level(3)->ready()
+				CmsFactory::view()->fragment()->navbar()
+					->title($title)
+					->level(3)
+					->ready()
 			);
 		}
 	}

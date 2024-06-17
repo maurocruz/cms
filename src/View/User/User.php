@@ -18,8 +18,7 @@ class User
 				->title(_("Users"))
 				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus())
-				->level(2)
-				->search('/admin/user')
+				->search()
 				->ready()
 		);
 		if ($title) {
@@ -64,8 +63,8 @@ class User
 	public function new()
 	{
 		$this->navbarUser(_("Add new"));
-		CmsFactory::webSite()->addMain(
-			CmsFactory::response()->fragment()->auth()->register()
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->auth()->register()
 		);
 	}
 	/**
@@ -76,7 +75,7 @@ class User
 		if (isset($data['status']) && $data['status'] === 'fail') {
 			$message = $data['message'];
 			$this->navbarUser();
-			CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent($message));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent($message));
 		} elseif ($data) {
 			$value = $data[0];
 			$this->navbarUser($value['name']);
