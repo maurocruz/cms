@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\WebPageElement;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Exception;
 use Plinct\Cms\CmsFactory;

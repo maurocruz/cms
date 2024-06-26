@@ -25,7 +25,7 @@ class ThingElements
 		return $form->ready();
 	}
 
-	public static function formContent(Form $form, array $value = null): Form
+	public static function formContent(Form $form, array $value = null, array $excludes = null): Form
 	{
 		$case = 'new';
 		$idthing = null;
@@ -37,13 +37,17 @@ class ThingElements
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name')." <span style='color: #eecc77;'>*</span>");
-		// alternateName
-		$form->fieldsetWithInput('alternateName', $value['alternateName'] ?? null, _('Alternate name'));
+		if (!in_array('alternateName', $excludes)) {
+			// alternateName
+			$form->fieldsetWithInput('alternateName', $value['alternateName'] ?? null, _('Alternate name'));
+		}
 		// description
 		$form->fieldsetWithTextarea('description', $value['description'] ?? null, _('Description'),['class'=>'thing-description']);
-		// disambiguatingDescription
-		$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription' class='thing-disambiguatingDescription' id='disambiguatingDescription$idthing'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
-		$form->setEditor("disambiguatingDescription$idthing", "editor$case$idthing");
+		if (!in_array('disambiguatingDescription', $excludes)) {
+			// disambiguatingDescription
+			$form->content(CmsFactory::view()->fragment()->box()->expandingBox(_('Disambiguating description'), "<textarea name='disambiguatingDescription' class='thing-disambiguatingDescription' id='disambiguatingDescription$idthing'>$disambiguatingDescription</textarea>", false, 'width: 100%;'));
+			$form->setEditor("disambiguatingDescription$idthing", "editor$case$idthing");
+		}
 		// url
 		$form->fieldsetWithInput('url', $value['url'] ?? null, _('url'));
 		//

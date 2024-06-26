@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\WebSite;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;

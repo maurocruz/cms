@@ -25,6 +25,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
     }
     $token = $_COOKIE['API_TOKEN'] ?? null;
     if (App::getApiSecretKey()) {
+			// TODO Package tuupola/slim-jwt-auth is abandoned, you should avoid using it. Use jimtools/jwt-auth instead.
       $tokenDecode = $token ? JWT::decode($token, App::getApiSecretKey(), ["HS256"]) : null;
       if ($token) {
 	      $name = $tokenDecode->name;

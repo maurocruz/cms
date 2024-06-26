@@ -37,7 +37,7 @@ class Article implements TypeInterface
   public function index(?array $value): void
   {
     $this->navbarArticle();
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status")])->ready());
   }
 	/**
 	 * @param array|null $value
@@ -81,6 +81,8 @@ class Article implements TypeInterface
    */
   static private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
+	  $headline = $value['headline'] ?? null;
+	  $alternativeHeadline = $value['alternativeHeadline'] ?? null;
 		$about = $value['about'] ?? null;
     $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
 		$author = $value['author'] ?? null;
@@ -90,13 +92,15 @@ class Article implements TypeInterface
     $form->action("/admin/article/$case")->method('post');
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
-		$form = Thing::formContent($form, $value);
+		// THING
+		$form = Thing::formContent($form, $value, ['alternateName', 'disambiguatingDescription']);
 	  // about
 	  $form->relationshipOneToOne('thing',_('About'),'about',$about);
-    // title
-    $form->fieldsetWithInput("headline", $value['headline'] ?? null, _("Title"));
+    // HEADLINE
+    $form->fieldsetWithInput("headline", $headline, _("Title"));
+	  // ALTERNATIVE HEADLINE
+	  $form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
     // article body
-
 	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(
 			_('Article body'),
 			"<textarea name='articleBody' class='article-articleBody' id='articleBody$ID'>$articleBody</textarea>", false, 'width: 100%;'));

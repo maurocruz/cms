@@ -78,7 +78,7 @@ abstract class PersonAbstract
 		// THING
 		$form = Thing::formContent($form, $value);
 		// GIVEN NAME
-	  $form->fieldsetWithInput('givenName', $givenName, _("Given Name") );
+	  $form->fieldsetWithInput('givenName', $givenName, _("Given name") );
 	  // FAMILY NAME
 	  $form->fieldsetWithInput('familyName', $familyName, _("Family name"));
 		// ADDITIONAL NAME
@@ -88,15 +88,15 @@ abstract class PersonAbstract
 		// TAX ID
 	  $form->fieldsetWithInput('taxId', $taxId, _("Tax ID"));
 		// BIRTH DATA
-	  $form->fieldsetWithInput('birthDate', $birthDate, _("Birth data"), 'date');
+	  $form->fieldsetWithInput('birthDate', $birthDate, _("Birth date"), 'date');
 		// BIRTHPLACE
 	  $form->fieldsetWithInput('birthPlace', $birthPlace, _("Birth place"));
 	  // DEAth DATA
-	  $form->fieldsetWithInput('deathDate', $deathDate, _("Death data"), 'date');
+	  $form->fieldsetWithInput('deathDate', $deathDate, _("Death date"), 'date');
 	  // DEATH PLACE
 	  $form->fieldsetWithInput('deathPlace', $deathPlace, _("Death place"));
 	  // HAS OCCUPATION
-	  $form->fieldsetWithInput('hasOccupation', $hasOccupation, _("Has occupation"). " <span style='font-size: 85%;'>("._("Separate with semicolons if there are many").")</span>");
+	  $form->fieldsetWithInput('hasOccupation', $hasOccupation, _("Has occupation"));
 		// SUBMIT
     $form->submitButtonSend();
     if ($case == 'edit') $form->submitButtonDelete("/admin/person/erase");

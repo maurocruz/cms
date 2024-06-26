@@ -21,8 +21,6 @@ class Structure
       <link href="/admin/static/css/estilos.css" type="text/css" rel="stylesheet">
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
       <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
-      <script src="/admin/assets/js/scripts"></script>
-      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
       <link rel="stylesheet" href="https://plinct.com.br/static/dist/richtexteditor/rte_theme_default.css">
       <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/rte.js"></script>
       <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/plugins/all_plugins.js"></script>

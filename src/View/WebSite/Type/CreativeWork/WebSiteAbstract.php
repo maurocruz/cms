@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\WebSite;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 
 class WebSiteAbstract
 {
@@ -36,8 +35,8 @@ class WebSiteAbstract
         ->type('webSite')
         ->title("WebSite")
         ->level(2)
-        ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
-        ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
+        ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home(16,16))
+        ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus(16,16))
 	      ->search()
         ->ready()
     );
@@ -46,7 +45,7 @@ class WebSiteAbstract
       CmsFactory::view()->fragment()->navbar()
         ->title(_($title))
         ->level($level)
-        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home(16,16))
         ->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("List of webpages"))
         ->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", _("Add new webpage"))
         ->ready()

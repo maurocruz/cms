@@ -27,9 +27,9 @@ class Article
 	{
 		$creativeWorkStatus = $params['creativeWorkStatus'];
 		$datePublished = $params['datePublished'];
-		if ($creativeWorkStatus == 'published' && $datePublished == '') {
+		if ($creativeWorkStatus == 'published' && ($datePublished == '' || $datePublished == '00-00-00 00:00:00')) {
 			$params['datePublished'] = (new DateTime())->format('Y:m:d h:i:s');
-		} else {
+		} else if($creativeWorkStatus !== 'published') {
 			$params['datePublished'] = '';
 		}
 		return $params;

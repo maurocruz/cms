@@ -59,6 +59,8 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 		parent::$HEAD['content'][] = '<script>window.apiHost = "'.App::getApiHost().'"; window.staticFolder = "'.App::getStaticFolder().'";</script>';
 
 		// BODY BUNDLES
+		parent::$BODY['content'][] = /** @lang text */
+			'<script src="/admin/assets/js/scripts"></script><script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>';
 		parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 		foreach (parent::$BUNDLES as $bundle) {
 			parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().$bundle.'.bundle.js"></script>';

@@ -11,6 +11,9 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Article body"
+msgstr "Corpo do artigo"
+
 msgid "Draft"
 msgstr "Rascunho"
 
@@ -36,7 +39,10 @@ msgid "Issued by"
 msgstr "Emitida por"
 
 msgid "Certification status"
-msgstr "Status de certificação"
+msgstr "Status da certificação"
+
+msgid "Certification identification"
+msgstr "Id da certificação"
 
 msgid "active"
 msgstr "ativo"
@@ -266,6 +272,9 @@ msgstr "Cliente"
 
 msgid "Expired date"
 msgstr "Vencimento"
+
+msgid "Date expires"
+msgstr "Data da expiração"
 
 msgid "Add contract"
 msgstr "Adicionar contrato"
@@ -1204,6 +1213,12 @@ msgstr "data do nascimento"
 msgid "Birth place"
 msgstr "Local de nascimento"
 
+msgid "Death date"
+msgstr "Data do falecimento"
+
+msgid "Death place"
+msgstr "Local do falecimento"
+
 msgid "Gender"
 msgstr "Gênero"
 
@@ -1532,6 +1547,12 @@ msgstr" Lista de páginas web"
 
 msgid "View website"
 msgstr "Veja website"
+
+msgid "Headline"
+msgstr "Título"
+
+msgid "Content"
+msgstr "Conteúdo"
 
 msgid "Alternative headline"
 msgstr "Título alternativo"

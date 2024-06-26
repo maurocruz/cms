@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\WebPage;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\WebSite\WebSite;
 
 abstract class WebPageAbstract
 {
@@ -29,8 +28,8 @@ abstract class WebPageAbstract
 				->type('webPage')
 				->level(4)
 				->title("WebPage")
-				->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus(16,16))
 				->search()
 				->ready()
 		);
@@ -64,6 +63,8 @@ abstract class WebPageAbstract
   protected function formWebPage(array $value = null): array
   {
     // VARS
+	  $headline = $value['headline'] ?? null;
+		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
 		$text = $value['text'] ?? null;
 		$author = $value['author'] ?? null;
     $case = $value ? 'edit' : 'new';
@@ -77,9 +78,15 @@ abstract class WebPageAbstract
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
     }
 		// THING
-	  $form = Thing::formContent($form, $value);
+	  $form = Thing::formContent($form, $value, ['alternateName', 'disambiguatingDescription']);
+		// HEADLINE
+	  $form->fieldsetWithInput('headline', $headline, _('Headline'));
+	  // ALTERNATIVE HEADLINE
+	  $form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
 	  // TEXT
-	  $form->fieldsetWithTextarea('text',$text, _("Content"));
+	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(_("Content"),"<textarea name='text' class='webPage-text' id='contentTextareaWebPage'>$text</textarea>", false, 'width: 100%;'));
+		$form->setEditor('contentTextareaWebPage');
+
 		// AUTHOR
 	  $form->content(CmsFactory::view()->fragment()->reactShell('person')
 		  ->setAttribute('data-action','getItemType')
