@@ -17,10 +17,12 @@ class Structure
       <meta name="viewport" content="width=device-width">
       <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link href="/admin/static/css/reset.css" type="text/css" rel="stylesheet">
-      <link href="/admin/static/css/estilos.css" type="text/css" rel="stylesheet">
+      <link href="/admin/assets/css/reset" type="text/css" rel="stylesheet">
+      <link href="/admin/assets/css/estilos" type="text/css" rel="stylesheet">
       <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
-      <link href="/admin/static/css/style-dark.css" type="text/css" rel="stylesheet">
+      <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
+      <script src="/admin/assets/js/scripts"></script>
+      <script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>
       <link rel="stylesheet" href="https://plinct.com.br/static/dist/richtexteditor/rte_theme_default.css">
       <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/rte.js"></script>
       <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/plugins/all_plugins.js"></script>
@@ -51,7 +53,7 @@ class Structure
   {
     $apiHost = App::getApiHost();
     $apiLocation = $apiHost && filter_var($apiHost, FILTER_VALIDATE_URL) ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "localhost";
-    return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 140%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
+    return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
   }
 
 	/**

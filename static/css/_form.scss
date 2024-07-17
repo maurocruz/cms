@@ -411,33 +411,19 @@
 /** BOOK
 ====================================================== */
 .form-book {
-  display: flex;
-  flex-wrap: wrap;
+  fieldset:nth-of-type(2) { flex-basis: 50%; }
+  fieldset:nth-of-type(3) { flex-basis: 50%; }
 
-  fieldset:nth-of-type(n) { flex-basis: 50%; }
-  fieldset:nth-of-type(1) { flex-basis: 100%; }
-  fieldset:nth-of-type(8) { flex-basis: 100%; }
-  fieldset:nth-of-type(9) { flex-basis: 100%; }
-
-  @media (min-width: 768px) {
-    fieldset:nth-of-type(n) { flex-basis: 25%; }
-    fieldset:nth-of-type(2) { flex-basis: 20%; }
-    fieldset:nth-of-type(3) { flex-basis: 15%; }
-    fieldset:nth-of-type(4) { flex-basis: 50%; }
-    fieldset:nth-of-type(5) { flex-basis: 15%; }
-
-    fieldset:nth-of-type(6) { flex-basis: 20%; }
-    fieldset:nth-of-type(7) { flex-basis: 20%; }
-    fieldset:nth-of-type(8) { flex-basis: 60%; }
-
-    fieldset:nth-of-type(9) { flex-basis: 60%; }
-    fieldset:nth-of-type(10) { flex-basis: 20%; }
-    fieldset:nth-of-type(11) { flex-basis: 20%; }
+  @media (min-width: 480px) {
+    fieldset:nth-of-type(8) { flex-basis: 50%; }
+    fieldset:nth-of-type(9) { flex-basis: 50%; }
   }
-
-  fieldset:nth-of-type(1)
-  {
-    flex-basis: 100%;
+  @media (min-width: 640px) {
+    fieldset:nth-of-type(4) { flex-basis: 50%; }
+    div:nth-of-type(2) { flex-basis: 50%; }
+    fieldset:nth-of-type(7) { flex-basis: 33%; }
+    fieldset:nth-of-type(8) { flex-basis: 33%; }
+    fieldset:nth-of-type(9) { flex-basis: 33%; }
   }
 }
 
@@ -791,6 +777,7 @@
 /* THING
 ====================================================== */
 .form-thing {
+  padding: 0 5px;
   fieldset:nth-of-type(n) { width: 100%; }
 }
 
