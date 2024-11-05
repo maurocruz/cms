@@ -51,7 +51,7 @@ class Structure
   {
     $apiHost = App::getApiHost();
     $apiLocation = $apiHost && filter_var($apiHost, FILTER_VALIDATE_URL) ? '<a href="' . $apiHost . '" target="_blank">' . $apiHost . '</a>' : "localhost";
-    return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
+    return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 140%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
   }
 
 	/**

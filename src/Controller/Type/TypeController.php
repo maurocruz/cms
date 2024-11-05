@@ -60,8 +60,6 @@ class TypeController
 				}
 				// if not module controller class
 				if ($returns === null) {
-					// debug logger
-					//CmsFactory::view()->Logger('debug')->debug("Controller Module not exist", ['type'=>$this->type,'method'=>__METHOD__]);
 					// generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
 					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();

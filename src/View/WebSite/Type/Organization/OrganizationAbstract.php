@@ -40,8 +40,8 @@ abstract class OrganizationAbstract
 		CmsFactory::view()->addHeader(
 	    CmsFactory::view()->fragment()->navbar()
 		    ->setTitle(_("Organization"))
-		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home(18,18))
-		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus(18,18))
+		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home(16,16))
+		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
 		    ->search()
 		    ->ready()
 		);
@@ -63,13 +63,27 @@ abstract class OrganizationAbstract
 			CmsFactory::view()->fragment()->navbar()
 				->title($this->name)
 				->level(3)
-				->newTab("/admin/organization/edit?id=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/organization?id=$this->idorganization&action=service", _("Services"))
-				->newTab("/admin/organization/product?id=$this->idorganization", _("Products"))
-				->newTab("/admin/organization/order?id=$this->idorganization", _("Orders"))
+				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/organization/service?idorganization=$this->idorganization", _("Services"))
+				->newTab("/admin/organization/product?idorganization=$this->idorganization", _("Products"))
+				->newTab("/admin/organization/order?idorganization=$this->idorganization", _("Orders"))
 				->ready()
 		);
   }
+
+	protected function navbarProduct()
+	{
+		$this->navbarIndex();
+		$this->navbarEdit();
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_("Products"))
+				->newTab("/admin/organization/product?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/product/new?manufacturer=$this->idorganization", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->level(4)
+				->ready()
+		);
+	}
 
   /**
    * FORM EDIT AND NEW

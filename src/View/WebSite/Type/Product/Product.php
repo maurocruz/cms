@@ -3,104 +3,90 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Product;
 
 use Exception;
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
-use Plinct\Cms\Controller\WebSite\Type\ImageObject\ImageObjectView;
-use Plinct\Cms\Controller\WebSite\Type\Organization\Organization;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Tool\ToolBox;
 
-class Product extends ProductAbstract
+class Product implements TypeInterface
 {
-  /**
-   * @param string|null $title
-   */
-  private function navbarProduct(string $title = null)
-  {
-    CmsFactory::webSite()->navbar(_("Product"), [
-      "/admin/$this->manufacturerType/product?id=$this->manufacturer" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/$this->manufacturerType/product?id=$this->manufacturer&action=new" => CmsFactory::response()->fragment()->icon()->plus()
-    ], 4, ['table'=>'product'] );
+	private function navbar(?string $title = null): void
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_('Product'))
+				->type('product')
+				->newTab("/admin/product", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/product/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->search()
+				->ready()
+		);
+		if ($title) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()->title($title)->level(3)->ready()
+			);
+		}
+	}
 
-    if ($title) {
-      CmsFactory::webSite()->navbar($title, [], 5);
-    }
-  }
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function index(?array $value): void
+	{
+		$this->navbar();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('product')->ready()
+		);
+	}
+
+	public function new(?array $value): void
+	{
+		$this->navbar();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->box()->simpleBox($this->form())
+		);
+	}
 
   /**
    * @throws Exception
    */
-  public function edit($data)
+  public function edit($data): void
   {
     $value = $data[0];
-    if ($value['manufacturerType'] == 'organization') {
-      $organization = $value['manufacturer'];
-      $organization['action'] = 'edit';
-      $organization['product'] = $value;
-      (new Organization())->product($organization);
-    }
+		$this->navbar($value['name']);
+		$typeBuilder = ToolBox::typeBuilder($value);
+		$idthing = $typeBuilder->getPropertyValue('idthing');
+		CmsFactory::view()->addMain([
+				CmsFactory::view()->fragment()->box()->simpleBox($this->form($value)),
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $idthing)->ready()
+			]
+		);
   }
 
-  /**
-   * @param null $value
-   */
-  public function newWithPartOf($value = null)
-  {
-    $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
-    $this->manufacturerType = strtolower($value['@type']);
+	private function form(?array $value = null): array
+	{
+		$form = CmsFactory::view()->fragment()->form();
+		$form->attributes(['class'=>'form-basic form-product']);
+		$form->method('post');
+		if ($value) {
+			$typeBuilder = ToolBox::typeBuilder($value);
+			$idproduct = $typeBuilder->getId();
+			$form->action('/admin/product/edit');
+			$form->input('idproduct', (string) $idproduct, 'hidden');
+		} else {
+			$form->action('/admin/product/new');
+		}
+		$form = Thing::formContent($form, $value);
+		// category
+		$form->fieldsetWithInput('category',$value['category'] ?? null, _('Category'));
+		// manufacturer
+		$form->relationshipOneToOne('Organization',_('Manufacturer'),'manufacturer',$value['manufacturer'] ?? null);
 
-    $this->navbarProduct(_("Add new"));
-
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(parent::formProduct()));
-  }
-
-  /**
-   * @param $value
-   */
-  public function indexWithPartOf($value)
-  {
-    if (isset($value['products']['error']) || (isset($value['products']['status']) && $value['products']['status'] == 'error')) {
-      $message = $value['products']['error']['message'] ?? $value['products']['message'] ?? "error";
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->error()->installSqlTable('product', $message));
-
-    } else {
-      $this->manufacturer = ArrayTool::searchByValue($value['identifier'], 'id', 'value');
-      $this->manufacturerType = strtolower($value['@type']);
-      $itemListElement = $value['products']['itemListElement'];
-
-      $this->navbarProduct();
-
-      $listTable = CmsFactory::response()->fragment()->listTable();
-      // CAPTION
-      $listTable->caption(sprintf(_("List of %s"), _("Products")));
-      // LABELS
-      $listTable->labels(_('Name'), _('Category'), _("Date modified"));
-      // ROWS
-      $listTable->rows($itemListElement, ['name', 'category', 'dateModified']);
-      // BUTTONS
-      $listTable->setEditButton("/admin/$this->manufacturerType/product?id=$this->manufacturer&item=");
-      // READY
-      CmsFactory::webSite()->addMain($listTable->ready());
-    }
-  }
-
-  /**
-   * @throws Exception
-   */
-  public function editWithPartOf($value)
-  {
-    $this->manufacturer = ArrayTool::searchByValue($value['identifier'],'id','value');
-    $this->manufacturerType = strtolower($value['@type']);
-
-    $product = $value['product'];
-    $this->id = ArrayTool::searchByValue($product['identifier'],'id','value');
-
-    $this->navbarProduct($product['name']);
-
-    // FORM EDIT PRODUCT
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formProduct('edit',$product)));
-    // OFFERS
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($product) ));
-    // IMAGES
-    CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox( _("Images"), (new ImageObjectView())->getForm("product", $this->id, $product['image']) ));
-  }
+		$form->submitButtonSend();
+		if ($value) {
+			$form->submitButtonDelete('/admin/product/delete');
+		}
+		return $form->ready();
+	}
 }

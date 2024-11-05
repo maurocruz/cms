@@ -35,7 +35,7 @@ class User
 
 		if (isset($data['status']) && $data['status'] == 'fail') {
 			// fail
-			CmsFactory::view()->addMain(CmsFactory::response()->message()->warning($data['message']));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
 		} else {
 			// view
 			CmsFactory::view()->user()->index($data, $params['orderBy'], $params['ordering']);

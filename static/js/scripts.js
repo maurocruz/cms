@@ -112,7 +112,7 @@ window.onload = () => {
    * contagem de caracteres no campos description do thing type
    * @type {HTMLCollectionOf<Element>}
    */
-  const thingDescriptions = document.getElementsByClassName('thing-description');
+  const thingDescriptions = document.getElementsByClassName('thing-disambiguatingDescription');
   if (thingDescriptions) {
     for (let i=0; i < thingDescriptions.length; i++) {
       const maxLenght = 255;

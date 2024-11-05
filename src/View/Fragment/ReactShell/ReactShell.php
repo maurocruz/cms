@@ -95,7 +95,6 @@ class ReactShell
 	 */
 	public final function ready(): string {
 		$this->setAttribute('data-apihost', App::getApiHost());
-		//$this->attributes['data-usertoken'] = CmsFactory::controller()->user()->userLogged()->getToken();
 		$div = "<div";
 		foreach ($this->attributes as $key => $value) {
 			$div .= " $key='$value'";

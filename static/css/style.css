@@ -169,7 +169,7 @@ dd {
 }
 
 .box-expanding {
-  max-height: 39px;
+  max-height: 35px;
   overflow: hidden;
 }
 
@@ -720,12 +720,6 @@ a.white {
 }
 .form-basic .form-submit-button-delete svg {
   color: #e61919;
-}
-.form-basic .thing-description textarea {
-  height: 16ch;
-}
-.form-basic .thing-disambiguatingDescription {
-  min-height: 30ch;
 }
 .form-basic .plinct-shell {
   width: 100%;
@@ -1293,15 +1287,15 @@ a.white {
 .form-product {
   display: flex;
   flex-wrap: wrap;
+  line-height: normal;
 }
-.form-product fieldset:nth-of-type(3) {
-  width: 100%;
-}
-.form-product fieldset:nth-of-type(4) {
-  width: 100%;
-}
-.form-product fieldset:nth-of-type(5) {
-  width: 100%;
+@media (min-width: 768px) {
+  .form-product fieldset:nth-of-type(1) {
+    flex-basis: 49%;
+  }
+  .form-product fieldset:nth-of-type(2) {
+    flex-basis: 50%;
+  }
 }
 
 /* PROGRAM MEMBERSHIP

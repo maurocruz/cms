@@ -33,7 +33,7 @@ return function (Route $route)
 			elseif ($action == 'delete' || $action == 'del' || $action == 'erase') {
 				$data = CmsFactory::model()->api()->delete('user/privileges', $params)->ready();
 			} else {
-				$data = CmsFactory::response()->message()->warning('No action found');
+				$data = CmsFactory::view()->fragment()->message()->warning('No action found');
 			}
 			// RESPONSE
 			if (isset($data['status']) && $data['status'] == 'fail') {
@@ -73,8 +73,8 @@ return function (Route $route)
 	 */
 	$route->post('/{action}', function (Request $request, Response $response, $args)
 	{
-		if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
-			return CmsFactory::response()->writeBody($response);
+		if (!CmsFactory::controller()->user()->userLogged()->getIduser()) {
+			return CmsFactory::view()->writeBody($response);
 		}
 
 		$action = $args['action'];
@@ -92,7 +92,7 @@ return function (Route $route)
 						CmsFactory::view()->fragment()->message()->warning($returns['message'])
 					);
 					// DATA
-					$data = CmsFactory::model()->api()->get('user',['iduser' => $iduser, 'properties' => 'privileges']);
+					$data = CmsFactory::model()->api()->get('user',['iduser' => $iduser, 'properties' => 'privileges'])->ready();
 					// VIEW
 					CmsFactory::view()->user()->edit($data);
 

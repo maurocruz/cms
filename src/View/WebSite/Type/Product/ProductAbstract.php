@@ -20,11 +20,23 @@ abstract class ProductAbstract
   protected string $manufacturerType;
 
 	/**
-	 * @return array
+	 * @param string|null $title
 	 */
-  protected function new(): array {
-      return self::formProduct();
-  }
+	protected function navbarProduct(string $title = null)
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar(_("Product"), [
+				"/admin/product" => CmsFactory::view()->fragment()->icon()->home(16,16),
+				"/admin/product/new" => CmsFactory::view()->fragment()->icon()->plus(16,16)
+			], 4, ['table'=>'product'] )
+				->level(2)
+				->ready()
+		);
+
+		if ($title) {
+			CmsFactory::view()->fragment()->navbar($title, [], 5);
+		}
+	}
 
   /**
    * @param string $case

@@ -63,4 +63,19 @@ class Organization extends OrganizationAbstract implements TypeInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
   }
+
+	public function product(array $data)
+	{
+		$value = $data[0];
+		$typeBuilder = new TypeBuilder('organization', $value);
+		$idorganization = $typeBuilder->getId();
+		$this->idorganization = $idorganization;
+		$this->name = $value['name'];
+
+		$this->navbarProduct();
+
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('product')->setAttribute('data-params','{"manufacturer":"'.$idorganization.'"}')->ready()
+		);
+	}
 }

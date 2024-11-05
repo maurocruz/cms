@@ -11,6 +11,9 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Short description for disambiguating"
+msgstr "Pequena descrição para desambiguação"
+
 msgid "Article body"
 msgstr "Corpo do artigo"
 
