@@ -21,7 +21,10 @@ class Article implements TypeInterface
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
 		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(18,18),
 		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
-	      ], 2, ['table'=>'article','searchBy'=>'headline'] )->ready()
+	      ])
+				->type('Article')
+				->search()
+				->ready()
 		);
 		//
     if ($title) {

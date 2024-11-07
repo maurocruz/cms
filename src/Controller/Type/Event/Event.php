@@ -12,7 +12,7 @@ class Event
 	 */
 	public function edit(array $params): bool
 	{
-	  $params = array_merge($params, [ "properties" => "*,location,superEvent,subEvent" ]);
+	  $params = array_merge($params, [ "properties" => "location,superEvent,subEvent" ]);
 		$data = CmsFactory::model()->api()->get('event', $params)->ready();
 	  return CmsFactory::view()->webSite()->type('event')->setData($data)->setMethodName('edit')->ready();
 	}

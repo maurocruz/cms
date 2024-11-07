@@ -7,6 +7,7 @@ use Plinct\Cms\Controller\Controller;
 use Plinct\Cms\Model\Model;
 use Plinct\Cms\View\View;
 
+use Plinct\Tool\ToolBox;
 use Slim\App as Slim;
 
 class CmsFactory
@@ -29,6 +30,11 @@ class CmsFactory
 	 */
 	public static function model(): Model {
 		return new Model();
+	}
+
+	public static function toolBox(): ToolBox
+	{
+		return new ToolBox();
 	}
 	/**
 	 * @return View

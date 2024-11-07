@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\ImageObject;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
 class ImageObject implements TypeInterface
@@ -18,7 +17,7 @@ class ImageObject implements TypeInterface
 			CmsFactory::view()->fragment()->navbar()
 				->title(_('Images'))
 				->level(2)
-				->newTab("/admin/imageObject", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/imageObject", CmsFactory::view()->fragment()->icon()->home(16,16))
 				->ready()
 		);
 		if ($title) {

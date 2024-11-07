@@ -1,66 +1,68 @@
 <?php
 declare(strict_types=1);
-namespace Plinct\Cms\Controller\WebSite\Type\Taxon;
+namespace Plinct\Cms\View\WebSite\Type\Taxon;
 
 use Exception;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\TypeInterface;
 
-class TaxonView
+class Taxon implements TypeInterface
 {
   /**
    * @param string|null $title
-   * @param int $level
    */
-  private function navbarTaxon(string $title = null, int $level = 2)
+  private function navbar(string $title = null)
   {
-    $list = [];
-    CmsFactory::webSite()->navbar("Taxon", [
-      "/admin/taxon" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/taxon/new" => CmsFactory::response()->fragment()->icon()->plus()
-    ], 2, ['table'=>'taxon']);
+		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
+	    ->type('taxon')
+	    ->title(_('Taxon'))
+	    ->newTab("/admin/taxon", CmsFactory::view()->fragment()->icon()->home(16,16))
+	    ->newTab("/admin/taxon/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->search()
+	    ->ready()
+		);
     if ($title) {
-      CmsFactory::webSite()->navbar($title, $list, $level);
+      CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()->type('taxon')->title($title)->ready());
     }
   }
   /**
    *
+   * @param array|null $value
    */
-  public function index()
+  public function index(?array $value)
   {
-		$apiHost = App::getApiHost();
-		$columnsTable = '{"edit":"Edit","name":"Nome","taxonRank":"Rank","dateModified":"Modificado"}';
-    $this->navbarTaxon();
-	  CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='taxon' data-apihost='$apiHost' data-columnsTable='$columnsTable'></div>");
+    $this->navbar();
+	  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('taxon')->setColumnsTable(['taxonRank'=>_('Taxon rank')])->ready());
   }
   /**
-   * @param array $data
+   * @param ?array $data
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(?array $data)
   {
 		$apiHost = App::getApiHost();
-		$userToken = CmsFactory::request()->user()->userLogged()->getToken();
+		$userToken = CmsFactory::controller()->user()->userLogged()->getToken();
     if (!empty($data)) {
       $value = $data[0];
       $id = $value['idtaxon'];
-      $this->navbarTaxon($value['name'] . " (" . $value['taxonRank'] . ")", 3);
-			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='taxon' data-idispartof='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
+      $this->navbar($value['name'] . " (" . $value['taxonRank'] . ")");
+			CmsFactory::view()->addMain("<div class='plinct-shell' data-type='taxon' data-idispartof='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
       // form taxon
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox(_("Taxon"), self::formTaxon('edit', $value, $data['parentTaxonList'])));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Taxon"), self::formTaxon('edit', $value, $data['parentTaxonList'])));
       // images
-      CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
+      CmsFactory::view()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
     } else {
-      $this->navbarTaxon();
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent(_("No item found!")));
+      $this->navbar();
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No item found!")));
     }
   }
   /**
+   * @param array|null $value
    */
-  public function new() {
-    $this->navbarTaxon();
-		CmsFactory::webSite()->addMain(Thing::new('taxon'));
+  public function new(?array $value) {
+    $this->navbar();
+		CmsFactory::view()->addMain(Thing::new('taxon'));
   }
   /**
    * @param string $case
@@ -71,7 +73,7 @@ class TaxonView
   private static function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
   {
     $id = $value ? $value['idtaxon'] : null;
-    $form = CmsFactory::response()->fragment()->form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
+    $form = CmsFactory::view()->fragment()->form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
     $form->action("/admin/taxon/$case")->method('post');
     // id
     if ($id) $form->input('idtaxon', $id, 'hidden');

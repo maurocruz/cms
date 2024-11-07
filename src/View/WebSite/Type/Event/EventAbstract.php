@@ -19,11 +19,14 @@ abstract class EventAbstract
    */
   protected function formEvent(string $case = "new", array $value = null): array
   {
+		//var_dump($value);
     // VARS
     $startDate = $value['startDate'] ?? null;
     $endDate = $value['endDate'] ??  null;
 		$organizer = $value['organizer'] ?? null;
-		$location = $value['location'] ?? null;
+		$location = $value['location'][0] ?? null;
+		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
+
     // FROM
     $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
@@ -38,7 +41,7 @@ abstract class EventAbstract
     // END DATE
     $form->fieldsetWithInput('endDate', $endDate, _("End date"), "datetime-local");
 		// LOCATION
-	  $form->relationshipOneToOne('place', _('Place'),'location', $location);
+	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getId());
 		// ORGANIZER
 	  $form->relationshipOneToOne('thing',_('Organizer'),'organizer',$organizer);
     // BUTTONS

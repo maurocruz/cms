@@ -16,8 +16,8 @@ class User
 			CmsFactory::view()->fragment()->navbar()
 				->type('user')
 				->title(_("Users"))
-				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
 				->search()
 				->ready()
 		);

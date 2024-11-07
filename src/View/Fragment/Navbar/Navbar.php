@@ -67,7 +67,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 	 */
   public function search(string $action = null, string $searchBy = 'name', string $params = null, string $linkList = null): NavbarInterface
   {
-		$this->setSearch(['searchBy'=>$searchBy,'params','linkList'=>$linkList]);
+		$this->setSearch(['searchBy'=>$searchBy,'params'=>$params,'linkList'=>$linkList]);
     return $this;
   }
 

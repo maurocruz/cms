@@ -38,12 +38,12 @@ interface NavbarInterface
     public function content($content): NavbarInterface;
 
     /**
-     * @param string $action
+     * @param ?string $action
      * @param string $searchBy
      * @param string|null $params
      * @return NavbarInterface
      */
-    public function search(string $action, string $searchBy = 'name', string $params = null): NavbarInterface;
+    public function search(string $action = null, string $searchBy = 'name', string $params = null): NavbarInterface;
 
     /**
      * @return array
