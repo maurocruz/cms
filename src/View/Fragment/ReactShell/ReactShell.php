@@ -81,6 +81,16 @@ class ReactShell
 		return $this;
 	}
 
+	/**
+	 * @param string $id
+	 * @return $this
+	 */
+	public function setId(string $id): ReactShell
+	{
+		$this->setAttribute('data-id', $id);
+		return $this;
+	}
+
 	public function getItemType(string $legend, string $propertyName, int $value = null): ReactShell
 	{
 		$this->setAttribute('data-action','getItemType')

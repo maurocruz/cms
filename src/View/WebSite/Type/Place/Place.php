@@ -18,7 +18,7 @@ class Place implements TypeInterface
   /**
    *
    */
-  public function navbarPlace(string $title = null)
+  public function navbarPlace(string $title = null): void
   {
 		CmsFactory::view()->addHeader(
 	    CmsFactory::View()->fragment()->navbar()
@@ -39,7 +39,7 @@ class Place implements TypeInterface
 	/**
 	 * @param array|null $value
 	 */
-  public function index(?array $value)
+  public function index(?array $value): void
   {
     $this->navbarPlace();
 		CmsFactory::view()->addMain(
@@ -50,7 +50,7 @@ class Place implements TypeInterface
   /**
    * @param null $value
    */
-  public function new($value = null)
+  public function new($value = null): void
   {
     $this->navbarPlace();
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));
@@ -71,7 +71,7 @@ class Place implements TypeInterface
 			$this->placeId = isset($value) ? $idplace : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('place')->setIsPartOf($idplace)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready());
 		}
   }
 

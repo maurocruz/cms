@@ -13,7 +13,7 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 	/**
 	 * @return null
 	 */
-	public function create()
+	public function create(): null
 	{
 		// LANGUAGE
 		self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
@@ -27,7 +27,7 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 	/**
 	 * @return void
 	 */
-	public static function buildBodyStructure()
+	public static function buildBodyStructure(): void
 	{
 		// HEADER
 		if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
@@ -41,7 +41,10 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 		parent::addFooter(Structure::footer());
 	}
 
-	public static function clearMain()
+	/**
+	 * @return void
+	 */
+	public static function clearMain(): void
 	{
 		parent::$MAIN['content'] = null;
 	}
@@ -60,7 +63,7 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 
 		// BODY BUNDLES
 		parent::$BODY['content'][] = /** @lang text */
-			'<script src="/admin/assets/js/scripts"></script><script src="https://plinct.com.br/static/dist/plinct-shell/main(v3).js"></script>';
+			'<script src="/admin/assets/js/scripts"></script><script src="https://plinct.com.br/static/dist/plinct-shell/v3/main.js"></script>';
 		parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 		foreach (parent::$BUNDLES as $bundle) {
 			parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().$bundle.'.bundle.js"></script>';
