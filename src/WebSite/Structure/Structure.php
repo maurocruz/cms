@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Structure;
 
 use Plinct\Cms\App;
@@ -25,7 +23,7 @@ class Structure
       <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
       <script src="/admin/assets/js/scripts"></script>
       <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
-      <script src="https://plinct.com.br/static/dist/plinct-shell/main.js"></script>
+      <script src="https://plinct.com.br/static/dist/plinct-shell/v2/main.js"></script>
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 
@@ -52,15 +50,16 @@ class Structure
     return '<p style="display: inline;"><a href="/admin" style="font-weight: bold; font-size: 200%; margin: 0 10px; text-decoration: none; color: inherit;">' . App::getTitle() . '</a> ' . _("Control Panel") . '. Api: ' . $apiLocation . ". " . _("Version") . ": " . App::getVersion() . '</p>';
   }
 
+	/**
+	 * @return array
+	 */
   public static function mainMenu(): array
   {
 		$navbar = CmsFactory::response()->fragment()->navbar()
-			->newTab("/admin", CmsFactory::response()->fragment()->icon()->home())
+			->newTab("/admin", CmsFactory::response()->fragment()->icon()->home(16,16))
 			->newTab("/admin/user",_("Users"));
-
     if (App::getTypesEnabled()) {
       $attributes = null;
-
       foreach (App::getTypesEnabled() as $key => $value) {
         if (is_string($key) && is_string($value)) {
           $link = $key;
@@ -76,14 +75,15 @@ class Structure
           $link = "/admin/$value";
         $text = ucfirst($value);
         }
-
         $navbar->newTab($link, $text, $attributes);
       }
     }
-
     return $navbar->ready();
   }
 
+	/**
+	 * @return string
+	 */
   public static function footer(): string
   {
     return "<p>Copyright by Mauro Cruz</p>";
