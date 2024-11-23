@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms\Request\Api;
 
 use Plinct\Cms\App;
@@ -12,6 +10,7 @@ class Api
 {
 	private string $hostApi;
 	private Curl $curl;
+	private ?string $method;
 
 	public function __construct(string $hostApi = null)
 	{
@@ -26,6 +25,7 @@ class Api
 	 */
 	public function get(string $relativeUrl, array $params = []): Api
 	{
+		$this->method = 'GET';
 		$this->curl->setUrl($this->hostApi.$relativeUrl)->get($params)->returnWithJson();
 		return $this;
 	}
@@ -38,6 +38,7 @@ class Api
 	 */
 	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
 	{
+		$this->method = 'POST';
 		$this->curl->setUrl($this->hostApi.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
@@ -47,7 +48,9 @@ class Api
 	 * @param array $data
 	 * @return $this
 	 */
-	public function put(string $relativeUrl, array $data): Api {
+	public function put(string $relativeUrl, array $data): Api
+	{
+		$this->method = 'PUT';
 		$this->curl->setUrl($this->hostApi.$relativeUrl)->put($data)->returnWithJson();
 		return $this;
 	}
@@ -57,7 +60,9 @@ class Api
 	 * @param array $params
 	 * @return $this
 	 */
-	public function delete(string $relativeUrl, array $params): Api {
+	public function delete(string $relativeUrl, array $params): Api
+	{
+		$this->method = 'DELETE';
 		$this->curl->setUrl($this->hostApi.$relativeUrl)->delete($params)->returnWithJson();
 		return $this;
 	}
@@ -70,13 +75,11 @@ class Api
 		if($token) {
 			$this->curl->authorizationBear($token);
 		}
-
-		$returns = json_decode($this->curl->ready(), true);
-
+		$exec = $this->curl->ready();
+		$returns = json_decode($exec, true);
 		if ($returns === null) {
 			return ['status'=>'fail', 'message' => 'User not authorized for this operation'];
 		}
-
 		return $returns;
 	}
 }
