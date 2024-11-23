@@ -57,7 +57,7 @@ class PlaceView
 			$value = $data[0];
 			$apiHost = App::getApiHost();
 			$userToken = CmsFactory::request()->user()->userLogged()->getToken();
-			$this->placeId = isset($value) ? $value['idplace'] : null;
+			$this->placeId = isset($value) ? (string) $value['idplace'] : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
 			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='place' data-idIsPartOf='{$value['idplace']}' data-apiHost='$apiHost' data-userToken='$userToken' data-openSection='true'></div>");

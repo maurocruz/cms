@@ -5,24 +5,23 @@ namespace Plinct\Cms\WebSite\Type\Event;
 use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 
 class EventView extends EventAbstract
 {
   /**
    *
    */
-  protected function navbarEvent()
+  protected function navbarEvent(): void
   {
     CmsFactory::webSite()->navbar(_("Events"), [
-      "/admin/event" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/event/new" => CmsFactory::response()->fragment()->icon()->plus()
+      "/admin/event" => CmsFactory::response()->fragment()->icon()->home(16,16),
+      "/admin/event/new" => CmsFactory::response()->fragment()->icon()->plus(16,16)
     ], 3, ["table"=>"event"]);
   }
 
 	/**
 	 */
-  public function index()
+  public function index(): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -39,7 +38,7 @@ class EventView extends EventAbstract
   /**
    *
    */
-  public function new()
+  public function new(): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -50,7 +49,7 @@ class EventView extends EventAbstract
   /**
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -60,7 +59,7 @@ class EventView extends EventAbstract
 
     } else {
       $value = $data[0];
-      $this->idevent = $value['idevent'];
+      $this->idevent = (string) $value['idevent'];
       // VIEW IN SITE
       CmsFactory::webSite()->addMain([ "tag" => "p", "content" => _("View on website"), "href" => "/eventos/". substr($value['startDate'], 0, 10)."/". urlencode($value['name']), "hrefAttributes" => [ "target" => "_blank" ] ]);
       // EVENT FORM
