@@ -117,12 +117,26 @@ class FormDecorator extends ElementDecorator implements FormInterface
       return $this;
   }
 
+	/**
+	 * @param string $name
+	 * @param array $items
+	 * @param $valueChecked
+	 * @param string|null $legend
+	 * @return FormInterface
+	 */
+	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
+		return $this;
+	}
+
   /**
    * GET A DATA FROM SOLOINE SERVER
    * @param array $params
    * @return mixed
    */
-  protected static function getData(array $params) {
+  protected static function getData(array $params): mixed
+  {
       $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
       return json_decode((ServerFactory::soloine())->get($params), true);
   }
@@ -169,7 +183,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param string $editorName
    * @return void
    */
-  public function setEditor(string $id, string $editorName = 'editor')
+  public function setEditor(string $id, string $editorName = 'editor'): void
   {
       if(App::getRichTextEditor())   $this->form->setEditor($id, $editorName, App::getStaticFolder());
   }
@@ -180,8 +194,13 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function submitButtonSend(array $attributes = null): FormInterface
   {
-      $this->form->submitButtonSend($attributes);
-      return $this;
+		if ($attributes) {
+			$attr = array_merge(['class'=>'form-submit-button-send'], $attributes);
+		} else {
+			$attr = ['class'=>'form-submit-button-send'];
+		}
+		$this->form->submitButtonSend($attr);
+    return $this;
   }
 
   /**
