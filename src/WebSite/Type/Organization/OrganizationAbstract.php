@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Organization;
 
 use Plinct\Cms\CmsFactory;
@@ -78,7 +77,7 @@ abstract class OrganizationAbstract
     $form = CmsFactory::response()->fragment()->form(["name" => "form-organization", "id" => "form-organization", "class" => "formPadrao form-organization"]);
     $form->action("/admin/organization/$case")->method("post");
     $form->content([ "tag" => "h3", "content" => $value['name'] ?? null ]);
-    if ($case == "edit") $form->input("idorganization", $value['idorganization'], 'hidden');
+    if ($case == "edit") $form->input("idorganization", (string) $value['idorganization'], 'hidden');
     // legal name
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id
