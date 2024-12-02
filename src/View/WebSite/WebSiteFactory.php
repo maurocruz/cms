@@ -13,7 +13,7 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 	/**
 	 * @return null
 	 */
-	public function create(): null
+	public function create()
 	{
 		// LANGUAGE
 		self::$HTML['attributes'] = ["lang" => Locale::getServerLanguage()];
@@ -63,7 +63,7 @@ class WebSiteFactory extends WebSiteFactoryAbstract
 
 		// BODY BUNDLES
 		parent::$BODY['content'][] = /** @lang text */
-			'<script src="/admin/assets/js/scripts"></script><script src="https://plinct.com.br/static/dist/plinct-shell/v3/main.js"></script>';
+			'<script src="/admin/assets/js/scripts"></script>';
 		parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().'index.bundle.js" data-apiHost="'.App::getApiHost().'" data-staticFolder="'.App::getStaticFolder().'"></script>';
 		foreach (parent::$BUNDLES as $bundle) {
 			parent::$BODY['content'][] = '<script src="'.App::getStaticFolder().$bundle.'.bundle.js"></script>';

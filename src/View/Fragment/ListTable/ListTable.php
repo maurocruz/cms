@@ -84,7 +84,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 			foreach ($this->rows as $key => $row) {
 				// edit buttom
 				if ($this->buttonEdit) {
-					$this->table->bodyCell(CmsFactory::view()->fragments()->icon()->edit(), ['style' => 'text-align: center;'], $this->buttonEdit[$key]);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], $this->buttonEdit[$key]);
 				}
 				// items
 				foreach ($row as $cell) {

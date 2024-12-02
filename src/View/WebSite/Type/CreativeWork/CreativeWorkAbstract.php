@@ -9,26 +9,38 @@ use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 
 abstract class CreativeWorkAbstract
 {
+	/**
+	 * @var int|null
+	 */
 	protected ?int $idcreativeWork;
 
+	/**
+	 * @return void
+	 */
 	public static function navbar()
 	{
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('creativeWork')
 			->setTitle(_('Creative work'))
-			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home(18,18))
-			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(18,18))
+			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home(16,16))
+			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(16,16))
 			->search()
 		;
 		$subclass = App::getTypesEnabled()['CreativeWork'] ?? null;
 		if ($subclass) {
-			foreach ($subclass as $type) {
-				$navbar->newTab("/admin/".lcfirst($type), _($type));
+			foreach ($subclass as $key => $type) {
+				$title = is_array($type) ? $key : $type;
+				$navbar->newTab("/admin/".lcfirst($title), _($title));
 			}
 		}
 		CmsFactory::view()->addHeader($navbar->ready());
 	}
 
+	/**
+	 * @param string $case
+	 * @param array|null $value
+	 * @return array
+	 */
 	protected function form(string $case = 'new', array $value = null): array
 	{
 		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-creativeWork']);
@@ -49,6 +61,12 @@ abstract class CreativeWorkAbstract
 		return $form->ready();
 	}
 
+	/**
+	 * @param string $case
+	 * @param Form $form
+	 * @param array|null $value
+	 * @return Form
+	 */
 	public static function formContent(string $case, Form $form, array $value = null): Form
 	{
 		// thing

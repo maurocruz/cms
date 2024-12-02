@@ -1,13 +1,9 @@
 <?php
-
-declare(strict_types=1);
-
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Server;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
-
-use Plinct\Cms\Controller\CmsFactory;
 
 return function (Route $route)
 {
@@ -15,8 +11,8 @@ return function (Route $route)
 	{
 		$route->get('/{className}', function (Request $request, Response $response, $args)
 		{
-			if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
-				return CmsFactory::response()->writeBody($response);
+			if (!CmsFactory::controller()->user()->userLogged()->getIduser()) {
+				return CmsFactory::view()->writeBody($response);
 			}
 
 			$queryParams = $request->getQueryParams();
@@ -24,18 +20,18 @@ return function (Route $route)
 			$className = $args['className'];
 			$classNameSpace = "\\" . base64_decode($ns) . "\\" . ucfirst($className);
 
-			CmsFactory::webSite()->enclave()->get($classNameSpace, $queryParams);
+			CmsFactory::view()->enclave()->get($classNameSpace, $queryParams);
 
-			return CmsFactory::response()->writeBody($response);
+			return CmsFactory::view()->writeBody($response);
 
 		});
 
 		$route->post('/{className}', function(Request $request, Response $response, $args)
 		{
 			// CHECK AUTHENTICATION
-			if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
-				CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->auth()->login());
-				return CmsFactory::response()->writeBody($response);
+			if (!CmsFactory::controller()->user()->userLogged()->getIduser()) {
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login());
+				return CmsFactory::view()->writeBody($response);
 			}
 
 			$parseBody = $request->getParsedBody();
@@ -57,11 +53,11 @@ return function (Route $route)
 					$returns = Server::enclave()->delete($classNameSpace, $parseBody);
 					break;
 				default:
-					$returns = CmsFactory::response()->fragment()->noContent(_("Action not recognized"));
+					$returns = CmsFactory::view()->fragment()->noContent(_("Action not recognized"));
 			}
 			if (is_array($returns)) {
-				CmsFactory::webSite()->addMain($returns);
-				return CmsFactory::response()->writeBody($response);
+				CmsFactory::view()->addMain($returns);
+				return CmsFactory::view()->writeBody($response);
 			} elseif (is_string($returns)) {
 				return $response->withHeader('Location', $returns)->withStatus(301);
 			} else {

@@ -1,8 +1,8 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View;
 
 use Plinct\Cms\Controller\App;
+use Plinct\Cms\Enclave\Enclave;
 use Plinct\Cms\View\Fragment\Fragment;
 use Plinct\Cms\View\User\User;
 use Plinct\Cms\View\WebSite\WebSite;
@@ -47,6 +47,14 @@ class View
 	}
 
 	/**
+	 * @return Enclave
+	 */
+	public function enclave(): Enclave
+	{
+		return new Enclave();
+	}
+
+	/**
 	 * @return Fragment
 	 */
 	public function fragment(): Fragment
@@ -54,6 +62,9 @@ class View
 		return new Fragment();
 	}
 
+	/**
+	 * @return void
+	 */
 	public function clearMain()
 	{
 		WebSiteFactory::clearMain();

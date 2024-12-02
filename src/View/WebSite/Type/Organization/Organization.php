@@ -39,9 +39,11 @@ class Organization extends OrganizationAbstract implements TypeInterface
    */
   public function edit(?array $data)
   {
-	  // NAVBAR
+		// NAVBAR
 	  parent::navbarIndex();
-		if (!empty($data)) {
+		if (isset($data['status']) && $data['status']=='fail') {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
+		} elseif (!empty($data)) {
 			$value = $data[0];
 			$typeBuilder = new TypeBuilder('organization', $value);
 			$this->idorganization = $typeBuilder->getId();

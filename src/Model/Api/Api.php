@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Model\Api;
 
 use Plinct\Cms\CmsFactory;
@@ -16,8 +15,12 @@ class Api
 	 * @var Curl
 	 */
 	private Curl $curl;
-
+	/**
+	 * @var array|null
+	 */
 	private ?array $data = null;
+
+	private string $method = "GET";
 
 	/**
 	 * @param string|null $apiHost
@@ -54,7 +57,9 @@ class Api
 	 * @param array|null $FILES
 	 * @return $this
 	 */
-	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api {
+	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
+	{
+		$this->method = "POST";
 		$this->data = $data;
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
@@ -65,7 +70,9 @@ class Api
 	 * @param array $data
 	 * @return $this
 	 */
-	public function put(string $relativeUrl, array $data): Api {
+	public function put(string $relativeUrl, array $data): Api
+	{
+		$this->method = "PUT";
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->put($data)->returnWithJson();
 		return $this;
 	}
@@ -75,15 +82,18 @@ class Api
 	 * @param array $params
 	 * @return $this
 	 */
-	public function delete(string $relativeUrl, array $params): Api {
+	public function delete(string $relativeUrl, array $params): Api
+	{
+		$this->method = "DELETE";
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->delete($params)->returnWithJson();
 		return $this;
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function ready() {
+	public function ready(): array
+	{
 		$token = CmsFactory::controller()->user()->userLogged()->getToken();
 		if($token) {
 			$this->curl->authorizationBear($token);
@@ -95,11 +105,12 @@ class Api
 		$method = $info['effective_method'] ?? null;
 		$returns = json_decode($data, true);
 		if ($returns === null) {
-			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed (api.php 97)", ["url"=>$info['url'], "method"=>$method, "data"=>$this->data]);
-			return ['status'=>'fail', 'message' => "Get api failed: api.php 99"];
+			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed", ["url"=>$info['url'], "method"=>$method, "data"=>$this->data]);
+			return ['status'=>'fail', 'message' => "Get api failed: url={$info['url']}; method={$method};"];
 		} elseif (isset($returns['status'])) {
 			if ($returns['status'] === 'fail') {
 				CmsFactory::view()->Logger('apiHost')->critical("$method: Api failed", $returns);
+				return ['status'=>'fail', 'message' => "Get api failed: {$returns['message']};"];
 			}
 		}
 		return $returns;

@@ -39,6 +39,7 @@ abstract class OrganizationAbstract
   {
 		CmsFactory::view()->addHeader(
 	    CmsFactory::view()->fragment()->navbar()
+		    ->type('Organization')
 		    ->setTitle(_("Organization"))
 		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home(16,16))
 		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus(16,16))

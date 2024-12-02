@@ -1,10 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\Enclave;
-
-use Plinct\Cms\Controller\CmsFactory;
+namespace Plinct\Cms\Enclave;
+use Plinct\Cms\CmsFactory;
 
 class Enclave
 {
@@ -21,10 +17,15 @@ class Enclave
 				$classObject->view($queryParams);
       }
     } else {
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message(_("Enclave not found!")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message(_("Enclave not found!")));
     }
   }
 
+	/**
+	 * @param string $classNameSpace
+	 * @param array $params
+	 * @return string
+	 */
   public function post(string $classNameSpace, array $params): string
   {
 		$returns = null;
@@ -37,6 +38,11 @@ class Enclave
     return $returns;
   }
 
+	/**
+	 * @param string $classNameSpace
+	 * @param array $params
+	 * @return string
+	 */
   public function put(string $classNameSpace, array $params): string
   {
 	  $returns = null;
@@ -49,6 +55,11 @@ class Enclave
     return $returns;
   }
 
+	/**
+	 * @param string $classNameSpace
+	 * @param array $params
+	 * @return string
+	 */
   public function delete(string $classNameSpace, array $params): string
   {
 	  $returns = null;

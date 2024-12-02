@@ -4,9 +4,18 @@ namespace Plinct\Cms\View\Fragment\Message;
 
 class Message
 {
+	/**
+	 * @param string $message
+	 * @return string
+	 */
 	public function noContent(string $message = 'No content'): string {
 		return "<p class='warning'>"._($message)."</p>";
 	}
+
+	/**
+	 * @param $message
+	 * @return string
+	 */
 	public function warning($message = 'Oops! something went wrong!'): string
 	{
 		$warning = '';
@@ -16,6 +25,6 @@ class Message
 			}
 			$warning .= json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 		}
-		return "<p class='warning'>".$warning ?? _($message)."</p>";
+		return "<p class='warning'>" . ($warning != '' ? $warning : _($message)) . "</p>";
 	}
 }
