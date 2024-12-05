@@ -1,7 +1,5 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Type;
-
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,7 +42,8 @@ class TypeController
 	 */
 	public function ready(): ?bool
 	{
-		$returns = null;
+		$returns = false;
+		$object = null;
 		if ($this->type) {
 			// check if table sql exists
 			$data = CmsFactory::model()->api()->get('config/database',['showTableStatus'=>lcfirst($this->type)])->ready();
@@ -53,14 +52,17 @@ class TypeController
 			} else {
 				// if moduyle has controller class
 				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type);
+				$classNameIntangible = __NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller';
 				if (class_exists($className)) {
 					$object = new $className();
-					if (method_exists($object, $this->methodName)) {
-						$returns = $object->{$this->methodName}($this->queryParams);
-					}
+				} elseif(class_exists($classNameIntangible)) {
+					$object = new $classNameIntangible();
+				}
+				if ($object && method_exists($object, $this->methodName)) {
+					$returns = $object->{$this->methodName}($this->queryParams);
 				}
 				// if not module controller class
-				if ($returns === null) {
+				if ($returns === false) {
 					// generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
 					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();

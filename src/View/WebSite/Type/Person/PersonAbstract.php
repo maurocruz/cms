@@ -23,30 +23,30 @@ abstract class PersonAbstract
 	/**
    *
    */
-  protected function navbarPerson()
+  public static function navbarIndex()
   {
 		CmsFactory::View()->addHeader(
 			CmsFactory::View()->fragment()->navbar()
         ->type('person')
         ->title(_("Person"))
-        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home(18,18))
-        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus(18,18))
+        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home(16,16))
+        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus(16,16))
         ->search()
         ->ready()
       );
   }
 
-  protected function navbarPersonEdit()
+  public static function navbarEdit(string $name, int $idperson)
   {
     // LEVEL 1
-    $this->navbarPerson();
+    self::navbarIndex();
     // LEVEL 2
     CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
       ->type('person')
-      ->title($this->name)
+      ->title($name)
       ->level(3)
-      ->newTab("/admin/person/edit/$this->idperson", CmsFactory::view()->fragment()->icon()->home(18,18))
+      ->newTab("/admin/person/edit/$idperson", CmsFactory::view()->fragment()->icon()->home(16,16))
       ->ready()
     );
   }

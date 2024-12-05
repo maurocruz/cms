@@ -1134,6 +1134,7 @@ a.white {
 .form-order {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 .form-order .choose-type-select {
   max-width: 160px;
@@ -1142,27 +1143,24 @@ a.white {
   width: 100%;
 }
 .form-order fieldset:nth-of-type(3) {
-  max-width: 160px;
-  width: 50%;
+  flex-basis: 130px;
 }
 .form-order fieldset:nth-of-type(4) {
-  max-width: 160px;
-  width: 50%;
+  flex-basis: calc(100% - 130px);
 }
 .form-order fieldset:nth-of-type(5) {
-  max-width: 160px;
-  width: 50%;
+  flex-basis: 130px;
 }
 .form-order fieldset:nth-of-type(6) {
+  flex-basis: calc(100% - 130px);
   max-width: 160px;
-  width: 50%;
 }
-@media (min-width: 576px) {
-  .form-order fieldset:nth-of-type(3) {
-    width: calc(50% - 80px);
+@media (min-width: 610px) {
+  .form-order fieldset:nth-of-type(4) {
+    flex-basis: 160px;
   }
-  .form-order fieldset:nth-of-type(5) {
-    width: calc(50% - 80px);
+  .form-order fieldset:nth-of-type(6) {
+    flex-basis: calc(50% - 130px);
   }
 }
 

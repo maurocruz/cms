@@ -17,7 +17,7 @@ class Person extends PersonAbstract implements TypeInterface
    */
   public function index(?array $value): void
   {
-    $this->navbarPerson();
+    $this->navbarIndex();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('person')->ready()
 		);
@@ -28,7 +28,7 @@ class Person extends PersonAbstract implements TypeInterface
    * @param
    */
   public function new(?array $value) {
-      $this->navbarPerson();
+      $this->navbarIndex();
       CmsFactory::View()->addMain(
 				CmsFactory::View()->fragment()->box()->simpleBox(self::formPerson(),_("Add new"))
       );
@@ -46,7 +46,7 @@ class Person extends PersonAbstract implements TypeInterface
 			$this->name = $value['name'];
 			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
       // NAVBAR
-      $this->navbarPersonEdit();
+      $this->navbarEdit($this->name, $this->idperson);
       // FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Edit person"), self::formPerson('edit', $value), true));
 			//  MEMBER OF
@@ -63,7 +63,7 @@ class Person extends PersonAbstract implements TypeInterface
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
 
     } else {
-      $this->navbarPerson();
+      $this->navbarIndex();
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Person is not exists!")));
     }
   }

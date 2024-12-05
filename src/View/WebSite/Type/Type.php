@@ -25,10 +25,16 @@ class Type
 	public function __construct(string $typeName) {
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
 		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
+		$classNameIntagible = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName);
+		$classNameIntagibleIntoFolder = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		if (class_exists($className)) {
 			$this->object = new $className();
 		} elseif (class_exists($classNameCreativeWork)) {
 			$this->object = new $classNameCreativeWork();
+		} elseif (class_exists($classNameIntagible)) {
+			$this->object = new $classNameIntagible();
+		} elseif (class_exists($classNameIntagibleIntoFolder)) {
+			$this->object = new $classNameIntagibleIntoFolder();
 		}
 	}
 
@@ -64,10 +70,10 @@ class Type
 				default:
 					method_exists($this->object, $this->methodName)
 						? $this->object->{$this->methodName}($this->data)
-						: CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('Method does not exist')));
+						: CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_(sprintf("Method '%s' on '%s' does not exist", $this->methodName, get_class($this->object)))));
 			}
 		} else {
-			return false;
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_("Object does not exist")));
 		}
 		return true;
 	}

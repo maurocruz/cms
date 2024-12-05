@@ -1,114 +1,63 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\ToolBox;
 
-use Plinct\Cms\Controller\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\HistoryView;
-use Plinct\Cms\View\WebSite\Type\Intangible\Invoice\InvoiceView;
-use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
 
 class OrderView extends OrderAbstract
 {
-  /**
-   * LIST ORDERS
-   *
-   * @param $value
-   */
-  public function indexWithPartOf($value)
-  {
-    if (isset($value['orders']['error']) || (isset($value['orders']['status']) && $value['orders']['status'] == 'error')) {
-      $message = $value['orders']['error']['message'] ?? $value['orders']['message'] ?? "error";
-      CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->error()->installSqlTable('order', $message)
-      );
 
-    } else {
-	    $orders = $value['orders'];
-	    $idSeller = ToolBox::searchByValue($value['identifier'],'id','value');
-	    // NAVBAR
-	    parent::navbarOrder($value);
-	    // SEARCH
-	    CmsFactory::webSite()->addMain(
-				CmsFactory::response()->fragment()->form()->search("", "customerName", filter_input(INPUT_GET, 'customerName'))
-	    );
-	    // PERIOD
-	    CmsFactory::webSite()->addMain(
-				parent::periodoParagraph($orders['itemListOrder'])
-	    );
-	    // LIST TABLE
-	    $table = CmsFactory::response()->fragment()->listTable(['class'=>'table-list']);
-	    $table->caption(sprintf(_("List of %s"), _("orders")))
-        ->labels("ID", _("Customer"), _("Seller"), _("Ordered items"), _("Order status"), _("Order date"))
-        ->setProperties(['idorder','customer','seller','orderedItem','orderStatus','orderDate']);
+	public function index(?array $value)
+	{
+		$typeBuilder = ToolBox::typeBuilder($value);
+		$idthing = $typeBuilder->getPropertyValue('idthing');
+		parent::navbarIndex($value);
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('order')->setHasPart($idthing)->ready()
+		);
+	}
 
-	    if ($orders['numberOfItems'] != '0') {
-        foreach ($orders['itemListElement'] as $orderItem) {
-          $item = $orderItem['item'];
-          $idIsPartOf = $item['idorder'];
-          $tableIsPartOf = "order";
-          $idHasPart = ToolBox::searchByValue($item['seller']['identifier'], 'id', 'value');
-          $tableHasPart = lcfirst($item['seller']['@type']);
-          $orderedItems = [];
-          if (isset($item['orderedItem'])) {
-            foreach ($item['orderedItem'] as $orderedItem) {
-              $orderedItems[] = $orderedItem['orderedItem']['name'];
-            }
-          }
-          $table->addRow($item['idorder'], $item['customer']['name'], $item['seller']['name'], implode("; ", $orderedItems), $item['orderStatus'], $item['orderDate'])
-              ->buttonEdit("/admin/organization/order?id=$idSeller&item={$item['idorder']}")
-              ->buttonDelete($idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
-          unset($orderedItems);
-        }
-	    }
-
-	    // ready
-	    CmsFactory::webSite()->addMain($table->ready());
-    }
-  }
-
-  /**
-   * CREATE NEW ORDER
-   *
-   * @param null $value
-   */
-  public function newWithPartOf($value = null)
-  {
-    // NAVBAR
-    parent::navbarOrder($value);
-    // FORM NEW
-    CmsFactory::webSite()->addMain(
-			CmsFactory::response()->fragment()->box()->simpleBox(self::formOrder("new", [ 'seller' => $value ]), sprintf(_("Add new %s from %s"), _("order"), $value['name']))
-    );
-  }
+	/**
+	 * CREATE NEW ORDER
+	 *
+	 * @param null $value
+	 */
+	public function new($value = null)
+	{
+		// NAVBAR
+		parent::navbarIndex($value);
+		// FORM NEW
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("new", $value), sprintf(_("Add new %s from %s"), _("order"), $value['name']))
+		);
+	}
 
   /**
    * EDIT A ORDER
    *
-   * @param array $data
+   * @param ?array $data
    */
-  public function editWithPartOf(array $data)
+  public function edit(?array $data)
   {
-    if (empty($data)) {
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent());
-
-    } else {
-      self::$idOrder = ArrayTool::searchByValue($data['identifier'],'id','value');
+		if (empty($data)) {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->noContent());
+		} else {
+			$value = $data[0];
+			$typeBuilder = ToolBox::typeBuilder($value);
+			self::$idOrder = $typeBuilder->getId();
       // NAVBAR
-      parent::navbarOrder($data['seller'],$data['customer']['name']);
+      parent::navbarOrder($value);
       // ORDER
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formOrder("edit", $data), _("Order")));
+      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("edit", $value), _("Order")));
       // ORDERED ITEMS
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox((new OrderItemView())->edit($data), _("Ordered items")));
+      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->edit($value), _("Ordered items")));
       // INVOICES
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox((new InvoiceView())->edit($data), _("Invoices")));
+      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->edit($value), _("Invoices")));
       // HISTORY
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox((new HistoryView())->view($data['history']), _("Historic")));
+      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new HistoryView())->view($value['history']), _("Historic")));
     }
   }
 
@@ -122,8 +71,8 @@ class OrderView extends OrderAbstract
     // NAVBAR
     parent::navbarOrder($value);
 
-    CmsFactory::webSite()->navbar(_("Payments"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::response()->fragment()->icon()->home(),
+    CmsFactory::view()->fragment()->navbar(_("Payments"),[
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::view()->fragment()->icon()->home(),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
       "javascript: print();" => _("Print out")
@@ -188,7 +137,7 @@ class OrderView extends OrderAbstract
 
     $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
 
-    CmsFactory::webSite()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
+    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
   }
 
   /**
@@ -201,8 +150,8 @@ class OrderView extends OrderAbstract
     // NAVBAR
     parent::navbarOrder($value);
 
-    CmsFactory::webSite()->navbar(_("Expired orders"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => CmsFactory::response()->fragment()->icon()->home(),
+    CmsFactory::view()->fragment()->navbar(_("Expired orders"),[
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => CmsFactory::view()->fragment()->icon()->home(),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
       "javascript: print();" => _("Print out")
@@ -219,7 +168,7 @@ class OrderView extends OrderAbstract
     $content[] = self::selectPeriodo($orders['numberOfItems'], "expired");
 
     // TABLE
-    $table = CmsFactory::response()->fragment()->listTable();
+    $table = CmsFactory::view()->fragment()->listTable();
     $table->caption(sprintf(_("List of %s"), _("orders")));
     $table->labels('ID', _("Due date"), _("Customer"), _("Ordered item"), _("Order status"));
     $table->rows($orders['itemListElement'],['idorder', 'paymentDueDate', 'customer', 'orderedItem:0:orderedItem', 'orderStatus'])
@@ -230,6 +179,6 @@ class OrderView extends OrderAbstract
     $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
 
     // VIEW
-    CmsFactory::webSite()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
+    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
   }
 }

@@ -205,4 +205,28 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 				}
         return "<datalist id='$id'>$content</datalist>";
     }
+
+	/**
+	 * @param string $property
+	 * @param $typesForChoose
+	 * @param $value
+	 * @param string $nameLike
+	 * @param array $attributes
+	 * @return array
+	 */
+		public function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
+		{
+			$attributes2['class'] = "choose-type";
+			$attributes2['data-property'] = $property;
+			$attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
+			$attributes2['data-like'] = $nameLike;
+			$attributes2['data-currentType'] = $value['@type'] ?? null;
+			$attributes2['data-currentName'] = $value['name'] ?? null;
+			$attributes2['data-currentId'] = isset($value['identifier']) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
+			$widthAttr = "display: flex; min-height: 23px;";
+			$attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
+			unset($attributes['style']);
+			$attributes3 = $attributes ? array_merge($attributes2, $attributes) : $attributes2;
+			return [ "tag" => "div", "attributes" => $attributes3 ];
+		}
 }

@@ -38,10 +38,10 @@ class ReactShell
 
 	/**
 	 * @param string $name
-	 * @param string $value
+	 * @param string|int $value
 	 * @return $this
 	 */
-	public function setAttribute(string $name, string $value ): ReactShell
+	public function setAttribute(string $name, $value ): ReactShell
 	{
 		$this->attributes[$name] = $value;
 		return $this;
@@ -62,12 +62,12 @@ class ReactShell
 		return $this;
 	}
 	/**
-	 * @param string $tableName
+	 * @param int $idHasPart
 	 * @return $this
 	 */
-	public function setTableHasPart(string $tableName): ReactShell
+	public function setHasPart(int $idHasPart): ReactShell
 	{
-		$this->setAttribute('data-tablehaspart', $tableName);
+		$this->setAttribute('data-haspart', $idHasPart);
 		return $this;
 	}
 

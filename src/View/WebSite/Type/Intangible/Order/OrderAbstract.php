@@ -1,20 +1,20 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Organization\Organization;
+use Plinct\Cms\View\WebSite\Type\Person\Person;
+use Plinct\Cms\View\WebSite\Type\TypeInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\StringTool;
+use Plinct\Tool\ToolBox;
 
-abstract class OrderAbstract
+abstract class OrderAbstract implements TypeInterface
 {
   /**
-   * @var string
+   * @var ?string
    */
-  protected static string $idOrder;
+  protected static ?string $idOrder = null;
   /**
    * @var int
    */
@@ -28,27 +28,56 @@ abstract class OrderAbstract
    */
   protected string $idHasPart;
 
-  /**
-   * NAVBAR
-   *
-   * @param $seller
-   * @param null $customer
-   */
-  protected function navbarOrder($seller, $customer = null)
+	public static function navbarIndex(array $value)
+	{
+		if ($value['@type'] == 'Order') {
+			$seller = $value['seller'];
+			$sellerType = $seller['@type'];
+			$sellerName = $seller['name'];
+			$sellerTypeBuilder = ToolBox::typeBuilder($seller);
+		} else {
+			$sellerTypeBuilder = ToolBox::typeBuilder($value);
+			$sellerType = $value['@type'];
+			$sellerName = $value['name'];
+		}
+		$idthingSeller = $sellerTypeBuilder->getPropertyValue('idthing');
+		if ($sellerType == 'Organization') {
+			$idorganization = $sellerTypeBuilder->getPropertyValue('idorganization');
+			Organization::navbarIndex();
+			Organization::navbarEdit($sellerName, $idorganization, $idthingSeller);
+		}
+		if ($sellerType == 'Person') {
+			$idperson = $sellerTypeBuilder->getPropertyValue('idperson');
+			Person::navbarIndex();
+			Person::navbarEdit($sellerName, $idperson);
+		}
+		$navbar = CmsFactory::view()->fragment()->navbar()
+			->type('order')
+			->level(5)
+			->title(_('Orders'))
+			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->newTab("/admim/order/payment?seller=$idthingSeller", ucfirst(_("payments")))
+			->newTab("/admim/order/expired?seller=$idthingSeller", ucfirst(_("Due dates")));
+
+		CmsFactory::view()->addHeader($navbar->ready());
+	}
+
+	/**
+	 * NAVBAR
+	 *
+	 * @param $value
+	 */
+  protected function navbarOrder($value)
   {
-    $this->typeHasPart = lcfirst($seller['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($seller['identifier'],'id','value');
-
-    $list =  [
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus(),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment" => ucfirst(_("payments")),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired" => ucfirst(_("Due dates"))
-    ];
-
-    CmsFactory::webSite()->navbar(_("Order"), $list, 4);
-
-    if ($customer) CmsFactory::webSite()->navbar($customer,[],5);
+		self::navbarIndex($value);
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('order')
+				->level(5)
+				->title(_('Order'))
+				->ready()
+		);
   }
 
   /**
@@ -60,15 +89,14 @@ abstract class OrderAbstract
    */
   protected function formOrder(string $case = "new", $value = null): array
   {
-    $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-order']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-order']);
     $form->action("/admin/order/$case")->method('post');
     // hiddens
     if ($case == "edit") $form->input("idorder", self::$idOrder, "hidden");
-
     // SELLER
-    $form->fieldset(CmsFactory::response()->fragment()->form()->chooseType("seller", "organization,person", $value['seller'] ?? null), _("Seller"));
+    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("seller", "organization,person", $value['seller'] ?? null), _("Seller"));
     // CUSTOMER
-    $form->fieldset(CmsFactory::response()->fragment()->form()->chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"));
+    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"));
     // ORDER DATE
     $form->fieldsetWithInput("orderDate", isset($value['orderDate']) ? substr($value['orderDate'],0,10) : date("Y-m-d"), _("Order date"), "date");
     // ORDER STATUS

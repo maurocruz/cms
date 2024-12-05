@@ -12,6 +12,8 @@ abstract class OrganizationAbstract
    * @var array
    */
   protected array $content = [];
+
+	protected string $idthing;
   /**
    * @var int
    */
@@ -35,7 +37,7 @@ abstract class OrganizationAbstract
   /**
    * INDEX NAVBAR
    */
-  protected function navbarIndex()
+  public static function navbarIndex()
   {
 		CmsFactory::view()->addHeader(
 	    CmsFactory::view()->fragment()->navbar()
@@ -58,30 +60,51 @@ abstract class OrganizationAbstract
   /**
    *
    */
-  protected function navbarEdit()
+  public static function navbarEdit(string $name, int $idorganization, string $idthing)
   {
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
-				->title($this->name)
+				->title($name)
 				->level(3)
-				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/organization/service?idorganization=$this->idorganization", _("Services"))
-				->newTab("/admin/organization/product?idorganization=$this->idorganization", _("Products"))
-				->newTab("/admin/organization/order?idorganization=$this->idorganization", _("Orders"))
+				->newTab("/admin/organization/edit?idorganization=$idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/organization/service?idorganization=$idorganization", _("Services"))
+				->newTab("/admin/organization/product?idorganization=$idorganization", _("Products"))
+				->newTab("/admin/order?seller=$idthing", _("Orders"))
 				->ready()
 		);
   }
 
+	protected function navbarService()
+	{
+		$this->navbarIndex();
+		$this->navbarEdit($this->name, $this->idorganization, $this->idthing);
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->level(4)
+				->type('service')
+				->title(_("Services"))
+				->newTab("/admin/organization/service?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/product/new?provider=$this->idorganization", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->search()
+				->ready()
+		);
+	}
+
+	/**
+	 * @return void
+	 */
 	protected function navbarProduct()
 	{
 		$this->navbarIndex();
-		$this->navbarEdit();
+		$this->navbarEdit($this->name, $this->idorganization, $this->idthing);
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
+				->level(4)
+				->type('product')
 				->title(_("Products"))
 				->newTab("/admin/organization/product?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
 				->newTab("/admin/product/new?manufacturer=$this->idorganization", CmsFactory::view()->fragment()->icon()->plus(16,16))
-				->level(4)
+				->search()
 				->ready()
 		);
 	}

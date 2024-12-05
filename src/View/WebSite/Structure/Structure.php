@@ -29,7 +29,7 @@ class Structure
 				const config = { toolbar: "mytoolbar", skin: "gray", url_base: "https://plinct.com.br/static/dist/richtexteditor", toggleBorder: false, showFloatParagraph: false };
         config.toolbar_mytoolbar = "{bold,italic,underline,strike,superscript,subscript}|{fontsize}|{forecolor,backcolor}|{justifyleft,justifycenter,justifyright,justifyfull}|{insertorderedlist,insertunorderedlist}|{insertlink,unlink,insertimage}|removeformat|insertdocument"+"#{undo,redo,fullscreenenter,fullscreenexit,code}";
 			</script> 
-			<script src="https://plinct.local/static/dist/plinct-shell/v2/main.js"></script>
+			<script src="https://plinct.local/static/dist/plinct-shell/v3/main.js"></script>
       <title>Plinct CMS [' . App::getTitle() . ']</title>';
   }
 

@@ -1,0 +1,58 @@
+<?php
+namespace Plinct\Cms\Controller\Type\Intangible;
+
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\TypeControllerInterface;
+
+class OrderController implements TypeControllerInterface
+{
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+	public function index(array $params): bool
+	{
+		$seller = $params['seller'];
+		$data = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
+		if (isset($data[0])) {
+			return CmsFactory::view()->webSite()->type('order')->setData($data[0])->setMethodName('index')->ready();
+		} else {
+			return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning("No seller found"));
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+	public function new(array $params): bool
+	{
+		$seller = $params['seller'];
+		$data = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
+		if (isset($data[0])) {
+			return CmsFactory::view()->webSite()->type('order')->setData($data[0])->setMethodName('new')->ready();
+		} else {
+			return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning("No seller found"));
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+	public function edit(array $params): bool
+	{
+		$idorder = $params['idorder'] ?? null;
+		$seller = $params['seller'] ?? null;
+		$queryArray['hasPart'] = true;
+		$queryArray['properties'] = "invoice,orderItem,customer,seller";
+		if ($idorder) {
+			$queryArray['idorder'] = $idorder;
+		}
+		if ($seller) {
+			$queryArray['seller'] = $seller;
+		}
+		$data = CmsFactory::model()->api()->get('order',$queryArray)->ready();
+		return CmsFactory::view()->webSite()->type('order')->setData($data)->setMethodName('edit')->ready();
+	}
+}

@@ -7,6 +7,7 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Tool\ToolBox;
 
 class Organization extends OrganizationAbstract implements TypeInterface
 {
@@ -45,12 +46,12 @@ class Organization extends OrganizationAbstract implements TypeInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
 		} elseif (!empty($data)) {
 			$value = $data[0];
-			$typeBuilder = new TypeBuilder('organization', $value);
-			$this->idorganization = $typeBuilder->getId();
+			$typeBuilder = ToolBox::typeBuilder($value);
+			$this->idorganization =  $typeBuilder->getId();
+			$this->idthing = $typeBuilder->getPropertyValue('idthing');
 			$this->name = $value['name'];
-			$idthing = $typeBuilder->getPropertyValue('idthing');
 			// NAVBAR
-			parent::navbarEdit();
+			parent::navbarEdit($this->name, $this->idorganization, $this->idthing);
 			// ORGANIZATION
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value), true)
@@ -60,12 +61,28 @@ class Organization extends OrganizationAbstract implements TypeInterface
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idorganization, $value['contactPoint'] ?? null))
 			);
 			// IMAGE
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $idthing)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $this->idthing)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
   }
 
+	public function service(array $data)
+	{
+		$value = $data[0];
+		$typeBuilder = ToolBox::typeBuilder($value);
+		$this->idorganization = $typeBuilder->getId();
+		$this->name = $value['name'];
+		parent::navbarService();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('service')->setAttribute('data-params','{"provider":"'.$this->idorganization.'"}')->ready()
+		);
+	}
+
+	/**
+	 * @param array $data
+	 * @return void
+	 */
 	public function product(array $data)
 	{
 		$value = $data[0];
@@ -73,9 +90,7 @@ class Organization extends OrganizationAbstract implements TypeInterface
 		$idorganization = $typeBuilder->getId();
 		$this->idorganization = $idorganization;
 		$this->name = $value['name'];
-
 		$this->navbarProduct();
-
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('product')->setAttribute('data-params','{"manufacturer":"'.$idorganization.'"}')->ready()
 		);
