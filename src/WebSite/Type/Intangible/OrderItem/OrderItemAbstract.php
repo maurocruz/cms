@@ -101,7 +101,7 @@ abstract class OrderItemAbstract
           ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-          ->bodyCell(CmsFactory::response()->fragment()->button()->buttonDelete($value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
+          ->bodyCell(CmsFactory::response()->fragment()->button()->buttonDelete((string) $value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
           ->closeRow();
 
         $quantityTotal += $orderQuantity;
@@ -159,7 +159,7 @@ abstract class OrderItemAbstract
 				// REFERENCE ORDER
 				$form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
 				// OFFER
-				$form->input("items[$key][offer]", $item['idoffer'], "hidden");
+				$form->input("items[$key][offer]", (string) $item['idoffer'], "hidden");
 				// OFFERED ITEM TYPE
 				$form->input("items[$key][orderedItemType]", $type, "hidden");
 

@@ -24,7 +24,7 @@ class OrderItemView extends OrderItemAbstract
    */
   public function edit(array $data): array
   {
-    $this->referencesOrder = $data['idorder'];
+    $this->referencesOrder = (string) $data['idorder'];
     $this->orderedItem = $data['orderedItem'];
     $this->sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
     $this->sellerType = $data['seller']['@type'];

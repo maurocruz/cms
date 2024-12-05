@@ -62,7 +62,7 @@ class OrderView extends OrderAbstract
           }
           $table->addRow($item['idorder'], $item['customer']['name'], $item['seller']['name'], implode("; ", $orderedItems), $item['orderStatus'], $item['orderDate'])
               ->buttonEdit("/admin/organization/order?id=$idSeller&item={$item['idorder']}")
-              ->buttonDelete($idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
+              ->buttonDelete((string) $idIsPartOf, $tableIsPartOf, $idHasPart, $tableHasPart);
           unset($orderedItems);
         }
 	    }
@@ -96,7 +96,6 @@ class OrderView extends OrderAbstract
   {
     if (empty($data)) {
       CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->noContent());
-
     } else {
       self::$idOrder = ArrayTool::searchByValue($data['identifier'],'id','value');
       // NAVBAR

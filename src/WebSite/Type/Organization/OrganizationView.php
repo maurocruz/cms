@@ -61,7 +61,7 @@ class OrganizationView extends OrganizationAbstract
       // NAVBAR
       parent::navbarEdit();
 			// THING
-			CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='organization' data-idispartof='{$value['idorganization']}' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
+			//CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='organization' data-idispartof='{$value['idorganization']}' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
       // ORGANIZATION
       CmsFactory::webSite()->addMain(
 				CmsFactory::response()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value))

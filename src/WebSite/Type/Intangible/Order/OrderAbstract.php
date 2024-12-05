@@ -85,7 +85,7 @@ abstract class OrderAbstract
     // PAYMENT DUE DATE
     $form->fieldsetWithInput("paymentDueDate", isset($value['paymentDueDate']) ? substr($value['paymentDueDate'],0,10) : null, _("Payment due date"), "date");
     // DISCOUNT
-    $form->fieldsetWithInput("discount", $value['discount'] ?? null, _("Discount"));
+    $form->fieldsetWithInput("discount", (string) $value['discount'] ?? null, _("Discount"));
     // TAGS
     $form->fieldsetWithInput("tags", $value['tags'] ?? null, _("Tags"));
     // SUBMIT

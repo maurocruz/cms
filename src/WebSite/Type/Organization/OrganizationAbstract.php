@@ -42,8 +42,8 @@ abstract class OrganizationAbstract
   protected function navbarIndex()
   {
     CmsFactory::webSite()->navbar(_("Organization"), [
-      "/admin/organization"=> CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/organization/new" => CmsFactory::response()->fragment()->icon()->plus()
+      "/admin/organization"=> CmsFactory::response()->fragment()->icon()->home(16,16),
+      "/admin/organization/new" => CmsFactory::response()->fragment()->icon()->plus(16,16)
     ], 2, ['table'=>'organization']);
   }
   /**
@@ -60,7 +60,7 @@ abstract class OrganizationAbstract
   protected function navbarEdit()
   {
     CmsFactory::webSite()->navbar($this->name, [
-      "/admin/organization/edit?id=$this->id" => CmsFactory::response()->fragment()->icon()->home(),
+      "/admin/organization/edit?id=$this->id" => CmsFactory::response()->fragment()->icon()->home(16,16),
       "/admin/organization?id=$this->id&action=service" => _("Services"),
       "/admin/organization/product?id=$this->id" => _("Products"),
       "/admin/organization/order?id=$this->id" => _("Orders")

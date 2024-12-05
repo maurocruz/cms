@@ -79,7 +79,12 @@ abstract class InvoiceAbstract
     $p = $case == "new" ? "+" : $n;
     $form->content("<span>".$p."</span>");
     // TOTAL PAYMENT DUE
-    $form->fieldsetWithInput("totalPaymentDue",$value['totalPaymentDue'] ?? null, $case == "new" ? _("Value") : null, "number", null, ["type" => "number", "step" => "0.01", "min" => "0.01"]);
+    $form->fieldsetWithInput("totalPaymentDue",
+	    isset($value['totalPaymentDue']) ? (string) $value['totalPaymentDue'] : null,
+	    $case == "new" ? _("Value") : null,
+	    "number",
+	    null,
+	    ["type" => "number", "step" => "0.01", "min" => "0.01"]);
     // PAYMENT DUE DATE
     $form->fieldsetWithInput("paymentDueDate", $value['paymentDueDate'] ?? null, $case == "new" ? _("Due date") : null, "date");
     // PAYMENT DATE
@@ -183,15 +188,12 @@ abstract class InvoiceAbstract
   protected static function saldoData($data): array
   {
     $dadosSaldo = [];
-    $totalPaymentAmount = 0;
     $dadosSaldo['credito'] = 0;
     $dadosSaldo['debito'] = 0;
     $dadosSaldo['atrasado'] = 0;
 
     foreach ($data as $value) {
       $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
-      // total
-      $totalPaymentAmount += $value['totalPaymentDue'];
       // pago
       $dadosSaldo['credito'] += $paid ? $value['totalPaymentDue'] : 0;
       // debito

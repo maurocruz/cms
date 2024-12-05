@@ -40,12 +40,12 @@ class ContactPoint
     $form = CmsFactory::response()->fragment()->form(["class" => "formPadrao form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
-    $form->input('tableHasPart', $tableHasPart, "hidden");
+    $form->input('tableHasPart', (string) $tableHasPart, "hidden");
     if ($case === "new") {
       $form->input('idHasPart', (string) $idHasPart, "hidden");
       $form->content("<h4>"._('New').": </h4>");
     } else {
-      $form->input('idcontactPoint', $value['idcontactPoint'], 'hidden');
+      $form->input('idcontactPoint', (string) $value['idcontactPoint'], 'hidden');
     }
     // POSITION
     $form->fieldsetWithInput("position", (isset($value['position']) ? (string) $value['position'] : (string) $key), "#", "number", null, [ "min" => "1"]);
