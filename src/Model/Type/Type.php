@@ -25,24 +25,25 @@ class Type
 	 * @return mixed|string|string[]
 	 */
 	public function post(array $params) {
-		$action = $params['action'] ?? null;
+		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
+		if ($isMultidimensional) {
+			$newParams['multidimensional'] = json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+			$params = $newParams;
+		}
 		$data = CmsFactory::model()->api()->post($this->type, $params)->ready();
 		// ERROR OR FAIL
-		if ((isset($data['status']) && $data['status'] == 'fail') || (isset($data['error']))) {
-			if(isset($data['error'])) {
-				$data = $data['error'];
-				$data['status'] = 'error';
-			}
+		if (array_key_exists('status', $data) && ($data['status'] == 'fail' || $data['status'] == 'error')) {
 			return $data;
 		}
 		// SUCCESS
-		else if (isset($data[0])) {
-			$value = $data[0];
+		else if (array_key_exists('status', $data) && $data['status'] == "success") {
+			$value = $data['data'][0];
 			$idname = "id$this->type";
 			$idvalue = $value[$idname] ?? null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			if ($this->type === "webPageElement" || $this->type === "programMembership" || $action === 'redirectToSamePage') {
+			$redirectedPage = ['orderItem','programMembership','webPageElement'];
+			if (in_array($this->type, $redirectedPage)) {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
 			// REDIRECT TO EDIT PAGE
@@ -87,13 +88,14 @@ class Type
 	 */
 	public function erase(array $params)
 	{
-		$id = $params["id$this->type"];
+		$id = $params["id$this->type"] ?? $params['idIsPartOf'];
 		$data = CmsFactory::model()->api()->delete($this->type, ["id$this->type" => $id])->ready();
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
 		}
 		// REDIRECT
-		if ($this->type === "webPageElement" || $this->type === "programMembership") {
+		$redirectedPage = ['orderItem','programMembership','webPageElement'];
+		if (in_array($this->type, $redirectedPage)) {
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
 		//

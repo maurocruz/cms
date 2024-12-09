@@ -57,10 +57,9 @@ class Api
 	 * @param array|null $FILES
 	 * @return $this
 	 */
-	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
+	public function post(string $relativeUrl, $data, array $FILES = NULL): Api
 	{
 		$this->method = "POST";
-		$this->data = $data;
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
