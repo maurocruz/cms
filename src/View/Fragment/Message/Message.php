@@ -16,9 +16,10 @@ class Message
 	 * @param $message
 	 * @return string
 	 */
-	public function warning($message = 'Oops! something went wrong!'): string
+	public function warning($message): string
 	{
 		$warning = '';
+		$message = !!$message ? $message : 'Oops! something went wrong!';
 		if (is_array($message)) {
 			if (isset($message['message'])) {
 				$warning = $message['message'].". ";

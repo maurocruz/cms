@@ -204,7 +204,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param array|null $attributes
    * @return FormInterface
    */
-  public function submitButtonSend(array $attributes = null): FormInterface
+  public function submitButtonSend(array $attributes = ['class'=>'form-submit-button-send']): FormInterface
   {
       $this->form->submitButtonSend($attributes);
       return $this;

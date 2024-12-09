@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ArrayTool;
+use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\ElementInterface;
 use Plinct\Web\Element\Form\Form as WebForm;
@@ -216,13 +217,19 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	 */
 		public function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
 		{
+			if (is_array($value)) {
+				$typeBuilder = ToolBox::typeBuilder($value);
+				$id = $typeBuilder->getId();
+			} else {
+				$id = null;
+			}
 			$attributes2['class'] = "choose-type";
 			$attributes2['data-property'] = $property;
 			$attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
 			$attributes2['data-like'] = $nameLike;
 			$attributes2['data-currentType'] = $value['@type'] ?? null;
 			$attributes2['data-currentName'] = $value['name'] ?? null;
-			$attributes2['data-currentId'] = isset($value['identifier']) ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
+			$attributes2['data-currentId'] = $id;
 			$widthAttr = "display: flex; min-height: 23px;";
 			$attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
 			unset($attributes['style']);
