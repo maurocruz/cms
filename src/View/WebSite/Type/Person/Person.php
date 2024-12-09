@@ -6,11 +6,10 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\Certification;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
-use Plinct\Cms\View\WebSite\Type\Intangible\ProgramMembership;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Person extends PersonAbstract implements TypeInterface
+class Person extends PersonAbstract implements TypeViewInterface
 {
   /**
    * @param ?array $value

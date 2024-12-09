@@ -6,9 +6,9 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class WebPage extends WebPageAbstract implements TypeInterface
+class WebPage extends WebPageAbstract implements TypeViewInterface
 {
 
 	/**

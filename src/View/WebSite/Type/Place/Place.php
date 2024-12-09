@@ -6,9 +6,9 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Place implements TypeInterface
+class Place implements TypeViewInterface
 {
   /**
    * @var int

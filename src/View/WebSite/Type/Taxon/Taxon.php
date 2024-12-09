@@ -5,9 +5,9 @@ namespace Plinct\Cms\View\WebSite\Type\Taxon;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Taxon implements TypeInterface
+class Taxon implements TypeViewInterface
 {
   /**
    * @param string|null $title

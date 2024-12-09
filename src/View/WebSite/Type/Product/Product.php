@@ -5,10 +5,10 @@ namespace Plinct\Cms\View\WebSite\Type\Product;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
-class Product implements TypeInterface
+class Product implements TypeViewInterface
 {
 	private function navbar(?string $title = null): void
 	{

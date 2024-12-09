@@ -4,9 +4,9 @@ namespace Plinct\Cms\View\WebSite\Type\Event;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Event extends EventAbstract implements TypeInterface
+class Event extends EventAbstract implements TypeViewInterface
 {
   /**
    *

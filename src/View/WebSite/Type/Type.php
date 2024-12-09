@@ -7,9 +7,9 @@ use Plinct\Cms\CmsFactory;
 class Type
 {
 	/**
-	 * @var TypeInterface|mixed
+	 * @var TypeViewInterface|mixed
 	 */
-	private ?TypeInterface $object = null;
+	private ?TypeViewInterface $object = null;
 	/**
 	 * @var string|null
 	 */

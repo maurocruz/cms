@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type;
 
-interface TypeInterface
+interface TypeViewInterface
 {
 	public function index(?array $value);
 

@@ -4,9 +4,9 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class CreativeWork extends CreativeWorkAbstract implements TypeInterface
+class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 {
 
 	public function __construct()

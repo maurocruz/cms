@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class ImageObject implements TypeInterface
+class ImageObject implements TypeViewInterface
 {
 	/**
 	 * @return void

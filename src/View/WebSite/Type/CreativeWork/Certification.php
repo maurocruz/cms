@@ -5,9 +5,9 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Certification implements TypeInterface
+class Certification implements TypeViewInterface
 {
 
 	public function __construct()

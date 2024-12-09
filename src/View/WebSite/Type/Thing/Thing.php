@@ -1,12 +1,9 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Thing;
 
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\Fragment\Form\Form;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Thing extends ThingElements implements TypeInterface
+class Thing extends ThingElements implements TypeViewInterface
 {
 
 	public function new(?array $value)

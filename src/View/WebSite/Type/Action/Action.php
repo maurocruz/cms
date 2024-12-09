@@ -5,9 +5,9 @@ namespace Plinct\Cms\View\WebSite\Type\Action;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Action implements TypeInterface
+class Action implements TypeViewInterface
 {
 	/**
 	 * @param string|null $title
