@@ -1,13 +1,11 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\OrderItem;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
+use Plinct\Tool\ToolBox;
 
-class OrderItemView extends OrderItemAbstract
+class OrderItemView extends OrderItemAbstract implements TypeViewInterface
 {
   /**
    * @var float
@@ -18,21 +16,34 @@ class OrderItemView extends OrderItemAbstract
    */
   public static float $totalWithDiscount;
 
-  /**
-   * @param array $data
-   * @return array
-   */
-  public function edit(array $data): array
-  {
-    $this->referencesOrder = $data['idorder'];
-    $this->orderedItem = $data['orderedItem'];
-    $this->sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
-    $this->sellerType = $data['seller']['@type'];
+	public function index(?array $value): bool
+	{
+		return true;
+	}
 
-    return [
-      parent::listOrderedItems($data),
-      CmsFactory::response()->fragment()->box()->expandingBox(_("Include new item"), parent::listSellerOfferedItems($data['seller']['hasOfferCatalog']))
-    ];
+	public function new(?array $value): bool
+	{
+		return true;
+	}
+
+	/**
+	 * @param ?array $data
+	 * @return array
+	 */
+  public function edit(?array $data): array
+  {
+		$typeBuilderOrder = ToolBox::typeBuilder($data);
+    $this->referencesOrder = $typeBuilderOrder->getId();
+    $this->orderedItem = $data['orderedItem'];
+	  $seller = $data['seller'];
+		$typeBuilderSeller = ToolBox::typeBuilder($seller);
+    $this->sellerId = $typeBuilderSeller->getId();
+    $this->sellerType = $seller['@type'];
+
+		return [
+			parent::listOrderedItems($data),
+	    CmsFactory::view()->fragment()->box()->expandingBox(_("Include new item"), parent::listSellerOfferedItems($seller['hasOfferCatalog']))
+	  ];
   }
 
   /**

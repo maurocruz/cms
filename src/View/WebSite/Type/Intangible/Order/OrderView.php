@@ -2,6 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\ToolBox;
 
@@ -48,12 +49,13 @@ class OrderView extends OrderAbstract
 			$value = $data[0];
 			$typeBuilder = ToolBox::typeBuilder($value);
 			self::$idOrder = $typeBuilder->getId();
+			$this->tags = $typeBuilder->getPropertyValue('tags');
       // NAVBAR
       parent::navbarOrder($value);
       // ORDER
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("edit", $value), _("Order")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("edit", $value), _("Order")));
       // ORDERED ITEMS
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->edit($value), _("Ordered items")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->edit($value), _("Ordered items")));
       // INVOICES
       //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->edit($value), _("Invoices")));
       // HISTORY

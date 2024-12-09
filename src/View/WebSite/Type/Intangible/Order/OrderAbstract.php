@@ -4,12 +4,12 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Cms\View\WebSite\Type\Person\Person;
-use Plinct\Cms\View\WebSite\Type\TypeInterface;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\StringTool;
 use Plinct\Tool\ToolBox;
 
-abstract class OrderAbstract implements TypeInterface
+abstract class OrderAbstract implements TypeViewInterface
 {
   /**
    * @var ?string
@@ -27,7 +27,15 @@ abstract class OrderAbstract implements TypeInterface
    * @var string
    */
   protected string $idHasPart;
+	/**
+	 * @var ?string
+	 */
+	protected ?string $tags = null;
 
+	/**
+	 * @param array $value
+	 * @return void
+	 */
 	public static function navbarIndex(array $value)
 	{
 		if ($value['@type'] == 'Order') {
@@ -89,12 +97,13 @@ abstract class OrderAbstract implements TypeInterface
    */
   protected function formOrder(string $case = "new", $value = null): array
   {
+		$seller = $case == 'new' ? $value : $value['seller'];
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-order']);
     $form->action("/admin/order/$case")->method('post');
     // hiddens
     if ($case == "edit") $form->input("idorder", self::$idOrder, "hidden");
     // SELLER
-    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("seller", "organization,person", $value['seller'] ?? null), _("Seller"));
+    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("seller", "organization,person", $seller), _("Seller"));
     // CUSTOMER
     $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"));
     // ORDER DATE
@@ -115,7 +124,7 @@ abstract class OrderAbstract implements TypeInterface
     // DISCOUNT
     $form->fieldsetWithInput("discount", $value['discount'] ?? null, _("Discount"));
     // TAGS
-    $form->fieldsetWithInput("tags", $value['tags'] ?? null, _("Tags"));
+    $form->fieldsetWithInput("tags", $this->tags, _("Tags"));
     // SUBMIT
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/order/erase");

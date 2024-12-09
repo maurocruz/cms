@@ -1,11 +1,7 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\OrderItem;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
 
@@ -59,12 +55,8 @@ abstract class OrderItemAbstract
    */
   protected function listOrderedItems($data): array
   {
-    $idHasPart = ArrayTool::searchByValue($data['identifier'],"id","value");
-    $tableHasPart = lcfirst($data['@type']);
-    $sellerId = ArrayTool::searchByValue($data['seller']['identifier'], "id")['value'];
-    $sellerType = $data['sellerType'];
-    $discount = (float)$data['discount'];
-    //
+    $idorder = $this->referencesOrder;
+    $discount = (float) $data['discount'];
     $orderedItems = $data['orderedItem'] ?? null;
     $numberOfItems = $orderedItems ? count($orderedItems) : null;
     $quantityTotal = 0;
@@ -86,9 +78,13 @@ abstract class OrderItemAbstract
     // BODY
     if ($orderedItems) {
       foreach ($orderedItems as $key => $value) {
-        $type = $value['orderedItem']['@type'];
-        $name = $value['orderedItem']['name'];
-        $idItem = ArrayTool::searchByValue($value['orderedItem']['identifier'],"id")['value'];
+				$orderItem = ToolBox::typeBuilder($value);
+				$idordemItem = $orderItem->getId();
+				$orderedItem = $value['orderedItem'];
+				$typeBuilderOrdereItem = ToolBox::typeBuilder($orderedItem);
+        $type = $orderedItem['@type'];
+        $name = $orderedItem['name'];
+        $isOrderedItem = $typeBuilderOrdereItem->getId();
         $orderQuantity = (float)$value['orderQuantity'];
         $price = isset($value['offer']['price']) ? (float)$value['offer']['price'] : null;
         $totalPrice = $price * $orderQuantity;
@@ -97,11 +93,11 @@ abstract class OrderItemAbstract
         // BODY CELLS
         $table->bodyCell($key+1)
           ->bodyCell($type, ["style" =>"text-align: center;"])
-          ->bodyCell(sprintf('<a href="/admin/%s/%s?id=%s&item=%s">%s</a>',lcfirst($sellerType),lcfirst($type),$sellerId,$idItem,$name))
+          ->bodyCell(sprintf('<a href="/admin/%s/%s">%s</a>',lcfirst($type),$isOrderedItem,$name))
           ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-          ->bodyCell(CmsFactory::response()->fragment()->buttons()->buttonDelete($value['idorderItem'],"orderItem",$idHasPart,$tableHasPart, ['class'=>'form-orderedItem-delete-button']))
+          ->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($idordemItem,"orderItem",$idorder,"order",['class'=>'form-orderedItem-delete-button']))
           ->closeRow();
 
         $quantityTotal += $orderQuantity;
@@ -131,7 +127,7 @@ abstract class OrderItemAbstract
    */
   protected function listSellerOfferedItems($sellerHasOfferCatalog): array
   {
-    $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic']);
     $form->action("/admin/orderItem/new")->method("post");
     // number of items
     $form->content("<p>" . sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) . "</p>");
@@ -145,30 +141,33 @@ abstract class OrderItemAbstract
 
 		if ($sellerHasOfferCatalog['numberOfItems'] == '0') {
 			$table->bodyCell(_("No items available!"), ['colspan'=>'6','style'=>'text-align: center;'])->closeRow();
-
 		} else {
 			foreach ($sellerHasOfferCatalog['itemListElement'] as $key => $value) {
 				$item = $value['item'];
-				$id = ToolBox::searchByValue($item['itemOffered']['identifier'], "id")['value'];
-				$name = $item['itemOffered']['name'];
-				$type = $item['itemOffered']['@type'];
+				$typeBuilder = ToolBox::typeBuilder($item);
+				$idoffer = $typeBuilder->getId();
+				$itemOffered = $item['itemOffered'];
+				$typeBuilderItemOffered = ToolBox::typeBuilder($itemOffered);
+				$itemOrderedThing = $typeBuilderItemOffered->getPropertyValue('idthing');
+				$name = $itemOffered['name'];
+				$type = $itemOffered['@type'];
 				$price = $item['priceCurrency'] . " " . number_format((float)$item['price'], 2, ',', '.');
-				$elegibleDuration = $item['elegibleDuration'];
-				$hrefItem = sprintf("/admin/%s/%s?id=%s&item=%s", lcfirst($this->sellerType), lcfirst($type), $this->sellerId, $id);
+				$eligibleDuration = $item['eligibleDuration'];
+				$hrefItem = sprintf("/admin/offer/%s", $idoffer);
 
 				// REFERENCE ORDER
 				$form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
 				// OFFER
-				$form->input("items[$key][offer]", $item['idoffer'], "hidden");
+				//$form->input("items[$key][offer]", $idoffer, "hidden");
 				// OFFERED ITEM TYPE
-				$form->input("items[$key][orderedItemType]", $type, "hidden");
+				$form->input("items[$key][orderedItem]", $itemOrderedThing, "hidden");
 
 				// TABLE ROW
-				$table->bodyCell("<input name='items[$key][orderedItem]' type='checkbox' value='$id' >", ["style" => "text-align: center;"])
+				$table->bodyCell("<input name='items[$key][offer]' type='checkbox' value='$idoffer' >", ["style" => "text-align: center;"])
 					->bodyCell($name, null, $hrefItem)
 					->bodyCell(_($type))
 					->bodyCell($price, ["style" => "text-align: right;"])
-					->bodyCell($elegibleDuration)
+					->bodyCell($eligibleDuration)
 					->bodyCell("<input name='items[$key][orderQuantity]' type='number' value='1' min='1' style='width: 80px;'>")
 					->closeRow();
 			}
