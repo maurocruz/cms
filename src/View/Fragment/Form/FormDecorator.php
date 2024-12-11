@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
@@ -47,14 +46,14 @@ class FormDecorator extends ElementDecorator implements FormInterface
 
   /**
    * @param string $name
-   * @param string $value
+   * @param string|int $value
    * @param string $type
    * @param array|null $attributes
    * @return FormInterface
    */
-  public function input(string $name, string $value, string $type = 'text', array $attributes = null): FormInterface
+  public function input(string $name, $value, string $type = 'text', array $attributes = null): FormInterface
   {
-     $this->form->input($name, $value, $type, $attributes);
+     $this->form->input($name,(string) $value, $type, $attributes);
      return $this;
   }
 
