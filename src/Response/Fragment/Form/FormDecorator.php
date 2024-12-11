@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Response\Fragment\Form;
 
 use Plinct\Cms\App;
@@ -48,14 +45,14 @@ class FormDecorator extends ElementDecorator implements FormInterface
 
   /**
    * @param string $name
-   * @param string $value
+   * @param string|int $value
    * @param string $type
    * @param array|null $attributes
    * @return FormInterface
    */
-  public function input(string $name, string $value, string $type = 'text', array $attributes = null): FormInterface
+  public function input(string $name, $value, string $type = 'text', array $attributes = null): FormInterface
   {
-     $this->form->input($name, $value, $type, $attributes);
+     $this->form->input($name, (string) $value, $type, $attributes);
      return $this;
   }
 
@@ -76,16 +73,16 @@ class FormDecorator extends ElementDecorator implements FormInterface
 
   /**
    * @param string $name
-   * @param string|null $value
+   * @param string|int|null $value
    * @param string|null $legend
    * @param string $type
    * @param array|null $attributes
    * @param array|null $attributesInput
    * @return FormInterface
    */
-  public function fieldsetWithInput(string $name, string $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
+  public function fieldsetWithInput(string $name, $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
   {
-      $this->form->fieldsetWithInput($name, $value, $legend, $type, $attributes, $attributesInput);
+      $this->form->fieldsetWithInput($name, (string) $value, $legend, $type, $attributes, $attributesInput);
       return $this;
   }
 

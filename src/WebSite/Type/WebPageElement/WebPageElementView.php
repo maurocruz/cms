@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebPageElement;
 
 use Exception;
@@ -97,7 +94,7 @@ class WebPageElementView
     // WebPageElements hasPart
     if ($value) {
       foreach ($value as $valueWebPageElement) {
-				$this->idwebPageElement = $valueWebPageElement['idwebPageElement'];
+				$this->idwebPageElement = (string) $valueWebPageElement['idwebPageElement'];
 				$name = $valueWebPageElement['name'];
 				$text = $valueWebPageElement['text'];
 
