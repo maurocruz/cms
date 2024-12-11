@@ -61,7 +61,7 @@ abstract class OrderAbstract implements TypeViewInterface
 		}
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('order')
-			->level(5)
+			->level(4)
 			->title(_('Orders'))
 			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
 			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))

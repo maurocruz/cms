@@ -338,6 +338,31 @@ a.white {
   background-color: rgba(30, 22, 22, 0.6) !important;
 }
 
+form button {
+  display: inline-grid;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  align-items: center;
+}
+form button svg {
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: #40d377;
+}
+form .form-submit-button-delete {
+  margin-right: auto;
+}
+form .form-submit-button-delete svg {
+  color: #e61919;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -697,30 +722,6 @@ a.white {
 .form-basic textarea {
   background-color: #bbb;
 }
-.form-basic button {
-  display: inline-grid;
-  cursor: pointer;
-  border: 0;
-  background-color: transparent;
-  align-items: center;
-}
-.form-basic button svg {
-  overflow: hidden;
-  width: 30px;
-  height: 30px;
-  display: inline-block;
-  vertical-align: middle;
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
-  color: #40d377;
-}
-.form-basic .form-submit-button-delete {
-  margin-right: auto;
-}
-.form-basic .form-submit-button-delete svg {
-  color: #e61919;
-}
 .form-basic .plinct-shell {
   width: 100%;
 }
@@ -1058,20 +1059,13 @@ a.white {
   width: 100%;
 }
 .form-invoice button {
-  background-color: transparent;
   padding: 0;
-  border: none;
   height: fit-content;
   align-self: end;
-  cursor: pointer;
 }
-.form-invoice button .form-submit-button-send {
-  color: #84f7ba;
+.form-invoice button svg {
+  width: 22px;
   height: 22px;
-}
-.form-invoice button .icon-delete {
-  color: #cc0000;
-  font-size: 1.7em;
 }
 
 /* LOCALBUSINESS
@@ -1573,6 +1567,9 @@ table .table-delete-button {
   }
   .menu5 {
     padding-left: 24px;
+  }
+  .menu6 {
+    padding-left: 30px;
   }
   .form-postalAddress fieldset:nth-of-type(1) {
     width: 100%;

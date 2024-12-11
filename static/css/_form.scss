@@ -1,5 +1,32 @@
 @use 'shared';
 
+form {
+  button {
+    display: inline-grid;
+    cursor: pointer;
+    border: 0;
+    background-color: transparent;
+    align-items: center;
+
+    svg {
+      overflow: hidden;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: transparent;
+      border: 0;
+      color: #40d377;
+    }
+  }
+  .form-submit-button-delete {
+    margin-right: auto;
+    svg {
+      color: #e61919;
+    }
+  }
+}
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -327,31 +354,6 @@
     background-color: #bbb;
   }
 
-  button {
-    display: inline-grid;
-    cursor: pointer;
-    border: 0;
-    background-color: transparent;
-    align-items: center;
-
-    svg {
-      overflow: hidden;
-      width: 30px;
-      height: 30px;
-      display: inline-block;
-      vertical-align: middle;
-      cursor: pointer;
-      background-color: transparent;
-      border: 0;
-      color: #40d377;
-    }
-  }
-  .form-submit-button-delete {
-    margin-right: auto;
-    svg {
-      color: #e61919;
-    }
-  }
 
   .plinct-shell {
     width: 100%;
@@ -575,20 +577,12 @@
     width: 100%;
   }
   button {
-    background-color: transparent;
     padding: 0;
-    border: none;
     height: fit-content;
     align-self: end;
-    cursor: pointer;
-
-    .form-submit-button-send {
-      color: #84f7ba;
+    svg {
+      width: 22px;
       height: 22px;
-    }
-    .icon-delete {
-      color: #cc0000;
-      font-size: 1.7em;
     }
   }
 }

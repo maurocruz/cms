@@ -1,14 +1,11 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Invoice;
 
 use DateTime;
 use Exception;
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
-use Plinct\Tool\ArrayTool;
+use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
 
 abstract class InvoiceAbstract
@@ -66,26 +63,33 @@ abstract class InvoiceAbstract
    */
   protected function formInvoice(string $case = 'new', $value = null, $n = null): array
   {
-    // VARS
-    $idinvoice = $value ? ArrayTool::searchByValue($value['identifier'], "id")['value'] : null;
-
-    $form = CmsFactory::response()->fragment()->form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
+		if ($value) {
+			$typeBuilderInvoice = ToolBox::typeBuilder($value);
+			$idinvoice = $typeBuilderInvoice->getId();
+		} else {
+			$idinvoice = null;
+		}
+		$scheduledPaymentDate = $value['scheduledPaymentDate'] ?? null;
+		$paymentDueDate = $value['paymentDueDate'] ?? null;
+		$totalPaymentDue = $value['totalPaymentDue'] ?? null;
+	  $paymentStatus = $value['paymentStatus'] ?? null;
+		// FORM
+    $form = CmsFactory::view()->fragment()->form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
     $form->action("/admin/invoice/".$case)->method("post");
     // HIDDENS
     $form->input("referencesOrder", (string)$this->idorder, "hidden");
-    $form->input("tableHasPart", (string) $this->idorder, "hidden");
     if ($case == "edit")  $form->input("idinvoice", $idinvoice, "hidden");
     // #
     $p = $case == "new" ? "+" : $n;
     $form->content("<span>".$p."</span>");
     // TOTAL PAYMENT DUE
-    $form->fieldsetWithInput("totalPaymentDue",$value['totalPaymentDue'] ?? null, $case == "new" ? _("Value") : null, "number", null, ["type" => "number", "step" => "0.01", "min" => "0.01"]);
+    $form->fieldsetWithInput("totalPaymentDue", $totalPaymentDue, $case == "new" ? _("Value") : null, "number", null, ["type" => "number", "step" => "0.01", "min" => "0.01"]);
+    // SCHEDULE PAYMENT DATE
+    $form->fieldsetWithInput("scheduledPaymentDate", $scheduledPaymentDate, $case == "new" ? _("Schedule paydate") : null, "date");
     // PAYMENT DUE DATE
-    $form->fieldsetWithInput("paymentDueDate", $value['paymentDueDate'] ?? null, $case == "new" ? _("Due date") : null, "date");
-    // PAYMENT DATE
-    $form->fieldsetWithInput("paymentDate", $value['paymentDate'] ?? null, $case == "new" ? _("Payment") : null, 'date');
+    $form->fieldsetWithInput("paymentDueDate", $paymentDueDate, $case == "new" ? _("Payment") : null, 'date');
     // PAYMENT STATUS
-    $form->fieldsetWithSelect("paymentStatus",$value['paymentStatus'] ?? null, [
+    $form->fieldsetWithSelect("paymentStatus", $paymentStatus, [
       "PaymentDue" => _("Payment due"),
       "PaymentComplete" => _("Payment complete"),
       "PaymentPastDue" => _("Payment past due"),
@@ -108,25 +112,22 @@ abstract class InvoiceAbstract
     if ($value) {
       $expired = null;
       $now = new DateTime();
+			$scheduledPaymentDate = $value['scheduledPaymentDate'] ?? null;
+			$paymentDueDate = $value['paymentDueDate'] ?? null;
       try {
-          $expired = new DateTime($value['paymentDueDate']);
+          $expired = new DateTime($scheduledPaymentDate);
       } catch (Exception $e) {
       }
       $diff = $expired->diff($now);
     }
-
     if ($value == null) {
       return "form-back-gray";
-
-    } elseif ($value['paymentDate'] && $value['paymentDate'] !== "0000-00-00") {
+    } elseif ($paymentDueDate && $paymentDueDate !== "0000-00-00") {
       return "form-back-green";
-
     } elseif($diff->invert == 0) {
       return "form-back-red";
-
     } elseif($diff->days < 30) {
       return "form-back-yellow";
-
     } else {
       return "form-back-white";
     }
@@ -183,15 +184,12 @@ abstract class InvoiceAbstract
   protected static function saldoData($data): array
   {
     $dadosSaldo = [];
-    $totalPaymentAmount = 0;
     $dadosSaldo['credito'] = 0;
     $dadosSaldo['debito'] = 0;
     $dadosSaldo['atrasado'] = 0;
 
     foreach ($data as $value) {
       $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
-      // total
-      $totalPaymentAmount += $value['totalPaymentDue'];
       // pago
       $dadosSaldo['credito'] += $paid ? $value['totalPaymentDue'] : 0;
       // debito
