@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Response\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
@@ -183,7 +180,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
     public function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
 	    $this->tableHasPart = $tableHasPart;
-	    $this->idHasPart = $idHasPart;
+	    $this->idHasPart = (string) $idHasPart;
 	    $this->tableIsPartOf = $tableIsPartOf;
 			return $this->oneToOne($propertyName, $value);
     }
@@ -191,16 +188,16 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	/**
 	 * DEPRECATED
 	 * @param string $tableHasPart
-	 * @param string $idHasPart
+	 * @param string|int $idHasPart
 	 * @param string $tableIsPartOf
 	 * @param array|null $value
 	 * @param string|null $orberBy
 	 * @return array
 	 */
-    public function relationshipOneToMany(string $tableHasPart, string $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
+    public function relationshipOneToMany(string $tableHasPart, $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
     {
 	    $this->tableHasPart = $tableHasPart;
-	    $this->idHasPart = $idHasPart;
+	    $this->idHasPart = (string) $idHasPart;
 	    $this->tableIsPartOf = $tableIsPartOf;
 			return $this->oneToMany($value, $orberBy);
 

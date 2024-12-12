@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\LocalBusiness;
 
 use Exception;
@@ -17,8 +14,8 @@ class LocalBusinessView
   public function navbarLocalBussines(string $title = null)
   {
     CmsFactory::webSite()->navbar(_("Locals business"), [
-        "/admin/localBusiness" => CmsFactory::response()->fragment()->icon()->home(),
-        "/admin/localBusiness/new" => CmsFactory::response()->fragment()->icon()->plus()
+        "/admin/localBusiness" => CmsFactory::response()->fragment()->icon()->home(16,16),
+        "/admin/localBusiness/new" => CmsFactory::response()->fragment()->icon()->plus(16,16)
     ], 2, ['table'=>'localBusiness']);
 
     if ($title) CmsFactory::webSite()->navbar($title, [], 3);
@@ -56,18 +53,8 @@ class LocalBusinessView
 		$userToken = CmsFactory::request()->user()->userLogged()->getToken();
 		// NAVBAR
     $this->navbarLocalBussines($value['name']);
-    // LOCAL BUSINESS
-		CmsFactory::webSite()->addMain("<div
-			class='plinct-shell'
-			data-type='localBusiness'
-			data-idispartof='{$value['idlocalBusiness']}'
-			data-apihost='{$apiHost}'
-			data-usertoken='{$userToken}'
-		></div>");
-    //$content[] = "<script src='https://plinct.com.br/static/dist/plinct-thing/main.js'></script>";
-    //$content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
-
-    //$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
+		// LOCAL BUSINESS
+		$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
 		// ADDITIONAL TYPE
 		//$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Additional type"), '<div>Development additional type functions</div>');
     // LOCATION
@@ -79,43 +66,54 @@ class LocalBusinessView
     // MEMBER
     $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Persons"), CmsFactory::response()->fragment()->form()->relationshipOneToMany("localBusiness", $id, "person", $value['member']));
     // IMAGE
-		/*$content[] = "<div
+		$content[] = "<div
 			class='plinct-shell'
 			data-type='imageObject'
 			data-tablehaspart='localBusiness'
 			data-idhaspart='{$value['idlocalBusiness']}'
 			data-apihost='{$apiHost}'
 			data-usertoken='{$userToken}'
-		></div>";*/
-    //$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("localBusiness", $id, $value['image']));
+		></div>";
 
     CmsFactory::webSite()->addMain($content);
   }
 
-  /**
-   * @return array
-   */
-  private static function formLocalBussiness(): array
+	/**
+	 * @param string $case
+	 * @param array|null $value
+	 * @return array
+	 */
+  private static function formLocalBussiness($case = 'new', array $value = null): array
   {
+		$idlocalBusiness = $value['idlocalBusiness'] ?? null;
+		$name = $value['name'] ?? null;
+		$description = $value['description'] ?? null;
+		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
+		$hasOfferCatalog = $value['hasOfferCatalog'] ?? null;
+		$url = $value['url'] ?? null;
+		$dateCreated = $value['dateCreated'] ?? null;
+		$dateModified = $value['dateModified'] ?? null;
+
     $form = CmsFactory::response()->fragment()->form(["id"=>"form-localBusiness", "class" => "formPadrao form-localBusiness"]);
-    $form->action("/admin/localBusiness/new")->method('post');
+    $form->action("/admin/localBusiness/$case")->method('post');
+		if ($idlocalBusiness) $form->input('idlocalBusiness', $idlocalBusiness, 'hidden');
     // name
-    $form->fieldsetWithInput("name", null['name'] ?? null, _("Name"));
+    $form->fieldsetWithInput("name", $name, _("Name"));
     // description
-    $form->fieldsetWithTextarea("description", null['description'] ?? null, _("Description"));
+    $form->fieldsetWithTextarea("description", $description, _("Description"));
     // disambiguatingDescription
-    $form->fieldsetWithTextarea("disambiguatingDescription", null['disambiguatingDescription'] ?? null, _("Disambiguating description"));
+    $form->fieldsetWithTextarea("disambiguatingDescription", $disambiguatingDescription, _("Disambiguating description"));
     // hasOfferCatalog
-    $form->fieldsetWithInput("hasOfferCatalog", null['hasOfferCatalog'] ?? null, _("Offer catalog"));
+    $form->fieldsetWithInput("hasOfferCatalog", $hasOfferCatalog, _("Offer catalog"));
     // url
-    $form->fieldsetWithInput("url", null['url'] ?? null, "Url");
+    $form->fieldsetWithInput("url", $url, "Url");
     // dateCreated
-    if ("new" == "edit") $form->fieldsetWithInput("dateCreated", null['dateCreated'] ?? null, _("Date created"), "datetime", null, [ "disabled" ]);
+    if ("new" == "edit") $form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), "datetime", null, [ "disabled" ]);
     // dateModified
-    if ("new" == "edit") $form->fieldsetWithInput("dateModified", null['dateModified'] ?? null, _("Date modified"), "datetime", null, [ "disabled" ]);
+    if ("new" == "edit") $form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"), "datetime", null, [ "disabled" ]);
     // submit buttons
     $form->submitButtonSend();
-    if ("new" == "edit") $form->submitButtonDelete("/admin/localBusiness/erase");
+    if ($idlocalBusiness) $form->submitButtonDelete("/admin/localBusiness/erase");
     // ready
     return $form->ready();
   }
