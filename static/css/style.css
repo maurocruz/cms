@@ -299,6 +299,29 @@ a.white {
   background-color: rgba(30, 22, 22, 0.6) !important;
 }
 
+form .form-submit-button {
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+form .form-submit-button-send {
+  color: #40d377;
+}
+form .form-submit-button-send:hover {
+  color: #84f7ba;
+}
+form .form-submit-button-delete {
+  color: #cc0000;
+}
+form .form-submit-button-delete:hover {
+  color: #ff5555;
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -403,28 +426,6 @@ a.white {
 }
 .formPadrao .labelradio input[type=radio] {
   margin-right: 3px;
-}
-.formPadrao .form-submit-button {
-  overflow: hidden;
-  width: 30px;
-  height: 30px;
-  display: inline-block;
-  vertical-align: middle;
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
-}
-.formPadrao .form-submit-button-send {
-  color: #40d377;
-}
-.formPadrao .form-submit-button-send:hover {
-  color: #84f7ba;
-}
-.formPadrao .form-submit-button-delete {
-  color: #cc0000;
-}
-.formPadrao .form-submit-button-delete:hover {
-  color: #ff5555;
 }
 @media (min-width: 576px) {
   .formPadrao {

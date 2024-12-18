@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Request\Server\Type;
 
 use Plinct\Cms\CmsFactory;
@@ -23,7 +20,7 @@ class HistoryServer
   public function __construct($tableHasPart, $idHasPart)
   {
     $this->tableHasPart = $tableHasPart;
-    $this->idHasPart = $idHasPart;
+    $this->idHasPart = (string) $idHasPart;
     $this->userId = CmsFactory::request()->user()->userLogged()->getIduser();
   }
 

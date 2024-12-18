@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\Order;
 
 use Plinct\Cms\CmsFactory;
@@ -40,8 +37,8 @@ abstract class OrderAbstract
     $this->idHasPart = ArrayTool::searchByValue($seller['identifier'],'id','value');
 
     $list =  [
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus(),
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart" => CmsFactory::response()->fragment()->icon()->home(16,16),
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus(16,16),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment" => ucfirst(_("payments")),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired" => ucfirst(_("Due dates"))
     ];

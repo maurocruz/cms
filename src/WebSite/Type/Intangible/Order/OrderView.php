@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\Order;
 
 use Plinct\Tool\ArrayTool;
@@ -122,7 +119,7 @@ class OrderView extends OrderAbstract
     parent::navbarOrder($value);
 
     CmsFactory::webSite()->navbar(_("Payments"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::response()->fragment()->icon()->home(),
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::response()->fragment()->icon()->home(16,16),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
       "javascript: print();" => _("Print out")
@@ -201,7 +198,7 @@ class OrderView extends OrderAbstract
     parent::navbarOrder($value);
 
     CmsFactory::webSite()->navbar(_("Expired orders"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => CmsFactory::response()->fragment()->icon()->home(),
+      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => CmsFactory::response()->fragment()->icon()->home(16,16),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
       "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
       "javascript: print();" => _("Print out")

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Response\Fragment\Button;
 
 use Plinct\Cms\CmsFactory;
@@ -24,7 +21,7 @@ class Button
             ->input('tableIsPartOf', $tableISPartOf, 'hidden')
             ->input('idHasPart', $idHasPart, 'hidden')
             ->input('tableHasPart', $tableHasPart, 'hidden');
-        $form->content("<button type='submit' class='button-submit' onclick='return confirm(\"" . _("Do you really want to delete this item?") . "\")'>"
+        $form->content("<button type='submit' class='button-submit form-submit-button-delete' onclick='return confirm(\"" . _("Do you really want to delete this item?") . "\")'>"
                 . CmsFactory::response()->fragment()->icon()->delete()
             ."</button>");
 

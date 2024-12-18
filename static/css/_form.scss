@@ -1,5 +1,32 @@
 @use 'shared';
 
+form {
+  .form-submit-button {
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+  }
+
+  .form-submit-button-send{
+    color: #40d377;
+  }
+
+  .form-submit-button-send:hover { color: #84f7ba; }
+
+  .form-submit-button-delete {
+    color: #cc0000;
+  }
+
+  .form-submit-button-delete:hover {
+    color: #ff5555;
+  }
+}
+
 /* COMPONENT _ form padrao
 ======================================================= */
 .formPadrao {
@@ -123,31 +150,6 @@
     input[type=radio] {
       margin-right: 3px;
     }
-  }
-
-  .form-submit-button {
-    overflow: hidden;
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-    background-color: transparent;
-    border: 0;
-  }
-
-  .form-submit-button-send{
-    color: #40d377;
-  }
-  
-  .form-submit-button-send:hover { color: #84f7ba; }
-
-  .form-submit-button-delete {
-    color: #cc0000;
-  }
-
-  .form-submit-button-delete:hover {
-    color: #ff5555;
   }
 
   @media (min-width: 576px) {
