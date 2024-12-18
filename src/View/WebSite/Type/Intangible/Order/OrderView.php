@@ -4,10 +4,9 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
+use Plinct\Cms\View\WebSite\Type\Action\ActionView;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\ToolBox;
-
-use Plinct\Cms\View\WebSite\Type\Intangible\HistoryView;
 
 class OrderView extends OrderAbstract
 {
@@ -60,7 +59,7 @@ class OrderView extends OrderAbstract
       // INVOICES
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->edit($value), _("Invoices")));
       // HISTORY
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new HistoryView())->view($value['history']), _("Historic")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new ActionView())->view($value['potentialAction']), _("Historic")));
     }
   }
 

@@ -61,7 +61,7 @@ return function (Route $route)
      * GET LOGIN
      */
     $route->get('/login', function (Request $request, Response $response) {
-      if (CmsFactory::request()->user()->userLogged()->getIduser()) {
+      if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
         return $response->withHeader("Location", "/admin")->withStatus(302);
       } else {
 	      CmsFactory::view()->clearMain();

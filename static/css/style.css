@@ -1158,8 +1158,9 @@ form .form-submit-button-delete svg {
   }
 }
 
-.form-orderedItem-delete-button button svg {
-  font-size: 1.3em;
+.form-orderItem button svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* PERSON

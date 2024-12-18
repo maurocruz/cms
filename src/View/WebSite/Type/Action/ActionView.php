@@ -1,13 +1,10 @@
 <?php
-
-declare(strict_types=1);
-
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible;
+namespace Plinct\Cms\View\WebSite\Type\Action;
 
 use Plinct\Tool\DateTime;
 use Plinct\Web\Element\Table;
 
-class HistoryView
+class ActionView
 {
 	/**
 	 * @param $data
@@ -25,10 +22,10 @@ class HistoryView
     // BODY
     if($data) {
       foreach ($data as $value) {
-        $table->bodyCell(DateTime::formatDateTime($value['datetime']))
-          ->bodyCell($value['action'])
-          ->bodyCell($value['summary'] ? stripslashes($value['summary']) : '')
-          ->bodyCell($value['user']['name'] ?? _("Undefined"))
+        $table->bodyCell(DateTime::formatDateTime($value['startTime']))
+          ->bodyCell($value['actionStatus'])
+          ->bodyCell($value['result'] ? stripslashes($value['result']) : '')
+          ->bodyCell($value['agent']['name'] ?? _("Undefined"))
           ->closeRow();
       }
     } else {

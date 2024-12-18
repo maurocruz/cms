@@ -58,6 +58,7 @@ abstract class OrderItemAbstract
     $idorder = $this->referencesOrder;
     $discount = (float) $data['discount'];
     $orderedItems = $data['orderedItem'] ?? null;
+		$acceptedOffer = $data['acceptedOffer'] ?? null;
     $numberOfItems = $orderedItems ? count($orderedItems) : null;
     $quantityTotal = 0;
     $totalBill = 0;
@@ -86,9 +87,9 @@ abstract class OrderItemAbstract
         $name = $orderedItem['name'];
         $isOrderedItem = $typeBuilderOrdereItem->getId();
         $orderQuantity = (float)$value['orderQuantity'];
-        $price = isset($value['offer']['price']) ? (float)$value['offer']['price'] : null;
+        $price = isset($acceptedOffer[$key]['price']) ? (float) $acceptedOffer[$key]['price'] : null;
         $totalPrice = $price * $orderQuantity;
-        $priceCurrency = $value['offer']['priceCurrency'] ?? null;
+        $priceCurrency = $acceptedOffer[$key]['priceCurrency'] ?? null;
 
         // BODY CELLS
         $table->bodyCell($key+1)
@@ -97,7 +98,7 @@ abstract class OrderItemAbstract
           ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
           ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
-          ->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($idordemItem,"orderItem",$idorder,"order",['class'=>'form-orderedItem-delete-button']))
+          ->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($idordemItem,"orderItem",$idorder,"order",['class'=>'form-orderItem']))
           ->closeRow();
 
         $quantityTotal += $orderQuantity;

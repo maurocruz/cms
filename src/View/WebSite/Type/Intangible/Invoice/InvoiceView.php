@@ -13,7 +13,7 @@ class InvoiceView extends InvoiceAbstract
   {
 		$typeBuilderOrder = ToolBox::typeBuilder($data);
     $this->idorder = $typeBuilderOrder->getId();
-    $lenght = $data['partOfInvoice'] ? count($data['partOfInvoice']): 0;
+    $lenght = isset($data['partOfInvoice']) ? count($data['partOfInvoice']): 0;
     // NEW
     $content[] = parent::formInvoice("new", null, $lenght+1 );
     // INVOICES

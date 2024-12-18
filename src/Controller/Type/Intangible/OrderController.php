@@ -45,7 +45,7 @@ class OrderController implements TypeControllerInterface
 		$idorder = $params['idorder'] ?? null;
 		$seller = $params['seller'] ?? null;
 		$queryArray['hasPart'] = true;
-		$queryArray['properties'] = "invoice,orderItem,customer,seller,hasOfferCatalog";
+		$queryArray['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action";
 		$queryArray['availability'] = "InStock";
 		$queryArray['isValidThrough'] = true;
 		if ($idorder) {
