@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
@@ -17,9 +16,9 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	 */
 	private string $tableHasPart;
 	/**
-	 * @var int
+	 * @var ?string
 	 */
-	private int $idHasPart;
+	private ?string $idHasPart = null;
 	/**
 	 * @var string
 	 */
@@ -96,12 +95,13 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 
 	/**
 	 * For print forms of the relationships tables
+	 * @param string|null $idHasPart
 	 * @param string $tableHasPart
-	 * @param int $idHasPart
+	 * @param string $idIsPartOf
 	 * @param string $tableIsPartOf
 	 * @return RelationshipInterface
 	 */
-	public function relationship(string $tableHasPart, int $idHasPart, string $tableIsPartOf): RelationshipInterface
+	public function relationship(?string $idHasPart, string $tableHasPart, string $idIsPartOf, string $tableIsPartOf ): RelationshipInterface
 	{
 		$this->tableHasPart = $tableHasPart;
 		$this->idHasPart = $idHasPart;
@@ -111,30 +111,15 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 
 	/**
 	 * Relationship one to one
+	 * @param string $legend
 	 * @param string $propertyName
-	 * @param array|null $value
-	 * @param string|null $orberBy
 	 * @return array
 	 */
-	public function oneToOne(string $propertyName, array $value = null, string $orberBy = null): array
+	public function oneToOne(string $legend, string $propertyName): array
 	{
-		$table = lcfirst($this->tableIsPartOf);
-		$this->attributes(["class" => "formPadrao form-relationship"]);
+		$this->attributes(["class" => "form-basic form-relationship"]);
 		$this->action("/admin/$this->tableHasPart/edit")->method("post");
-
-		if ($value) {
-			$value = array_key_exists(0,$value) ? $value[0] : $value;
-			$id = ArrayTool::searchByValue($value['identifier'], "id")['value'];
-
-			$this->input("id$this->tableHasPart", (string) $this->idHasPart, "hidden")
-				->fieldsetWithInput('name',$value['name'],_($value['@type']) . " <a href=\"/admin/$table/edit/$id\">"._("Edit")."</a>", "text", null, [ "disabled" ])
-				->input($propertyName, '', 'hidden')
-				->submitButtonDelete("/admin/$this->tableHasPart/edit");
-		} else {
-			$this->content("<div class='add-existent' data-type='$table' data-propertyName='$propertyName' data-tableHasPart='$this->tableHasPart' data-idHasPart='$this->idHasPart'  data-orderBy='$orberBy'></div>");
-			CmsFactory::view()->addBundle('relationship');
-		}
-
+		$this->relationshipOneToOne($this->tableHasPart, $legend, $propertyName);
 		return $this->ready();
 	}
 
