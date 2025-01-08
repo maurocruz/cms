@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Type\Article;
 
 use DateTime;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
-class Article
+class ArticleController implements TypeControllerInterface
 {
 	/**
 	 * @param array $params
@@ -33,5 +33,15 @@ class Article
 			$params['datePublished'] = '';
 		}
 		return $params;
+	}
+
+	public function index(array $params): bool
+	{
+		return false;
+	}
+
+	public function new(array $params): bool
+	{
+		return false;
 	}
 }

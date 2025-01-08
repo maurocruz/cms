@@ -1,13 +1,13 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Type\Person;
 
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\TypeControllerInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\Sitemap;
 
-class Person
+class PersonController implements TypeControllerInterface
 {
 	/**
 	 * @param array $params
@@ -78,4 +78,14 @@ class Person
     }
     (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-person.xml"))->saveSitemap($dataSitemap);
   }
+
+	public function index(array $params): bool
+	{
+		return false;
+	}
+
+	public function new(array $params): bool
+	{
+		return false;
+	}
 }

@@ -45,7 +45,7 @@ class OrderController implements TypeControllerInterface
 		$idorder = $params['idorder'] ?? null;
 		$seller = $params['seller'] ?? null;
 		$queryArray['hasPart'] = true;
-		$queryArray['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action";
+		$queryArray['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action,hasOfferCatalog,itemOffered";
 		$queryArray['availability'] = "InStock";
 		$queryArray['isValidThrough'] = true;
 		if ($idorder) {
@@ -56,5 +56,18 @@ class OrderController implements TypeControllerInterface
 		}
 		$data = CmsFactory::model()->api()->get('order',$queryArray)->ready();
 		return CmsFactory::view()->webSite()->type('order')->setData($data)->setMethodName('edit')->ready();
+	}
+
+	public function invoice(array $params): bool
+	{
+		$seller = $params['seller'] ?? null;
+		if ($seller) {
+			$dataSeller = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
+			if (isset($dataSeller[0])) {
+				$valueSeller = $dataSeller[0];
+			}
+		}
+		//$dataOrder = CmsFactory::model()->api()->get('order',$params)->ready();
+		return CmsFactory::view()->webSite()->type('order')->setData(['seller'=>$valueSeller])->setMethodName('payment')->ready();
 	}
 }

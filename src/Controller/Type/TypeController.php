@@ -1,5 +1,6 @@
 <?php
 namespace Plinct\Cms\Controller\Type;
+
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,7 +52,7 @@ class TypeController
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
 				// if moduyle has controller class
-				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type);
+				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller';
 				$classNameIntangible = __NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller';
 				if (class_exists($className)) {
 					$object = new $className();

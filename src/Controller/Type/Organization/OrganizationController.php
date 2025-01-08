@@ -4,7 +4,7 @@ namespace Plinct\Cms\Controller\Type\Organization;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
-class Organization implements TypeControllerInterface
+class OrganizationController implements TypeControllerInterface
 {
 	/**
 	 * @param array $params
