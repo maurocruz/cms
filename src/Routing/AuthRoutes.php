@@ -17,7 +17,6 @@ return function (Route $route)
    */
   $route->get('/logout',  function (Request $request, Response $response)
   {
-    session_start();
     unset($_SESSION['userLogin']);
     setcookie("API_TOKEN", "", time() - 3600);
     return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);

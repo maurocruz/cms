@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
@@ -14,8 +13,8 @@ class ServiceView extends ServiceAbstract
   private function navbarService()
   {
     CmsFactory::webSite()->navbar(_("Services"), [
-      "/admin/$this->tableHasPart?id=$this->idHasPart&action=service" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus()
+      "/admin/$this->tableHasPart?id=$this->idHasPart&action=service" => CmsFactory::response()->fragment()->icon()->home(16,16),
+      "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus(16,16)
     ], 4);
   }
   /**

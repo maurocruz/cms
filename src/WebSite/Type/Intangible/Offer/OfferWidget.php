@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\Offer;
 
 use Plinct\Cms\CmsFactory;
@@ -15,13 +12,18 @@ abstract class OfferWidget extends OfferAbstract
   protected function formOffer($value = null): array
   {
     $case = $value ? "edit" : "new";
+		$offeredBy = $this->offeredBy;
+		$offeredByType = $offeredBy['@type'] ?? null;
+		$offeredById = $offeredBy['id'.lcfirst($offeredByType)] ?? null;
 
     $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-offer']);
     $form->action("/admin/offer/$case")->method('post');
     // HIDDENS
     if ($this->tableHasPart && $this->idHasPart) {
-      $form->input("itemOffered", (string)$this->idHasPart, "hidden");
+      $form->input("itemOffered", $this->idHasPart, "hidden");
       $form->input("itemOfferedType", $this->tableHasPart, "hidden");
+      $form->input("offeredBy", $offeredById, "hidden");
+      $form->input("offeredByType", $offeredByType, "hidden");
     } else {
       $form->fieldset($form->chooseType("itemOffered", ["service", "product"], $value['itemOffered'], "name", ["style" => "display: flex;"]), _("Item offered"), ["style" => "width: 100%;"]);
     }

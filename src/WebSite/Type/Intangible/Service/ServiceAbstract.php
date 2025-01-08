@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
@@ -44,9 +41,9 @@ abstract class ServiceAbstract
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
     // ADDITIONAL TYPE
-    $form->selectAdditionalType('service', $value['additionalType'] ?? null);
+    //$form->selectAdditionalType('service', $value['additionalType'] ?? null);
     // CATEGORY
-    $form->selectCategory('service', $value['category'] ?? null);
+    //$form->selectCategory('service', $value['category'] ?? null);
     // DESCRIPTION
     $form->fieldsetWithTextarea('description', $value['description'] ?? null, _("Description"));
     // DISAMBIGUATING DESCRIPTION
