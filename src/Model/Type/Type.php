@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Model\Type;
 
 use Plinct\Cms\CmsFactory;
@@ -20,6 +19,10 @@ class Type
 		$this->type = $type;
 	}
 
+	public function get(?array $params): array
+	{
+		return CmsFactory::model()->api()->get($this->type, $params)->ready();
+	}
 	/**
 	 * @param array $params
 	 * @return mixed|string|string[]
