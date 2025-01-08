@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\ReactShell;
 
 use Plinct\Cms\Controller\App;
@@ -25,6 +24,17 @@ class ReactShell
 	}
 
 	/**
+	 * @param string $name
+	 * @param string $value
+	 * @return $this
+	 */
+	public function setDataset(string $name, string $value): ReactShell
+	{
+		$this->setAttribute("data-$name", $value);
+		return $this;
+	}
+
+	/**
 	 * @param bool $openSection
 	 * @return ReactShell
 	 */
@@ -33,6 +43,26 @@ class ReactShell
 		if ($openSection) {
 			$this->setAttribute('openSection','true');
 		}
+		return $this;
+	}
+
+	/**
+	 * @param string $value
+	 * @return $this
+	 */
+	public function setOrderBy(string $value): ReactShell
+	{
+		$this->setAttribute("data-orderby", $value);
+		return $this;
+	}
+
+	/**
+	 * @param string $value
+	 * @return $this
+	 */
+	public function setOrdering(string $value): ReactShell
+	{
+		$this->setAttribute("data-ordering", $value);
 		return $this;
 	}
 
@@ -96,7 +126,7 @@ class ReactShell
 		$this->setAttribute('data-action','getItemType')
 			->setAttribute('data-legend',$legend)
 			->setAttribute('data-propertyName',$propertyName)
-			->setAttribute('data-value',(string) $value ?? '');
+			->setAttribute('data-haspart',(string) $value ?? '');
 		return $this;
 	}
 
