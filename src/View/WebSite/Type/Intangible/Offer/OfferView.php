@@ -1,96 +1,73 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Offer;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
+use Plinct\Tool\ToolBox;
 
-class OfferView extends OfferWidget
+class OfferView extends OfferAbstract implements TypeViewInterface
 {
-  /**
-   *
+
+	/**
+   * @param ?array $value
    */
-  private function navbarOffer()
+  public function index(?array $value)
   {
-    CmsFactory::webSite()->navbar(_("Offer"), [
-      "/admin/offer" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/offer/new" => CmsFactory::response()->fragment()->icon()->plus()
-    ]);
-  }
-
-  /**
-   * @param array $data
-   */
-  public function index(array $data)
-  {
-    $this->navbarOffer();
-
-    $table = CmsFactory::response()->fragment()->listTable();
-    $table->caption(sprintf(_("List of %s"), _("offers")));
-    $table->labels(_("Price"), _("Valid through"), _("Item offered"), _("Item offered type"));
-    $table->rows($data['itemListElement'], ['price','validThrough','itemOffered:name','itemOfferedType']);
-    CmsFactory::webSite()->addMain($table->ready());
-  }
-
-  /**
-   * @param array $data
-   * @return array
-   */
-  public function editWithPartOf(array $data): array
-  {
-    $this->setOfferedBy($data);
-
-    $this->tableHasPart = lcfirst($data['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-
-    // NEW OFFER
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer());
-
-    if ($data['offers'] === null) {
-      $content[] = CmsFactory::response()->fragment()->miscellaneous()->message(_("No offers found"));
-
-    } else {
-      foreach ($data['offers'] as $key => $value) {
-        $number = $key + 1;
-        $content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formOffer($value), _("Offer")." #$number");
-      }
-    }
-
-    return $content;
-  }
-
-  /**
-   * @param null $data
-   */
-  public function new($data = null)
-  {
-    $this->tableHasPart = lcfirst($data['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($data['identifier'], "id")['value'];
-		CmsFactory::webSite()->addMain(
-			CmsFactory::response()->fragment()->box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer())
+		$this->navbarOfferedBy($value);
+		//
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('offer')->setHasPart($this->iditemOffered)->ready()
 		);
   }
 
+
   /**
-   * @param $tableHasPart
-   * @param $idHasPart
-   * @param $data
-   * @return array
+   * @param null $value
    */
-  public function getForm($tableHasPart, $idHasPart, $data): array
+  public function new($value = null)
   {
-    $content = null;
-    $this->tableHasPart = $tableHasPart;
-    $this->idHasPart = $idHasPart;
-    if ($data) {
-      foreach ($data as $value) {
-        $content[] = self::formOffer($value);
-      }
-    } else {
-      $content[] = ["New: ", self::formOffer()];
-    }
-    return $content;
+	  $this->navbarOfferedBy($value);
+		//
+	  CmsFactory::view()->addMain(
+	    CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer(),_('New offer'))
+	  );
   }
+
+	public function edit(?array $data)
+	{
+		$value = $data[0];
+		$offeredBy = $value['offeredBy'];
+		$itemOffered = $value['itemOffered'];
+		$tbItemOffered = ToolBox::typeBuilder($itemOffered);
+		$itemOfferedName = $itemOffered['name'];
+		$itemOfferedType = lcfirst($tbItemOffered->getType());
+		$itemOfferedId = $tbItemOffered->getId();
+		$this->navbarOfferedBy($offeredBy);
+
+
+		CmsFactory::view()->addMain([
+			CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer('edit',$value),_('Edit offer')),
+			CmsFactory::view()->fragment()->box()->simpleBox("<p><a href='/admin/$itemOfferedType/edit/$itemOfferedId'>$itemOfferedName</a></p>",_('Item offered'))
+			]
+		);
+	}
+
+	/**
+	 * @param array $data
+	 * @return array
+	 */
+	public function editWithPartOf(array $data): array
+	{
+		// NEW OFFER
+		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(sprintf(_("Add new %s"), _("offer")), parent::formOffer());
+		if ($data['offers'] === null) {
+			$content[] = CmsFactory::view()->fragment()->miscellaneous()->message(_("No offers found"));
+		} else {
+			foreach ($data['offers'] as $key => $value) {
+				$number = $key + 1;
+				$content[] = CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer('edit', $value), _("Offer")." #$number");
+			}
+		}
+		return $content;
+	}
 }

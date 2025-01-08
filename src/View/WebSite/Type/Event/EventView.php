@@ -1,28 +1,12 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Event;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Event extends EventAbstract implements TypeViewInterface
+class EventView extends EventAbstract implements TypeViewInterface
 {
-  /**
-   *
-   */
-  protected function navbarEvent(): void
-  {
-		CmsFactory::view()->addHeader(
-	    CmsFactory::view()->fragment()->navbar()
-		    ->type('event')
-		    ->title(_("Events"))
-		    ->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home(16,16))
-	      ->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
-				->search()
-		    ->ready()
-		);
-  }
 
 	/**
 	 * @param array|null $value
@@ -61,17 +45,20 @@ class Event extends EventAbstract implements TypeViewInterface
       $value = $data[0];
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
       $this->idevent = $typeBuilder->getId();
-			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
+			$idthing = $typeBuilder->getIdthing();
+			$superEvent = $value['superEvent'] ?? null;
       // EVENT FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
 			// SUPER EVENTS
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Super Event"), CmsFactory::view()->fragment()->form()->relationship("event", (int)$this->idevent, "event")->oneToOne('superEvent', $value['superEvent'], 'startDate desc') ));
+      CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Super Event"),CmsFactory::view()->fragment()->form()->relationship($superEvent, 'event', $idthing,'event')->oneToOne('Super Event','superEvent'))
+      );
 			// SUB EVENTS
       //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Sub Events"), CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", (int)$this->idevent, 'event', $value['subEvent'], "idevent desc")));
       // PLACE
       //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationship("event", (int)$this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setTableHasPart('event')->setIsPartOf($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
     }
   }
 }

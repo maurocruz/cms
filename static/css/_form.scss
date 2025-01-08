@@ -6,7 +6,7 @@ form {
     cursor: pointer;
     border: 0;
     background-color: transparent;
-    align-items: center;
+    align-self: flex-end;
 
     svg {
       overflow: hidden;
@@ -329,9 +329,10 @@ form {
   justify-content: space-between;
   background-color: #444444;
   padding: 5px;
+  margin-bottom: 5px;
 
   fieldset {
-    margin: 0 0 8px 0;
+    margin: 5px 0;
     padding: 0;
     border: 0;
     line-height: normal;
@@ -342,7 +343,7 @@ form {
     margin: 0 0 2px 5px;
   }
 
-  input[type="text"], textarea {
+  input, textarea, select {
     padding: 4px 6px;
     border-style: none;
     border-radius: 4px;
@@ -350,10 +351,18 @@ form {
     background-color: #ccc;
   }
 
+  input[type='number'], {
+    margin: 0 4px;
+  }
+
+  select {
+    width: fit-content;
+    margin: 0 4px
+  }
+
   textarea {
     background-color: #bbb;
   }
-
 
   .plinct-shell {
     width: 100%;
@@ -367,6 +376,9 @@ form {
         width: calc(100% - 15px);
         background-color: #ccc;
 
+      }
+      .plgit-input-withSelect {
+        width: calc(100% - 132px);
       }
       .plinct-getItemType-listItem {
         position: absolute;
@@ -603,27 +615,33 @@ form {
 /* OFFER
 ====================================================== */
 .form-offer {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset {
-    width: 50%;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  fieldset:nth-of-type(5) { flex-basis: 100px; input { width: 100px;} }
+  fieldset:nth-of-type(6) { flex-basis: 60px; }
+  fieldset:nth-of-type(7) { flex-basis: calc(100% - 180px); }
+  fieldset:nth-of-type(8) { flex-basis: 50%; }
+  fieldset:nth-of-type(9) { flex-basis: 50%; }
+
+  @media (min-width: 480px) {
+    fieldset:nth-of-type(8) { flex-basis: calc((100% - 192px)/2); }
+    fieldset:nth-of-type(9) { flex-basis: calc((100% - 192px)/2); }
+    fieldset:nth-of-type(10) { flex-basis: 190px; }
   }
-  @media (min-width: 576px) {
-    fieldset {
-      width: 25%;
-    }
+  @media (min-width: 640px) {
+    fieldset:nth-of-type(8) { flex-basis: 170px; }
+    fieldset:nth-of-type(9) { flex-basis: 170px; }
   }
-  @media (min-width: 768px) {
-    fieldset {
-      width: 14%;
-    }
-    fieldset:nth-of-type(2) { width: 50px; }
-    fieldset:nth-of-type(3) { width: calc(24% - 50px); }
+  @media (min-width: 700px) {
+    fieldset:nth-of-type(7) { flex-basis: 170px; }
+    fieldset:nth-of-type(8) { flex-basis: 100px; }
+    fieldset:nth-of-type(9) { flex-basis: 170px; margin-right: auto; }
   }
-  @media (min-width: 1024px) {
-    fieldset { width: 16%; }
-    fieldset:nth-of-type(2) { width: 80px; }
-    fieldset:nth-of-type(3) { width: calc(26% - 80px); }
+  @media (min-width: 830px) {
+    fieldset:nth-of-type(7) { flex-basis: 170px; }
+    fieldset:nth-of-type(8) { flex-basis: 100px; }
+    fieldset:nth-of-type(9) { flex-basis: 170px; margin-right: 0; }
   }
 }
 

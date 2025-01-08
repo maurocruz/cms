@@ -1,99 +1,85 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Service;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
-use Plinct\Tool\ArrayTool;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Organization\Organization;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
+use Plinct\Tool\ToolBox;
 
-class ServiceView extends ServiceAbstract
+class ServiceView extends ServiceAbstract implements TypeViewInterface
 {
-  /**
-   *
-   */
-  private function navbarService()
-  {
-    CmsFactory::webSite()->navbar(_("Services"), [
-      "/admin/$this->tableHasPart?id=$this->idHasPart&action=service" => CmsFactory::response()->fragment()->icon()->home(),
-      "/admin/$this->tableHasPart/service?id=$this->idHasPart&action=new" => CmsFactory::response()->fragment()->icon()->plus()
-    ], 4);
-  }
-  /**
-   * @param array $data
-   */
-  public function indexWithPartOf(array $data)
-  {
-	  $this->tableHasPart = lcfirst($data['@type']);
-	  $this->idHasPart = ArrayTool::searchByValue($data['identifier'], 'id', 'value');
-	  // NAVBAR
-	  $this->navbarService();
-		//
-    if (isset($data['services']['error']) || (isset($data['services']['status']) && $data['services']['status'] == 'error')) {
-      $message = $data['services']['error']['message'] ?? $data['services']['message'] ?? "error";
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->error()->installSqlTable('service', $message));
-    } else {
-      // VARS
-      // LIST
-      $listIndex = CmsFactory::response()->fragment()->listTable(['class' => 'table']);
-      $listIndex->caption(sprintf(_("List of %s"), _("services")));
-      $listIndex->labels(_('Name'), _("Category"), _("Date modified"));
-      $listIndex->setEditButton($_SERVER['REQUEST_URI'] . "&item=");
-      $listIndex->rows($data['services']['itemListElement'], ['name', 'category', 'dateModified']);
-      // VIEW
-      CmsFactory::webSite()->addMain($listIndex->ready());
-    }
-  }
-  /**
-   * @param null $value
-   */
-  public function newWithPartOf($value = null)
-  {
-    $this->tableHasPart = lcfirst($value['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
-    // NAVBAR
-    $this->navbarService();
-    // FORM
-    CmsFactory::webSite()->addMain(parent::newWithPartOfForm());
-  }
-  /**
-   * @param array $data
-   */
-  public function editWithPartOf(array $data)
-  {
-    $this->tableHasPart = lcfirst($data['provider']['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($data['provider']['identifier'],'id','value');
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function index(?array $value)
+	{
+		$tb = ToolBox::typeBuilder($value);
+		$this->provider = $tb->getPropertyValue('idthing');
+		if ($tb->getType() == 'Organization') {
+			Organization::navbarIndex();
+			Organization::navbarEdit($tb->getValue('name'), $tb->getId(), $this->provider);
+		}
+		parent::navbarIndex();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('service')->setHasPart($this->provider)->ready()
+		);
+	}
 
-    // NAVBAR
-    $this->navbarService();
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
+	public function edit(?array $data)
+	{
+		if (empty($data)) {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message());
+		} else {
+			$provider = $data['provider'];
+			$offers = $data['offers'];
+			$TBProvider = ToolBox::typeBuilder($provider);
+			$this->provider = $TBProvider->getPropertyValue('idthing');
+			if($TBProvider->getType() == 'Organization') {
+				Organization::navbarIndex();
+				Organization::navbarEdit($TBProvider->getValue('name'), $TBProvider->getId(), $this->provider);
+			}
+			parent::navbarIndex();
+			parent::navbarEdit($data['name']);
+			// EDIT SERVICE
+			CmsFactory::view()->addMain(self::serviceForm("edit", $data));
+			// OFFERS
+			$offerList = '<table><thead><tr><th>#</th><th>idoffer</th><th>'._('Name').'</th><th>'._('Availability').'</th><th>'._('Valid through').'</th><th>'._('Date created').'</th></tr></thead><tbody>';
+			foreach ($offers as $key => $offer) {
+				$tbOffer = ToolBox::typeBuilder($offer);
+				$name = $offer['name'];
+				$idoffer = $tbOffer->getId();
+				$dateCreated = $tbOffer->getPropertyValue('dateCreated');
+				$availability = $offer['availability'];
+				$validThrough = $offer['validThrough'];
+				$offerList .= "<tr><td>".($key+1)."</td><td>$idoffer</td><td><a href='/admin/offer/edit/$idoffer'>$name</a></td><td>$availability</td><td>$validThrough</td><td>$dateCreated</td></tr>";
+			}
+			$offerList .= '</tbody></table>';
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->simpleBox($offerList,_('Offers'))
+			);
+			//CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($data)));
+		}
 
-    if (empty($data)) {
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->miscellaneous()->message());
-    } else {
-      // EDIT SERVICE
-      CmsFactory::webSite()->addMain(self::serviceForm("edit", $data));
-      // OFFER
-      CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($data) ));
-    }
-  }
-  /**
-   * @param $value
-   */
-  public function listServices($value)
-  {
-    $this->tableHasPart = lcfirst($value['@type']);
-    $this->idHasPart = ArrayTool::searchByValue($value['identifier'],'id','value');
-    // NAVBAR
-    $this->navbarService();
-    // LIST TABLE IN MAIN
-    $listTable = CmsFactory::response()->fragment()->listTable();
-    $listTable->setEditButton("/admin/$this->tableHasPart/service?id=$this->idHasPart&item=");
-    // caption
-    $listTable->caption(sprintf(_("%s services list"),$value['name']));
-    // labels
-    $listTable->labels('id',_('Name'),_("Date modified"));
-    // rows
-    $listTable->rows($value['services']['itemListElement'],['idservice','name','dateModified']);
-    // VIEW
-    CmsFactory::webSite()->addMain($listTable->ready());
-  }
+	}
+
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function new(?array $value)
+	{
+		if (!empty($value)) {
+			$tbProvider = ToolBox::typeBuilder($value);
+			$this->provider = $tbProvider->getPropertyValue('idthing');
+		}
+		// NAVBAR
+		$this->navbarIndex();
+		// FORM
+		CmsFactory::view()->addMain(parent::serviceForm());
+	}
 }

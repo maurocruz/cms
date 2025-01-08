@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\Intangible\OrderItem;
 
+use NumberFormatter;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
@@ -78,6 +79,7 @@ abstract class OrderItemAbstract
 
     // BODY
     if ($orderedItems) {
+			$numberFormatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
       foreach ($orderedItems as $key => $value) {
 				$orderItem = ToolBox::typeBuilder($value);
 				$idordemItem = $orderItem->getId();
@@ -90,14 +92,16 @@ abstract class OrderItemAbstract
         $price = isset($acceptedOffer[$key]['price']) ? (float) $acceptedOffer[$key]['price'] : null;
         $totalPrice = $price * $orderQuantity;
         $priceCurrency = $acceptedOffer[$key]['priceCurrency'] ?? null;
+				$priceFormated = $numberFormatter->formatCurrency($price,$priceCurrency);
+				$totalBillFormatter = $numberFormatter->formatCurrency($totalPrice,$priceCurrency);
 
         // BODY CELLS
         $table->bodyCell($key+1)
           ->bodyCell($type, ["style" =>"text-align: center;"])
           ->bodyCell(sprintf('<a href="/admin/%s/%s">%s</a>',lcfirst($type),$isOrderedItem,$name))
           ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
-          ->bodyCell($priceCurrency." ".($price ? number_format($price,2,',','.') : "ND"), ["style" =>"text-align: right;"])
-          ->bodyCell($priceCurrency." ".number_format($totalPrice,2,',','.'), ["style" =>"text-align: right;"])
+          ->bodyCell($priceFormated, ["style" =>"text-align: right;"])
+          ->bodyCell($totalBillFormatter, ["style" =>"text-align: right;"])
           ->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($idordemItem,"orderItem",$idorder,"order",['class'=>'form-orderItem']))
           ->closeRow();
 
@@ -128,6 +132,7 @@ abstract class OrderItemAbstract
    */
   protected function listSellerOfferedItems($sellerHasOfferCatalog): array
   {
+	  $numberFormatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic']);
     $form->action("/admin/orderItem/new")->method("post");
     // number of items
@@ -152,7 +157,7 @@ abstract class OrderItemAbstract
 				$itemOrderedThing = $typeBuilderItemOffered->getPropertyValue('idthing');
 				$name = $itemOffered['name'];
 				$type = $itemOffered['@type'];
-				$price = $item['priceCurrency'] . " " . number_format((float)$item['price'], 2, ',', '.');
+				$price = $numberFormatter->formatCurrency($item['price'],$item['priceCurrency']);
 				$eligibleDuration = $item['eligibleDuration'];
 				$hrefItem = sprintf("/admin/offer/%s", $idoffer);
 

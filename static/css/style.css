@@ -343,7 +343,7 @@ form button {
   cursor: pointer;
   border: 0;
   background-color: transparent;
-  align-items: center;
+  align-self: flex-end;
 }
 form button svg {
   overflow: hidden;
@@ -701,9 +701,10 @@ form .form-submit-button-delete svg {
   justify-content: space-between;
   background-color: #444444;
   padding: 5px;
+  margin-bottom: 5px;
 }
 .form-basic fieldset {
-  margin: 0 0 8px 0;
+  margin: 5px 0;
   padding: 0;
   border: 0;
   line-height: normal;
@@ -712,12 +713,19 @@ form .form-submit-button-delete svg {
 .form-basic legend {
   margin: 0 0 2px 5px;
 }
-.form-basic input[type=text], .form-basic textarea {
+.form-basic input, .form-basic textarea, .form-basic select {
   padding: 4px 6px;
   border-style: none;
   border-radius: 4px;
   width: calc(100% - 15px);
   background-color: #ccc;
+}
+.form-basic input[type=number] {
+  margin: 0 4px;
+}
+.form-basic select {
+  width: fit-content;
+  margin: 0 4px;
 }
 .form-basic textarea {
   background-color: #bbb;
@@ -735,6 +743,9 @@ form .form-submit-button-delete svg {
   border-radius: 4px;
   width: calc(100% - 15px);
   background-color: #ccc;
+}
+.form-basic .plinct-shell .plinct-getItemType .plgit-input-withSelect {
+  width: calc(100% - 132px);
 }
 .form-basic .plinct-shell .plinct-getItemType .plinct-getItemType-listItem {
   position: absolute;
@@ -1089,37 +1100,68 @@ form .form-submit-button-delete svg {
 /* OFFER
 ====================================================== */
 .form-offer {
-  display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
-.form-offer fieldset {
-  width: 50%;
+.form-offer fieldset:nth-of-type(5) {
+  flex-basis: 100px;
 }
-@media (min-width: 576px) {
-  .form-offer fieldset {
-    width: 25%;
+.form-offer fieldset:nth-of-type(5) input {
+  width: 100px;
+}
+.form-offer fieldset:nth-of-type(6) {
+  flex-basis: 60px;
+}
+.form-offer fieldset:nth-of-type(7) {
+  flex-basis: calc(100% - 180px);
+}
+.form-offer fieldset:nth-of-type(8) {
+  flex-basis: 50%;
+}
+.form-offer fieldset:nth-of-type(9) {
+  flex-basis: 50%;
+}
+@media (min-width: 480px) {
+  .form-offer fieldset:nth-of-type(8) {
+    flex-basis: calc((100% - 192px) / 2);
+  }
+  .form-offer fieldset:nth-of-type(9) {
+    flex-basis: calc((100% - 192px) / 2);
+  }
+  .form-offer fieldset:nth-of-type(10) {
+    flex-basis: 190px;
   }
 }
-@media (min-width: 768px) {
-  .form-offer fieldset {
-    width: 14%;
+@media (min-width: 640px) {
+  .form-offer fieldset:nth-of-type(8) {
+    flex-basis: 170px;
   }
-  .form-offer fieldset:nth-of-type(2) {
-    width: 50px;
-  }
-  .form-offer fieldset:nth-of-type(3) {
-    width: calc(24% - 50px);
+  .form-offer fieldset:nth-of-type(9) {
+    flex-basis: 170px;
   }
 }
-@media (min-width: 1024px) {
-  .form-offer fieldset {
-    width: 16%;
+@media (min-width: 700px) {
+  .form-offer fieldset:nth-of-type(7) {
+    flex-basis: 170px;
   }
-  .form-offer fieldset:nth-of-type(2) {
-    width: 80px;
+  .form-offer fieldset:nth-of-type(8) {
+    flex-basis: 100px;
   }
-  .form-offer fieldset:nth-of-type(3) {
-    width: calc(26% - 80px);
+  .form-offer fieldset:nth-of-type(9) {
+    flex-basis: 170px;
+    margin-right: auto;
+  }
+}
+@media (min-width: 830px) {
+  .form-offer fieldset:nth-of-type(7) {
+    flex-basis: 170px;
+  }
+  .form-offer fieldset:nth-of-type(8) {
+    flex-basis: 100px;
+  }
+  .form-offer fieldset:nth-of-type(9) {
+    flex-basis: 170px;
+    margin-right: 0;
   }
 }
 
@@ -1530,6 +1572,12 @@ table .table-delete-button {
 
 .table-list .icon-delete {
   font-size: 1.3em;
+}
+
+.tableIndex td {
+  line-height: 1.2em;
+  vertical-align: middle;
+  padding: 4px !important;
 }
 
 .plcm-section {

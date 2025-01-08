@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type;
 
 use Plinct\Cms\CmsFactory;
@@ -24,11 +23,14 @@ class Type
 	 */
 	public function __construct(string $typeName) {
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
+		$classNameView = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
 		$classNameIntagible = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName);
 		$classNameIntagibleIntoFolder = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		if (class_exists($className)) {
 			$this->object = new $className();
+		} elseif(class_exists($classNameView)) {
+			$this->object = new $classNameView();
 		} elseif (class_exists($classNameCreativeWork)) {
 			$this->object = new $classNameCreativeWork();
 		} elseif (class_exists($classNameIntagible)) {

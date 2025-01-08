@@ -1,11 +1,9 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Organization;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -67,7 +65,7 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 		}
   }
 
-	public function service(array $data)
+	/*public function service(array $data)
 	{
 		$value = $data[0];
 		$typeBuilder = ToolBox::typeBuilder($value);
@@ -77,13 +75,13 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('service')->setAttribute('data-params','{"provider":"'.$this->idorganization.'"}')->ready()
 		);
-	}
+	}*/
 
 	/**
 	 * @param array $data
 	 * @return void
 	 */
-	public function product(array $data)
+	/*public function product(array $data)
 	{
 		$value = $data[0];
 		$typeBuilder = new TypeBuilder('organization', $value);
@@ -94,5 +92,5 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('product')->setAttribute('data-params','{"manufacturer":"'.$idorganization.'"}')->ready()
 		);
-	}
+	}*/
 }

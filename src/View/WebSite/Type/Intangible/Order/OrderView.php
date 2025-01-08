@@ -5,7 +5,6 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\Invoice\InvoiceView;
 use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
 use Plinct\Cms\View\WebSite\Type\Action\ActionView;
-use Plinct\Tool\DateTime;
 use Plinct\Tool\ToolBox;
 
 class OrderView extends OrderAbstract
@@ -70,15 +69,10 @@ class OrderView extends OrderAbstract
    */
   public function payment($value)
   {
+		var_dump($value);
     // NAVBAR
-    parent::navbarOrder($value);
-
-    CmsFactory::view()->fragment()->navbar(_("Payments"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::view()->fragment()->icon()->home(),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
-      "javascript: print();" => _("Print out")
-    ],5);
+    parent::navbarInvoice($value['seller']);
+/*
 
     // VARS
     $key = 0;
@@ -139,7 +133,7 @@ class OrderView extends OrderAbstract
 
     $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
 
-    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
+    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);*/
   }
 
   /**

@@ -1,32 +1,15 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Product;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
-class Product implements TypeViewInterface
+class Product extends ProductAbstract implements TypeViewInterface
 {
-	private function navbar(?string $title = null): void
-	{
-		CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-				->title(_('Product'))
-				->type('product')
-				->newTab("/admin/product", CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/product/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
-				->search()
-				->ready()
-		);
-		if ($title) {
-			CmsFactory::view()->addHeader(
-				CmsFactory::view()->fragment()->navbar()->title($title)->level(3)->ready()
-			);
-		}
-	}
 
 	/**
 	 * @param array|null $value
@@ -34,15 +17,21 @@ class Product implements TypeViewInterface
 	 */
 	public function index(?array $value): void
 	{
-		$this->navbar();
+		$tb = ToolBox::typeBuilder($value);
+		$this->manufacturer = $tb->getPropertyValue('idthing');
+		if ($tb->getType() == 'Organization') {
+			Organization::navbarIndex();
+			Organization::navbarEdit($tb->getValue('name'), $tb->getId(), $this->manufacturer);
+		}
+		parent::navbarIndex();
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('product')->ready()
+			CmsFactory::view()->fragment()->reactShell('product')->setHasPart((int) $this->manufacturer)->ready()
 		);
 	}
 
 	public function new(?array $value): void
 	{
-		$this->navbar();
+		parent::navbarIndex();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox($this->form())
 		);
@@ -54,7 +43,7 @@ class Product implements TypeViewInterface
   public function edit($data): void
   {
     $value = $data[0];
-		$this->navbar($value['name']);
+	  parent::navbarIndex($value['name']);
 		$typeBuilder = ToolBox::typeBuilder($value);
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		CmsFactory::view()->addMain([

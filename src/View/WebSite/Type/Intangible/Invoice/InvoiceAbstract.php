@@ -5,6 +5,7 @@ use DateTime;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
+use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
 
@@ -33,7 +34,7 @@ abstract class InvoiceAbstract
   /**
    * @var int
    */
-  protected static int $provider;
+  protected int $idprovider;
   /**
    * @var string
    */
@@ -54,6 +55,25 @@ abstract class InvoiceAbstract
    * @var float|int
    */
   protected float $totalPastDueAmount = 0;
+
+	public function navbarIndex(array $provider)
+	{
+		$tbProvider = ToolBox::typeBuilder($provider);
+		$this->idprovider = (int) $tbProvider->getPropertyValue('idthing');
+		if ($tbProvider->getType() == 'Organization') {
+			Organization::navbarIndex();
+			Organization::navbarEdit($tbProvider->getValue('name'), $tbProvider->getId(), $tbProvider->getPropertyValue('idthing'));
+		}
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('invoice')
+				->title(_('Invoice'))
+				->level(5)
+				->newTab("/admin/invoice?provider=$this->idprovider", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/invoice?provider=$this->idprovider&overdueInvoice=true", _('Faturas abertas'))
+				->ready()
+		);
+	}
 
   /**
    * @param string $case

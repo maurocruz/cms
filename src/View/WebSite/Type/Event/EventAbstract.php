@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Event;
 
 use Plinct\Cms\CmsFactory;
@@ -11,6 +10,19 @@ abstract class EventAbstract
    * @var ?int
    */
   protected ?int $idevent = null;
+
+	protected function navbarEvent(): void
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('event')
+				->title(_("Events"))
+				->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->search()
+				->ready()
+		);
+	}
 
   /**
    * @param string $case
@@ -24,7 +36,7 @@ abstract class EventAbstract
     $startDate = $value['startDate'] ?? null;
     $endDate = $value['endDate'] ??  null;
 		$organizer = $value['organizer'] ?? null;
-		$location = $value['location'][0] ?? null;
+		$location = $value['location'] ?? null;
 		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
 
     // FROM
@@ -41,7 +53,7 @@ abstract class EventAbstract
     // END DATE
     $form->fieldsetWithInput('endDate', $endDate, _("End date"), "datetime-local");
 		// LOCATION
-	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getId());
+	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getIdthing());
 		// ORGANIZER
 	  $form->relationshipOneToOne('thing',_('Organizer'),'organizer',$organizer);
     // BUTTONS

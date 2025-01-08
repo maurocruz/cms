@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Organization;
 
 use Plinct\Cms\CmsFactory;
@@ -67,14 +66,16 @@ abstract class OrganizationAbstract
 				->title($name)
 				->level(3)
 				->newTab("/admin/organization/edit?idorganization=$idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/organization/service?idorganization=$idorganization", _("Services"))
-				->newTab("/admin/organization/product?idorganization=$idorganization", _("Products"))
+				->newTab("/admin/service?provider=$idthing", _("Services"))
+				->newTab("/admin/product?manufacturer=$idthing", _("Products"))
 				->newTab("/admin/order?seller=$idthing", _("Orders"))
+				->newTab("/admin/offer?offeredBy=$idthing", _("Offers"))
+				->newTab("/admin/invoice?provider=$idthing", _("Invoices"))
 				->ready()
 		);
   }
 
-	protected function navbarService()
+	/*protected function navbarService()
 	{
 		$this->navbarIndex();
 		$this->navbarEdit($this->name, $this->idorganization, $this->idthing);
@@ -83,17 +84,17 @@ abstract class OrganizationAbstract
 				->level(4)
 				->type('service')
 				->title(_("Services"))
-				->newTab("/admin/organization/service?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/service?iprovider=$this->idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
 				->newTab("/admin/product/new?provider=$this->idorganization", CmsFactory::view()->fragment()->icon()->plus(16,16))
 				->search()
 				->ready()
 		);
-	}
+	}*/
 
 	/**
 	 * @return void
 	 */
-	protected function navbarProduct()
+	/*protected function navbarProduct()
 	{
 		$this->navbarIndex();
 		$this->navbarEdit($this->name, $this->idorganization, $this->idthing);
@@ -107,7 +108,7 @@ abstract class OrganizationAbstract
 				->search()
 				->ready()
 		);
-	}
+	}*/
 
   /**
    * FORM EDIT AND NEW

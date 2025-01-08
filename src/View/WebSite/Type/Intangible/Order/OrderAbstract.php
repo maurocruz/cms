@@ -15,6 +15,8 @@ abstract class OrderAbstract implements TypeViewInterface
    * @var ?string
    */
   protected static ?string $idOrder = null;
+
+	protected int $idthingSeller;
   /**
    * @var int
    */
@@ -36,7 +38,7 @@ abstract class OrderAbstract implements TypeViewInterface
 	 * @param array $value
 	 * @return void
 	 */
-	public static function navbarIndex(array $value)
+	public function navbarIndex(array $value)
 	{
 		if ($value['@type'] == 'Order') {
 			$seller = $value['seller'];
@@ -48,11 +50,11 @@ abstract class OrderAbstract implements TypeViewInterface
 			$sellerType = $value['@type'];
 			$sellerName = $value['name'];
 		}
-		$idthingSeller = $sellerTypeBuilder->getPropertyValue('idthing');
+		$this->idthingSeller = $sellerTypeBuilder->getPropertyValue('idthing');
 		if ($sellerType == 'Organization') {
 			$idorganization = $sellerTypeBuilder->getPropertyValue('idorganization');
 			Organization::navbarIndex();
-			Organization::navbarEdit($sellerName, $idorganization, $idthingSeller);
+			Organization::navbarEdit($sellerName, $idorganization, $this->idthingSeller);
 		}
 		if ($sellerType == 'Person') {
 			$idperson = $sellerTypeBuilder->getPropertyValue('idperson');
@@ -63,10 +65,10 @@ abstract class OrderAbstract implements TypeViewInterface
 			->type('order')
 			->level(4)
 			->title(_('Orders'))
-			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
-			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
-			->newTab("/admim/order/payment?seller=$idthingSeller", ucfirst(_("payments")))
-			->newTab("/admim/order/expired?seller=$idthingSeller", ucfirst(_("Due dates")));
+			->newTab("/admin/order?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->newTab("/admin/order/new?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->newTab("/admin/order/invoice?seller=$this->idthingSeller", _('Invoice'))
+			->newTab("/admin/order/expired?seller=$this->idthingSeller", ucfirst(_("Due dates")));
 
 		CmsFactory::view()->addHeader($navbar->ready());
 	}
@@ -88,6 +90,24 @@ abstract class OrderAbstract implements TypeViewInterface
 		);
   }
 
+	protected function navbarInvoice($value)
+	{
+		self::navbarIndex($value);
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+			->type('invoice')
+			->level(5)
+			->title(_('Invoice'))
+			->newTab("/admin/order/invoice?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->ready()
+		);
+		/*CmsFactory::view()->fragment()->navbar(_("Payments"),[
+			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::view()->fragment()->icon()->home(),
+			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
+			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
+			"javascript: print();" => _("Print out")
+		],5);*/
+	}
   /**
    * FORM TO EDIT OR TO ADD A NEW ORDER
    *

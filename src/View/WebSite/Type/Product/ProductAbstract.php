@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Product;
 
 use Plinct\Cms\CmsFactory;
@@ -18,6 +17,24 @@ abstract class ProductAbstract
    * @var string
    */
   protected string $manufacturerType;
+
+	protected function navbarIndex(?string $title = null): void
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_('Product'))
+				->type('product')
+				->level(4)
+				->newTab("/admin/product?manufacturer=$this->manufacturer", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/product/new?manufacturer=$this->manufacturer", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->ready()
+		);
+		if ($title) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()->title($title)->level(3)->ready()
+			);
+		}
+	}
 
 	/**
 	 * @param string|null $title
