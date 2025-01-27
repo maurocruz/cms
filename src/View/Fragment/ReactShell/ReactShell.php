@@ -92,22 +92,22 @@ class ReactShell
 		return $this;
 	}
 	/**
-	 * @param int $idHasPart
+	 * @param ?int $idHasPart
 	 * @return $this
 	 */
-	public function setHasPart(int $idHasPart): ReactShell
+	public function setHasPart(?int $idHasPart): ReactShell
 	{
 		$this->setAttribute('data-haspart', $idHasPart);
 		return $this;
 	}
 
 	/**
-	 * @param int $idHasPart
+	 * @param string $idHasPart
 	 * @return $this
 	 */
-	public function setIsPartOf(int $idHasPart): ReactShell
+	public function setIsPartOf(string $idHasPart): ReactShell
 	{
-		$this->setAttribute('data-ispartof',(string) $idHasPart);
+		$this->setAttribute('data-ispartof', $idHasPart);
 		return $this;
 	}
 
