@@ -63,7 +63,7 @@ class Structure
   {
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(18,18))
-			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
+			->newTab("/admin/configuration", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
     if (App::getTypesEnabled()) {

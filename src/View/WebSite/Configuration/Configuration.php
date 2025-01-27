@@ -1,13 +1,17 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Configuration;
 
 use Plinct\Cms\CmsFactory;
 
-class Configuration
+class Configuration extends ConfigurationAbstract
 {
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
 	public function index(array $data = null)
 	{
+		parent::navbar();
 		CmsFactory::view()->addMain("<h1>"._("Configuration")."</h1>");
 	}
 
@@ -25,5 +29,9 @@ class Configuration
 		<input type='submit' value='"._("Do you want to install it?")."' style='padding: 3px 8px;' >	
 	</form>
 </div>");
+	}
+
+	public function sitemap()
+	{
 	}
 }
