@@ -36,33 +36,6 @@
 
 .posts-box { max-height: 110px; overflow: hidden; }
 
-/*.box-expanding {
-    max-height: 1rem;
-    overflow: hidden;
-}
-.box-expanding--text {
-    font-weight: normal;
-    font-size: 0.85rem;
-}
-
-.button-dropdown { color: inherit; text-decoration: none; cursor: pointer; }
-.button-dropdown::after { 
-    content: "";
-    margin-left: 5px;
-    display: inline-block; width: 1.5em; height: 1em; 
-    background-color: transparent; 
-    box-sizing: border-box;
-    border-left-width: 0.75em; border-left-color: transparent; border-left-style: solid;
-    border-right-width: 0.75em; border-right-color: transparent; border-right-style: solid;
-}
-.button-dropdown-contracted::after { 
-    vertical-align: text-bottom; 
-    border-top-width: 0.6em; border-top-color: #555; border-top-style: solid; 
-}
-.button-dropdown-expanded::after { 
-    vertical-align: text-top; 
-    border-bottom-width: 0.6em; border-bottom-color: #555; border-bottom-style: solid; 
-}*/
 /* PAGE _ clientes
 ============================================================================= */
 .table-clientes{ font-size: 0.85em; }

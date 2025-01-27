@@ -34,12 +34,11 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
   {
 		$typeBuilderOrder = ToolBox::typeBuilder($data);
     $this->referencesOrder = $typeBuilderOrder->getId();
-    $this->orderedItem = $data['orderedItem'];
+    $this->orderedItem = $data['orderedItem'] ?? null;
 	  $seller = $data['seller'];
 		$typeBuilderSeller = ToolBox::typeBuilder($seller);
     $this->sellerId = $typeBuilderSeller->getId();
     $this->sellerType = $seller['@type'];
-
 		return [
 			parent::listOrderedItems($data),
 	    CmsFactory::view()->fragment()->box()->expandingBox(_("Include new item"), parent::listSellerOfferedItems($seller['hasOfferCatalog']))

@@ -1,8 +1,9 @@
 <?php
-declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork\WebSite;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\WebSite\WebSiteController;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
 
 class WebSiteAbstract
 {
@@ -37,7 +38,7 @@ class WebSiteAbstract
         ->level(2)
         ->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home(16,16))
         ->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus(16,16))
-	      ->search()
+	      ->newTab('/admin/webSite/sitemap', _('Sitemap'))
         ->ready()
     );
 
@@ -105,4 +106,23 @@ class WebSiteAbstract
     // ready
     return $form->ready();
   }
+
+	/**
+	 * @param $type
+	 * @return array
+	 */
+	protected function formSitemap($type): array
+	{
+		$sitemap = WebSiteController::getSitemap($type);
+		$sitemaName = $sitemap->exist_sitemap();
+		$form = CmsFactory::view()->fragment()->form(['class' => 'form-basic form-sitemap']);
+		$form->action("/admin/webSite/sitemap")->method('post');
+		$form->input('type',$type,'hidden');
+		if ($sitemaName) {
+			$form->content("<p><a href='/$sitemaName' target='_blank'>".$sitemaName."</a></p>");
+		}
+		$form->fieldsetWithInput('loc', null, _('Location'));
+		$form->content(" <button>"._("Generate sitemap")."</button>");
+		return $form->ready();
+	}
 }

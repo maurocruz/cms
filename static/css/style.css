@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-  font-size: 14px;
+  font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
   background: #d0e2f5;
 }
@@ -341,8 +341,6 @@ a.white {
 form button {
   display: inline-grid;
   cursor: pointer;
-  border: 0;
-  background-color: transparent;
   align-self: flex-end;
 }
 form button svg {
@@ -356,11 +354,22 @@ form button svg {
   border: 0;
   color: #40d377;
 }
+form .form-submit-button-send {
+  border: 0;
+  background-color: transparent;
+}
 form .form-submit-button-delete {
   margin-right: auto;
+  border: 0;
+  background-color: transparent;
 }
 form .form-submit-button-delete svg {
   color: #e61919;
+}
+form .mandatory-field {
+  color: yellow;
+  line-height: 0;
+  vertical-align: middle;
 }
 
 /* COMPONENT _ form padrao
@@ -719,13 +728,13 @@ form .form-submit-button-delete svg {
   border-radius: 4px;
   width: calc(100% - 15px);
   background-color: #ccc;
+  margin-right: 4px;
 }
-.form-basic input[type=number] {
-  margin: 0 4px;
+.form-basic input[type=dateTime-local] {
+  width: fit-content;
 }
 .form-basic select {
   width: fit-content;
-  margin: 0 4px;
 }
 .form-basic textarea {
   background-color: #bbb;
@@ -1054,11 +1063,17 @@ form .form-submit-button-delete svg {
 
 /* INVOICE
 ====================================================== */
-.form-invoice fieldset:nth-of-type(1) {
-  width: calc(50% - 18px);
+.form-invoice fieldset.totalPaymentDue {
+  flex-basis: 80px;
 }
-.form-invoice fieldset:nth-of-type(4) {
-  width: calc(50% - 50px);
+.form-invoice fieldset.scheduledPaymentDate {
+  flex-basis: 135px;
+}
+.form-invoice fieldset.paymentDueDate {
+  flex-basis: fit-content;
+}
+.form-invoice fieldset.paymentStatus {
+  flex-basis: fit-content;
 }
 .form-invoice span {
   display: inline-block;
@@ -1103,103 +1118,74 @@ form .form-submit-button-delete svg {
   align-items: flex-start;
   justify-content: flex-start;
 }
-.form-offer fieldset:nth-of-type(5) {
-  flex-basis: 100px;
-}
-.form-offer fieldset:nth-of-type(5) input {
-  width: 100px;
-}
-.form-offer fieldset:nth-of-type(6) {
-  flex-basis: 60px;
-}
-.form-offer fieldset:nth-of-type(7) {
-  flex-basis: calc(100% - 180px);
-}
-.form-offer fieldset:nth-of-type(8) {
+.form-offer fieldset.priceCurrency {
   flex-basis: 50%;
 }
-.form-offer fieldset:nth-of-type(9) {
+.form-offer fieldset.price {
   flex-basis: 50%;
 }
-@media (min-width: 480px) {
-  .form-offer fieldset:nth-of-type(8) {
-    flex-basis: calc((100% - 192px) / 2);
+.form-offer fieldset.eligibleQuantity {
+  flex-basis: 50%;
+}
+.form-offer fieldset.eligibleDuration {
+  flex-basis: 50%;
+}
+.form-offer fieldset.availability {
+  flex-basis: 160px;
+}
+.form-offer fieldset.validThrough {
+  flex-basis: 160px;
+}
+@media (min-width: 576px) {
+  .form-offer fieldset.priceCurrency {
+    flex-basis: 60px;
   }
-  .form-offer fieldset:nth-of-type(9) {
-    flex-basis: calc((100% - 192px) / 2);
+  .form-offer fieldset.price {
+    flex-basis: calc(40% - 60px);
   }
-  .form-offer fieldset:nth-of-type(10) {
-    flex-basis: 190px;
+  .form-offer fieldset.eligibleQuantity {
+    flex-basis: 30%;
+  }
+  .form-offer fieldset.eligibleDuration {
+    flex-basis: 30%;
   }
 }
-@media (min-width: 640px) {
-  .form-offer fieldset:nth-of-type(8) {
-    flex-basis: 170px;
+@media (min-width: 768px) {
+  .form-offer fieldset.price {
+    flex-basis: 110px;
   }
-  .form-offer fieldset:nth-of-type(9) {
-    flex-basis: 170px;
-  }
-}
-@media (min-width: 700px) {
-  .form-offer fieldset:nth-of-type(7) {
-    flex-basis: 170px;
-  }
-  .form-offer fieldset:nth-of-type(8) {
+  .form-offer fieldset.eligibleQuantity {
     flex-basis: 100px;
   }
-  .form-offer fieldset:nth-of-type(9) {
-    flex-basis: 170px;
-    margin-right: auto;
+  .form-offer fieldset.eligibleDuration {
+    flex-basis: 90px;
   }
 }
-@media (min-width: 830px) {
-  .form-offer fieldset:nth-of-type(7) {
-    flex-basis: 170px;
-  }
-  .form-offer fieldset:nth-of-type(8) {
-    flex-basis: 100px;
-  }
-  .form-offer fieldset:nth-of-type(9) {
-    flex-basis: 170px;
-    margin-right: 0;
-  }
-}
-
 /* ORDER FORM
 ====================================================== */
 .form-order {
-  display: flex;
-  flex-wrap: wrap;
   justify-content: flex-start;
 }
-.form-order .choose-type-select {
-  max-width: 160px;
+.form-order fieldset.orderDate {
+  flex-basis: fit-content;
 }
-.form-order fieldset:nth-of-type(n) {
-  width: 100%;
+.form-order fieldset.orderStatus {
+  flex-basis: fit-content;
 }
-.form-order fieldset:nth-of-type(3) {
-  flex-basis: 130px;
+.form-order fieldset.paymentDueDate {
+  flex-basis: 155px;
 }
-.form-order fieldset:nth-of-type(4) {
-  flex-basis: calc(100% - 130px);
+.form-order fieldset.discount {
+  flex-basis: 150px;
 }
-.form-order fieldset:nth-of-type(5) {
-  flex-basis: 130px;
-}
-.form-order fieldset:nth-of-type(6) {
-  flex-basis: calc(100% - 130px);
-  max-width: 160px;
-}
-@media (min-width: 610px) {
-  .form-order fieldset:nth-of-type(4) {
-    flex-basis: 160px;
-  }
-  .form-order fieldset:nth-of-type(6) {
-    flex-basis: calc(50% - 130px);
+@media (min-width: 576px) {
+  .form-order fieldset.discount {
+    flex-basis: 87px;
   }
 }
 
+/* ORDER ITEM
+==================================================== */
 .form-orderItem button svg {
   width: 20px;
   height: 20px;
@@ -1303,16 +1289,26 @@ form .form-submit-button-delete svg {
 /* SERVICE
 ====================================================== */
 @media (min-width: 576px) {
-  .form-service fieldset:nth-of-type(n) {
-    width: 100%;
+  .form-service > :nth-child(4) {
+    flex-basis: 50%;
   }
-  .form-service fieldset:nth-of-type(1) {
-    width: 50%;
-  }
-  .form-service fieldset:nth-of-type(2) {
-    width: 50%;
+  .form-service > :nth-child(5) {
+    flex-basis: 50%;
   }
 }
+/* SITEMAP
+====================================================== */
+.form-sitemap p {
+  margin: 0;
+  width: 100%;
+}
+.form-sitemap button {
+  margin: 5px 0;
+}
+.form-sitemap fieldset.loc {
+  flex-basis: calc(100% - 115px);
+}
+
 /* TAXON
 ====================================================== */
 .form-taxon textarea {
@@ -1341,6 +1337,23 @@ form .form-submit-button-delete svg {
 }
 .form-thing fieldset:nth-of-type(n) {
   width: 100%;
+}
+
+.form-thing-extract {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding-bottom: 3px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+@media (min-width: 768px) {
+  .form-thing-extract fieldset:nth-of-type(1) {
+    flex-basis: 50%;
+  }
+  .form-thing-extract fieldset:nth-of-type(2) {
+    flex-basis: 50%;
+  }
 }
 
 /* TRIP
@@ -1578,6 +1591,7 @@ table .table-delete-button {
   line-height: 1.2em;
   vertical-align: middle;
   padding: 4px !important;
+  font-size: 1.2em;
 }
 
 .plcm-section {
@@ -1625,19 +1639,6 @@ table .table-delete-button {
   }
   .form-propertyValue fieldset {
     width: calc(50% - 60px);
-  }
-  .form-invoice fieldset:nth-of-type(1) {
-    width: calc(100% - 452px);
-    max-width: 120px;
-  }
-  .form-invoice fieldset:nth-of-type(2) {
-    width: 120px;
-  }
-  .form-invoice fieldset:nth-of-type(3) {
-    width: 120px;
-  }
-  .form-invoice fieldset:nth-of-type(4) {
-    width: 130px;
   }
 }
 @media (min-width: 768px) {

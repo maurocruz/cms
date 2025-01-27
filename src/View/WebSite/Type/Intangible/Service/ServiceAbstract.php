@@ -59,6 +59,9 @@ abstract class ServiceAbstract
 		}
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-service box']);
     $form->action("/admin/service/$case")->method("post");
+		$form->setIdform(isset($idservice) ? "form-service-$idservice" : "form-service-new");
+		$form->addMandatories('provider');
+
     // title
     $title = $case == "edit" ? _('Edit service') : _('Add new service');
     $form->content("<h4>"._($title)."</h4>");
@@ -67,12 +70,18 @@ abstract class ServiceAbstract
     if ($case == 'edit') $form->input('idservice', $idservice,'hidden');
 		// THING
 		$form = Thing::formContent($form, $value);
+	  // PROVIDER
+	  $form->chooseType(_('Provider'),'provider','Organization,Person', $this->provider);
+		// IS RELATED TO
+	  $form->chooseType(_('Is related to'),'isRelatedTo','Service,Product',$value['isRelatedTo'] ?? null);
+		// SERVICE OUTPUT
+	  $form->chooseType(_('Service output'),'serviceOutput','CreativeWork,LocalBusiness',$value['serviceOutput'] ?? null);
     // CATEGORY
     $form->fieldsetWithInput('category',$value['category'] ?? null, _('Category'));
+		// SERVICE TYPE
+	  $form->fieldsetWithInput('serviceType',$value['serviceType'] ?? null, _('Service Type'));
     // TERMS OF SERVICE
     $form->fieldsetWithTextarea('termsOfService', $value['termsOfService'] ?? null, _("Terms of service"));
-		// PROVIDER
-	  $form->relationshipOneToOne('Organization|Person',_('Provider'),'provider', $this->provider);
     // SUBMIT BUTTONS
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/service/erase");

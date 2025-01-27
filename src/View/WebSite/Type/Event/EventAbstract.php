@@ -31,17 +31,16 @@ abstract class EventAbstract
    */
   protected function formEvent(string $case = "new", array $value = null): array
   {
-		//var_dump($value);
     // VARS
     $startDate = $value['startDate'] ?? null;
     $endDate = $value['endDate'] ??  null;
 		$organizer = $value['organizer'] ?? null;
 		$location = $value['location'] ?? null;
 		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
-
     // FROM
     $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
+		$form->setIdform("form-event-".($this->idevent ?? "new"));
     // HIDDENS
     if ($case == "edit") {
 			$form->input('idevent', (string)$this->idevent, 'hidden');

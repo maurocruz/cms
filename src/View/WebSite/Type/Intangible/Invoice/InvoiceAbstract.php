@@ -24,21 +24,37 @@ abstract class InvoiceAbstract
    */
   protected static ?string $idHasPart = null;
   /**
-   * @var int
+   * @var ?string
    */
-  protected static int $customer;
+  protected ?string $customerIdthing = null;
   /**
    * @var string
    */
-  protected static string $customerType;
+  protected string $customerType;
+	/**
+	 * @var string
+	 */
+	protected string $customerName;
+	/**
+	 * @var int
+	 */
+	protected int $customerId;
   /**
-   * @var int
+   * @var ?string
    */
-  protected int $idprovider;
+  protected ?string $providerIdthing = null;
   /**
    * @var string
    */
-  protected static string $providerType;
+  protected string $providerType;
+	/**
+	 * @var mixed|null
+	 */
+	protected string $providerName;
+	/**
+	 * @var int|null
+	 */
+	protected ?int $providerId;
   /**
    * @var float|int
    */
@@ -56,21 +72,53 @@ abstract class InvoiceAbstract
    */
   protected float $totalPastDueAmount = 0;
 
+	/**
+	 * @param array $customer
+	 */
+	public function setCustomer(array $customer): void
+	{
+		$typeBuilder = ToolBox::typeBuilder($customer);
+		$this->customerIdthing = $typeBuilder->getIdthing();
+		$this->customerId = $typeBuilder->getId();
+		$this->customerType = $typeBuilder->getType();
+		$this->customerName = $typeBuilder->getValue('name');
+	}
+
+	public function setProvider(array $provider): void
+	{
+		$typeBuilder = ToolBox::typeBuilder($provider);
+		$this->providerIdthing = $typeBuilder->getIdthing();
+		$this->providerId = $typeBuilder->getId();
+		$this->providerType = $typeBuilder->getType();
+		$this->providerName = $typeBuilder->getValue('name');
+	}
+
+	public function setOrder(array $order): void
+	{
+		$typeBuilder = ToolBox::typeBuilder($order);
+		$this->idorder = $typeBuilder->getId();
+	}
+
+	/**
+	 * @param array $provider
+	 * @return void
+	 */
 	public function navbarIndex(array $provider)
 	{
-		$tbProvider = ToolBox::typeBuilder($provider);
-		$this->idprovider = (int) $tbProvider->getPropertyValue('idthing');
-		if ($tbProvider->getType() == 'Organization') {
+		if (!$this->providerIdthing) {
+			$this->setProvider($provider);
+		}
+		if ($this->providerType == 'Organization') {
 			Organization::navbarIndex();
-			Organization::navbarEdit($tbProvider->getValue('name'), $tbProvider->getId(), $tbProvider->getPropertyValue('idthing'));
+			Organization::navbarEdit($this->providerName, $this->providerId, $this->providerIdthing);
 		}
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('invoice')
 				->title(_('Invoice'))
 				->level(5)
-				->newTab("/admin/invoice?provider=$this->idprovider", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/invoice?provider=$this->idprovider&overdueInvoice=true", _('Faturas abertas'))
+				->newTab("/admin/invoice?provider=$this->providerIdthing", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/invoice?provider=$this->providerIdthing&overdueInvoice=true", _('Faturas abertas'))
 				->ready()
 		);
 	}
@@ -94,9 +142,12 @@ abstract class InvoiceAbstract
 		$totalPaymentDue = $value['totalPaymentDue'] ?? null;
 	  $paymentStatus = $value['paymentStatus'] ?? null;
 		// FORM
-    $form = CmsFactory::view()->fragment()->form(['id'=>"form-payments-".$idinvoice, "name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value), "onSubmit" => "return CheckRequiredFieldsInForm(event,['totalPaymentDue','paymentDueDate']);"]);
+    $form = CmsFactory::view()->fragment()->form(["name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value)]);
     $form->action("/admin/invoice/".$case)->method("post");
+		$form->addMandatories('totalPaymentDue','scheduledPaymentDate','paymentStatus')->setIdform("form-payments-".($idinvoice ?? 'new'));
     // HIDDENS
+	  $form->input('customer', $this->customerIdthing, 'hidden');
+	  $form->input('provider', $this->providerIdthing, 'hidden');
     $form->input("referencesOrder", (string)$this->idorder, "hidden");
     if ($case == "edit")  $form->input("idinvoice", $idinvoice, "hidden");
     // #
@@ -105,7 +156,7 @@ abstract class InvoiceAbstract
     // TOTAL PAYMENT DUE
     $form->fieldsetWithInput("totalPaymentDue", $totalPaymentDue, $case == "new" ? _("Value") : null, "number", null, ["type" => "number", "step" => "0.01", "min" => "0.01"]);
     // SCHEDULE PAYMENT DATE
-    $form->fieldsetWithInput("scheduledPaymentDate", $scheduledPaymentDate, $case == "new" ? _("Schedule paydate") : null, "date");
+    $form->fieldsetWithInput("scheduledPaymentDate", $scheduledPaymentDate, $case == "new" ? _("Scheduled paydate") : null, "date");
     // PAYMENT DUE DATE
     $form->fieldsetWithInput("paymentDueDate", $paymentDueDate, $case == "new" ? _("Payment") : null, 'date');
     // PAYMENT STATUS

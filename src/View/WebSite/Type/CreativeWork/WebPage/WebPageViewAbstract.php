@@ -1,12 +1,12 @@
 <?php
-declare(strict_types=1);
-namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
+namespace Plinct\Cms\View\WebSite\Type\CreativeWork\WebPage;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\WebSite\WebSiteView;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
-abstract class WebPageAbstract
+abstract class WebPageViewAbstract
 {
 	protected ?string $idthing = null;
 	/**
@@ -48,7 +48,7 @@ abstract class WebPageAbstract
 		$name = $typeBuilder->getValue('name');
 		if ($idwebSite) {
 			$this->idwebSite = $idwebSite;
-			$webSite = new WebSite();
+			$webSite = new WebSiteView();
 			$webSite->setIdwebSite($this->idwebSite);
 			$webSite->navbarWebSite($name);
 		}

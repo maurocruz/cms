@@ -21,10 +21,12 @@ class Type
 	/**
 	 * @param string $typeName
 	 */
-	public function __construct(string $typeName) {
+	public function __construct(string $typeName)
+	{
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
 		$classNameView = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
+		$classNameCreativeWorkItem = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		$classNameIntagible = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName);
 		$classNameIntagibleIntoFolder = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		if (class_exists($className)) {
@@ -33,6 +35,8 @@ class Type
 			$this->object = new $classNameView();
 		} elseif (class_exists($classNameCreativeWork)) {
 			$this->object = new $classNameCreativeWork();
+		} elseif (class_exists($classNameCreativeWorkItem)) {
+			$this->object = new $classNameCreativeWorkItem();
 		} elseif (class_exists($classNameIntagible)) {
 			$this->object = new $classNameIntagible();
 		} elseif (class_exists($classNameIntagibleIntoFolder)) {

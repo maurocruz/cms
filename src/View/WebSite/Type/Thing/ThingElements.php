@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Thing;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Fragment\Form\Form;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
 class ThingElements
 {
@@ -16,7 +14,7 @@ class ThingElements
 		//button
 		$form->submitButtonSend();
 		if ($case === 'edit') {
-			$typeBuilder = new TypeBuilder('thing',$value);
+			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
 			$idthing = $typeBuilder->getId();
 			$form->input('idthing', (string) $idthing, 'hidden');
 			$form->submitButtonDelete("/admin/thing/erase");
@@ -34,14 +32,15 @@ class ThingElements
 		$description = $value['description'] ?? null;
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		$url = $value['url'] ?? null;
-
+		$form->addMandatories('name');
 		if ($value) {
-			$typeBuilder = new \Plinct\Tool\TypeBuilder($value);
+			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
 			$idthing = $typeBuilder->getPropertyValue('idthing') ?? null;
 			$case = 'edit';
 		}
+		$form->content("<div class='form-thing-extract'>");
 		// name
-		$form->fieldsetWithInput('name', $name, _('Name')." <span style='color: #eecc77;'>*</span>");
+		$form->fieldsetWithInput('name', $name, _('Name'));
 		// alternateName
 		if (!in_array('alternateName', $excludes)) {
 			$form->fieldsetWithInput('alternateName', $alternateName, _('Alternate name'));
@@ -57,6 +56,7 @@ class ThingElements
 		$form->setEditor("description$idthing", "editor$case$idthing");
 		// url
 		$form->fieldsetWithInput('url', $url, _('url'));
+		$form->content("</div>");
 		//
 		return $form;
 	}

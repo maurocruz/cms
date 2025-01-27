@@ -16,6 +16,8 @@ abstract class OrderAbstract implements TypeViewInterface
    */
   protected static ?string $idOrder = null;
 
+	private string $sellerType;
+
 	protected int $idthingSeller;
   /**
    * @var int
@@ -34,6 +36,14 @@ abstract class OrderAbstract implements TypeViewInterface
 	 */
 	protected ?string $tags = null;
 
+	protected function setVars($value)
+	{
+		$typeBuilder = ToolBox::typeBuilder($value);
+		$type = $typeBuilder->getType();
+		if ($type !== 'Order') {
+			$this->sellerType = $type;
+		}
+	}
 	/**
 	 * @param array $value
 	 * @return void
@@ -67,7 +77,7 @@ abstract class OrderAbstract implements TypeViewInterface
 			->title(_('Orders'))
 			->newTab("/admin/order?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
 			->newTab("/admin/order/new?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
-			->newTab("/admin/order/invoice?seller=$this->idthingSeller", _('Invoice'))
+			->newTab("/admin/order/payment?seller=$this->idthingSeller", _('Payments'))
 			->newTab("/admin/order/expired?seller=$this->idthingSeller", ucfirst(_("Due dates")));
 
 		CmsFactory::view()->addHeader($navbar->ready());
@@ -97,16 +107,10 @@ abstract class OrderAbstract implements TypeViewInterface
 			CmsFactory::view()->fragment()->navbar()
 			->type('invoice')
 			->level(5)
-			->title(_('Invoice'))
-			->newTab("/admin/order/invoice?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->title(_('Payments'))
+			->newTab("/admin/order/payment?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
 			->ready()
 		);
-		/*CmsFactory::view()->fragment()->navbar(_("Payments"),[
-			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=all" => CmsFactory::view()->fragment()->icon()->home(),
-			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=past" => _("Until today"),
-			"/admin/$this->typeHasPart/order?id=$this->idHasPart&action=payment&period=current_month" => _("Until the end of the current month"),
-			"javascript: print();" => _("Print out")
-		],5);*/
 	}
   /**
    * FORM TO EDIT OR TO ADD A NEW ORDER
@@ -120,12 +124,18 @@ abstract class OrderAbstract implements TypeViewInterface
 		$seller = $case == 'new' ? $value : $value['seller'];
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-order']);
     $form->action("/admin/order/$case")->method('post');
+		$form->setIdform("form-order-".(self::$idOrder ?? "new"));
+		$form->addMandatories('seller','customer','orderDate','orderStatus','paymentDueDate');
     // hiddens
     if ($case == "edit") $form->input("idorder", self::$idOrder, "hidden");
     // SELLER
-    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("seller", "organization,person", $seller), _("Seller"));
+	  if ($case == 'new') {
+		  $form->chooseType(_("Seller"), "seller", "organization,person", $seller);
+	  } else {
+			$form->fieldsetWithInput('seller',$seller['name'],_('Seller'),'text',null,['disabled'=>'disabled']);
+	  }
     // CUSTOMER
-    $form->fieldset(CmsFactory::view()->fragment()->form()->chooseType("customer", "localBusiness,organization,person", $value['customer'] ?? null), _("Customer"));
+    $form->chooseType(_("Customer"), "customer", "localBusiness,organization,person", $value['customer'] ?? null);
     // ORDER DATE
     $form->fieldsetWithInput("orderDate", isset($value['orderDate']) ? substr($value['orderDate'],0,10) : date("Y-m-d"), _("Order date"), "date");
     // ORDER STATUS

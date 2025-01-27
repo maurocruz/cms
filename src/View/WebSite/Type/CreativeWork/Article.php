@@ -23,7 +23,6 @@ class Article implements TypeViewInterface
 		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
 	      ])
 				->type('Article')
-				->search()
 				->ready()
 		);
 		//
@@ -68,7 +67,7 @@ class Article implements TypeViewInterface
       } else {
         $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
         // images
-	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready();
+	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((string) $idthing)->ready();
       }
     } else {
       $this->navbarArticle();
@@ -93,12 +92,14 @@ class Article implements TypeViewInterface
 		// FORM
     $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-article"]);
     $form->action("/admin/article/$case")->method('post');
+		$form->setIdform($case == 'new' ? "form-article-new" : "form-article-".$ID);
+		$form->addMandatories('headline','articleBody');
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		// THING
-		$form = Thing::formContent($form, $value, ['alternateName', 'disambiguatingDescription']);
+		$form = Thing::formContent($form, $value, ['disambiguatingDescription']);
 	  // about
-	  $form->relationshipOneToOne('thing',_('About'),'about',$about);
+	  $form->chooseType(_('About'), 'about','thing',$about);
     // HEADLINE
     $form->fieldsetWithInput("headline", $headline, _("Title"));
 	  // ALTERNATIVE HEADLINE
@@ -112,7 +113,7 @@ class Article implements TypeViewInterface
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
 		// author
-	  $form->relationshipOneToOne('person',_("Author"),'author',(int) $author);
+	  $form->chooseType(_('Author'),'author','person',$author);
 	  // creative work status
 		$form->fieldsetWithSelect('creativeWorkStatus', $creativeWorkStatus,[
 			"draft"=>_("Draft"),

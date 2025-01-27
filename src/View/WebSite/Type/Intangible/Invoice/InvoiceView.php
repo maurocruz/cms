@@ -14,11 +14,76 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 	 */
 	public function index(?array $value)
 	{
-		$provider = $value['provider'];
-		parent::navbarIndex($provider);
+		$provider = $value['provider'] ?? null;
+		if ($provider) {
+			parent::navbarIndex($provider);
+		}
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('invoice')->setHasPart($this->idprovider)->setOrderBy('schedulePaymentDate')->ready()
+			CmsFactory::view()->fragment()->reactShell('invoice')->setHasPart($this->providerIdthing)->setOrderBy('schedulePaymentDate')->ready()
 		);
+	}
+
+	public function edit(?array $data)
+	{
+		if (!empty($data)) {
+			$provider = $data['provider'] ?? null;
+			$customer = $data['customer'] ?? null;
+			$order = $data['referencesOrder'] ?? null;
+			$this->setCustomer($customer);
+			$this->setOrder($order);
+			$this->navbarIndex($provider);
+
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->simpleBox(
+					[
+						"<p>"._('Provider').": <a href='/admin/".lcfirst($this->providerType)."/edit/".$this->providerId."'>".$this->providerName."</a>; "._('Customer').": <a href='/admin/".lcfirst($this->customerType)."/edit/".$this->customerId."'>".$this->customerName."</a></p>",
+						parent::formInvoice('edit', $data)
+					],
+					_('Invoice')
+				)
+			);
+		} else {
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->message()->noContent()
+			);
+		}
+	}
+
+	/**
+	 * @param ?array $data
+	 * @return array
+	 */
+	public function editWithPart(?array $data): array
+	{
+		$value = $data[0] ?? $data;
+		$provider =  $value['@type'] == 'Order' ? $value['seller'] : $value['provider'];
+		$this->setCustomer($value['customer']);
+		$this->setProvider($provider);
+
+		$typeBuilderOrder = ToolBox::typeBuilder($data);
+		$this->idorder = $typeBuilderOrder->getId();
+		$lenght = isset($value['partOfInvoice']) ? count($value['partOfInvoice']) : 0;
+		// NEW
+		$content[] = parent::formInvoice("new", null, $lenght + 1);
+		// INVOICES
+		if ($lenght > 0) {
+			foreach ($value['partOfInvoice'] as $key => $item) {
+				$paymentDueDate = $item['paymentDueDate'];
+				$scheduledPaymentDate = $item['scheduledPaymentDate'];
+				$totalPaymentDue = $item['totalPaymentDue'];
+				// SET TOTALS AMOUNT
+				$this->totalInvoiceAmount += $totalPaymentDue;
+				$this->totalPaidAmount += $paymentDueDate !== '0000-00-00' ? $totalPaymentDue : 0;
+				$this->totalPayableAmount += $paymentDueDate == '0000-00-00' ? $totalPaymentDue : 0;
+				$this->totalPastDueAmount += $paymentDueDate == '0000-00-00' && date("Y-m-d") > $scheduledPaymentDate ? $totalPaymentDue : 0;
+				// FORM
+				$content[] = parent::formInvoice('edit', $item, $lenght - $key);
+			}
+		}
+		// balance
+		$content[] = parent::balance();
+		//
+		return $content;
 	}
 
 	/**
@@ -62,38 +127,6 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 		CmsFactory::view()->addMain("</tbody>");
 		CmsFactory::view()->addMain("</table>");
 	}
-
-  /**
-   * @param ?array $data
-   * @return array
-   */
-  public function edit(?array $data): array
-  {
-		$typeBuilderOrder = ToolBox::typeBuilder($data);
-    $this->idorder = $typeBuilderOrder->getId();
-    $lenght = isset($data['partOfInvoice']) ? count($data['partOfInvoice']): 0;
-    // NEW
-    $content[] = parent::formInvoice("new", null, $lenght+1 );
-    // INVOICES
-    if ($lenght > 0) {
-      foreach ($data['partOfInvoice'] as $key => $value) {
-				$paymentDueDate = $value['paymentDueDate'];
-				$scheduledPaymentDate = $value['scheduledPaymentDate'];
-				$totalPaymentDue = $value['totalPaymentDue'];
-        // SET TOTALS AMOUNT
-        $this->totalInvoiceAmount += $totalPaymentDue;
-        $this->totalPaidAmount += $paymentDueDate !== '0000-00-00' ? $totalPaymentDue : 0;
-        $this->totalPayableAmount += $paymentDueDate == '0000-00-00' ? $totalPaymentDue : 0;
-        $this->totalPastDueAmount += $paymentDueDate == '0000-00-00' && date("Y-m-d") > $scheduledPaymentDate ? $totalPaymentDue : 0;
-        // FORM
-        $content[] = parent::formInvoice('edit', $value, $lenght - $key);
-      }
-    }
-    // balance
-    $content[] = parent::balance();
-		//
-    return $content;
-  }
 
 
 	public function new(?array $value)

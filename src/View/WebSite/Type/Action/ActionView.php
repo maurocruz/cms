@@ -18,13 +18,15 @@ class ActionView
     $table->head(_("Date"), [ "style" => "width: 160px;" ])
       ->head(_("Action"), [ "style" => "width: 80px;" ])
       ->head(_("Summary"))
+	    ->head(_('Status'), [ "style" => "width: 80px;" ])
       ->head(_("Author"), [ "style" => "width: 150px;" ]);
     // BODY
     if($data) {
       foreach ($data as $value) {
         $table->bodyCell(DateTime::formatDateTime($value['startTime']))
-          ->bodyCell($value['actionStatus'])
-          ->bodyCell($value['result'] ? stripslashes($value['result']) : '')
+          ->bodyCell($value['@type'])
+          ->bodyCell($value['result'] ? str_replace("&",'; ',$value['result']) : '')
+	        ->bodyCell($value['actionStatus'])
           ->bodyCell($value['agent']['name'] ?? _("Undefined"))
           ->closeRow();
       }

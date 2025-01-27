@@ -14,12 +14,10 @@ class OfferView extends OfferAbstract implements TypeViewInterface
   public function index(?array $value)
   {
 		$this->navbarOfferedBy($value);
-		//
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('offer')->setHasPart($this->iditemOffered)->ready()
+			CmsFactory::view()->fragment()->reactShell('offer')->setHasPart(self::$offeredById)->ready()
 		);
   }
-
 
   /**
    * @param null $value
@@ -43,7 +41,6 @@ class OfferView extends OfferAbstract implements TypeViewInterface
 		$itemOfferedType = lcfirst($tbItemOffered->getType());
 		$itemOfferedId = $tbItemOffered->getId();
 		$this->navbarOfferedBy($offeredBy);
-
 
 		CmsFactory::view()->addMain([
 			CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer('edit',$value),_('Edit offer')),

@@ -12,6 +12,8 @@ class OrderView extends OrderAbstract
 
 	public function index(?array $value)
 	{
+		parent::setVars($value);
+
 		$typeBuilder = ToolBox::typeBuilder($value);
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		parent::navbarIndex($value);
@@ -56,9 +58,9 @@ class OrderView extends OrderAbstract
       // ORDERED ITEMS
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->edit($value), _("Ordered items")));
       // INVOICES
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->edit($value), _("Invoices")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->editWithPart($value), _("Invoices")));
       // HISTORY
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new ActionView())->view($value['potentialAction']), _("Historic")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new ActionView())->view($value['potentialAction'] ?? []), _("Historic")));
     }
   }
 
@@ -69,9 +71,13 @@ class OrderView extends OrderAbstract
    */
   public function payment($value)
   {
-		var_dump($value);
+		$seller = $value['seller'];
     // NAVBAR
-    parent::navbarInvoice($value['seller']);
+    parent::navbarInvoice($seller);
+		// LIST
+	  CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('order')->setHasPart($this->idthingSeller)->setDataset('seller',$this->idthingSeller)->ready()
+	  );
 /*
 
     // VARS

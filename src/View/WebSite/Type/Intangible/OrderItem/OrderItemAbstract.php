@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\Intangible\OrderItem;
 
-use NumberFormatter;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
@@ -17,9 +16,9 @@ abstract class OrderItemAbstract
    */
   protected string $referencesOrder;
   /**
-   * @var array
+   * @var ?array
    */
-  protected array $orderedItem;
+  protected ?array $orderedItem = null;
   /**
    * @var string
    */
@@ -79,7 +78,6 @@ abstract class OrderItemAbstract
 
     // BODY
     if ($orderedItems) {
-			$numberFormatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
       foreach ($orderedItems as $key => $value) {
 				$orderItem = ToolBox::typeBuilder($value);
 				$idordemItem = $orderItem->getId();
@@ -92,13 +90,13 @@ abstract class OrderItemAbstract
         $price = isset($acceptedOffer[$key]['price']) ? (float) $acceptedOffer[$key]['price'] : null;
         $totalPrice = $price * $orderQuantity;
         $priceCurrency = $acceptedOffer[$key]['priceCurrency'] ?? null;
-				$priceFormated = $numberFormatter->formatCurrency($price,$priceCurrency);
-				$totalBillFormatter = $numberFormatter->formatCurrency($totalPrice,$priceCurrency);
+				$priceFormated = $price ? ToolBox::NumberFormatterCurrency($priceCurrency)->format($price) : null;
+				$totalBillFormatter = $priceCurrency ? ToolBox::NumberFormatterCurrency($priceCurrency)->format($totalPrice) : null;
 
         // BODY CELLS
         $table->bodyCell($key+1)
           ->bodyCell($type, ["style" =>"text-align: center;"])
-          ->bodyCell(sprintf('<a href="/admin/%s/%s">%s</a>',lcfirst($type),$isOrderedItem,$name))
+          ->bodyCell(sprintf('<a href="/admin/%s/edit/%s">%s</a>',lcfirst($type),$isOrderedItem,$name))
           ->bodyCell($orderQuantity, ["style" =>"text-align: right;"])
           ->bodyCell($priceFormated, ["style" =>"text-align: right;"])
           ->bodyCell($totalBillFormatter, ["style" =>"text-align: right;"])
@@ -132,7 +130,6 @@ abstract class OrderItemAbstract
    */
   protected function listSellerOfferedItems($sellerHasOfferCatalog): array
   {
-	  $numberFormatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic']);
     $form->action("/admin/orderItem/new")->method("post");
     // number of items
@@ -157,9 +154,9 @@ abstract class OrderItemAbstract
 				$itemOrderedThing = $typeBuilderItemOffered->getPropertyValue('idthing');
 				$name = $itemOffered['name'];
 				$type = $itemOffered['@type'];
-				$price = $numberFormatter->formatCurrency($item['price'],$item['priceCurrency']);
-				$eligibleDuration = $item['eligibleDuration'];
-				$hrefItem = sprintf("/admin/offer/%s", $idoffer);
+				$price = ToolBox::NumberFormatterCurrency($item['priceCurrency'])->format($item['price']);
+				$eligibleDuration = $item['eligibleDuration'] ?? null;
+				$hrefItem = sprintf("/admin/offer/edit/%s", $idoffer);
 
 				// REFERENCE ORDER
 				$form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");

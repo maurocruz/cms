@@ -2,6 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
@@ -35,10 +36,12 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 		if (empty($data)) {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message());
 		} else {
+			$TBService = ToolBox::typeBuilder($data);
+			$serviceThing = $TBService->getIdthing();
 			$provider = $data['provider'];
 			$offers = $data['offers'];
 			$TBProvider = ToolBox::typeBuilder($provider);
-			$this->provider = $TBProvider->getPropertyValue('idthing');
+			$this->provider = $TBProvider->getIdthing();
 			if($TBProvider->getType() == 'Organization') {
 				Organization::navbarIndex();
 				Organization::navbarEdit($TBProvider->getValue('name'), $TBProvider->getId(), $this->provider);
@@ -46,25 +49,15 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 			parent::navbarIndex();
 			parent::navbarEdit($data['name']);
 			// EDIT SERVICE
-			CmsFactory::view()->addMain(self::serviceForm("edit", $data));
-			// OFFERS
-			$offerList = '<table><thead><tr><th>#</th><th>idoffer</th><th>'._('Name').'</th><th>'._('Availability').'</th><th>'._('Valid through').'</th><th>'._('Date created').'</th></tr></thead><tbody>';
-			foreach ($offers as $key => $offer) {
-				$tbOffer = ToolBox::typeBuilder($offer);
-				$name = $offer['name'];
-				$idoffer = $tbOffer->getId();
-				$dateCreated = $tbOffer->getPropertyValue('dateCreated');
-				$availability = $offer['availability'];
-				$validThrough = $offer['validThrough'];
-				$offerList .= "<tr><td>".($key+1)."</td><td>$idoffer</td><td><a href='/admin/offer/edit/$idoffer'>$name</a></td><td>$availability</td><td>$validThrough</td><td>$dateCreated</td></tr>";
-			}
-			$offerList .= '</tbody></table>';
-			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->simpleBox($offerList,_('Offers'))
-			);
-			//CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Offer"), (new OfferView())->editWithPartOf($data)));
+			CmsFactory::view()->addMain([
+				self::serviceForm("edit", $data),
+				// OFFERS
+				CmsFactory::view()->fragment()->box()->expandingBox(_('Offers'), [
+					CmsFactory::view()->fragment()->box()->expandingBox(_('New offer'), OfferView::newOffer($serviceThing, $this->provider)),
+					OfferView::listOffers($offers)
+				])
+			]);
 		}
-
 	}
 
 	/**
