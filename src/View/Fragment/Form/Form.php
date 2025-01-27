@@ -2,14 +2,14 @@
 namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
 use Plinct\Tool\ArrayTool;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\ElementFactory;
-use Plinct\Web\Element\ElementInterface;
 use Plinct\Web\Element\Form\Form as WebForm;
 use Plinct\Web\Element\Form\FormInterface;
 
-class Form extends FormDecorator implements FormInterface, RelationshipInterface, ElementInterface
+class Form extends FormDecorator implements RelationshipInterface
 {
 	/**
 	 * @var string
@@ -33,6 +33,25 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
     $this->form->attributes($attributes);
     return $this->form;
   }
+
+	/**
+	 * @param string $idform
+	 */
+	public function setIdform(string $idform): void
+	{
+		$this->form->attributes(['id'=>$idform]);
+		$this->idform = $idform;
+	}
+
+	/**
+	 * @param mixed ...$mandatories
+	 * @return Form
+	 */
+	public function addMandatories(...$mandatories): Form
+	{
+		$this->mandatories = array_merge($this->mandatories, $mandatories);
+		return $this;
+	}
 
 	/**
    * WRITE <SELECT> ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
@@ -193,32 +212,28 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
     }
 
 	/**
+	 * @param string $legend
 	 * @param string $property
-	 * @param $typesForChoose
-	 * @param $value
+	 * @param string|array $typesForChoose
+	 * @param string|array $value
 	 * @param string $nameLike
 	 * @param array $attributes
-	 * @return array
 	 */
-		public function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
+		public function chooseType(string $legend, string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = [])
 		{
 			if (is_array($value)) {
 				$typeBuilder = ToolBox::typeBuilder($value);
-				$id = $typeBuilder->getId();
+				$idthing = $typeBuilder->getIdthing();
 			} else {
-				$id = null;
+				$idthing = $value;
 			}
-			$attributes2['class'] = "choose-type";
-			$attributes2['data-property'] = $property;
-			$attributes2['data-types'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
-			$attributes2['data-like'] = $nameLike;
-			$attributes2['data-currentType'] = $value['@type'] ?? null;
-			$attributes2['data-currentName'] = $value['name'] ?? null;
-			$attributes2['data-currentId'] = $id;
-			$widthAttr = "display: flex; min-height: 23px;";
-			$attributes2['style'] = array_key_exists('style', $attributes) ? $widthAttr." ".$attributes['style'] : $widthAttr;
-			unset($attributes['style']);
-			$attributes3 = $attributes ? array_merge($attributes2, $attributes) : $attributes2;
-			return [ "tag" => "div", "attributes" => $attributes3 ];
+			$attributes['class'] = "plinct-shell";
+			$attributes['data-action'] = "getItemType";
+			$attributes['data-type'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
+			$attributes['data-property'] = $property;
+			$attributes['data-haspart'] = $idthing;
+			$attributes['data-legend'] = $legend;
+			$attributes['data-apihost'] = App::getApiHost();
+			$this->fieldset([ "tag" => "div", "attributes" => $attributes ], parent::writeLegend($property, $legend),['class'=>$property]);
 		}
 }

@@ -14,14 +14,22 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @var FormInterface
    */
   protected FormInterface $form;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $idform = null;
+	/**
+	 * @var array
+	 */
+	protected array $mandatories = array();
 
   /**
    * @param array|null $attributes
    */
   public function __construct(array $attributes = null)
   {
-      $this->form = ElementFactory::form($attributes);
-      $this->element = $this->form;
+    $this->form = ElementFactory::form($attributes);
+    $this->element = $this->form;
   }
 
   /**
@@ -30,8 +38,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function action(string $url): FormInterface
   {
-      $this->form->action($url);
-      return $this;
+    $this->form->action($url);
+    return $this;
   }
 
   /**
@@ -53,8 +61,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function input(string $name, $value, string $type = 'text', array $attributes = null): FormInterface
   {
-     $this->form->input($name,(string) $value, $type, $attributes);
-     return $this;
+    $this->form->input($name,(string) $value, $type, $attributes);
+    return $this;
   }
 
   /**
@@ -65,11 +73,11 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function fieldset($content, string $label = null, array $attributes = null): FormInterface
   {
-      $fieldset = ElementFactory::element('fieldset',$attributes);
-      $fieldset->content("<legend>$label</legend>");
-      $fieldset->content($content);
-      $this->form->content($fieldset->ready());
-      return $this;
+    $fieldset = ElementFactory::element('fieldset',$attributes);
+    $fieldset->content("<legend>$label</legend>");
+    $fieldset->content($content);
+    $this->form->content($fieldset->ready());
+    return $this;
   }
 
   /**
@@ -83,10 +91,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function fieldsetWithInput(string $name, string $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
   {
-      $this->form->fieldsetWithInput($name, $value, $legend, $type, $attributes, $attributesInput);
-      return $this;
+    $this->form->fieldsetWithInput($name, $value, self::writeLegend($name, $legend), $type, self::setAttr($attributes, $name), $attributesInput);
+    return $this;
   }
-
   /**
    * @param string $name
    * @param array $value
@@ -97,8 +104,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function fieldsetWithSelect(string $name, $value, array $list, string $legend = null, array $attributes = null): FormInterface
   {
-      $this->form->fieldsetWithSelect($name, $value, $list, $legend, $attributes);
-      return $this;
+    $this->form->fieldsetWithSelect($name, $value, $list, self::writeLegend($name, $legend), self::setAttr($attributes, $name));
+    return $this;
   }
 
   /**
@@ -111,8 +118,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function fieldsetWithTextarea(string $name, string $value = null, string $legend = null, array $attributesFieldset = null, array $attributesTextarea = []): FormInterface
   {
-      $this->form->fieldsetWithTextarea($name, $value, $legend, $attributesFieldset, $attributesTextarea);
-      return $this;
+    $this->form->fieldsetWithTextarea($name, $value, self::writeLegend($name, $legend), self::setAttr($attributesFieldset, $name), $attributesTextarea);
+    return $this;
   }
 
 	/**
@@ -124,7 +131,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 */
 	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
 	{
-		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, self::writeLegend($name, $legend));
 		return $this;
 	}
 
@@ -134,8 +141,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @return mixed
    */
   protected static function getData(array $params) {
-      $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
-      return json_decode((ServerFactory::soloine())->get($params), true);
+    $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
+    return json_decode((ServerFactory::soloine())->get($params), true);
   }
 
 	/**
@@ -161,30 +168,25 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   protected static function selectReady(string $property, $data, $value = null): array
   {
-      if (isset($data['status']) && $data['status'] == 'fail') {
-          $element = ElementFactory::element('input',[ 'name'=>$property, 'type'=>'text', 'value'=>$value]);
-
-      } else {
-          $element = ElementFactory::element('select', ['class' => 'select-soloine', 'name' => $property]);
-
-          if ($value) {
-              $element->content("<option value='$value'>$value</option>");
-          }
-
-          if (isset($data['@graph'])) {
-              $element->content("<option value=''>" . _("Select $property") . "</option>");
-
-              foreach ($data['@graph'] as $key => $item) {
-                  $element->content("<option value='$key'>$item</option>");
-              }
-          } elseif (Isset($data['message'])) {
-              $element->content("<option value=''>{$data['message']}</option>");
-          } else {
-	          $element->content("<option value=''>" ._('Not available!')."</option>");
-          }
+    if (isset($data['status']) && $data['status'] == 'fail') {
+      $element = ElementFactory::element('input',[ 'name'=>$property, 'type'=>'text', 'value'=>$value]);
+    } else {
+      $element = ElementFactory::element('select', ['class' => 'select-soloine', 'name' => $property]);
+      if ($value) {
+        $element->content("<option value='$value'>$value</option>");
       }
-
-      return $element->ready();
+      if (isset($data['@graph'])) {
+        $element->content("<option value=''>" . _("Select $property") . "</option>");
+        foreach ($data['@graph'] as $key => $item) {
+          $element->content("<option value='$key'>$item</option>");
+        }
+      } elseif (Isset($data['message'])) {
+        $element->content("<option value=''>{$data['message']}</option>");
+      } else {
+        $element->content("<option value=''>" ._('Not available!')."</option>");
+      }
+    }
+    return $element->ready();
   }
 
 	/**
@@ -199,14 +201,57 @@ class FormDecorator extends ElementDecorator implements FormInterface
     }
   }
 
+	/**
+	 * @param string $name
+	 * @param ?string $legend
+	 * @return ?string
+	 */
+	protected function writeLegend(string $name, ?string $legend = null): ?string
+	{
+		if ($legend && in_array($name, $this->mandatories)) {
+			$this->mandatories[$name] = $legend;
+			unset($this->mandatories[array_search($name, $this->mandatories)]);
+			$legend = $legend. " <span class='mandatory-field'>*</span>";
+		}
+		return $legend;
+	}
+
+	/**
+	 * @return void
+	 */
+	private function writeMandatory()
+	{
+		$mandat = json_encode($this->mandatories);
+		$formId = $this->idform;
+		$this->content("<script>
+document.getElementById('$formId').addEventListener('submit', function(e) {
+  const mandatories = JSON.parse('$mandat');
+  const elements = e.target.elements;
+  for (let i=0; i < elements.length; i++) {
+    const element = elements[i];
+    const name = element.name;
+    const value = element.value;
+    if (Object.keys(mandatories).includes(name)) {
+      if (value === '') {   
+        e.preventDefault();
+        element.focus();
+        alert('Mandatory fields \'' + mandatories[name] + '\' is blank!');
+        break;
+      }
+    }
+  }  
+});
+</script>");
+	}
+
   /**
    * @param array|null $attributes
    * @return FormInterface
    */
   public function submitButtonSend(array $attributes = ['class'=>'form-submit-button-send']): FormInterface
   {
-      $this->form->submitButtonSend($attributes);
-      return $this;
+    $this->form->submitButtonSend($attributes);
+    return $this;
   }
 
   /**
@@ -216,7 +261,35 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function submitButtonDelete(string $formaction = null, array $attributes = ['class'=>'form-submit-button-delete']): FormInterface
   {
-      $this->form->submitButtonDelete($formaction, $attributes);
-      return $this;
+    $this->form->submitButtonDelete($formaction, $attributes);
+    return $this;
   }
+
+	/**
+	 * @param ?array $attributes
+	 * @param string $name
+	 * @return array
+	 */
+	private static function setAttr(?array $attributes, string $name): array
+	{
+		if ($attributes) {
+			if (array_key_exists('class', $attributes)) {
+				$attributes['class'] = $name .' ' . $attributes['class'];
+			}
+			return  array_merge(['class'=>$name],$attributes);
+		} else {
+			return ['class'=> $name];
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ready(): array
+	{
+		if(!empty($this->mandatories) && $this->idform) {
+			$this->writeMandatory();
+		}
+		return $this->form->ready();
+	}
 }
