@@ -19,15 +19,21 @@ class Type
 		$this->type = $type;
 	}
 
+	/**
+	 * @param array|null $params
+	 * @return array
+	 */
 	public function get(?array $params): array
 	{
 		return CmsFactory::model()->api()->get($this->type, $params)->ready();
 	}
+
 	/**
 	 * @param array $params
 	 * @return mixed|string|string[]
 	 */
-	public function post(array $params) {
+	public function post(array $params)
+	{
 		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
 		if ($isMultidimensional) {
 			$newParams['multidimensional'] = json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -45,7 +51,7 @@ class Type
 			$idvalue = $value[$idname] ?? null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			$redirectedPage = ['orderItem','programMembership','webPageElement'];
+			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
 			if (in_array($this->type, $redirectedPage)) {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
@@ -91,13 +97,15 @@ class Type
 	 */
 	public function erase(array $params)
 	{
-		$id = $params["id$this->type"] ?? $params['idIsPartOf'];
-		$data = CmsFactory::model()->api()->delete($this->type, ["id$this->type" => $id])->ready();
+		$data = CmsFactory::model()->api()->delete($this->type, $params)->ready();
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
 		}
+
+		// TODO fazer redirecionameto para offer
+
 		// REDIRECT
-		$redirectedPage = ['orderItem','programMembership','webPageElement'];
+		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
 		if (in_array($this->type, $redirectedPage)) {
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
