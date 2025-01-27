@@ -20,11 +20,11 @@ class InvoiceController implements TypeControllerInterface
 				$data = CmsFactory::model()->type('invoice')->get(['overdueInvoice' => true] + $params);
 				return CmsFactory::view()->webSite()->type('invoice')->setMethodName('overdueInvoice')->setData(['provider'=>$providerData,'invoices'=>$data])->ready();
 			} else {
-				$data = null;// CmsFactory::model()->type('invoice')->get($params);
+				$data = null;
 			}
 			return CmsFactory::view()->webSite()->type('invoice')->setData(['provider'=>$providerData,'invoices'=>$data])->ready();
 		}
-		return false;
+		return CmsFactory::view()->webSite()->type('invoice')->ready();
 	}
 
 	/**
@@ -40,6 +40,13 @@ class InvoiceController implements TypeControllerInterface
 	 */
 	public function edit(array $params): bool
 	{
+		$idinvoice = $params['idinvoice'] ?? null;
+		if ($idinvoice) {
+			$dataInvoice = CmsFactory::model()->type('invoice')->get(['idinvoice'=>$idinvoice, 'properties'=>'customer,provider,referencesOrder']);
+			if (isset($dataInvoice[0])) {
+				return CmsFactory::view()->webSite()->type('invoice')->setData($dataInvoice[0])->setMethodName('edit')->ready();
+			}
+		}
 		return false;
 	}
 }

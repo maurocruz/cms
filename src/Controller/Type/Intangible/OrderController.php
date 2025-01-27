@@ -58,7 +58,11 @@ class OrderController implements TypeControllerInterface
 		return CmsFactory::view()->webSite()->type('order')->setData($data)->setMethodName('edit')->ready();
 	}
 
-	public function invoice(array $params): bool
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+	public function payment(array $params): bool
 	{
 		$seller = $params['seller'] ?? null;
 		if ($seller) {
@@ -67,7 +71,8 @@ class OrderController implements TypeControllerInterface
 				$valueSeller = $dataSeller[0];
 			}
 		}
-		//$dataOrder = CmsFactory::model()->api()->get('order',$params)->ready();
+		$dataOrder = CmsFactory::model()->api()->get('order',['orderStatus'=>'orderProcessing'] + $params)->ready();
+		var_dump($dataOrder);
 		return CmsFactory::view()->webSite()->type('order')->setData(['seller'=>$valueSeller])->setMethodName('payment')->ready();
 	}
 }

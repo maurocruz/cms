@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Controller\Authentication\Authentication;
@@ -41,6 +40,15 @@ class Controller
 	public function configuration(): Configuration
 	{
 		return new Configuration();
+	}
+
+	/**
+	 * @param string $type
+	 * @return Type\Type
+	 */
+	public function type(string $type): Type\Type
+	{
+		return new Type\Type($type);
 	}
 
 	/**

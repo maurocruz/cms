@@ -1,10 +1,9 @@
 <?php
-declare(strict_types=1);
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Server;
-use Plinct\Cms\Controller\Request\Server\Sitemap;
 use Plinct\Cms\Controller\Request\Server\Type\ClosureServer;
+use Plinct\Cms\Controller\Type\WebSite\Sitemap;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -52,26 +51,23 @@ return function (Route $route)
 		elseif ($action == "delete" || $action == "erase") {
 			$returns = CmsFactory::model()->type($type)->erase($params);
 		}
-
 		// CREATE SQL TABLE
 		elseif ($action == "createSqlTable") {
 			(new Server())->createSqlTable($type);
 			$returns = $_SERVER['HTTP_REFERER'];
 		}
-
 		// SITEMAP
 		elseif (($action == "sitemap")) {
 			$returns = $_SERVER['HTTP_REFERER'];
 			// sitemap
-			Sitemap::create($type, $params);
+			$sitemap = new Sitemap($type, $params);
+			$sitemap->saveSitemap();
 		}
-
 		// CLOSURE
 		elseif($type == "closure") {
 			$server = new ClosureServer($params);
 			$returns = $server->getReturn();
 		}
-
 		// GENERIC
 		else {
 			(new Server())->request($type, $action, $params);

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Configuration;
 
 use Plinct\Cms\CmsFactory;
@@ -12,7 +11,7 @@ class Configuration
 	public function initApplication(): array
 	{
 		$data = CmsFactory::model()->api()->get('config/database', ['schema'=>'init'])->ready();
-		if ($data['status'] === 'complete') {
+		if ($data['status'] === 'complete' && (isset($data['data']) && is_array($data['data']))) {
 			foreach ($data['data'] as $item) {
 				CmsFactory::view()->Logger('database')->info('SUCCESS: Created table', $item);
 			}
@@ -27,6 +26,11 @@ class Configuration
 	public function index(): void
 	{
 		CmsFactory::view()->webSite()->configuration()->index();
+	}
+
+	public function sitemap(): void
+	{
+		CmsFactory::view()->webSite()->configuration()->sitemap();
 	}
 
 	public function installModule(string $module): array

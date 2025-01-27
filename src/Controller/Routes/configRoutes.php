@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 use Plinct\Cms\CmsFactory;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,7 +6,7 @@ use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route) {
 
-	$route->group('/config', function (Route $route) {
+	$route->group('/configuration', function (Route $route) {
 
 		$route->get('/initApplication', function (Request $request, Response $response) {
 			$data = CmsFactory::controller()->configuration()->initApplication();
@@ -20,9 +18,9 @@ return function (Route $route) {
 		});
 
 		$route->get('[/{method}]', function (Request $request, Response $response) {
-		//	$method = $request->getAttribute('method') ?? null;
+			$method = $request->getAttribute('method') ?? 'index';
 			$controller = CmsFactory::controller()->configuration();
-			$controller->index();
+			$controller->$method();
 			return CmsFactory::view()->writeBody($response);
 		});
 

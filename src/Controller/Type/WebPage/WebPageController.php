@@ -4,7 +4,6 @@ namespace Plinct\Cms\Controller\Type\WebPage;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Sitemap;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
-use Plinct\Cms\Controller\WebSite\Type\WebSite\WebSiteController;
 
 class WebPageController implements TypeControllerInterface
 {
