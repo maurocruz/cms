@@ -33,7 +33,7 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
   public function edit(?array $data): array
   {
 		$typeBuilderOrder = ToolBox::typeBuilder($data);
-    $this->referencesOrder = $typeBuilderOrder->getId();
+    $this->orderItemNumber = $typeBuilderOrder->getId();
     $this->orderedItem = $data['orderedItem'] ?? null;
 	  $seller = $data['seller'];
 		$typeBuilderSeller = ToolBox::typeBuilder($seller);

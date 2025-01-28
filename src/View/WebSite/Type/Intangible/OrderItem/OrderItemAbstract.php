@@ -14,7 +14,7 @@ abstract class OrderItemAbstract
   /**
    * @var string
    */
-  protected string $referencesOrder;
+  protected string $orderItemNumber;
   /**
    * @var ?array
    */
@@ -48,25 +48,21 @@ abstract class OrderItemAbstract
    */
   protected static float $TOTAL_BILL = 0;
 
-
   /**
    * @param $data
    * @return array
    */
   protected function listOrderedItems($data): array
   {
-    $idorder = $this->referencesOrder;
+    $idorder = $this->orderItemNumber;
     $discount = (float) $data['discount'];
     $orderedItems = $data['orderedItem'] ?? null;
 		$acceptedOffer = $data['acceptedOffer'] ?? null;
     $numberOfItems = $orderedItems ? count($orderedItems) : null;
     $quantityTotal = 0;
     $totalBill = 0;
-
     // TABLE
-
     $table = new Table(['class'=>'table-orderedItems']);
-
     // HEADERS
     $table->head(_("#"), ["style" =>"width: 30px;"])
       ->head(_("Type"), ["style" =>"width: 75px;"])
@@ -75,7 +71,6 @@ abstract class OrderItemAbstract
       ->head(_("Unit price"), ["style" =>"width: 120px;"])
       ->head(_("Total price"), ["style" =>"width: 140px;"])
       ->head(_("Action"), ["style" =>"width: 45px;"]);
-
     // BODY
     if ($orderedItems) {
       foreach ($orderedItems as $key => $value) {
@@ -92,7 +87,6 @@ abstract class OrderItemAbstract
         $priceCurrency = $acceptedOffer[$key]['priceCurrency'] ?? null;
 				$priceFormated = $price ? ToolBox::NumberFormatterCurrency($priceCurrency)->format($price) : null;
 				$totalBillFormatter = $priceCurrency ? ToolBox::NumberFormatterCurrency($priceCurrency)->format($totalPrice) : null;
-
         // BODY CELLS
         $table->bodyCell($key+1)
           ->bodyCell($type, ["style" =>"text-align: center;"])
@@ -102,17 +96,13 @@ abstract class OrderItemAbstract
           ->bodyCell($totalBillFormatter, ["style" =>"text-align: right;"])
           ->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($idordemItem,"orderItem",$idorder,"order",['class'=>'form-orderItem']))
           ->closeRow();
-
         $quantityTotal += $orderQuantity;
         $totalBill += $totalPrice;
       }
-
       self::$TOTAL_BILL = $totalBill - $discount;
-
     } else {
       $table->bodyCell(_("No items found!"), [ "colspan" => "7", "style" => "text-align: center;" ])->closeRow();
     }
-
     // FOOTER
     $table->foot(sprintf(_("%s items"), "$numberOfItems"), [ "colspan" => "2" ])
       ->foot()
@@ -120,7 +110,6 @@ abstract class OrderItemAbstract
       ->foot(sprintf(_("Discount: %s"), number_format($discount,2,',','.')))
       ->foot(number_format(self::$TOTAL_BILL,2,',','.'), [ "style" => "text-align: right;" ])
       ->foot();
-
     return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=> $table->ready() ];
   }
 
@@ -134,14 +123,12 @@ abstract class OrderItemAbstract
     $form->action("/admin/orderItem/new")->method("post");
     // number of items
     $form->content("<p>" . sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) . "</p>");
-
     $table = new Table();
     $table->head(_("Select"), [ "style" => "width: 45px;"])
       ->headers([ _("Name"), _("Type") ])
       ->head(_("Price"), [ "style" => "width: 150px;"])
       ->head(_("Elegible duration"))
       ->head(_("Quantity"), [ "style" => "width: 80px;"]);
-
 		if ($sellerHasOfferCatalog['numberOfItems'] == '0') {
 			$table->bodyCell(_("No items available!"), ['colspan'=>'6','style'=>'text-align: center;'])->closeRow();
 		} else {
@@ -157,14 +144,12 @@ abstract class OrderItemAbstract
 				$price = ToolBox::NumberFormatterCurrency($item['priceCurrency'])->format($item['price']);
 				$eligibleDuration = $item['eligibleDuration'] ?? null;
 				$hrefItem = sprintf("/admin/offer/edit/%s", $idoffer);
-
 				// REFERENCE ORDER
-				$form->input("items[$key][referencesOrder]", $this->referencesOrder, "hidden");
+				$form->input("items[$key][orderItemNumber]", $this->orderItemNumber, "hidden");
 				// OFFER
 				//$form->input("items[$key][offer]", $idoffer, "hidden");
 				// OFFERED ITEM TYPE
 				$form->input("items[$key][orderedItem]", $itemOrderedThing, "hidden");
-
 				// TABLE ROW
 				$table->bodyCell("<input name='items[$key][offer]' type='checkbox' value='$idoffer' >", ["style" => "text-align: center;"])
 					->bodyCell($name, null, $hrefItem)
@@ -175,11 +160,8 @@ abstract class OrderItemAbstract
 					->closeRow();
 			}
 		}
-
     $form->content($table->ready());
-
     $form->submitButtonSend();
-
     return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=> $form->ready() ];
   }
 }
