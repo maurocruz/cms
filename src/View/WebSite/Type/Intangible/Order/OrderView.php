@@ -9,11 +9,13 @@ use Plinct\Tool\ToolBox;
 
 class OrderView extends OrderAbstract
 {
-
-	public function index(?array $value)
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function index(?array $value): void
 	{
 		parent::setVars($value);
-
 		$typeBuilder = ToolBox::typeBuilder($value);
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		parent::navbarIndex($value);
@@ -27,7 +29,7 @@ class OrderView extends OrderAbstract
 	 *
 	 * @param null $value
 	 */
-	public function new($value = null)
+	public function new($value = null): void
 	{
 		// NAVBAR
 		parent::navbarIndex($value);
@@ -42,7 +44,7 @@ class OrderView extends OrderAbstract
    *
    * @param ?array $data
    */
-  public function edit(?array $data)
+  public function edit(?array $data): void
   {
 		if (empty($data)) {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->noContent());
@@ -65,122 +67,50 @@ class OrderView extends OrderAbstract
   }
 
   /**
-   * SHOW PAYMENT INVOICES WHICH DUE DATE EXPIRED OR NEXT TO EXPIRY
-   *
-   * @param $value
-   */
-  public function payment($value)
-  {
-		$seller = $value['seller'];
-    // NAVBAR
-    parent::navbarInvoice($seller);
-		// LIST
-	  CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('order')->setHasPart($this->idthingSeller)->setDataset('seller',$this->idthingSeller)->ready()
-	  );
-/*
-
-    // VARS
-    $key = 0;
-
-    // TITLE
-    $content[] = [ "tag" => "h3", "content" => ucfirst(_("payments")) ];
-
-    // SELECT PERIOD
-    $content[] = parent::selectPeriodo(count($value['orders']), "payment");
-
-    $total = 0;
-    foreach ($value['orders'] as $key => $value) {
-      $idorder = $value['idorder'];
-      $href = "/admin/$this->typeHasPart/order?id=$this->idHasPart&item=$idorder";
-      $orderStatus = _($value['orderStatus']);
-      $paymentDueDate = DateTime::formatDate($value['paymentDueDate']);
-      $totalPaymentDue = number_format((float)$value['totalPaymentDue'],2,",",".");
-      $customerName = $value['customerName'];
-      $tbody[] = [ "tag" => "tr", "content" => [
-        [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => sprintf('<a href="%s">%s</a>', $href, _("Edit")) ],
-        [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $idorder],
-        [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $paymentDueDate],
-        [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => $totalPaymentDue ],
-        [ "tag" => "td", "content" => $customerName ],
-        [ "tag" => "td", "content" => $value['installments'] ],
-        [ "tag" => "td", "content" => $value['orderedItems'] ],
-        [ "tag" => "td", "content" => $orderStatus ]
-      ]];
-      $total += $value['totalPaymentDue'];
-    }
-
-    // total
-    $tbody[] = [ "tag" => "tr", "attributes" => [ "style" => "background-color: rgba(0,0,0,0.65);" ], "content" => [
-      [ "tag" => "td", "attributes" => [ "colspan" => "2"], "content" => "" ],
-      [ "tag" => "td", "attributes" => [ "style" => "text-align: center"], "content" => "TOTAL" ],
-      [ "tag" => "td", "attributes" => [ "style" => "text-align: right"], "content" => number_format($total,2,",",".") ],
-      [ "tag" => "td", "attributes" => [ "style" => "text-align: center"], "content" => ($key+1). " itens" ],
-      [ "tag" => "td", "content" => "" ],
-      [ "tag" => "td", "content" => "" ],
-      [ "tag" => "td", "content" => "" ]
-    ]];
-
-    $content[] = [ "tag" => "table", "attributes" => [ "class" => "table" ], "content" => [
-      [ "tag" => "thead", "content" => [
-        [ "tag" => "tr", "content" => [
-          [ "tag" => "th", "attributes" => [ "style" => "width: 30px;" ], "content" => _("Action") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 30px;" ], "content" => _("ID") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 80px;" ], "content" => _("Due date") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 90px;" ], "content" => _("Values") ],
-          [ "tag" => "th", "attributes" => [ "style" => "min-width: 240px;" ], "content" => _("Customer") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 80px;" ], "content" => ("Installments") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 240px;" ], "content" => _("Item") ],
-          [ "tag" => "th", "attributes" => [ "style" => "width: 140px;" ], "content" => _("Status") ]
-        ]]
-      ]],
-      [ "tag" => "tbody", "content" => $tbody ]
-    ] ];
-
-    $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
-
-    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);*/
-  }
-
-  /**
    * SHOW ORDERS WHOSE DUE DATE HAS EXPIRED
    *
    * @param $value
    */
-  public function expired($value)
+  public function expired($value): void
   {
+		$seller = $value['seller'];
+		$orderData = $value['orders'];
     // NAVBAR
-    parent::navbarOrder($value);
-
-    CmsFactory::view()->fragment()->navbar(_("Expired orders"),[
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=all" => CmsFactory::view()->fragment()->icon()->home(),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=past" => _("Until today"),
-      "/admin/$this->typeHasPart/order?id=$this->idHasPart&action=expired&period=current_month" => _("Until the end of the current month"),
-      "javascript: print();" => _("Print out")
-    ],5);
-
-    // VARS
-    $idHasPart = ToolBox::searchByValue($value['identifier'],'id','value');
-    $orders = $value['orders'];
-
-    // TITLE
-    $content[] = [ "tag" => "h3", "content" => _("Expired or due orders") ];
-
-    // SELECT BY PERIOD
-    $content[] = self::selectPeriodo($orders['numberOfItems'], "expired");
-
-    // TABLE
-    $table = CmsFactory::view()->fragment()->listTable();
-    $table->caption(sprintf(_("List of %s"), _("orders")));
-    $table->labels('ID', _("Due date"), _("Customer"), _("Ordered item"), _("Order status"));
-    $table->rows($orders['itemListElement'],['idorder', 'paymentDueDate', 'customer', 'orderedItem:0:orderedItem', 'orderStatus'])
-    ->setEditButton("/admin/organization/order?id=$idHasPart&item=");
-    $content[] = $table->ready();
-
-    // PRINT
-    $content[] = [ "tag" => "p", "content" => "Imprimir", "href" => "javascript: void(0);", "hrefAttributes" => [ "onclick" => "print();" ] ];
-
-    // VIEW
-    CmsFactory::view()->addMain([ "tag" => "div", "attributes" => [ "class" => "box" ], "content" => $content ]);
-  }
+    parent::navbarExpired($seller);
+		// TABLE
+		$table = CmsFactory::view()->fragment()->listTable(['class'=>'table-order-expired']);
+		$table->setCaption(_("Expired or due orders"));
+		$table->labels(
+			'#',
+			'idorder',
+			_("Payment due date"),
+			_('Customer'),
+			_('Ordered items')
+		);
+		foreach ($orderData as $key => $order) {
+			$tbOrder = ToolBox::typeBuilder($order);
+			$idorder = $tbOrder->getId();
+			$paymentDueDate = $order['paymentDueDate'];
+			$tbCustomer = ToolBox::typeBuilder($order['customer']);
+			$customerId = $tbCustomer->getId();
+			$customerName = $tbCustomer->getValue('name');
+			$customerType = $tbCustomer->getType();
+			$orderedItem = $order['orderedItem'] ?? [];
+			$itemOrderedArray = [];
+			foreach ($orderedItem as $item) {
+				$itemOrderedArray[] = $item['orderedItem']['name'];
+			}
+			$itemOrderedString = implode(', ', $itemOrderedArray);
+			// row
+			$table->addRow(
+				$key+1,
+				"<a href='/admin/order/edit/$idorder'>$idorder</a>",
+				ToolBox::dateTime($paymentDueDate)->format('d/m/Y'),
+				"<a href='/admin/$customerType/edit/$customerId'>$customerName</a>",
+				$itemOrderedString
+			);
+		}
+	  // VIEW
+	  CmsFactory::view()->addMain($table->ready());
+	}
 }

@@ -49,4 +49,31 @@ class InvoiceController implements TypeControllerInterface
 		}
 		return false;
 	}
+
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
+	public function paymentDue(array $params): bool
+	{
+		$providerId = $params['provider'] ?? null;
+		$paymentStatus = $params['paymentStatus'] ?? null;
+		if ($providerId) {
+			$providerData = CmsFactory::model()->type('thing')->get(['idthing'=>$providerId,'hasPart'=>true]);
+			$providerValue = $providerData[0] ?? null;
+			$paramsInvoice['provider'] = $providerId;
+			$paramsInvoice['properties'] = 'customer,referencesOrder';
+			$paramsInvoice['orderBy'] = 'scheduledPaymentDate';
+			$paramsInvoice['ordering'] = 'asc';
+			$paramsInvoice['paymentStatus'] = 'paymentDue';
+			if ($paymentStatus == 'paymentPastDue') {
+				$paramsInvoice['where'] = 'scheduledPaymentDate<curdate()';
+			}
+			$invoideData = CmsFactory::model()->type('invoice')->get($paramsInvoice);
+			return CmsFactory::view()->webSite()->type('invoice')->setMethodName('paymentDue')->setData(['provider'=>$providerValue,'invoices'=>$invoideData])->ready();
+		}
+		return CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->noContent()
+		);
+	}
 }

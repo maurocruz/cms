@@ -25,7 +25,7 @@ class ActionView
       foreach ($data as $value) {
         $table->bodyCell(DateTime::formatDateTime($value['startTime']))
           ->bodyCell($value['@type'])
-          ->bodyCell($value['result'] ? str_replace("&",'; ',$value['result']) : '')
+          ->bodyCell(isset($value['result']) ? str_replace("&",'; ',$value['result']) : '')
 	        ->bodyCell($value['actionStatus'])
           ->bodyCell($value['agent']['name'] ?? _("Undefined"))
           ->closeRow();

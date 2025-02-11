@@ -36,7 +36,11 @@ abstract class OrderAbstract implements TypeViewInterface
 	 */
 	protected ?string $tags = null;
 
-	protected function setVars($value)
+	/**
+	 * @param $value
+	 * @return void
+	 */
+	protected function setVars($value): void
 	{
 		$typeBuilder = ToolBox::typeBuilder($value);
 		$type = $typeBuilder->getType();
@@ -44,11 +48,12 @@ abstract class OrderAbstract implements TypeViewInterface
 			$this->sellerType = $type;
 		}
 	}
+
 	/**
 	 * @param array $value
 	 * @return void
 	 */
-	public function navbarIndex(array $value)
+	public static function navbarIndex(array $value): void
 	{
 		if ($value['@type'] == 'Order') {
 			$seller = $value['seller'];
@@ -60,11 +65,12 @@ abstract class OrderAbstract implements TypeViewInterface
 			$sellerType = $value['@type'];
 			$sellerName = $value['name'];
 		}
-		$this->idthingSeller = $sellerTypeBuilder->getPropertyValue('idthing');
+		$idthingSeller = $sellerTypeBuilder->getPropertyValue('idthing');
+
 		if ($sellerType == 'Organization') {
 			$idorganization = $sellerTypeBuilder->getPropertyValue('idorganization');
 			Organization::navbarIndex();
-			Organization::navbarEdit($sellerName, $idorganization, $this->idthingSeller);
+			Organization::navbarEdit($sellerName, $idorganization, $idthingSeller);
 		}
 		if ($sellerType == 'Person') {
 			$idperson = $sellerTypeBuilder->getPropertyValue('idperson');
@@ -75,10 +81,10 @@ abstract class OrderAbstract implements TypeViewInterface
 			->type('order')
 			->level(4)
 			->title(_('Orders'))
-			->newTab("/admin/order?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
-			->newTab("/admin/order/new?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
-			->newTab("/admin/order/payment?seller=$this->idthingSeller", _('Payments'))
-			->newTab("/admin/order/expired?seller=$this->idthingSeller", ucfirst(_("Due dates")));
+			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->newTab("/admin/invoice?provider=$idthingSeller", _('Invoices'))
+			->newTab("/admin/order/expired?seller=$idthingSeller", ucfirst(_("Due dates")));
 
 		CmsFactory::view()->addHeader($navbar->ready());
 	}
@@ -88,7 +94,7 @@ abstract class OrderAbstract implements TypeViewInterface
 	 *
 	 * @param $value
 	 */
-  protected function navbarOrder($value)
+  protected function navbarOrder($value): void
   {
 		self::navbarIndex($value);
 		CmsFactory::view()->addHeader(
@@ -100,18 +106,23 @@ abstract class OrderAbstract implements TypeViewInterface
 		);
   }
 
-	protected function navbarInvoice($value)
+	/**
+	 * @param $seller
+	 * @return void
+	 */
+	protected function navbarExpired($seller): void
 	{
-		self::navbarIndex($value);
+		self::navbarIndex($seller);
 		CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-			->type('invoice')
+		CmsFactory::view()->fragment()->navbar()
+			->title(_("Expired orders"))
+			->newTab('javascript: print();',_("Print out"))
+			->type('order')
 			->level(5)
-			->title(_('Payments'))
-			->newTab("/admin/order/payment?seller=$this->idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
 			->ready()
 		);
 	}
+
   /**
    * FORM TO EDIT OR TO ADD A NEW ORDER
    *
@@ -180,17 +191,11 @@ abstract class OrderAbstract implements TypeViewInterface
       ] ]
     ] ];
 
-    switch (filter_input(INPUT_GET, 'period')) {
-      case "current_month":
-        $period = _("Until the end of the current month") . " - <b>".DateTime::translateMonth(date('m'))." ".date('Y')."</b>";
-        break;
-      case "past":
-        $period = _("Until today") . " - <b>".DateTime::formatDate();
-        break;
-      default :
-        $period = null;
-        break;
-    }
+	  $period = match (filter_input(INPUT_GET, 'period')) {
+		  "current_month" => _("Until the end of the current month") . " - <b>" . DateTime::translateMonth(date('m')) . " " . date('Y') . "</b>",
+		  "past" => _("Until today") . " - <b>" . DateTime::formatDate(),
+		  default => null,
+	  };
 
     $content[] = [ "tag" => "p", "content" => sprintf(_("Showing %s items %s"), $numberOfItens, $period) ];
 
@@ -208,11 +213,11 @@ abstract class OrderAbstract implements TypeViewInterface
     $uri = StringTool::removeDuplicateQueryStrings('period');
 
     // text
-    switch ($period) {
-      case '-2 year': $text = 'last 2 years'; break;
-      case 'all': $text = 'all'; break;
-      default: $text = 'last 5 years'; break;
-    }
+	  $text = match ($period) {
+		  '-2 year' => 'last 2 years',
+		  'all' => 'all',
+		  default => 'last 5 years',
+	  };
 
     $string = "<p class='period-paragraph'>" . sprintf(_('Showing %s'), $text);
 

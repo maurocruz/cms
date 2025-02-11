@@ -34,13 +34,12 @@ class EventController implements TypeControllerInterface
 
 	/**
 	 * @throws DOMException
-	 * @throws DOMException
 	 */
 	public function sitemap(?array $params): ?bool
 	{
 		$template = $params['loc'] ?? null;
 		$dataSitemap = null;
-		$params = [ "orderBy" => "dateCreated", "ordering" => "desc", 'limit'=>'none' ];
+		$params = ['fields'=>'idevent,startDate,name,dateCreated,dateModified','orderBy'=>'dateCreated','ordering'=>'desc','limit'=>'none'];
 		$data = CmsFactory::model()->type('event')->get($params);
 		foreach ($data as $value) {
 			$typeBuider = ToolBox::typeBuilder($value);

@@ -12,7 +12,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function index(?array $value)
+	public function index(?array $value): void
 	{
 		$provider = $value['provider'] ?? null;
 		if ($provider) {
@@ -23,7 +23,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 		);
 	}
 
-	public function edit(?array $data)
+	public function edit(?array $data): void
 	{
 		if (!empty($data)) {
 			$provider = $data['provider'] ?? null;
@@ -36,7 +36,10 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox(
 					[
-						"<p>"._('Provider').": <a href='/admin/".lcfirst($this->providerType)."/edit/".$this->providerId."'>".$this->providerName."</a>; "._('Customer').": <a href='/admin/".lcfirst($this->customerType)."/edit/".$this->customerId."'>".$this->customerName."</a></p>",
+						"<p>"
+							._('Provider').": <a href='/admin/".lcfirst($this->providerType)."/edit/".$this->providerId."'>".$this->providerName."</a>; "
+							._('Customer').": <a href='/admin/".lcfirst($this->customerType)."/edit/".$this->customerId."'>".$this->customerName."</a>; "
+							._('Order').": <a href='/admin/order/edit/".$this->idorder."'>"._('Order')."</a></p>",
 						parent::formInvoice('edit', $data)
 					],
 					_('Invoice')
@@ -90,7 +93,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function overdueInvoice(?array $value)
+	public function paymentDue(?array $value): void
 	{
 		$provider = $value['provider'];
 		$invoices = $value['invoices'];
@@ -98,20 +101,20 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 
 		CmsFactory::view()->addMain("<h3>Faturas abertas</h3>");
 		CmsFactory::view()->addMain("<table class='table'>");
-		CmsFactory::view()->addMain("<thead><tr><th>#</th><th>"._('Invoice')."</th><th>"._('Order')."</th><th>"._('Data do vencimento')."</th><th>"._('Valor')."</th><th>"._('Customer')."</th><th>"._('Parcelas vencidas')."</th><th>"._('Order status')."</th></tr></thead>");
+		CmsFactory::view()->addMain("<thead><tr><th>#</th><th>"._('Invoice')."</th><th>"._('Order')."</th><th>"._('Data do vencimento')."</th><th>"._('Valor')."</th><th>"._('Customer')."</th><th>"._('Order status')."</th></tr></thead>");
 		CmsFactory::view()->addMain("<tbody>");
 		$numberFormatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
 		$total = 0;
 		foreach ($invoices as $key => $invoice) {
 			$tbInvoice = ToolBox::typeBuilder($invoice);
 			$idinvoice = $tbInvoice->getId();
-			$idorder = $tbInvoice->getPropertyValue('idorder');
+			$tbOrder = ToolBox::typeBuilder($invoice['referencesOrder']);
+			$idorder = $tbOrder->getPropertyValue('idorder');
 			$scheduledPaymentDate = $invoice['scheduledPaymentDate'];
 			$total += $invoice['totalPaymentDue'];
 			$totalPaymentDue = $numberFormatter->format($invoice['totalPaymentDue']);
-			$customerName = $invoice['name'];
-			$overdueParcel = $invoice['overdueParcel'];
-			$orderStatus = $invoice['orderStatus'];
+			$customerName = $invoice['customer']['name'];
+			$orderStatus = $invoice['referencesOrder']['orderStatus'];
 			CmsFactory::view()->addMain("<tr>");
 			CmsFactory::view()->addMain("<td>".($key+1)."</td>");
 			CmsFactory::view()->addMain("<td><a href='/admin/invoice/edit/$idinvoice'>"._('Edit invoice')."</a></td>");
@@ -119,7 +122,6 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 			CmsFactory::view()->addMain("<td>$scheduledPaymentDate</td>");
 			CmsFactory::view()->addMain("<td>$totalPaymentDue</td>");
 			CmsFactory::view()->addMain("<td>$customerName</td>");
-			CmsFactory::view()->addMain("<td>$overdueParcel</td>");
 			CmsFactory::view()->addMain("<td>$orderStatus</td>");
 			CmsFactory::view()->addMain("</tr>");
 		}

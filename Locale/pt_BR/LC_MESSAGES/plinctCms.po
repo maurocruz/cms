@@ -826,7 +826,7 @@ msgid "PaymentDue"
 msgstr "À pagar"
 
 msgid "Payment due"
-msgstr "À pagar"
+msgstr "À Receber"
 
 msgid "PaymentComplete"
 msgstr "Pago"

@@ -32,7 +32,7 @@ class Type
 	 * @param array $params
 	 * @return mixed|string|string[]
 	 */
-	public function post(array $params)
+	public function post(array $params): mixed
 	{
 		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
 		if ($isMultidimensional) {
@@ -73,7 +73,8 @@ class Type
 	 * @param array $params
 	 * @return mixed
 	 */
-	public function put(array $params) {
+	public function put(array $params): mixed
+	{
 		$id = $params["id$this->type"];
 		$namespaceClass = "Plinct\\Cms\\Controller\\Type\\".ucfirst($this->type)."\\".ucfirst($this->type);
 		if (class_exists($namespaceClass)) {
@@ -95,11 +96,11 @@ class Type
 	 * @param array $params
 	 * @return mixed|string
 	 */
-	public function erase(array $params)
+	public function erase(array $params): mixed
 	{
 		$data = CmsFactory::model()->api()->delete($this->type, $params)->ready();
 		if ($data['status'] === 'success') {
-			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type, 'id'=>$id]);
+			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type]);
 		}
 
 		// TODO fazer redirecionameto para offer
@@ -107,6 +108,9 @@ class Type
 		// REDIRECT
 		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
 		if (in_array($this->type, $redirectedPage)) {
+			if ($this->type == 'invoice' && (isset($params['output']) && $params['output'] == 'redirect_home')) {
+				return '/admin/order/edit/'.$params['referencesOrder'];
+			}
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
 		//

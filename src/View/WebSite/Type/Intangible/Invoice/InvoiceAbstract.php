@@ -4,8 +4,8 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Invoice;
 use DateTime;
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Intangible\Order\OrderView;
 use Plinct\Cms\View\WebSite\Type\Intangible\OrderItem\OrderItemView;
-use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\Table;
 
@@ -58,19 +58,19 @@ abstract class InvoiceAbstract
   /**
    * @var float|int
    */
-  protected float $totalInvoiceAmount = 0;
+  protected float|int $totalInvoiceAmount = 0;
   /**
    * @var float|int
    */
-  protected float $totalPaidAmount = 0;
+  protected float|int $totalPaidAmount = 0;
   /**
    * @var float|int
    */
-  protected float $totalPayableAmount = 0;
+  protected float|int $totalPayableAmount = 0;
   /**
    * @var float|int
    */
-  protected float $totalPastDueAmount = 0;
+  protected float|int $totalPastDueAmount = 0;
 
 	/**
 	 * @param array $customer
@@ -84,6 +84,10 @@ abstract class InvoiceAbstract
 		$this->customerName = $typeBuilder->getValue('name');
 	}
 
+	/**
+	 * @param array $provider
+	 * @return void
+	 */
 	public function setProvider(array $provider): void
 	{
 		$typeBuilder = ToolBox::typeBuilder($provider);
@@ -93,6 +97,10 @@ abstract class InvoiceAbstract
 		$this->providerName = $typeBuilder->getValue('name');
 	}
 
+	/**
+	 * @param array $order
+	 * @return void
+	 */
 	public function setOrder(array $order): void
 	{
 		$typeBuilder = ToolBox::typeBuilder($order);
@@ -103,14 +111,11 @@ abstract class InvoiceAbstract
 	 * @param array $provider
 	 * @return void
 	 */
-	public function navbarIndex(array $provider)
+	public function navbarIndex(array $provider): void
 	{
+		OrderView::navbarIndex($provider);
 		if (!$this->providerIdthing) {
 			$this->setProvider($provider);
-		}
-		if ($this->providerType == 'Organization') {
-			Organization::navbarIndex();
-			Organization::navbarEdit($this->providerName, $this->providerId, $this->providerIdthing);
 		}
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
@@ -118,7 +123,8 @@ abstract class InvoiceAbstract
 				->title(_('Invoice'))
 				->level(5)
 				->newTab("/admin/invoice?provider=$this->providerIdthing", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/invoice?provider=$this->providerIdthing&overdueInvoice=true", _('Faturas abertas'))
+				->newTab("/admin/invoice/paymentDue?provider=$this->providerIdthing", _('Payment due'))
+				->newTab("/admin/invoice/paymentDue?provider=$this->providerIdthing&paymentStatus=paymentPastDue", _('Payment past due'))
 				->ready()
 		);
 	}
@@ -146,6 +152,7 @@ abstract class InvoiceAbstract
     $form->action("/admin/invoice/".$case)->method("post");
 		$form->addMandatories('totalPaymentDue','scheduledPaymentDate','paymentStatus')->setIdform("form-payments-".($idinvoice ?? 'new'));
     // HIDDENS
+	  if ($n === null) $form->input('output', 'redirect_home', 'hidden');
 	  $form->input('customer', $this->customerIdthing, 'hidden');
 	  $form->input('provider', $this->providerIdthing, 'hidden');
     $form->input("referencesOrder", (string)$this->idorder, "hidden");
@@ -188,6 +195,7 @@ abstract class InvoiceAbstract
       try {
           $expired = new DateTime($scheduledPaymentDate);
       } catch (Exception $e) {
+				var_dump($e->getMessage());
       }
       $diff = $expired->diff($now);
     }
@@ -219,13 +227,10 @@ abstract class InvoiceAbstract
     $colorDiference = $difference < 0 ? "#fab5b5" : "inherit";
     $colorPayable = $totalPayableAmount > 0 ? "#fafab5" : "inherit";
     $colorPastDue = $totalPastDueAmount > 0 ? "#fab5b5" : "inherit";
-
     // TABLE
     $table = new Table();
-
     // CAPTION
     $table->caption(_("Balance"));
-
     // HEADERS
     $table->head(_("Total order amount") )
       ->head(_("Total invoice amount"))
@@ -233,7 +238,6 @@ abstract class InvoiceAbstract
       ->head(_("Amounts paid"))
       ->head(_("Amounts payable"))
       ->head(_("Amounts past due"));
-
     // BODY
     $table->bodyCell(number_format($totalPaymentAmount,2,',','.'), [ "style" => "text-align: center;" ])
       ->bodyCell(number_format($totalInvoiceAmount,2,',','.'), [ "style" => "text-align: center;" ])
@@ -242,7 +246,6 @@ abstract class InvoiceAbstract
       ->bodyCell(number_format($totalPayableAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPayable" ])
       ->bodyCell(number_format($totalPastDueAmount,2,',','.'), [ "style" => "text-align: center; color: $colorPastDue" ])
       ->closeRow();
-
     // READY
     return ['tag'=>'div','attributes'=>['style'=>'max-width: 100%; overflow-x: scroll;'], 'content'=>$table->ready()];
   }
@@ -258,7 +261,6 @@ abstract class InvoiceAbstract
     $dadosSaldo['credito'] = 0;
     $dadosSaldo['debito'] = 0;
     $dadosSaldo['atrasado'] = 0;
-
     foreach ($data as $value) {
       $paid = $value['paymentDate'] !== "0000-00-00" && $value['paymentDate'] !== null;
       // pago

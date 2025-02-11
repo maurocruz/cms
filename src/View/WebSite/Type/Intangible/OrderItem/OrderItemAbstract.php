@@ -55,7 +55,7 @@ abstract class OrderItemAbstract
   protected function listOrderedItems($data): array
   {
     $idorder = $this->orderItemNumber;
-    $discount = (float) $data['discount'];
+    $discount = $data['discount'] ?? 0;
     $orderedItems = $data['orderedItem'] ?? null;
 		$acceptedOffer = $data['acceptedOffer'] ?? null;
     $numberOfItems = $orderedItems ? count($orderedItems) : null;

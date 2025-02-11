@@ -43,18 +43,8 @@ class OrderController implements TypeControllerInterface
 	public function edit(array $params): bool
 	{
 		$idorder = $params['idorder'] ?? null;
-		$seller = $params['seller'] ?? null;
-		$queryArray['hasPart'] = true;
-		$queryArray['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action,hasOfferCatalog,itemOffered";
-		$queryArray['availability'] = "InStock";
-		$queryArray['isValidThrough'] = true;
-		if ($idorder) {
-			$queryArray['idorder'] = $idorder;
-		}
-		if ($seller) {
-			$queryArray['seller'] = $seller;
-		}
-		$data = CmsFactory::model()->api()->get('order',$queryArray)->ready();
+		$params['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action,hasOfferCatalog,itemOffered";
+		$data = $idorder ? CmsFactory::model()->api()->get('order',$params)->ready() : [];
 		return CmsFactory::view()->webSite()->type('order')->setData($data)->setMethodName('edit')->ready();
 	}
 
@@ -62,17 +52,14 @@ class OrderController implements TypeControllerInterface
 	 * @param array $params
 	 * @return bool
 	 */
-	public function payment(array $params): bool
+	public function expired(array $params): bool
 	{
 		$seller = $params['seller'] ?? null;
-		if ($seller) {
-			$dataSeller = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
-			if (isset($dataSeller[0])) {
-				$valueSeller = $dataSeller[0];
-			}
-		}
-		$dataOrder = CmsFactory::model()->api()->get('order',['orderStatus'=>'orderProcessing'] + $params)->ready();
-		var_dump($dataOrder);
-		return CmsFactory::view()->webSite()->type('order')->setData(['seller'=>$valueSeller])->setMethodName('payment')->ready();
+		$thingData = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
+		$thingValue = $thingData[0] ?? null;
+
+		$params = ['properties'=>'customer,orderedItem','orderStatus'=>'orderProcessing','orderBy'=>'paymentDueDate asc'];
+		$dataOrder = CmsFactory::model()->api()->get('order',$params)->ready();
+		return CmsFactory::view()->webSite()->type('order')->setData(['seller'=>$thingValue,'orders'=>$dataOrder])->setMethodName('expired')->ready();
 	}
 }
