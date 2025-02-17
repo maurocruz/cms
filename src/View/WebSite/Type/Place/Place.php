@@ -1,12 +1,11 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Place;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
+use Plinct\Tool\ToolBox;
 
 class Place implements TypeViewInterface
 {
@@ -24,9 +23,8 @@ class Place implements TypeViewInterface
 	    CmsFactory::View()->fragment()->navbar()
 		    ->type('place')
 		    ->title(_('Place'))
-		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home(18,18))
-		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus(18,18))
-		    ->search()
+		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home(16,16))
+		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
 		    ->ready()
 		);
     if ($title) {
@@ -66,12 +64,16 @@ class Place implements TypeViewInterface
 			CmsFactory::view()->addMain("<p>"._("Nothing found!")."</p>");
 		} else {
 			$value = $data[0];
-			$typeBuilder = new TypeBuilder('place',$value);
+			$typeBuilder = ToolBox::typeBuilder($value);
 			$idplace = $typeBuilder->getId();
+			$idthing = $typeBuilder->getIdthing();
 			$this->placeId = isset($value) ? $idplace : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready());
+			CmsFactory::view()->addMain([
+				CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready(),
+				//CmsFactory::view()->fragment()->reactShell('imageObject')->setDataset('idHasPart',$idthing)->ready()
+			]);
 		}
   }
 
