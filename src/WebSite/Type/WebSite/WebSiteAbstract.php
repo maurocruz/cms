@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebSite;
 
 use Plinct\Cms\CmsFactory;
@@ -24,8 +21,8 @@ class WebSiteAbstract
         ->type('webSite')
         ->title("WebSite")
         ->level(2)
-        ->newTab('/admin/webSite', CmsFactory::response()->fragment()->icon()->home())
-        ->newTab('/admin/webSite/new', CmsFactory::response()->fragment()->icon()->plus())
+        ->newTab('/admin/webSite', CmsFactory::response()->fragment()->icon()->home(16,16))
+        ->newTab('/admin/webSite/new', CmsFactory::response()->fragment()->icon()->plus(16,16))
         ->search("/admin/webSite")
         ->ready()
     );
@@ -34,7 +31,7 @@ class WebSiteAbstract
       CmsFactory::response()->fragment()->navbar()
         ->title(_($title))
         ->level(3)
-        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::response()->fragment()->icon()->home())
+        ->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::response()->fragment()->icon()->home(16,16))
         ->newTab("/admin/webSite/webPage?id=$this->idwebSite", _("List of web pages"))
         ->ready()
     );
