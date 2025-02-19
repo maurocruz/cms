@@ -72,7 +72,9 @@ class Place implements TypeViewInterface
 			$this->navbarPlace($value['name']);
 			CmsFactory::view()->addMain([
 				CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready(),
-				//CmsFactory::view()->fragment()->reactShell('imageObject')->setDataset('idHasPart',$idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('review')->setDataset('idHasPart',$idthing)->ready(),
+				CmsFactory::view()->fragment()->reactShell('contactPoint')->setDataset('idHasPart',$idthing)->ready(),
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setDataset('idHasPart',$idthing)->ready()
 			]);
 		}
   }
