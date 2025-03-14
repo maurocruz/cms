@@ -46,19 +46,23 @@ class EventView extends EventAbstract implements TypeViewInterface
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
       $this->idevent = $typeBuilder->getId();
 			$idthing = $typeBuilder->getIdthing();
-			$superEvent = $value['superEvent'] ?? null;
       // EVENT FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
-			// SUPER EVENTS
-      CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Super Event"),CmsFactory::view()->fragment()->form()->relationship($superEvent, 'event', $idthing,'event')->oneToOne('Super Event','superEvent'))
-      );
+			// ADDITIONAL TYPES
+	    CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(
+					_('Additional type'),
+					CmsFactory::view()->fragment()->reactShell('event')->setProperty('additionalType')->setIdHasPart($idthing)->ready()
+				));
 			// SUB EVENTS
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Sub Events"), CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", (int)$this->idevent, 'event', $value['subEvent'], "idevent desc")));
-      // PLACE
-      //CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Place"), CmsFactory::view()->fragment()->form()->relationship("event", (int)$this->idevent, "place")->oneToOne("location", $value['location'], "dateCreated")));
+      CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(
+					_("Sub Events"),
+					CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", $idthing, 'event', $value['subEvent'] ?? null, "startDate")
+				)
+      );
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready());
     }
   }
 }

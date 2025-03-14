@@ -140,7 +140,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param array $params
    * @return mixed
    */
-  protected static function getData(array $params) {
+  protected static function getData(array $params): mixed
+  {
     $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
     return json_decode((ServerFactory::soloine())->get($params), true);
   }
@@ -154,7 +155,11 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 */
 	public function relationshipOneToOne(string $type, string $legend, string $propertyName, int $value = null): FormInterface
 	{
-		$this->content(CmsFactory::view()->fragment()->reactShell($type)->getItemType($legend, $propertyName, $value)->ready());
+		$this->content([
+			"<fieldset><legend>$legend</legend>",
+			CmsFactory::view()->fragment()->reactShell($type)->getItemType($legend, $propertyName, $value)->ready(),
+			"</fieldset>"
+		]);
 		return $this;
 	}
 
@@ -194,7 +199,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 * @param string $editorName
 	 * @return void
 	 */
-  public function setEditor(string $id, string $editorName = 'editor')
+  public function setEditor(string $id, string $editorName = 'editor'): void
   {
     if(App::getRichTextEditor()) {
 			$this->form->content("<script>const $editorName = new RichTextEditor('#$id', config );</script>");
@@ -219,7 +224,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	/**
 	 * @return void
 	 */
-	private function writeMandatory()
+	private function writeMandatory(): void
 	{
 		$mandat = json_encode($this->mandatories);
 		$formId = $this->idform;
@@ -244,10 +249,10 @@ document.getElementById('$formId').addEventListener('submit', function(e) {
 </script>");
 	}
 
-  /**
-   * @param array|null $attributes
-   * @return FormInterface
-   */
+	/**
+	 * @param array $attributes
+	 * @return FormInterface
+	 */
   public function submitButtonSend(array $attributes = ['class'=>'form-submit-button-send']): FormInterface
   {
     $this->form->submitButtonSend($attributes);

@@ -28,12 +28,12 @@ class EventController implements TypeControllerInterface
 	public function edit(array $params): bool
 	{
 		$idevent = $params['idevent'];
-		$data = CmsFactory::model()->type('event')->get(['idevent'=>$idevent,'properties'=>'location']);
+		$data = CmsFactory::model()->type('event')->get(['idevent'=>$idevent,'properties'=>'location,superEvent,subEvent']);
 	  return CmsFactory::view()->webSite()->type('event')->setData($data)->setMethodName('edit')->ready();
 	}
 
 	/**
-	 * @throws DOMException
+	 * @throws DOMException|\DateMalformedStringException
 	 */
 	public function sitemap(?array $params): ?bool
 	{

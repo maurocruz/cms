@@ -3,7 +3,6 @@ namespace Plinct\Cms\View\Fragment\Form;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
-use Plinct\Tool\ArrayTool;
 use Plinct\Tool\ToolBox;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\Form\Form as WebForm;
@@ -72,7 +71,7 @@ class Form extends FormDecorator implements RelationshipInterface
 	 * @param string|null $value
 	 * @return WebForm|FormInterface
 	 */
-  public function selectCategory(string $class = "thing", string $value = null)
+  public function selectCategory(string $class = "thing", string $value = null): WebForm|FormInterface
   {
       $this->form->fieldset(self::selectReady('category', self::getData(['class'=>$class,'source'=>'category']), $value), _("Category"));
 			return $this->form;
@@ -150,27 +149,40 @@ class Form extends FormDecorator implements RelationshipInterface
 	 */
 	public function oneToMany(array $value = null, string $orberBy = null): array
 	{
+		$apiHost = CmsFactory::controller()->getApiHost();
 		$table = lcfirst($this->tableIsPartOf);
-
+		// items exists
 		if ($value) {
 			foreach ($value as $item) {
-				$id = ArrayTool::searchByValue($item['identifier'], "id")['value'];
-				$form = CmsFactory::view()->fragment()->form(["class" => "formPadrao"])
+				$tb = ToolBox::typeBuilder($item);
+				$idevent = $tb->getId();
+				$idthing = $tb->getIdthing();
+				$form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-relationship"])
 					->action("/admin/$table/edit")->method("post");
-				$form->input("tableHasPart", $this->tableHasPart, "hidden")
+				$form->input("typeHasPart", $this->tableHasPart, "hidden")
 					->input("idHasPart", (string) $this->idHasPart, "hidden")
-					->input("tableIsPartOf", $this->tableIsPartOf, "hidden")
-					->input("idIsPartOf", $id, "hidden")
-					->fieldsetWithInput("name", $item['name'], _($item['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "text", null, ["disabled"])
+					->input("typeIsPartOf", $this->tableIsPartOf, "hidden")
+					->input("idIsPartOf", $idthing, "hidden")
+					->fieldsetWithInput("name", $item['name'], _($item['@type']) . " <a href=\"/admin/$table/edit/$idevent\">".("edit this")."</a>", "text", null, ["disabled"])
 					->submitButtonDelete("/admin/$table/erase");
 				$return[] = $form->ready();
 			}
 		}
-		$this->form->attributes(["class" => "formPadrao form-relationship"]);
+		// new item
+		$this->form->attributes(["class" => "form-basic form-relationship"]);
 		$this->form->action("/admin/" . lcfirst($this->tableIsPartOf) . "/new")->method("post");
-		$this->form->input("tableHasPart", $this->tableHasPart, "hidden")
-			->input("idHasPart", (string) $this->idHasPart, "hidden")
-			->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => $table, "data-idHasPart" => $this->idHasPart, "data-orderBy" => $orberBy  ] ]);
+		$this->form->content("<fieldset><legend>"._('New')."</legend>");
+		$this->form->content(['tag'=>'div','attributes'=>[
+			'class'=>'plinct-shell',
+			'data-action'=>'getItemType',
+			'data-typeHasPart'=>$this->tableHasPart,
+			'data-idHasPart'=>$this->idHasPart,
+			'data-typeIsPartOf'=>$this->tableIsPartOf,
+			'data-orderBy'=>$orberBy,
+			'data-apihost'=>$apiHost,]]
+		);
+		$this->form->content("</fieldset>");
+		$this->form->submitButtonSend(['class'=>'form-submit-button-send']);
 
 		$return[] = $this->form->ready();
 
@@ -219,7 +231,7 @@ class Form extends FormDecorator implements RelationshipInterface
 	 * @param string $nameLike
 	 * @param array $attributes
 	 */
-		public function chooseType(string $legend, string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = [])
+		public function chooseType(string $legend, string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []): void
 		{
 			if (is_array($value)) {
 				$typeBuilder = ToolBox::typeBuilder($value);

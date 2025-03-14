@@ -99,12 +99,13 @@ class Type
 	public function erase(array $params): mixed
 	{
 		$data = CmsFactory::model()->api()->delete($this->type, $params)->ready();
-		if ($data['status'] === 'success') {
-			CmsFactory::view()->Logger('type')->info("ITEM DELETED", ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type]);
+		// logger
+		CmsFactory::view()->Logger('type')->info("DELETE ".$data['status'], ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type]);
+		// Relationship
+		if ($data['status'] === 'success' && $data['message'] == 'Relationships deleted') {
+			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
-
 		// TODO fazer redirecionameto para offer
-
 		// REDIRECT
 		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
 		if (in_array($this->type, $redirectedPage)) {

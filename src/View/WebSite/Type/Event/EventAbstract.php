@@ -36,7 +36,9 @@ abstract class EventAbstract
     $endDate = $value['endDate'] ??  null;
 		$organizer = $value['organizer'] ?? null;
 		$location = $value['location'] ?? null;
+		$superEvent = $value['superEvent'] ?? null;
 		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
+		$superEventTb = $superEvent ? CmsFactory::toolBox()::typeBuilder($superEvent) : null;
     // FROM
     $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
@@ -54,7 +56,9 @@ abstract class EventAbstract
 		// LOCATION
 	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getIdthing());
 		// ORGANIZER
-	  $form->relationshipOneToOne('thing',_('Organizer'),'organizer',$organizer);
+	  $form->relationshipOneToOne('organization,person',_('Organizer'),'organizer',$organizer);
+		// SUPER EVENT
+	  $form->relationshipOneToOne('event',_('Super event'),'superEvent', $superEvent ? $superEventTb->getIdthing(): null);
     // BUTTONS
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/event/erase");

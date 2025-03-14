@@ -11,6 +11,13 @@ use Psr\Http\Message\ServerRequestInterface;
 class Controller
 {
 	/**
+	 * @return string|null
+	 */
+	public function getApiHost(): ?string
+	{
+		return App::getApiHost();
+	}
+	/**
 	 * @return Authentication
 	 */
 	public function Authentication(): Authentication
