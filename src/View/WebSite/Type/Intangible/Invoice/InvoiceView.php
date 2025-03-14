@@ -19,7 +19,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 			parent::navbarIndex($provider);
 		}
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('invoice')->setHasPart($this->providerIdthing)->setOrderBy('schedulePaymentDate')->ready()
+			CmsFactory::view()->fragment()->reactShell('invoice')->setIdHasPart($this->providerIdthing)->setOrderBy('schedulePaymentDate')->ready()
 		);
 	}
 

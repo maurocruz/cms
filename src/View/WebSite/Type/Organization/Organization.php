@@ -23,7 +23,7 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
    * @param array|null $value
    * @param
    */
-  public function new(?array $value)
+  public function new(?array $value): void
   {
     // NAVBAR
     parent::navbarNew();
@@ -36,7 +36,7 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
    * @param ?array $data
    * @throws Exception
    */
-  public function edit(?array $data)
+  public function edit(?array $data): void
   {
 		// NAVBAR
 	  parent::navbarIndex();
@@ -59,38 +59,9 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idorganization, $value['contactPoint'] ?? null))
 			);
 			// IMAGE
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $this->idthing)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $this->idthing)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
   }
-
-	/*public function service(array $data)
-	{
-		$value = $data[0];
-		$typeBuilder = ToolBox::typeBuilder($value);
-		$this->idorganization = $typeBuilder->getId();
-		$this->name = $value['name'];
-		parent::navbarService();
-		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('service')->setAttribute('data-params','{"provider":"'.$this->idorganization.'"}')->ready()
-		);
-	}*/
-
-	/**
-	 * @param array $data
-	 * @return void
-	 */
-	/*public function product(array $data)
-	{
-		$value = $data[0];
-		$typeBuilder = new TypeBuilder('organization', $value);
-		$idorganization = $typeBuilder->getId();
-		$this->idorganization = $idorganization;
-		$this->name = $value['name'];
-		$this->navbarProduct();
-		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('product')->setAttribute('data-params','{"manufacturer":"'.$idorganization.'"}')->ready()
-		);
-	}*/
 }

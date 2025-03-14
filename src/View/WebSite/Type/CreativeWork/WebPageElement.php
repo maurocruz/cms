@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Exception;
@@ -28,7 +27,7 @@ class WebPageElement
 	/**
    * @param $title
    */
-  private function navBarWebPageElement($title)
+  private function navBarWebPageElement($title): void
   {
     if ($title) {
       CmsFactory::view()->fragment()->navbar($title, []);
@@ -38,7 +37,7 @@ class WebPageElement
   /**
    * @return void
    */
-  public function index()
+  public function index(): void
   {
     $this->navBarWebPageElement(_("Web page element"));
   }
@@ -57,7 +56,7 @@ class WebPageElement
    * @param array $data
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
     // IDS
     $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];
@@ -85,7 +84,7 @@ class WebPageElement
     // ATTRIBUTES
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
     // IMAGES
-	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $idthing)->ready();
+	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $idthing)->ready();
 		// RETURN
     return $content;
   }

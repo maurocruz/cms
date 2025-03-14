@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
@@ -25,7 +24,11 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 		);
 	}
 
-	public function edit(?array $data)
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
+	public function edit(?array $data): void
 	{
 		if (isset($data[0])) {
 			$value = $data[0];
@@ -35,14 +38,18 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value), true));
 			// images
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int)$idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int)$idthing)->ready()
 			);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No creative work were found!")));
 		}
 	}
 
-	public function new(?array $value)
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function new(?array $value): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox(parent::form())

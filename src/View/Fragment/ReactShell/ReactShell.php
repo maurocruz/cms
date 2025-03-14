@@ -23,6 +23,12 @@ class ReactShell
 		$this->attributes = array_merge($this->attributes, $attributes);
 	}
 
+
+	public function setAction(string $name): ReactShell
+	{
+		$this->setAttribute('data-action', $name);
+		return $this;
+	}
 	/**
 	 * @param string $name
 	 * @param string $value
@@ -91,23 +97,42 @@ class ReactShell
 		}
 		return $this;
 	}
+
+	/**
+	 * @param string $name
+	 * @return $this
+	 */
+	public function setTypeHasPart(string $name): ReactShell
+	{
+		$this->setAttribute("data-typehaspart", $name);
+		return $this;
+	}
 	/**
 	 * @param ?int $idHasPart
 	 * @return $this
 	 */
-	public function setHasPart(?int $idHasPart): ReactShell
+	public function setIdHasPart(?int $idHasPart): ReactShell
 	{
-		$this->setAttribute('data-haspart', $idHasPart);
+		$this->setAttribute('data-idhaspart', $idHasPart);
 		return $this;
 	}
 
 	/**
-	 * @param string $idHasPart
+	 * @param string $name
 	 * @return $this
 	 */
-	public function setIsPartOf(string $idHasPart): ReactShell
+	public function setTypeIsPartOf(string $name): ReactShell
 	{
-		$this->setAttribute('data-ispartof', $idHasPart);
+		return $this;
+	}
+
+	/**
+	 * @param ?int $idHasPart
+	 * @return $this
+	 */
+	public function setIdIsPartOf(?int $idHasPart): ReactShell
+	{
+		$this->setAttribute('data-idispartof', $idHasPart);
 		return $this;
 	}
 
@@ -121,12 +146,23 @@ class ReactShell
 		return $this;
 	}
 
+	/**
+	 * @param string $legend
+	 * @param string $propertyName
+	 * @param int|null $value
+	 * @return $this
+	 */
 	public function getItemType(string $legend, string $propertyName, int $value = null): ReactShell
 	{
 		$this->setAttribute('data-action','getItemType')
-			->setAttribute('data-legend',$legend)
 			->setAttribute('data-propertyName',$propertyName)
-			->setAttribute('data-haspart',(string) $value ?? '');
+			->setAttribute('data-idispartof',(string) $value ?? '');
+		return $this;
+	}
+
+	public function setProperty(string $name): ReactShell
+	{
+		$this->setDataset('property', $name);
 		return $this;
 	}
 

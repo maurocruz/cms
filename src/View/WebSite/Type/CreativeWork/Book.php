@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
@@ -9,8 +8,14 @@ use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class Book implements TypeViewInterface
 {
+	/**
+	 * @var int|null
+	 */
 	private ?int $idbook;
 
+	/**
+	 *
+	 */
 	public function __construct()
 	{
 		CreativeWork::navbar();
@@ -25,21 +30,33 @@ class Book implements TypeViewInterface
 		);
 	}
 
-	public function index(?array $value)
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function index(?array $value): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('book')->setColumnsTable(['name'=>_('Name'),'author'=>_('Author')])->ready()
 		);
 	}
 
-	public function new(?array $value)
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function new(?array $value): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new"))
 		);
 	}
 
-	public function edit(array $data = null)
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
+	public function edit(array $data = null): void
 	{
 		if (isset($data[0])) {
 
@@ -51,7 +68,7 @@ class Book implements TypeViewInterface
 				CmsFactory::view()->fragment()->box()->simpleBox($this->form('edit', $data[0]), _("Edit"))
 			);
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready()
 			);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_('No items found!')));
@@ -78,7 +95,6 @@ class Book implements TypeViewInterface
 			$dateCreated = $typeBuider->getPropertyValue('dateCreated');
 			$dateModified = $typeBuider->getPropertyValue('dateModified');
 		}
-
 		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-book']);
 		$form->action('/admin/book/'.$case)->method('post');
 		// id

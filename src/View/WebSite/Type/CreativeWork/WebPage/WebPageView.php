@@ -15,7 +15,8 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
 	 * @param ?array $value
 	 * @return null
 	 */
-  public function index(?array $value) {
+  public function index(?array $value): null
+  {
 		parent::navbarWebSite($value);
 		parent::navbarWebPage();
 		return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->ready());
@@ -25,7 +26,8 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
    *
    * @param ?array $value
    */
-  public function new(?array $value) {
+  public function new(?array $value): void
+  {
     // NAVBAR
 	  parent::navbarWebSite($value);
     parent::navbarWebPage("Add new webpage");
@@ -52,7 +54,7 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
     // PROPERTIES
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
 		// IMAGES
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $this->idthing)->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $this->idthing)->ready());
     // WEB ELEMENTS
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Web page elements"), (new WebPageElement($idcreativeWork))->getForm((string) $this->idwebPage, $data['hasPart'])));
 	  return true;

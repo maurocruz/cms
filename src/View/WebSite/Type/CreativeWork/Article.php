@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Exception;
@@ -32,6 +31,7 @@ class Article implements TypeViewInterface
 			);
     }
   }
+
   /**
    *
    * @param array|null $value
@@ -41,6 +41,7 @@ class Article implements TypeViewInterface
     $this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status")])->ready());
   }
+
 	/**
 	 * @param array|null $value
 	 * @param
@@ -50,6 +51,7 @@ class Article implements TypeViewInterface
 		$this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
 	}
+
   /**
    * @param ?array $data
    * @throws Exception
@@ -67,7 +69,7 @@ class Article implements TypeViewInterface
       } else {
         $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
         // images
-	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((string) $idthing)->ready();
+	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready();
       }
     } else {
       $this->navbarArticle();
@@ -75,6 +77,7 @@ class Article implements TypeViewInterface
     }
     CmsFactory::view()->addMain($content);
   }
+
   /**
    * @param string $case
    * @param null $value
@@ -109,7 +112,6 @@ class Article implements TypeViewInterface
 			_('Article body'),
 			"<textarea name='articleBody' class='article-articleBody' id='articleBody$ID'>$articleBody</textarea>", false, 'width: 100%;'));
     $form->setEditor("articleBody$ID", "editor$case$ID");
-
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
 		// author
@@ -134,7 +136,6 @@ class Article implements TypeViewInterface
       // date published
       $form->fieldsetWithInput("datePublished", $value['datePublished'] ?? null, _("Date published"), "datetime-local", ['class'=>'form-article-datePublished'], ['readonly']);
     }
-
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/article/erase");

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
@@ -26,7 +25,8 @@ class Person extends PersonAbstract implements TypeViewInterface
    * @param array|null $value
    * @param
    */
-  public function new(?array $value) {
+  public function new(?array $value): void
+  {
       $this->navbarIndex();
       CmsFactory::View()->addMain(
 				CmsFactory::View()->fragment()->box()->simpleBox(self::formPerson(),_("Add new"))
@@ -37,7 +37,8 @@ class Person extends PersonAbstract implements TypeViewInterface
    * @param ?array $data
    * @throws Exception
    */
-  public function edit(?array $data) {
+  public function edit(?array $data): void
+  {
     if (!empty($data)) {
       $value = $data[0];
 	    $typeBuilder = new TypeBuilder('person', $value);
@@ -48,16 +49,12 @@ class Person extends PersonAbstract implements TypeViewInterface
       $this->navbarEdit($this->name, $this->idperson);
       // FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Edit person"), self::formPerson('edit', $value), true));
-			//  MEMBER OF
-	    /*CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Program membership"), ProgramMembership::edit($value))
-	    );*/
 			// HAS CERTIFICATION
 	    CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
 	    );
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready());
 	    // CONTACT POINT
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
 

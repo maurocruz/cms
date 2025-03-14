@@ -15,7 +15,7 @@ class OfferView extends OfferAbstract implements TypeViewInterface
   {
 		$this->navbarOfferedBy($value);
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('offer')->setHasPart(self::$offeredById)->ready()
+			CmsFactory::view()->fragment()->reactShell('offer')->setIdHasPart(self::$offeredById)->ready()
 		);
   }
 

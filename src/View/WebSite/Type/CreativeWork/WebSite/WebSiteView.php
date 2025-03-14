@@ -43,7 +43,7 @@ class WebSiteView extends WebSiteAbstract implements TypeViewInterface
 			// form
 			CmsFactory::view()->addMain(parent::editView($value));
 			// list of webPages
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIsPartOf($idcreativeWork)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIdIsPartOf($idcreativeWork)->ready());
 		} else {
 			parent::navbarWebSite();
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('Nothing found!'));

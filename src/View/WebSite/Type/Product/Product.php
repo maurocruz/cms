@@ -25,7 +25,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		}
 		parent::navbarIndex();
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('product')->setHasPart((int) $this->manufacturer)->ready()
+			CmsFactory::view()->fragment()->reactShell('product')->setIdHasPart((int) $this->manufacturer)->ready()
 		);
 	}
 
@@ -48,7 +48,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		CmsFactory::view()->addMain([
 				CmsFactory::view()->fragment()->box()->simpleBox($this->form($value)),
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIsPartOf((int) $idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $idthing)->ready()
 			]
 		);
   }

@@ -20,7 +20,7 @@ class OrderView extends OrderAbstract
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		parent::navbarIndex($value);
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('order')->setHasPart($idthing)->ready()
+			CmsFactory::view()->fragment()->reactShell('order')->setIdHasPart($idthing)->ready()
 		);
 	}
 

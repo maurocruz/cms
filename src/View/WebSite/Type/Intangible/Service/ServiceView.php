@@ -13,7 +13,7 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function index(?array $value)
+	public function index(?array $value): void
 	{
 		$tb = ToolBox::typeBuilder($value);
 		$this->provider = $tb->getPropertyValue('idthing');
@@ -23,7 +23,7 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 		}
 		parent::navbarIndex();
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('service')->setHasPart($this->provider)->ready()
+			CmsFactory::view()->fragment()->reactShell('service')->setIdHasPart($this->provider)->ready()
 		);
 	}
 
@@ -31,7 +31,7 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 	 * @param array|null $data
 	 * @return void
 	 */
-	public function edit(?array $data)
+	public function edit(?array $data): void
 	{
 		if (empty($data)) {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message());
@@ -64,7 +64,7 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function new(?array $value)
+	public function new(?array $value): void
 	{
 		if (!empty($value)) {
 			$tbProvider = ToolBox::typeBuilder($value);
