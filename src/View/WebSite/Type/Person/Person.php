@@ -5,7 +5,6 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\Certification;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class Person extends PersonAbstract implements TypeViewInterface
@@ -41,10 +40,10 @@ class Person extends PersonAbstract implements TypeViewInterface
   {
     if (!empty($data)) {
       $value = $data[0];
-	    $typeBuilder = new TypeBuilder('person', $value);
+	    $typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
       $this->idperson = (int) $typeBuilder->getId();
+			$idthing = $typeBuilder->getIdthing();
 			$this->name = $value['name'];
-			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
       // NAVBAR
       $this->navbarEdit($this->name, $this->idperson);
       // FORM
@@ -54,9 +53,9 @@ class Person extends PersonAbstract implements TypeViewInterface
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
 	    );
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
 	    // CONTACT POINT
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idperson, $value['contactPoint'])));
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $idthing, $value['contactPoint'])));
 
     } else {
       $this->navbarIndex();

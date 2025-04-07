@@ -18,6 +18,10 @@ class WebPageController implements TypeControllerInterface
 		return CmsFactory::view()->webSite()->type('webPage')->setMethodName('index')->setData($value)->ready();
   }
 
+	/**
+	 * @param array|null $params
+	 * @return bool
+	 */
 	public function new(?array $params = []): bool {
 		$idwebSite = $params['idwebSite'] ?? null;
 		$data = $idwebSite ? CmsFactory::model()->api()->get('webSite',['idwebSite'=>$idwebSite])->ready() : null;
@@ -46,7 +50,7 @@ class WebPageController implements TypeControllerInterface
   }
 	/**
 	 */
-  public function saveSitemap()
+  public function saveSitemap(): void
   {
 	  (new WebSiteController())->saveSitemap();
   }

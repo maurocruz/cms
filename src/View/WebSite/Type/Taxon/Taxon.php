@@ -1,18 +1,22 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Taxon;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\App;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class Taxon implements TypeViewInterface
 {
+	/**
+	 * @var ?int
+	 */
+	private ?int $idtaxon = null;
+
   /**
    * @param string|null $title
    */
-  private function navbar(string $title = null)
+  private function navbar(string $title = null): void
   {
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 	    ->type('taxon')
@@ -26,57 +30,64 @@ class Taxon implements TypeViewInterface
       CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()->type('taxon')->title($title)->ready());
     }
   }
+
   /**
    *
    * @param array|null $value
    */
-  public function index(?array $value)
+  public function index(?array $value): void
   {
     $this->navbar();
 	  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('taxon')->setColumnsTable(['taxonRank'=>_('Taxon rank')])->ready());
   }
+
   /**
    * @param ?array $data
    * @throws Exception
    */
-  public function edit(?array $data)
+  public function edit(?array $data): void
   {
-		$apiHost = App::getApiHost();
-		$userToken = CmsFactory::controller()->user()->userLogged()->getToken();
     if (!empty($data)) {
       $value = $data[0];
-      $id = $value['idtaxon'];
+			$tb = CmsFactory::toolBox()::typeBuilder($value);
+			$idthing = $tb->getIdthing();
+      $idtaxon = $tb->getId();
+			$this->idtaxon = $idtaxon;
       $this->navbar($value['name'] . " (" . $value['taxonRank'] . ")");
-			CmsFactory::view()->addMain("<div class='plinct-shell' data-type='taxon' data-idispartof='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
       // form taxon
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Taxon"), self::formTaxon('edit', $value, $data['parentTaxonList'])));
-      // images
-      CmsFactory::view()->addMain("<div class='plinct-shell' data-type='imageObject' data-tablehaspart='taxon' data-idhaspart='$id' data-apihost='$apiHost' data-usertoken='$userToken'></div>");
+      CmsFactory::view()->addMain([
+				self::formTaxon('edit', $value, $data['parentTaxonList']),
+	      CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready()
+      ]);
     } else {
       $this->navbar();
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No item found!")));
     }
   }
+
   /**
    * @param array|null $value
    */
-  public function new(?array $value) {
+  public function new(?array $value): void
+  {
     $this->navbar();
-		CmsFactory::view()->addMain(Thing::new('taxon'));
+		CmsFactory::view()->addMain(self::formTaxon());
   }
+
   /**
    * @param string $case
    * @param null $value
    * @param array|null $parentTaxonList
    * @return array
    */
-  private static function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
+  private function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
   {
-    $id = $value ? $value['idtaxon'] : null;
-    $form = CmsFactory::view()->fragment()->form(['id'=>'taxonForm','class'=>'formPadrao box form-taxon','onsubmit'=>"return CheckRequiredFieldsInForm(event, 'name,taxonRank')"]);
+    $form = CmsFactory::view()->fragment()->form(['id'=>'taxonForm','class'=>'form-basic box form-taxon']);
     $form->action("/admin/taxon/$case")->method('post');
     // id
-    if ($id) $form->input('idtaxon', $id, 'hidden');
+    if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');
+		// THING
+	  $form = Thing::formContent($form, $value);
     // scientificNameAuthorship
     $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName
@@ -86,7 +97,7 @@ class Taxon implements TypeViewInterface
     $form->fieldsetWithSelect("taxonRank", $selectTaxonRank, ["family"=>_("Family"), "genus" => _("Genus"), "species"=>_("Species")], _("Taxon rank"));
     // parent taxon
     $parentTaxonList = $parentTaxonList ?? [];
-    $selectParentTaxon = isset($value['parentTaxon']) ? [ $value['parentTaxon'] => $parentTaxonList[$value['parentTaxon']]] : null;
+    $selectParentTaxon = isset($value['parentTaxon']) && !!$value['parentTaxon'] ? [ $value['parentTaxon'] => $parentTaxonList[$value['parentTaxon']]] : null;
     $form->fieldsetWithSelect('parentTaxon', $selectParentTaxon, $parentTaxonList, _("Parent taxon"));
     // occurrence
     $form->fieldsetWithInput('occurrence', $value['occurrence'] ?? null, _("Occurrence"));
@@ -105,7 +116,7 @@ class Taxon implements TypeViewInterface
     // fruits
     $form->fieldsetWithInput('fruits', $value['fruits'] ?? null, _("Fruits"));
     // citations
-    $form->fieldsetWithTextarea('citations',$value['citations'] ?? null, _('Citations'), null, ['id'=>"citations$id"]);
+    $form->fieldsetWithTextarea('citations',$value['citations'] ?? null, _('Citations'), null, ['id'=>"citations$this->idtaxon"]);
     // submit
     $form->submitButtonSend();
     if ($case == 'edit') $form->submitButtonDelete('/admin/taxon/erase');

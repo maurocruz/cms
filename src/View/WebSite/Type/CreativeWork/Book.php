@@ -68,7 +68,7 @@ class Book implements TypeViewInterface
 				CmsFactory::view()->fragment()->box()->simpleBox($this->form('edit', $data[0]), _("Edit"))
 			);
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready()
 			);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_('No items found!')));

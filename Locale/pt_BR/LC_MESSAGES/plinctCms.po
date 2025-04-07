@@ -221,6 +221,9 @@ msgstr "Hospedagem"
 msgid "Select item..."
 msgstr "Selecione um item..."
 
+msgid "Position"
+msgstr "Posição"
+
 #################################  ACTIONS   ################################### 
 
 msgid "Action"

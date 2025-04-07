@@ -48,7 +48,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		$idthing = $typeBuilder->getPropertyValue('idthing');
 		CmsFactory::view()->addMain([
 				CmsFactory::view()->fragment()->box()->simpleBox($this->form($value)),
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $idthing)->ready()
 			]
 		);
   }

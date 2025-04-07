@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Controller\WebSite\Type\LocalBusiness;
 
 use Exception;
@@ -14,7 +11,7 @@ class LocalBusinessView
   /**
    *
    */
-  public function navbarLocalBussines(string $title = null)
+  public function navbarLocalBussines(string $title = null): void
   {
     CmsFactory::webSite()->navbar(_("Locals business"), [
         "/admin/localBusiness" => CmsFactory::response()->fragment()->icon()->home(),
@@ -27,7 +24,7 @@ class LocalBusinessView
   /**
    * @param $data
    */
-  public function index($data)
+  public function index($data): void
   {
 		$apiHost = App::getApiHost();
     $this->navbarLocalBussines();
@@ -37,7 +34,7 @@ class LocalBusinessView
   /**
    *
    */
-  public function new()
+  public function new(): void
   {
     $this->navbarLocalBussines();
     CmsFactory::webSite()->addMain(
@@ -48,8 +45,8 @@ class LocalBusinessView
   /**
    * @throws Exception
    */
-  public function edit($data)
-	{
+  public function edit($data): void
+  {
     $value = $data[0];
     $id = $value['idlocalBusiness'];
 		$apiHost = App::getApiHost();

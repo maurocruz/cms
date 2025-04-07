@@ -38,7 +38,7 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value), true));
 			// images
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int)$idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int)$idthing)->ready()
 			);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No creative work were found!")));

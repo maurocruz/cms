@@ -25,6 +25,7 @@ class Place implements TypeViewInterface
 		    ->title(_('Place'))
 		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home(16,16))
 		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+		    ->search()
 		    ->ready()
 		);
     if ($title) {

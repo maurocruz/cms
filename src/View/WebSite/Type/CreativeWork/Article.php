@@ -69,7 +69,7 @@ class Article implements TypeViewInterface
       } else {
         $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
         // images
-	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready();
+	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready();
       }
     } else {
       $this->navbarArticle();

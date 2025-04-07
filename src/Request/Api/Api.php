@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Request\Api;
 
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\logger\Logger;
 use Plinct\Tool\Curl\v1\Curl;
 
 class Api
@@ -73,7 +71,8 @@ class Api
 	/**
 	 * @return mixed
 	 */
-	public function ready() {
+	public function ready(): mixed
+	{
 		$token = CmsFactory::request()->user()->userLogged()->getToken();
 		if($token) {
 			$this->curl->authorizationBear($token);

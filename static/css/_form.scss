@@ -349,7 +349,7 @@ form {
   }
 
   legend {
-    margin: 0 0 2px 5px;
+    margin: 0 0 2px 3px;
   }
 
   input, textarea, select {
@@ -453,37 +453,41 @@ form {
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-child(n) { width: 100%; }
-  fieldset:nth-of-type(1) { width: 60px; }
-  fieldset:nth-of-type(2) { width: calc(100% - 60px); }
-
+  h4 { flex-basis: 100%; }
+  fieldset.position { flex-basis: 60px; }
+  fieldset.name { flex-basis: calc(100% - 60px); }
+  fieldset.contactType { flex-basis: calc(50% - 70px); }
+  fieldset.telephone { flex-basis: calc(50% - 30px); }
+  fieldset.whatsapp {
+    flex-basis: 96px;
+    display: flex;
+    legend { width: 100%; }
+    label {
+      display: flex;
+      margin-right: 8px;
+    }
+  }
   @media (min-width: 576px) {
-    fieldset:nth-child(n) { width: 50%; }
-    fieldset:nth-of-type(1) { width: 60px; }
-    fieldset:nth-of-type(2) { width: calc(50% - 30px); }
-    fieldset:nth-of-type(3) { width: calc(50% - 30px); }
-    fieldset:nth-of-type(4) { width: calc(100% - 110px); }
-    fieldset:nth-of-type(5) { width: 110px; }
+    fieldset.name { flex-basis: calc(33.33% - 60px); }
+    fieldset.contactType { flex-basis: calc(33.33% - 70px); }
+    fieldset.telephone { flex-basis: calc(33.33% - 30px); }
+    fieldset.email { flex-basis: 50%; }
+    fieldset.obs { flex-basis: 50%; }
   }
-
   @media (min-width: 768px) {
-    fieldset:nth-of-type(1) { width: 60px; }
-    fieldset:nth-of-type(2) { width: 160px; }
-    fieldset:nth-of-type(3) { width: 160px; }
-    fieldset:nth-of-type(4) { width: calc(100% - 490px); }
-    fieldset:nth-of-type(5) { width: 110px; }
+    fieldset.name { flex-basis: calc(20% - 60px); }
+    fieldset.contactType { flex-basis: calc(20% - 70px); }
+    fieldset.telephone { flex-basis: calc(20% - 30px); }
+    fieldset.email { flex-basis: 20%; }
+    fieldset.obs { flex-basis: 20%; }
   }
-  @media (min-width: 1024px) {
-    fieldset:nth-of-type(1) { width: 55px; }
-    fieldset:nth-of-type(2) { width: 125px; }
-    fieldset:nth-of-type(3) { width: 100px; }
-    fieldset:nth-of-type(4) { width: calc(100% - 855px); }
-    fieldset:nth-of-type(5) { width: 110px; }
-    fieldset:nth-of-type(6) { width: 185px; }
-    fieldset:nth-of-type(7) { width: 170px; }
-
+  @media (min-width: 992px) {
+    justify-content: flex-start;
+    fieldset.name { flex-basis: 120px; }
+    fieldset.contactType { flex-basis: 130px; }
+    fieldset.telephone { flex-basis: 160px; }
+    fieldset.email { flex-basis: calc(50% - 315px); }
+    fieldset.obs { flex-basis: calc(50% - 315px); }
   }
 }
 
@@ -491,7 +495,6 @@ form {
 ======================================================= */
 .form-event {
   justify-content: flex-start;
-
 
   @media (min-width: 480px) {
     fieldset.startDate { flex-basis: 210px;  }
@@ -891,10 +894,8 @@ form {
 /* WEB PAGE ELEMENT
 ====================================================== */
 .form-webPageElement {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(1) { width: calc(100% - 60px); }
-  fieldset:nth-of-type(2) { width: 60px; }
-  fieldset:nth-of-type(3) { width: 100%; }
-  fieldset:nth-of-type(4) { width: 100%; }
+  fieldset.name { flex-basis: calc(100% - 50px); }
+  fieldset.position { flex-basis: 50px;
+    input { text-align: right; }
+  }
 }

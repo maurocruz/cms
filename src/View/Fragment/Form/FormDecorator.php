@@ -129,9 +129,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 * @param string|null $legend
 	 * @return FormInterface
 	 */
-	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
+	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null, array $attributes = null): FormInterface
 	{
-		$this->form->fieldsetWithRadio($name, $items, $valueChecked, self::writeLegend($name, $legend));
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, self::writeLegend($name, $legend), self::setAttr($attributes, $name));
 		return $this;
 	}
 

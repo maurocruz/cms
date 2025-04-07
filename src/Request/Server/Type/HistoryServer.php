@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Controller\Request\Server\Type;
 
 use Plinct\Cms\Controller\CmsFactory;
@@ -39,7 +36,7 @@ class HistoryServer
    * @param array $params
    * @param array $data
    */
-  public function setSummaryByDifference(array $params, array $data)
+  public function setSummaryByDifference(array $params, array $data): void
   {
     $dataOld = $data[0] ?? $data;
     $text = '';

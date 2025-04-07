@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Structure;
 
 use Plinct\Cms\CmsFactory;
@@ -62,7 +61,7 @@ class Structure
   public static function mainMenu(): array
   {
 		$navbar = CmsFactory::view()->fragment()->navbar()
-			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(18,18))
+			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(16,16))
 			->newTab("/admin/configuration", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);

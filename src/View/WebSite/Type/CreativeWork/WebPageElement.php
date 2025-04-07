@@ -84,7 +84,7 @@ class WebPageElement
     // ATTRIBUTES
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
     // IMAGES
-	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $idthing)->ready();
+	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $idthing)->ready();
 		// RETURN
     return $content;
   }
@@ -124,7 +124,7 @@ class WebPageElement
     $id = $this->idwebPageElement;
 		$headline = $value['headline'] ?? null;
 		$position = $value['position'] ?? null;
-    $form = CmsFactory::view()->fragment()->form(['name'=>'form-webPageElement--$case','id'=>'form-webPageElement-$case-$id','class'=>'formPadrao form-webPageElement']);
+    $form = CmsFactory::view()->fragment()->form(['name'=>"form-webPageElement--$case",'id'=>"form-webPageElement-$case-$id",'class'=>'form-basic form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
     // HIDDEN
     if ($case == 'edit') $form->input('idwebPageElement', (string)$this->idwebPageElement, 'hidden');

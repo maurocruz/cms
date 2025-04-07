@@ -21,7 +21,7 @@ abstract class WebPageViewAbstract
 	/**
 	 *
 	 */
-	protected function navbarWebPage(string $title = null)
+	protected function navbarWebPage(string $title = null): void
 	{
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
@@ -42,7 +42,8 @@ abstract class WebPageViewAbstract
 		);
 	}
 
-	protected function navbarWebSite(array $value = null) {
+	protected function navbarWebSite(array $value = null): void
+	{
 		$typeBuilder = new TypeBuilder('webSite', $value);
 		$idwebSite = $typeBuilder->getId();
 		$name = $typeBuilder->getValue('name');
@@ -78,7 +79,7 @@ abstract class WebPageViewAbstract
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
     }
 		// THING
-	  $form = Thing::formContent($form, $value, ['alternateName', 'disambiguatingDescription']);
+	  $form = Thing::formContent($form, $value);
 		// HEADLINE
 	  $form->fieldsetWithInput('headline', $headline, _('Headline'));
 	  // ALTERNATIVE HEADLINE
@@ -86,14 +87,8 @@ abstract class WebPageViewAbstract
 	  // TEXT
 	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(_("Content"),"<textarea name='text' class='webPage-text' id='contentTextareaWebPage'>$text</textarea>", false, 'width: 100%;'));
 		$form->setEditor('contentTextareaWebPage');
-
 		// AUTHOR
-	  $form->content(CmsFactory::view()->fragment()->reactShell('person')
-		  ->setAttribute('data-action','getItemType')
-		  ->setAttribute('data-legend',_("Author"))
-		  ->setAttribute('data-propertyName','author')
-		  ->setAttribute('data-value',$author ?? '')
-		  ->ready());
+	  $form->relationshipOneToOne('person',_('Author'),'author',(int) $author);
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete('/admin/webPage/erase');

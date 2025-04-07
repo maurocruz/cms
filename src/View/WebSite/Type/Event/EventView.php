@@ -49,11 +49,7 @@ class EventView extends EventAbstract implements TypeViewInterface
       // EVENT FORM
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
 			// ADDITIONAL TYPES
-	    CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(
-					_('Additional type'),
-					CmsFactory::view()->fragment()->reactShell('event')->setProperty('additionalType')->setIdHasPart($idthing)->ready()
-				));
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('event')->setProperty('additionalType')->setIdHasPart($idthing)->ready());
 			// SUB EVENTS
       CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(
@@ -62,7 +58,7 @@ class EventView extends EventAbstract implements TypeViewInterface
 				)
       );
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
     }
   }
 }

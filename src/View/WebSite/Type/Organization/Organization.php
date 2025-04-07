@@ -56,10 +56,10 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 			);
 			// CONTACT POINT
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idorganization, $value['contactPoint'] ?? null))
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idthing, $value['contactPoint'] ?? null))
 			);
 			// IMAGE
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdIsPartOf((int) $this->idthing)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $this->idthing)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
