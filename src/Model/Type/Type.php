@@ -115,6 +115,6 @@ class Type
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
 		//
-		return !array_search($this->type, App::getTypesEnabled()) ? '/admin/'.$this->type : filter_input(INPUT_SERVER, 'HTTP_REFERER');
+		return !array_search($this->type, App::getModulesEnabled()) ? '/admin/'.$this->type : filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
 }

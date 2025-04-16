@@ -6,20 +6,59 @@ use Plinct\Cms\CmsFactory;
 class Configuration extends ConfigurationAbstract
 {
 	/**
-	 * @param array|null $data
 	 * @return void
 	 */
-	public function index(array $data = null)
+	public function index(): void
 	{
+		$modulesAvailable = CmsFactory::controller()->configuration()->getModulesAvailable();
+		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
+		// NAVBAR
 		parent::navbar();
+		// write
 		CmsFactory::view()->addMain("<h1>"._("Configuration")."</h1>");
+		CmsFactory::view()->addMain("<dl>");
+
+		// MODULES ENABLED
+		CmsFactory::view()->addMain("<dt>"._('Modules Enabled')."</dt>");
+		CmsFactory::view()->addMain("<dd>");
+		if (empty($modulesEnabled)) {
+			CmsFactory::view()->addMain(_('No Modules enabled'));
+		} else {
+			CmsFactory::view()->addMain("<ul>");
+			foreach ($modulesEnabled as $item) {
+				CmsFactory::view()->addMain("<li>" . _($item) . "</li>");
+			}
+			CmsFactory::view()->addMain("</ul>");
+		}
+		CmsFactory::view()->addMain("</dd>");
+
+		CmsFactory::view()->addMain("</dl>");
+
+		// MODULES AVAILABLE
+		CmsFactory::view()->addMain("<table>");
+		CmsFactory::view()->addMain("<caption>"._('Modules Available')."</caption>");
+		CmsFactory::view()->addMain("<thead><tr><th>Module</th><th>Is instaled?</th></tr></thead>");
+		CmsFactory::view()->addMain("<tbody>");
+		foreach ($modulesAvailable as $item) {
+			$isInstalled = in_array($item, $modulesEnabled);
+			CmsFactory::view()->addMain("<tr></tr><td>"._($item)."</td>");
+			CmsFactory::view()->addMain("<td>");
+			CmsFactory::view()->addMain("<form action='/admin/config/installModule' method='post' class='form-config-installModule'>");
+			CmsFactory::view()->addMain("<input type='hidden' name='module' value='$item'/>");
+			CmsFactory::view()->addMain(!$isInstalled ? " <button class='button'>"._('Install module')."</button>" : _('Module was installed!'));
+			CmsFactory::view()->addMain("</form>");
+			CmsFactory::view()->addMain("</td></tr>");
+		}
+		CmsFactory::view()->addMain("</tbody>");
+		CmsFactory::view()->addMain("</table>");
+
 	}
 
 	/**
 	 * @param string $type
 	 * @return null
 	 */
-	public function installSqlTable(string $type)
+	public function installSqlTable(string $type): null
 	{
 		return CmsFactory::view()->addMain("
 <div class='warning'>

@@ -5,41 +5,71 @@ use Plinct\Cms\CmsFactory;
 
 class Configuration
 {
+
 	/**
-	 * @return string[]
+	 * @var array
 	 */
-	public function initApplication(): array
+	private static array $modulesEnabled = [];
+	/**
+	 * @var array
+	 */
+	private static array $modulesAvailable = [];
+
+	/**
+	 * @param array $types
+	 */
+	public function setModulesEnabled(array $types): void
 	{
-		$data = CmsFactory::model()->api()->get('config/database', ['schema'=>'init'])->ready();
-		if ($data['status'] === 'complete' && (isset($data['data']) && is_array($data['data']))) {
-			foreach ($data['data'] as $item) {
-				CmsFactory::view()->Logger('database')->info('SUCCESS: Created table', $item);
-			}
-			return ['status'=>'success', 'message'=>'SQL schema basic has been builded' ];
-		} else {
-			CmsFactory::view()->Logger('database')->info('FAIL: SQL Schema fail', $data);
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_($data['message'])));
-			return ['status'=>'fail', 'message'=>'SQL schema basic was not builded'];
-		}
+		self::$modulesEnabled = $types;
 	}
 
+	/**
+	 * @param array $modulesAvailable
+	 */
+	public function setModulesAvailable(array $modulesAvailable): void
+	{
+		self::$modulesAvailable = $modulesAvailable;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getModulesEnabled(): array
+	{
+		return self::$modulesEnabled;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getModulesAvailable(): array
+	{
+		return self::$modulesAvailable;
+	}
+
+	/**
+	 * @return void
+	 */
 	public function index(): void
 	{
 		CmsFactory::view()->webSite()->configuration()->index();
 	}
 
+	/**
+	 * @return void
+	 */
 	public function sitemap(): void
 	{
 		CmsFactory::view()->webSite()->configuration()->sitemap();
 	}
 
+	/**
+	 * @param string $module
+	 * @return string[]
+	 */
 	public function installModule(string $module): array
 	{
-		if ($module === "ImageObject") {
-			CmsFactory::model()->api()->post('config/install',['module'=>'MediaObject'])->ready();
-		}
-		$data = CmsFactory::model()->api()->post('config/install',['module'=>$module])->ready();
-
+		$data = CmsFactory::model()->api()->post('config/installModule',['module'=>$module])->ready();
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('config')->info("SUCCESS: Module $module created", $data);
 			return ['status'=>'success', 'message'=>"Module $module created" ];

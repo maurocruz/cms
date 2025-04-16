@@ -62,33 +62,33 @@ class Structure
   {
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(16,16))
-			->newTab("/admin/configuration", CmsFactory::view()->fragment()->icon()->config())
+			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
-    if (App::getTypesEnabled()) {
-      $attributes = null;
-      foreach (App::getTypesEnabled() as $key => $value) {
-        if (is_string($key) && is_string($value)) {
-          $link = $key;
-          $text = ucfirst($value);
-        }
-        // if enclave
-        elseif (is_object($value)) {
-          $link = "/admin/enclave/" . $value->getMenuPath();
-          $text = ucfirst($value->getMenuText());
-          $attributes['style'] = "background-color: #574141;";
-        }
-				// if array
-        elseif (is_array($value)) {
-	        $text = ucfirst($key);
-	        $link = "/admin/$key";
-        } else {
-          $link = "/admin/".lcfirst($value);
-          $text = ucfirst($value);
-        }
-        $navbar->newTab($link, _($text), $attributes);
+
+    $attributes = null;
+    foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $key => $value) {
+      if (is_string($key) && is_string($value)) {
+        $link = $key;
+        $text = ucfirst($value);
       }
+      // if enclave
+      elseif (is_object($value)) {
+        $link = "/admin/enclave/" . $value->getMenuPath();
+        $text = ucfirst($value->getMenuText());
+        $attributes['style'] = "background-color: #574141;";
+      }
+			// if array
+      elseif (is_array($value)) {
+        $text = ucfirst($key);
+        $link = "/admin/$key";
+      } else {
+        $link = "/admin/".lcfirst($value);
+        $text = ucfirst($value);
+      }
+      $navbar->newTab($link, _($text), $attributes);
     }
+
     return $navbar->ready();
   }
 

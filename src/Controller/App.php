@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller;
 
 use Gitonomy\Git\Repository;
@@ -18,10 +17,10 @@ class App
    * @var ?string
    */
   private static ?string $IMAGES_FOLDER = "/public/images/";
-  /**
-   * @var string
-   */
-  private static $IMAGE_MAX_WIDTH = 1080;
+	/**
+	 * @var int
+	 */
+  private static int $IMAGE_MAX_WIDTH = 1080;
   /**
    * @var Slim
    */
@@ -35,10 +34,6 @@ class App
    */
   private static string $LANGUAGE;
   /**
-   * @var array
-   */
-  private static array $TypesEnabled = [];
-  /**
    * @var string
    */
   private static string $VERSION;
@@ -51,13 +46,13 @@ class App
    */
   private static ?string $API_HOST = null;
   /**
-   * @var string|null
+   * @var string
    */
   private static string $API_SECRET_KEY = "";
   /**
    * @var float|int
    */
-  private static $API_USER_EXPIRE = 60*60*24*7;
+  private static int|float $API_USER_EXPIRE = 60*60*24*7;
   /**
    * @var string
    */
@@ -65,7 +60,7 @@ class App
   /**
    * @var
    */
-  private static $soloineUrl;
+  private static mixed $soloineUrl;
   /**
    * @var bool
    */
@@ -96,13 +91,46 @@ class App
   public function __construct(Slim $slim)
   {
     $this->slim = $slim;
-		self::$BASE_DIR = realpath(__DIR__ . '/../..');
+		// BASE DIR
+		self::setBASEDIR(realpath(__DIR__ . '/../..'));
+		// URL
 		$host = filter_input(INPUT_SERVER, 'HTTP_HOST');
-    self::$URL = (filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . filter_input(INPUT_SERVER,'HTTP_HOST');
+		self::setURL((filter_input(INPUT_SERVER, 'HTTPS') == 'on' ? "https" : "http") . ":" . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . $host);
+		// TITLE
 		$this->setTitle($host);
+		// VERSION
     self::setVersion();
+		// LANGUAGE
     self::$LANGUAGE = Locale::getServerLanguage();
+		// CONFIGURATION ITEMS
+		$configurationItems = CmsFactory::model()->api()->get($host.'/api/config')->ready();
+		$itemListElement = is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
+		foreach ($itemListElement as $value) {
+			$item = $value['item'];
+			if ($item['name'] == 'Modules Available') {
+				CmsFactory::controller()->configuration()->setModulesAvailable($item['itemListElement']);
+			}
+			if ($item['name'] == 'Modules Enabled') {
+				CmsFactory::controller()->configuration()->setModulesEnabled($item['itemListElement']);
+			}
+		}
   }
+
+	/**
+	 * @param string $BASE_DIR
+	 */
+	public static function setBASEDIR(string $BASE_DIR): void
+	{
+		self::$BASE_DIR = $BASE_DIR;
+	}
+
+	/**
+	 * @param string $URL
+	 */
+	public static function setURL(string $URL): void
+	{
+		self::$URL = $URL;
+	}
 	/**
 	 * @param string|null $logdir
 	 */
@@ -165,7 +193,7 @@ class App
   /**
    * @param mixed $soloineUrl
    */
-  public function setSoloineUrl($soloineUrl): void
+  public function setSoloineUrl(mixed $soloineUrl): void
   {
     self::$soloineUrl = $soloineUrl;
   }
@@ -173,7 +201,7 @@ class App
   /**
    * @return mixed
    */
-  public static function getSoloineUrl()
+  public static function getSoloineUrl(): mixed
   {
     return self::$soloineUrl;
   }
@@ -207,14 +235,6 @@ class App
     self::$TITLE = $title; return $this;
   }
 
-  /**
-   * @param array $types
-   * @return $this
-   */
-  public function setTypesEnabled(array $types): App
-  {
-    self::$TypesEnabled = $types; return $this;
-  }
 
   /**
    * @param $relativePath
@@ -236,7 +256,7 @@ class App
   /**
    *
    */
-  public static function setVersion()
+  public static function setVersion(): void
   {
 		$version = 'NAN';
 	  $gitDirectory = realpath(__DIR__ . '/../../.git');
@@ -259,7 +279,7 @@ class App
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
 		  $packages = json_decode(file_get_contents($installedFile));
 		  foreach ($packages->packages as $package) {
-			  if ($package->name && $package->name == "plinct/cms") {
+			  if ($package->name == "plinct/cms") {
 				  $version = $package->version;
 			  }
 		  }
@@ -274,14 +294,14 @@ class App
   public static function getApiHost(): ?string
   {
 		if (self::$API_HOST) {
-			return substr(self::$API_HOST,-1) === "/" ? self::$API_HOST : self::$API_HOST. "/";
+			return str_ends_with(self::$API_HOST, "/") ? self::$API_HOST : self::$API_HOST. "/";
 		}
 		return null;
   }
 
-  /**
-   * @return string|null
-   */
+	/**
+	 * @return string
+	 */
   public static function getApiSecretKey(): string
   {
     return self::$API_SECRET_KEY;
@@ -290,7 +310,7 @@ class App
   /**
    * @return float|int
    */
-  public static function getApiUserExpire()
+  public static function getApiUserExpire(): float|int
   {
     return self::$API_USER_EXPIRE;
   }
@@ -333,14 +353,6 @@ class App
   public static function getTitle(): ?string
   {
     return self::$TITLE;
-  }
-
-  /**
-   * @return array
-   */
-  public static function getTypesEnabled(): array
-  {
-    return self::$TypesEnabled;
   }
 
   /**
@@ -426,7 +438,7 @@ class App
   /**
    * @return mixed
    */
-  final public function run()
+  final public function run(): mixed
   {
 		return CmsFactory::controller()->Routes()->home($this->slim);
   }

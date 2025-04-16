@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Index;
 
 use Plinct\Cms\CmsFactory;
@@ -7,12 +6,9 @@ use Plinct\Cms\Controller\App;
 
 class Index
 {
-	/**
-	 * @return null
-	 */
-	public function view()
+	public function view(): void
 	{
-		return CmsFactory::view()->addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>");
+		CmsFactory::view()->addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>");
 	}
 
 }

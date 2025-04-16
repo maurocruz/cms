@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Controller
 {
+
 	/**
 	 * @return string|null
 	 */

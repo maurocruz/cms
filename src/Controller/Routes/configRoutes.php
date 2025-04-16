@@ -6,16 +6,7 @@ use Slim\Routing\RouteCollectorProxy as Route;
 
 return function (Route $route) {
 
-	$route->group('/configuration', function (Route $route) {
-
-		$route->get('/initApplication', function (Request $request, Response $response) {
-			$data = CmsFactory::controller()->configuration()->initApplication();
-			if ($data['status'] === 'success') {
-				return $response->withHeader("Location", "/admin")->withStatus(302);
-			} else {
-				return CmsFactory::view()->writeBody($response);
-			}
-		});
+	$route->group('/config', function (Route $route) {
 
 		$route->get('[/{method}]', function (Request $request, Response $response) {
 			$method = $request->getAttribute('method') ?? 'index';

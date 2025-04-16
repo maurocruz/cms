@@ -1,8 +1,6 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
-use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
@@ -17,7 +15,7 @@ abstract class CreativeWorkAbstract
 	/**
 	 * @return void
 	 */
-	public static function navbar()
+	public static function navbar(): void
 	{
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('creativeWork')
@@ -26,7 +24,7 @@ abstract class CreativeWorkAbstract
 			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(16,16))
 			->search()
 		;
-		$subclass = App::getTypesEnabled()['CreativeWork'] ?? null;
+		$subclass = CmsFactory::controller()->configuration()->getModulesEnabled()['CreativeWork'] ?? null;
 		if ($subclass) {
 			foreach ($subclass as $key => $type) {
 				$title = is_array($type) ? $key : $type;

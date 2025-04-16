@@ -10,7 +10,7 @@ class Api
 	/**
 	 * @var string|null
 	 */
-	private string $apiHost;
+	private ?string $apiHost;
 	/**
 	 * @var Curl
 	 */
@@ -19,8 +19,6 @@ class Api
 	 * @var array|null
 	 */
 	private ?array $data = null;
-
-	private string $method = "GET";
 
 	/**
 	 * @param string|null $apiHost
@@ -57,9 +55,8 @@ class Api
 	 * @param array|null $FILES
 	 * @return $this
 	 */
-	public function post(string $relativeUrl, $data, array $FILES = NULL): Api
+	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
 	{
-		$this->method = "POST";
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
 	}
@@ -71,7 +68,6 @@ class Api
 	 */
 	public function put(string $relativeUrl, array $data): Api
 	{
-		$this->method = "PUT";
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->put($data)->returnWithJson();
 		return $this;
 	}
@@ -83,7 +79,6 @@ class Api
 	 */
 	public function delete(string $relativeUrl, array $params): Api
 	{
-		$this->method = "DELETE";
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->delete($params)->returnWithJson();
 		return $this;
 	}
@@ -105,7 +100,7 @@ class Api
 		$returns = json_decode($data, true);
 		if ($returns === null) {
 			CmsFactory::view()->Logger('apihost')->critical("$method: Api failed", ["url"=>$info['url'], "method"=>$method, "data"=>$this->data]);
-			return ['status'=>'fail', 'message' => "Get api failed: url={$info['url']}; method={$method};"];
+			return ['status'=>'fail', 'message' => "Get api failed: url={$info['url']}; method=$method;"];
 		} elseif (isset($returns['status'])) {
 			if ($returns['status'] === 'fail') {
 				CmsFactory::view()->Logger('apiHost')->critical("$method: Api failed", $returns);

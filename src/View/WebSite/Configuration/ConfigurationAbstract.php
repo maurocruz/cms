@@ -8,7 +8,7 @@ abstract class ConfigurationAbstract
 	/**
 	 * @return void
 	 */
-	protected function navbar()
+	protected function navbar(): void
 	{
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()

@@ -12,7 +12,7 @@ class OrderController implements TypeControllerInterface
 	 */
 	public function index(array $params): bool
 	{
-		$seller = $params['seller'];
+		$seller = $params['seller'] ?? null;
 		$data = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
 		if (isset($data[0])) {
 			return CmsFactory::view()->webSite()->type('order')->setData($data[0])->setMethodName('index')->ready();

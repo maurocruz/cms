@@ -48,7 +48,7 @@ class TypeController
 		if ($this->type) {
 			// check if table sql exists
 			$data = CmsFactory::model()->api()->get('config/database',['showTableStatus'=>lcfirst($this->type)])->ready();
-			if ($data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', App::getTypesEnabled()))) {
+			if ($data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', App::getModulesEnabled()))) {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
 				// if moduyle has controller class
@@ -70,8 +70,11 @@ class TypeController
 				}
 			}
 			return $returns;
-		} else {
-			return CmsFactory::view()->webSite()->index()->view();
+		}
+		// INDEX
+		else {
+			CmsFactory::view()->webSite()->index()->view();
+			return true;
 		}
 	}
 }
