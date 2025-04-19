@@ -53,7 +53,7 @@ class Form extends FormDecorator implements RelationshipInterface
 	}
 
 	/**
-   * WRITE <SELECT> ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
+   * WRITE <SELECT> AN ELEMENT TO CHOOSE THE 'ADDITIONAL TYPE' OF A 'TYPE'
    *
    * @param string $class
    * @param string|null $value
@@ -65,7 +65,7 @@ class Form extends FormDecorator implements RelationshipInterface
   }
 
 	/**
-	 * WRITE <SELECT> ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
+	 * WRITE <SELECT> AN ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
 	 *
 	 * @param string $class
 	 * @param string|null $value
@@ -87,59 +87,29 @@ class Form extends FormDecorator implements RelationshipInterface
    */
   public function search(string $action, string $name, string $value = null): array
   {
-      $form = ElementFactory::form(['class'=>'form']);
-      // ACTION AND METHOD
-      $form->action($action)->method('get');
-      $form->content('<fieldset>');
-      // CAPTION
-      $form->content("<legend>"._("Search")."</legend>");
-      // URI
-      $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-      if ($queryString) {
-          parse_str($queryString, $queryArray);
-          if ($queryArray) {
-              foreach ($queryArray as $nameQuery => $valueQuery) {
-                  $form->input($nameQuery, $valueQuery, "hidden");
-              }
-          }
+    $form = ElementFactory::form(['class'=>'form']);
+    // ACTION AND METHOD
+    $form->action($action)->method('get');
+    $form->content('<fieldset>');
+    // CAPTION
+    $form->content("<legend>"._("Search")."</legend>");
+    // URI
+    $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+    if ($queryString) {
+      parse_str($queryString, $queryArray);
+      if ($queryArray) {
+        foreach ($queryArray as $nameQuery => $valueQuery) {
+          $form->input($nameQuery, $valueQuery, "hidden");
+        }
       }
-      // INPUT SEARCH
-      $form->input($name, $value ?? '');
-      // SUBMIT
-      $form->input('', _("Submit") , 'submit');
-      $form->content('</fieldset>');
-      return $form->ready();
+    }
+    // INPUT SEARCH
+    $form->input($name, $value ?? '');
+    // SUBMIT
+    $form->input('', _("Submit") , 'submit');
+    $form->content('</fieldset>');
+    return $form->ready();
   }
-
-	/**
-	 * For print forms of the relationships tables
-	 * @param string|null $idHasPart
-	 * @param string $tableHasPart
-	 * @param string $idIsPartOf
-	 * @param string $tableIsPartOf
-	 * @return RelationshipInterface
-	 */
-	public function relationship(?string $idHasPart, string $tableHasPart, string $idIsPartOf, string $tableIsPartOf ): RelationshipInterface
-	{
-		$this->tableHasPart = $tableHasPart;
-		$this->idHasPart = $idHasPart;
-		$this->tableIsPartOf = $tableIsPartOf;
-		return $this;
-	}
-
-	/**
-	 * Relationship one to one
-	 * @param string $legend
-	 * @param string $propertyName
-	 * @return array
-	 */
-	public function oneToOne(string $legend, string $propertyName): array
-	{
-		$this->attributes(["class" => "form-basic form-relationship"]);
-		$this->action("/admin/$this->tableHasPart/edit")->method("post");
-		$this->relationshipOneToOne($this->tableHasPart, $legend, $propertyName);
-		return $this->ready();
-	}
 
 	/**
 	 * relationship one to many
@@ -147,11 +117,11 @@ class Form extends FormDecorator implements RelationshipInterface
 	 * @param string|null $orberBy
 	 * @return array
 	 */
-	public function oneToMany(array $value = null, string $orberBy = null): array
+	private function oneToMany(array $value = null, string $orberBy = null): array
 	{
 		$apiHost = CmsFactory::controller()->getApiHost();
 		$table = lcfirst($this->tableIsPartOf);
-		// items exists
+		// items exist
 		if ($value) {
 			foreach ($value as $item) {
 				$tb = ToolBox::typeBuilder($item);
@@ -226,26 +196,25 @@ class Form extends FormDecorator implements RelationshipInterface
 	/**
 	 * @param string $legend
 	 * @param string $property
-	 * @param string|array $typesForChoose
-	 * @param string|array $value
-	 * @param string $nameLike
+	 * @param array|string $typesForChoose
+	 * @param array|string|null $value
 	 * @param array $attributes
 	 */
-		public function chooseType(string $legend, string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []): void
-		{
-			if (is_array($value)) {
-				$typeBuilder = ToolBox::typeBuilder($value);
-				$idthing = $typeBuilder->getIdthing();
-			} else {
-				$idthing = $value;
-			}
-			$attributes['class'] = "plinct-shell";
-			$attributes['data-action'] = "getItemType";
-			$attributes['data-type'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
-			$attributes['data-property'] = $property;
-			$attributes['data-haspart'] = $idthing;
-			$attributes['data-legend'] = $legend;
-			$attributes['data-apihost'] = App::getApiHost();
-			$this->fieldset([ "tag" => "div", "attributes" => $attributes ], parent::writeLegend($property, $legend),['class'=>$property]);
+	public function chooseType(string $legend, string $property, array|string $typesForChoose, array|string|null $value, array $attributes = []): void
+	{
+		if (is_array($value)) {
+			$typeBuilder = ToolBox::typeBuilder($value);
+			$idthing = $typeBuilder->getIdthing();
+		} else {
+			$idthing = $value;
 		}
+		$attributes['class'] = "plinct-shell";
+		$attributes['data-action'] = "getItemType";
+		$attributes['data-type'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
+		$attributes['data-property'] = $property;
+		$attributes['data-haspart'] = $idthing;
+		$attributes['data-legend'] = $legend;
+		$attributes['data-apihost'] = App::getApiHost();
+		$this->fieldset([ "tag" => "div", "attributes" => $attributes ], parent::writeLegend($property, $legend),['class'=>$property]);
+	}
 }

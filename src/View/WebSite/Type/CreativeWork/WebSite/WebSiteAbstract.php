@@ -4,6 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork\WebSite;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\WebSite\WebSiteController;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\CreativeWork;
+use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 
 class WebSiteAbstract
 {
@@ -76,28 +77,21 @@ class WebSiteAbstract
   {
     //vars
     $id = $value['idwebSite'] ?? null;
-    $name = $value['name'] ?? null;
-    $description = $value['description'] ?? null;
     $copyrightHolder = $value['copyrightHolder'] ?? null;
     $author = $value['author'] ?? null;
-    $url = $value['url'] ?? null;
     $case = $id ? 'edit' : 'new';
 
     // form
-    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-webSite']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webSite']);
     $form->action("/admin/webSite/$case")->method('post');
     // hidden
     if ($id) $form->input('idwebSite',(string) $id,'hidden');
-    // name
-    $form->fieldsetWithInput('name',$name,_('Name'));
-    // url
-    $form->fieldsetWithInput('url',$url,'Url');
-    // description
-    $form->fieldsetWithTextarea('description', $description, _("Description"));
+		// thing
+	  $form = Thing::formContent($form, $value);
 		// copyrightHolder
-	  $form->fieldsetWithInput('copyrightHolder', $copyrightHolder, _('Copyright holder'));
+	  $form->chooseType(_( 'Copyright holder' ), 'copyrightHolder', array("Organization","Person"),$copyrightHolder);
 	  // author
-	  $form->fieldsetWithInput('author', $author, _('Author'));
+	  $form->relationshipOneToOne('person',_('Author'),'author',(int) $author);
     // submit
     $form->submitButtonSend(['class'=>'form-submit-button form-submit-button-send']);
     if ($id) {

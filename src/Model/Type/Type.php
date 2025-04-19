@@ -45,13 +45,12 @@ class Type
 			return $data;
 		}
 		// SUCCESS
-		else if (array_key_exists('status', $data) && $data['status'] == "success") {
+		else if (array_key_exists('status', $data) && $data['status'] == "success" ) {
 			$value = $data['data'][0];
-			$idname = "id$this->type";
-			$idvalue = $value[$idname] ?? null;
+			$idvalue = is_array($value) ? $value["id$this->type"] : null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
+			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint'];
 			if (in_array($this->type, $redirectedPage)) {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
@@ -115,6 +114,6 @@ class Type
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 		}
 		//
-		return !array_search($this->type, App::getModulesEnabled()) ? '/admin/'.$this->type : filter_input(INPUT_SERVER, 'HTTP_REFERER');
+		return !array_search($this->type, CmsFactory::controller()->configuration()->getModulesEnabled()) ? '/admin/'.$this->type : filter_input(INPUT_SERVER, 'HTTP_REFERER');
 	}
 }

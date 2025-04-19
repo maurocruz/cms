@@ -1,13 +1,55 @@
 <?php
+namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
-declare(strict_types=1);
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-namespace Plinct\Cms\Controller\WebSite\Type\Intangible;
-
-class Intangible
+class Intangible implements TypeViewInterface
 {
-	public function contactPoint(): ContactPoint
+	/**
+	 * @return void
+	 */
+	public static function navbar(): void
 	{
-		return new ContactPoint();
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_('Intangible'))
+				->type('Intanglble')
+				->newTab('/admin/intangible',CmsFactory::view()->fragment()->icon()->home(16,16))
+				->ready()
+		);
+	}
+
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function index(?array $value): void
+	{
+		self::navbar();
+		CmsFactory::view()->addMain(
+			[ "<h2>"._('Modules enabled')."</h2>",
+				"<ul>",
+				"<li><a href='/admin/contactPoint'>"._('Contact point')."</a></li>",
+			"</ul>"]
+		);
+	}
+
+	/**
+	 * @param array|null $data
+	 * @return void
+	 */
+	public function edit(?array $data)
+	{
+		// TODO: Implement edit() method.
+	}
+
+	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function new(?array $value)
+	{
+		// TODO: Implement new() method.
 	}
 }

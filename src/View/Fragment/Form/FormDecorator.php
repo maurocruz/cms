@@ -127,6 +127,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 * @param array $items
 	 * @param $valueChecked
 	 * @param string|null $legend
+	 * @param array|null $attributes
 	 * @return FormInterface
 	 */
 	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null, array $attributes = null): FormInterface

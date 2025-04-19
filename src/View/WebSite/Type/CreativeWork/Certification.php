@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
@@ -12,9 +11,7 @@ class Certification implements TypeViewInterface
 
 	public function __construct()
 	{
-		CmsFactory::view()->addHeader(
-			CreativeWork::navbar()
-		);
+		CreativeWork::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('certification')
@@ -31,7 +28,7 @@ class Certification implements TypeViewInterface
 	 * @param array|null $value
 	 * @return void
 	 */
-	public function index(?array $value)
+	public function index(?array $value): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternamte name'),'certificationIdentification'=>_("Certification identification")])->ready()
@@ -42,7 +39,7 @@ class Certification implements TypeViewInterface
 	 * @param array|null $data
 	 * @return void
 	 */
-	public function edit(?array $data)
+	public function edit(?array $data): void
 	{
 		if (!empty($data)) {
 			$value = $data[0];
@@ -52,7 +49,7 @@ class Certification implements TypeViewInterface
 		}
 	}
 
-	public function new(?array $value)
+	public function new(?array $value): void
 	{
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new")));
 	}
@@ -67,7 +64,7 @@ class Certification implements TypeViewInterface
 		$typeBuilder = new TypeBuilder($type,$data);
 		$idType = $typeBuilder->getPropertyValue('idthing');
 		$content = [];
-		if (is_array($data['hasCertification'])) {
+		if (isset($data['hasCertification']) && is_array($data['hasCertification'])) {
 			foreach ($data['hasCertification'] as $value) {
 				$content[] = CmsFactory::view()->fragment()->box()->expandingBox($value['name'], self::form('edit', $value), false, 'margin: 3px 5px;');
 			}

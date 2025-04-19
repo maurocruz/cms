@@ -39,24 +39,29 @@ class Person extends PersonAbstract implements TypeViewInterface
   public function edit(?array $data): void
   {
     if (!empty($data)) {
-      $value = $data[0];
-	    $typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
-      $this->idperson = (int) $typeBuilder->getId();
-			$idthing = $typeBuilder->getIdthing();
-			$this->name = $value['name'];
-      // NAVBAR
-      $this->navbarEdit($this->name, $this->idperson);
-      // FORM
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox( _("Edit person"), self::formPerson('edit', $value), true));
-			// HAS CERTIFICATION
-	    CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
-	    );
-      // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
-	    // CONTACT POINT
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $idthing, $value['contactPoint'])));
+			if (isset($data[0])) {
+				$value = $data[0];
+				$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
+				$this->idperson = (int)$typeBuilder->getId();
+				$idthing = $typeBuilder->getIdthing();
+				$this->name = $value['name'];
+				// NAVBAR
+				$this->navbarEdit($this->name, $this->idperson);
+				// FORM
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Edit person"), self::formPerson('edit', $value), true));
+				// CONTACT POINT
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $idthing, $value['contactPoint'] ?? null)));
+				// HAS CERTIFICATION
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
+				);
+				// IMAGE
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
 
+			} elseif (isset($data['status'])) {
+				var_dump($data);
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['status'].": ".$data['message']));
+			}
     } else {
       $this->navbarIndex();
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Person is not exists!")));

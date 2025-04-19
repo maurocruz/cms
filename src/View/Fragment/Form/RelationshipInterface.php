@@ -6,20 +6,6 @@ use Plinct\Web\Element\Form\FormInterface;
 interface RelationshipInterface
 {
 	/**
-	 * @param string $legend
-	 * @param string $propertyName
-	 * @return array
-	 */
-	public function oneToOne(string $legend, string $propertyName): array;
-
-	/**
-	 * @param array|null $value
-	 * @param string|null $orberBy
-	 * @return array
-	 */
-	public function oneToMany(array $value = null, string $orberBy = null): array;
-
-	/**
 	 * @param string $type
 	 * @param string $legend
 	 * @param string $propertyName

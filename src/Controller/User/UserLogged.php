@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\User;
 
 use Plinct\Cms\CmsFactory;
@@ -91,7 +90,7 @@ class UserLogged
 			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') return true;
 			return (
 				$functionValue > $function
-				&& $this->permittedActions($actions, $actionsValue)
+				&&  $this->permittedActions($actions, $actionsValue)
 				&& ($namespaceValue === 'all' || $namespaceValue == $namespace)
 			);
 		}
@@ -107,10 +106,10 @@ class UserLogged
 	private function permittedActions(string $needled, string $haystacked): bool
 	{
 		$returns = false;
-		if (strpos($needled,'c') !== false) $returns = strpos($haystacked,'c') !== false;
-		if (strpos($needled,'r') !== false) $returns = strpos($haystacked,'r') !== false;
-		if (strpos($needled,'u') !== false) $returns = strpos($haystacked,'u') !== false;
-		if (strpos($needled,'d') !== false) $returns = strpos($haystacked,'d') !== false;
+		if (str_contains($needled, 'c')) $returns = str_contains($haystacked, 'c');
+		if (str_contains($needled, 'r')) $returns = str_contains($haystacked, 'r');
+		if (str_contains($needled, 'u')) $returns = str_contains($haystacked, 'u');
+		if (str_contains($needled, 'd')) $returns = str_contains($haystacked, 'd');
 		return $returns;
 	}
 }

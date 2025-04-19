@@ -3,9 +3,41 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class ContactPoint
+class ContactPoint implements TypeViewInterface
 {
+	public static function navbar(): void
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_('Contact point'))
+				->type('ContactPoint')
+				->level(3)
+				->newTab('/admin/contactPoint', CmsFactory::view()->fragment()->icon()->home(16,16))
+				->ready()
+		);
+	}
+
+	public function index(?array $value): void
+	{
+		Intangible::navbar();
+		self::navbar();
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('contactPoint')->ready()
+		);
+	}
+
+	public function edit(?array $data): void
+	{
+		Intangible::navbar();
+	}
+
+	public function new(?array $value)
+	{
+		// TODO: Implement new() method.
+	}
+
   /**
    * @param $tableHasPart
    * @param $idHasPart
@@ -46,7 +78,7 @@ class ContactPoint
     if ($case === "new") {
       $form->input('idHasPart', (string) $idHasPart, "hidden");
       $form->content("<h4>"._('New').": </h4>");
-    } else {
+    } elseif ($value) {
       $form->input('idcontactPoint', (string) $idcontactPoint, 'hidden');
       $form->input('idIsPartOf', (string) $idcontactPoint, 'hidden');
     }
