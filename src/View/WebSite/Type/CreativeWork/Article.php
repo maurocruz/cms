@@ -102,7 +102,7 @@ class Article implements TypeViewInterface
 		// THING
 		$form = Thing::formContent($form, $value, ['disambiguatingDescription']);
 	  // about
-	  $form->chooseType(_('About'), 'about','thing',$about);
+		$form->relationshipOneToOne('thing',_("About"), 'about', $about);
     // HEADLINE
     $form->fieldsetWithInput("headline", $headline, _("Title"));
 	  // ALTERNATIVE HEADLINE
@@ -115,7 +115,7 @@ class Article implements TypeViewInterface
     // section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
 		// author
-	  $form->chooseType(_('Author'),'author','person',$author);
+		$form->relationshipOneToOne('person',_("Author"), 'author', $author);
 	  // creative work status
 		$form->fieldsetWithSelect('creativeWorkStatus', $creativeWorkStatus,[
 			"draft"=>_("Draft"),

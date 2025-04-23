@@ -210,9 +210,9 @@ class Form extends FormDecorator implements RelationshipInterface
 		}
 		$attributes['class'] = "plinct-shell";
 		$attributes['data-action'] = "getItemType";
-		$attributes['data-type'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
+		$attributes['data-typehaspart'] = is_array($typesForChoose) ? implode(",",$typesForChoose) : $typesForChoose;
 		$attributes['data-property'] = $property;
-		$attributes['data-haspart'] = $idthing;
+		$attributes['data-idhaspart'] = $idthing;
 		$attributes['data-legend'] = $legend;
 		$attributes['data-apihost'] = App::getApiHost();
 		$this->fieldset([ "tag" => "div", "attributes" => $attributes ], parent::writeLegend($property, $legend),['class'=>$property]);
