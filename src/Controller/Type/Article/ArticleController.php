@@ -3,6 +3,7 @@ namespace Plinct\Cms\Controller\Type\Article;
 
 use DateTime;
 use DOMException;
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
@@ -17,9 +18,7 @@ class ArticleController implements TypeControllerInterface
 	 */
   public function edit(array $params): bool
   {
-    $params2 = [ "properties" => "*" ];
-    $params3 = $params ? array_merge($params, $params2) : $params2;
-		$data = CmsFactory::model()->api()->get("article", $params3)->ready();
+		$data = CmsFactory::model()->api()->get("article", $params)->ready();
 		return CmsFactory::view()->webSite()->type('article')->setData($data)->setMethodName('edit')->ready();
   }
 
@@ -51,6 +50,7 @@ class ArticleController implements TypeControllerInterface
 
 	/**
 	 * @throws DOMException
+	 * @throws Exception
 	 */
 	public function sitemap(?array $params): ?bool
 	{
