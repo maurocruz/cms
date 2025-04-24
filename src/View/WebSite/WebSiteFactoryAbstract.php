@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite;
 
 class WebSiteFactoryAbstract
@@ -41,7 +40,8 @@ class WebSiteFactoryAbstract
    * @param $content
    * @return void
    */
-  protected function addHead($content) {
+  protected function addHead($content): void
+  {
     self::$HEAD['content'][] = $content;
   }
 
@@ -61,7 +61,7 @@ class WebSiteFactoryAbstract
 
 	/**
 	 * @param $content
-	 * @return null
+	 * @return bool|null
 	 */
   public static function addMain($content): ?bool
   {
@@ -73,7 +73,8 @@ class WebSiteFactoryAbstract
    * @param $content
    * @return null
    */
-  protected static function addFooter($content) {
+  protected static function addFooter($content): null
+  {
     self::$FOOTER['content'][] = $content;
 		return null;
   }
@@ -83,7 +84,7 @@ class WebSiteFactoryAbstract
 	 * @param string $bundle
 	 * @return null
 	 */
-	public static function addBundle(string $bundle)
+	public static function addBundle(string $bundle): null
 	{
 		if (in_array($bundle,self::$BUNDLES) === false) {
 			self::$BUNDLES[] = $bundle;

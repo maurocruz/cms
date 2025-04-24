@@ -11,25 +11,32 @@ class Structure
 	 */
 	public static function head(): string
   {
-    return '
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width">
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link href="/admin/assets/css/reset" type="text/css" rel="stylesheet">
-      <link href="/admin/assets/css/estilos" type="text/css" rel="stylesheet">
-      <link href="/admin/assets/css/style" type="text/css" rel="stylesheet">
-      <link href="/admin/assets/css/style-dark" type="text/css" rel="stylesheet">
-      <script src="/admin/assets/js/scripts"></script>
-      <link rel="stylesheet" href="https://plinct.com.br/static/dist/richtexteditor/rte_theme_default.css">
-      <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/rte.js"></script>
-      <script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/plugins/all_plugins.js"></script>
-      <script>
+		$cssReset = file_get_contents(__DIR__ . '/../../../../static/css/reset.css');
+		$cssEstilos = file_get_contents(__DIR__ . '/../../../../static/css/estilos.css');
+		$cssStyle = file_get_contents(__DIR__ . '/../../../../static/css/style.css');
+		$cssStyleDark = file_get_contents(__DIR__ . '/../../../../static/css/style-dark.css');
+		$jsScripts = file_get_contents(__DIR__ . '/../../../../static/js/scripts.js');
+
+    $returns = '<meta charset="UTF-8">';
+		$returns .= '<meta name="viewport" content="width=device-width">';
+	  $returns .= '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">';
+	  $returns .= '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
+		$returns .= "<style>$cssReset</style>";
+		$returns .= "<style>$cssEstilos</style>";
+		$returns .= "<style>$cssStyle</style>";
+		$returns .= "<style>$cssStyleDark</style>";
+		$returns .= "<script>$jsScripts</script>";
+		$returns .= '<link rel="stylesheet" href="https://plinct.com.br/static/dist/richtexteditor/rte_theme_default.css">';
+	  $returns .= '<script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/rte.js"></script>';
+	  $returns .= '<script type="text/javascript" src="https://plinct.com.br/static/dist/richtexteditor/plugins/all_plugins.js"></script>';
+	  $returns .= '<script>
 				const config = { toolbar: "mytoolbar", skin: "gray", url_base: "https://plinct.com.br/static/dist/richtexteditor", toggleBorder: false, showFloatParagraph: false };
         config.toolbar_mytoolbar = "{bold,italic,underline,strike,superscript,subscript}|{fontsize}|{forecolor,backcolor}|{justifyleft,justifycenter,justifyright,justifyfull}|{insertorderedlist,insertunorderedlist}|{insertlink,unlink,insertimage}|removeformat|insertdocument"+"#{undo,redo,fullscreenenter,fullscreenexit,code}";
-			</script> 
-			<script src="https://plinct.local/static/dist/plinct-shell/v3/main.js"></script>
-      <title>Plinct CMS [' . App::getTitle() . ']</title>';
+			</script> ';
+	  $returns .= '<script src="https://plinct.local/static/dist/plinct-shell/v3/main.js"></script>';
+	  $returns .= '<title>Plinct CMS [' . App::getTitle() . ']</title>';
+		$returns .= '<meta name="description" content="CMS for Plinct">';
+		return $returns;
   }
 
   /**
@@ -61,11 +68,10 @@ class Structure
   public static function mainMenu(): array
   {
 		$navbar = CmsFactory::view()->fragment()->navbar()
-			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home(16,16))
+			->newTab("/admin", CmsFactory::view()->fragment()->icon()->home())
 			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
-
     $attributes = null;
     foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $key => $value) {
       if (is_string($key) && is_string($value)) {
@@ -88,7 +94,6 @@ class Structure
       }
       $navbar->newTab($link, _($text), $attributes);
     }
-
     return $navbar->ready();
   }
 

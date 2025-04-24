@@ -1,9 +1,7 @@
 <?php
-declare(strict_types=1);
-
 use Plinct\Cms\Controller\Middleware\AuthenticationMiddleware;
-use Plinct\Cms\Controller\Middleware\RemoteProcedureCallMiddleware;
 use Plinct\Cms\Controller\Middleware\MessageOrientedMiddleware;
+use Plinct\Cms\Controller\Middleware\RemoteProcedureCallMiddleware;
 use Slim\Routing\RouteCollectorProxy as Route;
 
 use Plinct\Cms\CmsFactory;
@@ -15,12 +13,8 @@ return function (Route $route)
 {
 	CmsFactory::view()->createWebSite();
 
-  $route->group('/admin', function(Route $route) {
-	  /**
-	   * ASSETS
-	   */
-	  CmsFactory::controller()->routes()->assets($route);
-
+  $route->group('/admin', function(Route $route)
+  {
     /**
      * AUTHENTICATION ROUTES
      */

@@ -16,16 +16,6 @@ class Routes
   }
 
 	/**
-	 * @param Route $slim
-	 * @return mixed
-	 */
-  public function assets(Route $slim): mixed
-  {
-		$route = require __DIR__ . '/assetRoutes.php';
-	  return $route($slim);
-  }
-
-	/**
 	 * @param Route $route
 	 * @return mixed
 	 */

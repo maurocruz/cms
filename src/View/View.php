@@ -15,15 +15,17 @@ class View
 	/**
 	 * @return null
 	 */
-	public function createWebSite() {
+	public function createWebSite(): null
+	{
 		return (new WebSiteFactory())->create();
 	}
 
 	/**
 	 * @param $content
-	 * @return null
+	 * @return bool|null
 	 */
-	public function addMain($content) {
+	public function addMain($content): ?bool
+	{
 		return WebSiteFactory::addMain($content);
 	}
 
@@ -32,7 +34,7 @@ class View
 	 * @param bool $firstChild
 	 * @return null
 	 */
-	public function addHeader($content, bool $firstChild = false)
+	public function addHeader($content, bool $firstChild = false): null
 	{
 		return WebSiteFactory::addHeader($content, $firstChild);
 	}
@@ -41,7 +43,7 @@ class View
 	 * @param $bundle
 	 * @return null
 	 */
-	public function addBundle($bundle)
+	public function addBundle($bundle): null
 	{
 		return WebSiteFactory::addBundle($bundle);
 	}
@@ -65,7 +67,7 @@ class View
 	/**
 	 * @return void
 	 */
-	public function clearMain()
+	public function clearMain(): void
 	{
 		WebSiteFactory::clearMain();
 	}
