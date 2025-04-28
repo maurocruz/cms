@@ -13,13 +13,15 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
 
 	/**
 	 * @param ?array $value
-	 * @return null
+	 * @return bool|null
 	 */
-  public function index(?array $value): null
+  public function index(?array $value): ?bool
   {
+		$tb = CmsFactory::toolBox()->typeBuilder($value);
+		$idIsPartOf = $tb->getId();
 		parent::navbarWebSite($value);
 		parent::navbarWebPage();
-		return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->ready());
+		return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdIsPartOf($idIsPartOf)->setColumnsTable(['url'=>'Url'])->ready());
   }
 
   /**

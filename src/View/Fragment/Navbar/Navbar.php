@@ -1,11 +1,17 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Navbar;
 
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 
 class Navbar extends NavbarAbstract implements NavbarInterface
 {
+	/**
+	 * @param string|null $title
+	 * @param array|null $tabs
+	 * @param int $level
+	 * @param array|null $searchInput
+	 */
   public function __construct(string $title = null, array $tabs = null, int $level = 2, array $searchInput = null)
   {
 		$this->setTitle($title);
@@ -35,6 +41,24 @@ class Navbar extends NavbarAbstract implements NavbarInterface
     $this->setAttributes("class", "menu menu$level");
     return $this;
   }
+
+	/**
+	 * @param array $modulesAvailable
+	 * @return NavbarInterface
+	 */
+	public function setModulesAvailable(array $modulesAvailable): NavbarInterface
+	{
+		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
+		if ($modulesEnabled) {
+			foreach ($modulesEnabled as $key => $type) {
+				if (in_array($type, $modulesAvailable)) {
+					$title = is_array($type) ? $key : $type;
+					$this->newTab("/admin/" . lcfirst($title), _($title));
+				}
+			}
+		}
+		return $this;
+	}
 
   /**
    * @param string $link

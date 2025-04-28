@@ -17,9 +17,11 @@ class Structure
 		$cssStyleDark = file_get_contents(__DIR__ . '/../../../../static/css/style-dark.css');
 		$jsScripts = file_get_contents(__DIR__ . '/../../../../static/js/scripts.js');
 
+		$host = CmsFactory::controller()->getHost();
+
     $returns = '<meta charset="UTF-8">';
 		$returns .= '<meta name="viewport" content="width=device-width">';
-	  $returns .= '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">';
+	  $returns .= "<link rel='shortcut icon' href='$host/favicon.ico' type='image/x-icon'>";
 	  $returns .= '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
 		$returns .= "<style>$cssReset</style>";
 		$returns .= "<style>$cssEstilos</style>";
@@ -72,27 +74,14 @@ class Structure
 			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
-    $attributes = null;
-    foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $key => $value) {
-      if (is_string($key) && is_string($value)) {
-        $link = $key;
-        $text = ucfirst($value);
-      }
-      // if enclave
-      elseif (is_object($value)) {
-        $link = "/admin/enclave/" . $value->getMenuPath();
-        $text = ucfirst($value->getMenuText());
-        $attributes['style'] = "background-color: #574141;";
-      }
-			// if array
-      elseif (is_array($value)) {
-        $text = ucfirst($key);
-        $link = "/admin/$key";
-      } else {
-        $link = "/admin/".lcfirst($value);
-        $text = ucfirst($value);
-      }
-      $navbar->newTab($link, _($text), $attributes);
+    foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $value) {
+			if (in_array($value,['Organization','Event','Person','Place','Product','Taxon'])) {
+				$text = lcfirst($value);
+				$navbar->newTab("/admin/$value", _($text));
+			}
+			if (in_array($value,['Article','Book','Certification','MediaObject','WebPage','WebPageElement','WebSite'])) {
+				$navbar->newTab("/admin/creativeWork", _('Creative work'));
+			}
     }
     return $navbar->ready();
   }

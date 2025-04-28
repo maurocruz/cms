@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\Controller\Type\WebSite;
+namespace Plinct\Cms\Controller\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;

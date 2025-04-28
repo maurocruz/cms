@@ -75,7 +75,7 @@ class Type
 	public function put(array $params): mixed
 	{
 		$id = $params["id$this->type"];
-		$namespaceClass = "Plinct\\Cms\\Controller\\Type\\".ucfirst($this->type)."\\".ucfirst($this->type);
+		$namespaceClass = "Plinct\\Cms\\Controller\\Type\\".ucfirst($this->type)."\\".ucfirst($this->type).'Controller';
 		if (class_exists($namespaceClass)) {
 			$classType = new $namespaceClass();
 			if (method_exists($classType, 'update')) {

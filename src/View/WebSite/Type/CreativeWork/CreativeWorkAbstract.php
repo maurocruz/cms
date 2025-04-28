@@ -20,15 +20,18 @@ abstract class CreativeWorkAbstract
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('creativeWork')
 			->setTitle(_('Creative work'))
-			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home(16,16))
-			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home())
+			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus())
+			->setModulesAvailable(['Article','Book','Certification','MediaObject','WebPage','WebPageElement','WebSite'])
 			->search()
 		;
-		$subclass = CmsFactory::controller()->configuration()->getModulesEnabled()['CreativeWork'] ?? null;
-		if ($subclass) {
-			foreach ($subclass as $key => $type) {
-				$title = is_array($type) ? $key : $type;
-				$navbar->newTab("/admin/".lcfirst($title), _($title));
+		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
+		if ($modulesEnabled) {
+			foreach ($modulesEnabled as $key => $type) {
+				// MEDIA OBJECT
+				if (in_array($type, ['ImageObject','VideoObject'])) {
+					$navbar->newTab("/admin/mediaObject", _('Media object'));
+				}
 			}
 		}
 		CmsFactory::view()->addHeader($navbar->ready());

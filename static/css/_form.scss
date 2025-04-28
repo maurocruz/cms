@@ -511,31 +511,27 @@ form {
 /* IMAGE OBJECT
 ======================================================= */
 .form-imageObject {
-  figure {
-    width: 100%;
-    text-align: center;
+  justify-content: flex-start;
+
+  fieldset.idimageObject { flex-basis: 40px; }
+  fieldset.contentUrl { flex-basis: calc(100% - 40px); }
+  fieldset.contentSize { flex-basis: 25%; }
+  fieldset.width { flex-basis: 25%; }
+  fieldset.height { flex-basis: 25%; }
+  fieldset.encodingFormat { flex-basis: 25%; }
+  fieldset.license { flex-basis: 100%; }
+  fieldset.keywords { flex-basis: 100%; }
+  fieldset.uploadDate { flex-basis: 220px; }
+  fieldset.dateModified { flex-basis: 220px; }
+
+  .form-imageObject-mentions {
+    flex-basis: 100%;
+    padding: 3px;
   }
 
   @media (min-width: 576px) {
-    fieldset:nth-of-type(1) { width: 60px; }
-    fieldset:nth-of-type(2) { width: calc(100% - 60px); }
-    fieldset:nth-of-type(3) { width: 33.3%; }
-    fieldset:nth-of-type(4) { width: 33.3%; }
-    fieldset:nth-of-type(5) { width: 33.3%; }
-    fieldset:nth-of-type(6) { width: 33.3%; }
-    fieldset:nth-of-type(7) { width: 33.3%; }
-    fieldset:nth-of-type(8) { width: 33.3%; }
-    fieldset:nth-of-type(9) { width: 100%; }
-  }
-
-  @media (min-width: 992px) {
-    fieldset:nth-of-type(3) { width: 16.66%; }
-    fieldset:nth-of-type(4) { width: 16.66%; }
-    fieldset:nth-of-type(5) { width: 16.66%; }
-    fieldset:nth-of-type(6) { width: 16.66%; }
-    fieldset:nth-of-type(7) { width: 16.66%; }
-    fieldset:nth-of-type(8) { width: 16.66%; }
-    fieldset:nth-of-type(9) { width: 100%; }
+    fieldset.license { flex-basis: 50%; }
+    fieldset.keywords { flex-basis: 50%; }
   }
 }
 

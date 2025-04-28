@@ -11,6 +11,12 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Pages"
+msgstr "Páginas"
+
+msgid "Media Object"
+msgstr "Mídia"
+
 msgid "Short description for disambiguating"
 msgstr "Pequena descrição para desambiguação"
 

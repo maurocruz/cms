@@ -18,6 +18,15 @@ class Controller
 	{
 		return App::getApiHost();
 	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getHost(): ?string
+	{
+		return App::getURL();
+	}
+
 	/**
 	 * @return Authentication
 	 */

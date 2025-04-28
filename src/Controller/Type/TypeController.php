@@ -46,18 +46,21 @@ class TypeController
 		$returns = false;
 		$object = null;
 		if ($this->type) {
-			// check if table sql exists
+			// check if table SQL exists
 			$data = CmsFactory::model()->api()->get('config/database',['showTableStatus'=>lcfirst($this->type)])->ready();
 			if ($data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', App::getModulesEnabled()))) {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
 				// if moduyle has controller class
 				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller';
+				$classNameCreativeWork = __NAMESPACE__ . "\\CreativeWork\\" . ucfirst($this->type).'Controller';
 				$classNameIntangible = __NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller';
 				if (class_exists($className)) {
 					$object = new $className();
 				} elseif(class_exists($classNameIntangible)) {
 					$object = new $classNameIntangible();
+				} elseif(class_exists($classNameCreativeWork)) {
+					$object = new $classNameCreativeWork();
 				}
 				if ($object && method_exists($object, $this->methodName)) {
 					$returns = $object->{$this->methodName}($this->queryParams);
@@ -66,7 +69,11 @@ class TypeController
 				if ($returns === false) {
 					// generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
-					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
+					if (empty($dataType)){
+						$returns = CmsFactory::view()->addMain( CmsFactory::view()->fragment()->message()->noContent() );
+					} else {
+						$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
+					}
 				}
 			}
 			return $returns;

@@ -921,60 +921,49 @@ form .mandatory-field {
 
 /* IMAGE OBJECT
 ======================================================= */
-.form-imageObject figure {
-  width: 100%;
-  text-align: center;
+.form-imageObject {
+  justify-content: flex-start;
+}
+.form-imageObject fieldset.idimageObject {
+  flex-basis: 40px;
+}
+.form-imageObject fieldset.contentUrl {
+  flex-basis: calc(100% - 40px);
+}
+.form-imageObject fieldset.contentSize {
+  flex-basis: 25%;
+}
+.form-imageObject fieldset.width {
+  flex-basis: 25%;
+}
+.form-imageObject fieldset.height {
+  flex-basis: 25%;
+}
+.form-imageObject fieldset.encodingFormat {
+  flex-basis: 25%;
+}
+.form-imageObject fieldset.license {
+  flex-basis: 100%;
+}
+.form-imageObject fieldset.keywords {
+  flex-basis: 100%;
+}
+.form-imageObject fieldset.uploadDate {
+  flex-basis: 220px;
+}
+.form-imageObject fieldset.dateModified {
+  flex-basis: 220px;
+}
+.form-imageObject .form-imageObject-mentions {
+  flex-basis: 100%;
+  padding: 3px;
 }
 @media (min-width: 576px) {
-  .form-imageObject fieldset:nth-of-type(1) {
-    width: 60px;
+  .form-imageObject fieldset.license {
+    flex-basis: 50%;
   }
-  .form-imageObject fieldset:nth-of-type(2) {
-    width: calc(100% - 60px);
-  }
-  .form-imageObject fieldset:nth-of-type(3) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(4) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(5) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(6) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(7) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(8) {
-    width: 33.3%;
-  }
-  .form-imageObject fieldset:nth-of-type(9) {
-    width: 100%;
-  }
-}
-@media (min-width: 992px) {
-  .form-imageObject fieldset:nth-of-type(3) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(4) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(5) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(6) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(7) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(8) {
-    width: 16.66%;
-  }
-  .form-imageObject fieldset:nth-of-type(9) {
-    width: 100%;
+  .form-imageObject fieldset.keywords {
+    flex-basis: 50%;
   }
 }
 
