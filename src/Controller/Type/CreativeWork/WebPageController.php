@@ -42,6 +42,6 @@ class WebPageController implements TypeControllerInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
 			return false;
 		}
-		return CmsFactory::view()->webSite()->type('webPage')->setMethodName('edit')->setData($data[0])->ready();
+		return isset($data[0]) && is_array($data[0]) && CmsFactory::view()->webSite()->type('webPage')->setMethodName('edit')->setData($data[0])->ready();
 	}
 }
