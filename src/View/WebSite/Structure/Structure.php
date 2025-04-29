@@ -35,7 +35,7 @@ class Structure
 				const config = { toolbar: "mytoolbar", skin: "gray", url_base: "https://plinct.com.br/static/dist/richtexteditor", toggleBorder: false, showFloatParagraph: false };
         config.toolbar_mytoolbar = "{bold,italic,underline,strike,superscript,subscript}|{fontsize}|{forecolor,backcolor}|{justifyleft,justifycenter,justifyright,justifyfull}|{insertorderedlist,insertunorderedlist}|{insertlink,unlink,insertimage}|removeformat|insertdocument"+"#{undo,redo,fullscreenenter,fullscreenexit,code}";
 			</script> ';
-	  $returns .= '<script src="https://plinct.local/static/dist/plinct-shell/v3/main.js"></script>';
+	  $returns .= '<script src="https://plinct.com.br/static/dist/plinct-shell/v3/main.js"></script>';
 	  $returns .= '<title>Plinct CMS [' . App::getTitle() . ']</title>';
 		$returns .= '<meta name="description" content="CMS for Plinct">';
 		return $returns;
