@@ -124,11 +124,14 @@ class WebPageElement
     $id = $this->idwebPageElement;
 		$headline = $value['headline'] ?? null;
 		$position = $value['position'] ?? null;
-    $form = CmsFactory::view()->fragment()->form(['name'=>"form-webPageElement--$case",'id'=>"form-webPageElement-$case-$id",'class'=>'form-basic form-webPageElement']);
+    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
+		$form->setIdform($id ? "webPageElement$id" : "webPageElement$case");
+		$form->addMandatories('name');
     // HIDDEN
     if ($case == 'edit') $form->input('idwebPageElement', (string)$this->idwebPageElement, 'hidden');
     if($case == 'new') $form->input('isPartOf', $this->isPartOf, 'hidden');
+		// THING
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
     // POSITION

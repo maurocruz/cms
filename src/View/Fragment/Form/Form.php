@@ -43,11 +43,22 @@ class Form extends FormDecorator implements RelationshipInterface
 	}
 
 	/**
+	 * @return string|null
+	 */
+	public function getIdform(): ?string
+	{
+		return $this->idform;
+	}
+
+	/**
 	 * @param mixed ...$mandatories
 	 * @return Form
 	 */
 	public function addMandatories(...$mandatories): Form
 	{
+		if (!$this->getIdform()) {
+			$this->setIdform(md5(http_build_query($this->form->getAttributes())));
+		}
 		$this->mandatories = array_merge($this->mandatories, $mandatories);
 		return $this;
 	}

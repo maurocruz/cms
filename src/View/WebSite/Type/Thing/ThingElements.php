@@ -32,12 +32,16 @@ class ThingElements
 		$description = $value['description'] ?? null;
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		$url = $value['url'] ?? null;
-		$form->addMandatories('name');
 		if ($value) {
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
 			$idthing = $typeBuilder->getPropertyValue('idthing') ?? null;
 			$case = 'edit';
 		}
+		if (!$form->getIdform()) {
+			$form->setIdform("form-name".($idthing ? "-$idthing" : '-new'));
+		}
+		$form->addMandatories('name');
+		// CONTENT
 		$form->content("<div class='form-thing-extract'>");
 		// name
 		$form->fieldsetWithInput('name', $name, _('Name'));
