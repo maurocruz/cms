@@ -888,8 +888,7 @@ form {
 /* WEB PAGE
 ====================================================== */
 .form-webPage {
-  fieldset:nth-of-type(5) { width: 100%; }
-  fieldset:nth-of-type(6) { width: 100%; }
+  fieldset.text textarea { min-height: 200px;}
 }
 
 /* WEB PAGE ELEMENT
@@ -899,4 +898,5 @@ form {
   fieldset.position { flex-basis: 50px;
     input { text-align: right; }
   }
+  fieldset.text textarea { min-height: 150px;}
 }

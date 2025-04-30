@@ -66,7 +66,7 @@ abstract class WebPageViewAbstract
     // VARS
 	  $headline = $value['headline'] ?? null;
 		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
-		$text = $value['text'] ?? null;
+		$text = $value['text'] ?? '';
 		$author = $value['author'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
@@ -85,7 +85,7 @@ abstract class WebPageViewAbstract
 	  // ALTERNATIVE HEADLINE
 	  $form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
 	  // TEXT
-	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(_("Content"),"<textarea name='text' class='webPage-text' id='contentTextareaWebPage'>$text</textarea>", false, 'width: 100%;'));
+	  $form->fieldsetWithTextarea('text', htmlentities($text), _("Content"), ['style'=>'width: 100%;'], ['id'=>'contentTextareaWebPage']);
 		$form->setEditor('contentTextareaWebPage');
 		// AUTHOR
 	  $form->relationshipOneToOne('person',_('Author'),'author',(int) $author);

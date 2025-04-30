@@ -1496,11 +1496,8 @@ form .mandatory-field {
 
 /* WEB PAGE
 ====================================================== */
-.form-webPage fieldset:nth-of-type(5) {
-  width: 100%;
-}
-.form-webPage fieldset:nth-of-type(6) {
-  width: 100%;
+.form-webPage fieldset.text textarea {
+  min-height: 200px;
 }
 
 /* WEB PAGE ELEMENT
@@ -1513,6 +1510,9 @@ form .mandatory-field {
 }
 .form-webPageElement fieldset.position input {
   text-align: right;
+}
+.form-webPageElement fieldset.text textarea {
+  min-height: 150px;
 }
 
 /* ELEMENT _ table

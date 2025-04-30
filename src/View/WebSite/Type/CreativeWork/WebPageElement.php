@@ -124,6 +124,7 @@ class WebPageElement
     $id = $this->idwebPageElement;
 		$headline = $value['headline'] ?? null;
 		$position = $value['position'] ?? null;
+		$text = $value['text'] ?? '';
     $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
 		$form->setIdform($id ? "webPageElement$id" : "webPageElement$case");
@@ -139,7 +140,7 @@ class WebPageElement
 		// headline
 	  $form->fieldsetWithInput('headline', $headline, _('Title'));
     // TEXT
-    $form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'), null, ["id"=>"textareaWebPageElement$id"]);
+    $form->fieldsetWithTextarea('text', htmlentities($text), _('Text'), null, ["id"=>"textareaWebPageElement$id"]);
     $form->setEditor("textareaWebPageElement$id", "editor$case$id");
     // SUBMIT BUTTONS
     $form->submitButtonSend();
