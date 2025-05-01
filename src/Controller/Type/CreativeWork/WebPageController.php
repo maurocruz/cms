@@ -36,7 +36,7 @@ class WebPageController implements TypeControllerInterface
 	 */
 	public function edit(array $params): bool
 	{
-		$params2 = array_merge($params, ["properties" => "image,hasPart,isPartOf"]);
+		$params2 = array_merge($params, ["properties" => "hasPart,isPartOf,propertyValue"]);
 		$data = CmsFactory::model()->api()->get("webPage", $params2)->ready();
 		if (isset($data['status']) && $data['status'] === 'fail') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));

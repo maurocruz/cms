@@ -748,6 +748,14 @@ form {
 
 }
 
+/* PROPERTY VALUE
+===================================================== */
+.form-propertyValue {
+  justify-content: flex-start;
+  fieldset.name { flex-basis: calc(50% - 30px); }
+  fieldset.value { flex-basis: calc(50% - 30px); }
+}
+
 /* RELATIONSHIP
 ====================================================== */
 .form-relationship {

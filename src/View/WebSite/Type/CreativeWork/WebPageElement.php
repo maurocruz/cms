@@ -81,8 +81,8 @@ class WebPageElement
 		$idthing = $typeBuilder->getPropertyValue('idthing');
     // FORM CONTENT
     $content[] = self::formWebPageElement("edit", $value);
-    // ATTRIBUTES
-    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", (string) $this->idwebPageElement, $value['identifier']));
+    // PROPERTY VALUE
+    $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", $idthing, $value['identifier']));
     // IMAGES
 	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $idthing)->ready();
 		// RETURN
@@ -104,10 +104,8 @@ class WebPageElement
 				$this->idwebPageElement = $typeBuilder->getId();
 				$name = $valueWebPageElement['name'];
 				$text = $valueWebPageElement['text'];
-
         $title = $name ? strip_tags(str_replace("<br>"," ",$name))
 	        : ($text ? substr(strip_tags($text),0,40).'...' : "");
-
         $content[] = CmsFactory::view()->fragment()->box()->expandingBox("[" . $this->idwebPageElement . "] " . $title , self::editForms($valueWebPageElement));
       }
     }

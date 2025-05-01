@@ -5,7 +5,6 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\CreativeWork\WebPageElement;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class WebPageView extends WebPageViewAbstract implements TypeViewInterface
@@ -41,10 +40,10 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
 	 * @throws Exception
 	 */
 	public function edit(?array $data): bool {
-		$typeBuilder = new TypeBuilder('webPage', $data);
+		$typeBuilder = CmsFactory::toolBox()::typeBuilder($data);
 		$webSite = $typeBuilder->getValue("isPartOf");
 		$idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
-		$typeBuilderWebSite = new TypeBuilder('webSite', $webSite);
+		$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($webSite);
 	  $this->idwebSite = $typeBuilderWebSite->getId();
 	  $this->idwebPage = $typeBuilder->getId();
 		$this->idthing = $typeBuilder->getPropertyValue('idthing');
@@ -54,7 +53,7 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
     // FORM EDIT
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
     // PROPERTIES
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idwebPage, $data['identifier'])));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idthing, $data['identifier'])));
 		// IMAGES
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $this->idthing)->ready());
     // WEB ELEMENTS

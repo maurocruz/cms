@@ -7,40 +7,45 @@ use Plinct\Cms\CmsFactory;
 class PropertyValueView
 {
 	/**
-	 * @param string $tableHasPart
+	 * @param string $typeHasPart
 	 * @param string $idHasPart
 	 * @param array $data
 	 * @return array
 	 */
-  public function getForm(string $tableHasPart, string $idHasPart, array $data): array {
+  public function getForm(string $typeHasPart, string $idHasPart, array $data): array {
     foreach ($data as $value) {
-      if (isset($value['identifier'])) {
-        $content[] = self::formPropertyValue($tableHasPart, $idHasPart, 'edit', $value);
-      }
+			$name = $value['name'] ?? null;
+			if ($name !== 'dateCreated' && $name !== 'dateModified' && !str_contains($name,'id')) {
+				$content[] = self::formPropertyValue($typeHasPart, $idHasPart, 'edit', $value);
+			}
     }
     // new
-    $content[] = self::formPropertyValue($tableHasPart, $idHasPart);
+    $content[] = self::formPropertyValue($typeHasPart, $idHasPart);
     return $content;
   }
 
 	/**
-	 * @param string $tableHasPart
+	 * @param string $typeHasPart
 	 * @param string $idHasPart
 	 * @param string $case
 	 * @param array|null $value
 	 * @return array
 	 */
-  protected function formPropertyValue(string $tableHasPart, string $idHasPart, string $case = "new", array $value = null): array
+  protected function formPropertyValue(string $typeHasPart, string $idHasPart, string $case = "new", array $value = null): array
   {
-	  $form = CmsFactory::view()->fragment()->form(["id" => "form-attributes-$case-$tableHasPart-$idHasPart", "name" => "form-attributes--$case", "class" => "formPadrao form-propertyValue"])->action("/admin/PropertyValue/$case")->method('post');
+	  $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-propertyValue"]);
+		$form->action("/admin/propertyValue/$case")->method('post');
+		$form->setIdform("form-propertyValue-".($value['idpropertyValue'] ?? "new"));
+		$form->addMandatories('name');
 	  // HIDDENS
-	  $form->input('tableHasPart', $tableHasPart, 'hidden');
+	  $form->input('typeHasPart', $typeHasPart, 'hidden');
 	  // NEW
 	  if ($case == 'new') {
-		  $form->content(_('New '));
+		  $form->content("<p style='width: 100%; margin: 0;'>"._('New ')."</p>");
 			$form->input('idHasPart', $idHasPart, 'hidden');
     } else {
-			$form->input('idpropertyValue',$value['idpropertyValue'], 'hidden');
+			$tb = CmsFactory::toolBox()::typeBuilder($value);
+			$form->input('idpropertyValue',$tb->getId(), 'hidden');
 	  }
 		// NAME
 	  $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));

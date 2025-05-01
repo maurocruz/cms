@@ -47,10 +47,10 @@ class Type
 		// SUCCESS
 		else if (array_key_exists('status', $data) && $data['status'] == "success" ) {
 			$value = $data['data'][0];
-			$idvalue = is_array($value) ? $value["id$this->type"] : null;
+			$idvalue = is_array($value) ? $value["id".lcfirst($this->type)] : null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint'];
+			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint','propertyValue'];
 			if (in_array($this->type, $redirectedPage)) {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
@@ -106,7 +106,7 @@ class Type
 		}
 		// TODO fazer redirecionameto para offer
 		// REDIRECT
-		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice'];
+		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','propertyValue'];
 		if (in_array($this->type, $redirectedPage)) {
 			if ($this->type == 'invoice' && (isset($params['output']) && $params['output'] == 'redirect_home')) {
 				return '/admin/order/edit/'.$params['referencesOrder'];
