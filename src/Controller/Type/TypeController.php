@@ -65,14 +65,9 @@ class TypeController
 					$returns = $object->{$this->methodName}($this->queryParams);
 				}
 				// if not module controller class
-				if ($returns === false) {
-					// generic model
+				if ($returns === false) { // generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
-					if (empty($dataType)){
-						$returns = CmsFactory::view()->addMain( CmsFactory::view()->fragment()->message()->noContent() );
-					} else {
-						$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
-					}
+					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
 				}
 			}
 			return $returns;

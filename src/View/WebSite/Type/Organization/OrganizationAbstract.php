@@ -81,7 +81,7 @@ abstract class OrganizationAbstract
    */
   protected function formOrganization(string $case = 'new', $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-organization"]);
+    $form = CmsFactory::view()->fragment()->form("form-organization", ["class" => "form-basic form-organization"]);
     $form->action("/admin/organization/$case")->method("post");
 		// HIDDEN
     if ($case == "edit") $form->input("idorganization", (string) $this->idorganization, 'hidden');

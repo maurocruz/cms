@@ -81,7 +81,7 @@ class Place implements TypeViewInterface
 	 */
   private function formPlace(): array
   {
-    $form = CmsFactory::view()->fragment()->form([ "id" => "form-place-new", "name" => "place-form-new", "class" => "form-basic form-place" ]);
+    $form = CmsFactory::view()->fragment()->form("form-place", [ "id" => "form-place-new", "name" => "place-form-new", "class" => "form-basic form-place" ]);
     $form->action("/admin/place/new")->method("post");
     $form = Thing::formContent($form);
     // submit

@@ -57,7 +57,7 @@ class Form extends FormDecorator implements RelationshipInterface
 	public function addMandatories(...$mandatories): Form
 	{
 		if (!$this->getIdform()) {
-			$this->setIdform(md5(http_build_query($this->form->getAttributes())));
+			$this->setIdform($this->formName);
 		}
 		$this->mandatories = array_merge($this->mandatories, $mandatories);
 		return $this;
@@ -138,7 +138,7 @@ class Form extends FormDecorator implements RelationshipInterface
 				$tb = ToolBox::typeBuilder($item);
 				$idevent = $tb->getId();
 				$idthing = $tb->getIdthing();
-				$form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-relationship"])
+				$form = CmsFactory::view()->fragment()->form("form-relationshio",["class" => "form-basic form-relationship"])
 					->action("/admin/$table/edit")->method("post");
 				$form->input("typeHasPart", $this->tableHasPart, "hidden")
 					->input("idHasPart", (string) $this->idHasPart, "hidden")

@@ -87,7 +87,7 @@ class Action implements TypeViewInterface
 		$participant = $value['participant'] ?? null;
 		$startTime = $value['startTime'] ?? null;
 		$endTime = $value['endTime'] ?? null;
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-action']);
+		$form = CmsFactory::view()->fragment()->form("form-action",['class'=>'form-basic form-action']);
 		$form->action("/admin/action/$case")->method('post');
 		if ($case == 'edit') {
 			$typeBuilder = new TypeBuilder('action', $value);

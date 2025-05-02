@@ -36,6 +36,15 @@ class Certification implements TypeViewInterface
 	}
 
 	/**
+	 * @param array|null $value
+	 * @return void
+	 */
+	public function new(?array $value): void
+	{
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new")));
+	}
+
+	/**
 	 * @param array|null $data
 	 * @return void
 	 */
@@ -47,11 +56,6 @@ class Certification implements TypeViewInterface
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(sprintf(_("No %s were found!"), _('certification'))));
 		}
-	}
-
-	public function new(?array $value): void
-	{
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new")));
 	}
 
 	/**
@@ -82,8 +86,9 @@ class Certification implements TypeViewInterface
 		$expires = isset($value['expires']) ? substr($value['expires'],0,10) : null;
 		$certificationIdentification = $value['certificationIdentification'] ?? null;
 		// FORM
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-certification']);
+		$form = CmsFactory::view()->fragment()->form("form-certification",['class'=>'form-basic form-certification']);
 		$form->action("/admin/certification/$case")->method('post');
+		$form->addMandatories('issuedBy');
 		if ($case == 'edit') {
 			$typeBuilder = new TypeBuilder('certification', $value);
 			$idcertification = $typeBuilder->getId();
@@ -96,9 +101,9 @@ class Certification implements TypeViewInterface
 		// certificationIdentification
 		$form->fieldsetWithInput('certificationIdentification', $certificationIdentification, _('Certification identification'));
 		// about
-		$form->content(CmsFactory::view()->fragment()->reactShell('thing')->getItemType(_("About"),'about',$about)->ready());
+		$form->relationshipOneToOne('thing', _("About"), 'about', $about);
 		// issuedBy
-		$form->content(CmsFactory::view()->fragment()->reactShell('organization')->getItemType(_("Issued by"),'issuedBy', $issuedBy)->ready());
+		$form->relationshipOneToOne('organization', _("Issued by"), 'issuedBy', $issuedBy);
 		// certification status
 		$form->fieldsetWithRadio('certificationStatus',['0'=>_('inactive'), '1'=>_('active')], $certificationStatus, _("Certification status"));
 		// datePublished

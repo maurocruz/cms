@@ -71,7 +71,7 @@ class ContactPoint implements TypeViewInterface
 			$typeBuilder = new TypeBuilder('contactPoint', $value);
 			$idcontactPoint = $typeBuilder->getId();
 		}
-    $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-contactPoint"]);
+    $form = CmsFactory::view()->fragment()->form("form-contactPoint",["class" => "form-basic form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
     $form->input('typeHasPart', $typeHasPart, "hidden");

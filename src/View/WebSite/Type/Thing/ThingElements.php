@@ -8,7 +8,7 @@ class ThingElements
 {
 	public static function form(string $case = 'new', array $value = null): array
 	{
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-thing']);
+		$form = CmsFactory::view()->fragment()->form("form-thing", ['class'=>'form-basic form-thing']);
 		$form->method('post')->action("/admin/thing/$case");
 		$form = self::formContent($form, $value);
 		//button

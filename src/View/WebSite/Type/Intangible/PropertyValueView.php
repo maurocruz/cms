@@ -33,7 +33,7 @@ class PropertyValueView
 	 */
   protected function formPropertyValue(string $typeHasPart, string $idHasPart, string $case = "new", array $value = null): array
   {
-	  $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-propertyValue"]);
+	  $form = CmsFactory::view()->fragment()->form("form-propertyValue", ["class" => "form-basic form-propertyValue"]);
 		$form->action("/admin/propertyValue/$case")->method('post');
 		$form->setIdform("form-propertyValue-".($value['idpropertyValue'] ?? "new"));
 		$form->addMandatories('name');

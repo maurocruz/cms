@@ -20,7 +20,7 @@ return function (Route $route) {
 			if ($module) {
 				$data = CmsFactory::controller()->configuration()->installModule($module);
 				if ($data['status'] === 'success') {
-					return $response->withHeader("Location", "/admin/$module")->withStatus(302);
+					return $response->withHeader("Location", "/admin/".lcfirst($module))->withStatus(302);
 				} else {
 					return CmsFactory::view()->writeBody($response);
 				}

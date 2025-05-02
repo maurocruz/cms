@@ -43,7 +43,7 @@ abstract class OfferAbstract
 	 */
 	protected static function formOffer(string $case = 'new', array $value = null): array
 	{
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-offer']);
+		$form = CmsFactory::view()->fragment()->form("form-offer", ['class'=>'form-basic form-offer']);
 		$form->action("/admin/offer/$case")->method('post');
 		$form->addMandatories('itemOffered','price','eligibleQuantity','availability','validThrough');
 		$form->input('offeredBy', self::$offeredById, "hidden");

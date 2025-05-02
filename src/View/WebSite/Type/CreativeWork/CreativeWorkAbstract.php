@@ -44,7 +44,7 @@ abstract class CreativeWorkAbstract
 	 */
 	protected function form(string $case = 'new', array $value = null): array
 	{
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-creativeWork']);
+		$form = CmsFactory::view()->fragment()->form("form-creativeWork", ['class'=>'form-basic form-creativeWork']);
 		$form->method('post');
 		$form->action("/admin/creativeWork/$case");
 		// id

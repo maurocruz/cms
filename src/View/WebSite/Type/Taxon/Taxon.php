@@ -82,7 +82,7 @@ class Taxon implements TypeViewInterface
    */
   private function formTaxon(string $case = "new", $value = null, array $parentTaxonList = null): array
   {
-    $form = CmsFactory::view()->fragment()->form(['id'=>'taxonForm','class'=>'form-basic box form-taxon']);
+    $form = CmsFactory::view()->fragment()->form("form-taxon", ['id'=>'taxonForm','class'=>'form-basic box form-taxon']);
     $form->action("/admin/taxon/$case")->method('post');
     // id
     if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');

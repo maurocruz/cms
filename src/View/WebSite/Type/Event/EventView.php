@@ -54,7 +54,7 @@ class EventView extends EventAbstract implements TypeViewInterface
       CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(
 					_("Sub Events"),
-					CmsFactory::view()->fragment()->form()->relationshipOneToMany("event", $idthing, 'event', $value['subEvent'] ?? null, "startDate")
+					CmsFactory::view()->fragment()->form("form-event")->relationshipOneToMany("event", $idthing, 'event', $value['subEvent'] ?? null, "startDate")
 				)
       );
       // IMAGE

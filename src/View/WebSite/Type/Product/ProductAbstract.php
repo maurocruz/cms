@@ -62,7 +62,7 @@ abstract class ProductAbstract
    */
   protected function formProduct(string $case = "new", $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-product']);
+    $form = CmsFactory::view()->fragment()->form("form-product", ['class'=>'formPadrao form-product']);
     $form->action("/admin/product/$case")->method("post");
 
     $form->content("<h4>" . _(ucfirst($case)) . "</h4>");
@@ -73,9 +73,9 @@ abstract class ProductAbstract
     // NAME
     $form->fieldsetWithInput('name', $value['name'] ?? null, _('name'));
     // ADDITIONAL TYPE
-    $form->fieldset(CmsFactory::view()->fragment()->form()->selectAdditionalType('Product', $value['additionalType'] ?? null), _('Additional Type'));
+    $form->fieldset(CmsFactory::view()->fragment()->form("form-product")->selectAdditionalType('Product', $value['additionalType'] ?? null), _('Additional Type'));
     // CATEGORY
-    $form->fieldset(CmsFactory::view()->fragment()->form()->selectCategory('Product', $value['category'] ?? null), _("Category"));
+    $form->fieldset(CmsFactory::view()->fragment()->form("form-product")->selectCategory('Product', $value['category'] ?? null), _("Category"));
     // DESCRIPTION
     $form->fieldsetWithTextarea('description', $value['description'] ?? null, _("Description"));
     // DISAMBIGUATING DESCRIPTION

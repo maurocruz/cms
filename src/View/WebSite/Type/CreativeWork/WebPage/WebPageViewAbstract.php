@@ -70,7 +70,7 @@ abstract class WebPageViewAbstract
 		$author = $value['author'] ?? null;
     $case = $value ? 'edit' : 'new';
     // FORM
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPage']);
+    $form = CmsFactory::view()->fragment()->form("form-webPage",['class'=>'form-basic form-webPage']);
     $form->action("/admin/webPage/$case")->method('post');
     // hidden
     $form->input('isPartOf', (string) $this->idwebSite ,'hidden');

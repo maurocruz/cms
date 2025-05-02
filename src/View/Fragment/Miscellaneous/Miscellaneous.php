@@ -34,7 +34,7 @@ class Miscellaneous implements MiscellaneousInterface
 						$link = $file ? sprintf('<a href="%s/%s" target="_blank">%s</a>%s', App::getURL(), $file, $file, $errorText) : null;
 						$text = $file ? "Update sitemap" : "Create sitemap";
 						// form
-						$form = CmsFactory::view()->fragment()->form(['class' => 'formPadrao form-sitemap']);
+						$form = CmsFactory::view()->fragment()->form("form-sitemap",['class' => 'formPadrao form-sitemap']);
 						$form->action("/admin/" . lcfirst($type) . "/sitemap")->method('post');
 						$form->content("<p style='display: inline-block;'>" . _("Type") . ": " . $extension . "</p>");
 						$form->content("<button style='margin-left: 5px; height: 30px;'>" . _($text) . "</button>");

@@ -35,7 +35,7 @@ class ProgramMembership
 		$member = $value['member'] ?? null;
 		$membershipNumber = $value['membershipNumber'] ?? null;
 		$membershipPointsEarned = $value['membershipPointsEarned'] ?? null;
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-programMembership']);
+		$form = CmsFactory::view()->fragment()->form("form-programMembership", ['class'=>'form-basic form-programMembership']);
 		$form->action("/admin/programMembership/$case")->method('post');
 		if ($case === 'new') {
 			$typeBuilder = new TypeBuilder('person', $value);

@@ -69,7 +69,7 @@ abstract class PersonAbstract
 		$gender = $value['gender'] ?? null;
 		$hasOccupation = $value['hasOccupation'] ?? null;
 		// FORM
-    $form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-person"]);
+    $form = CmsFactory::view()->fragment()->form("form-person", ["class" => "form-basic form-person"]);
     $form->action("/admin/person/$case")->method('post');
 		// HIDDEN
 		if ($case === 'edit') {

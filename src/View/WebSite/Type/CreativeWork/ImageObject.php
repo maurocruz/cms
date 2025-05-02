@@ -85,7 +85,7 @@ class ImageObject implements TypeViewInterface
 			$imageType = $value['encodingFormat'] ?? $image->getEncodingFormat();
 		}
 
-		$form = CmsFactory::view()->fragment()->form(["class" => "form-basic form-imageObject"]);
+		$form = CmsFactory::view()->fragment()->form("form-imageObject",["class" => "form-basic form-imageObject"]);
 		$form->action("/admin/imageObject/edit")->method("post");
 		// figure
 		$form->content("<img src='$contentUrl' alt='$name'/>");

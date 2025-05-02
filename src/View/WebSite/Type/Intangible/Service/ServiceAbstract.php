@@ -57,7 +57,7 @@ abstract class ServiceAbstract
 			$TbService = ToolBox::typeBuilder($value);
 			$idservice = $TbService->getId();
 		}
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-service box']);
+    $form = CmsFactory::view()->fragment()->form("form-service", ['class'=>'form-basic form-service box']);
     $form->action("/admin/service/$case")->method("post");
 		$form->setIdform(isset($idservice) ? "form-service-$idservice" : "form-service-new");
 		$form->addMandatories('provider');

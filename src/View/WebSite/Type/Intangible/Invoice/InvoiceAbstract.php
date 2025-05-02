@@ -148,7 +148,7 @@ abstract class InvoiceAbstract
 		$totalPaymentDue = $value['totalPaymentDue'] ?? null;
 	  $paymentStatus = $value['paymentStatus'] ?? null;
 		// FORM
-    $form = CmsFactory::view()->fragment()->form(["name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value)]);
+    $form = CmsFactory::view()->fragment()->form("form-invoice", ["name" => "form-payments", "class" => "form-table form-invoice ".self::classStyle($value)]);
     $form->action("/admin/invoice/".$case)->method("post");
 		$form->addMandatories('totalPaymentDue','scheduledPaymentDate','paymentStatus')->setIdform("form-payments-".($idinvoice ?? 'new'));
     // HIDDENS

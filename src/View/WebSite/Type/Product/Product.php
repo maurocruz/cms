@@ -55,7 +55,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 
 	private function form(?array $value = null): array
 	{
-		$form = CmsFactory::view()->fragment()->form();
+		$form = CmsFactory::view()->fragment()->form("form-product");
 		$form->attributes(['class'=>'form-basic form-product']);
 		$form->method('post');
 		if ($value) {

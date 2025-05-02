@@ -820,6 +820,42 @@ form .mandatory-field {
   }
 }
 
+/* CERTIFICATION
+======================================================= */
+.form-certification {
+  justify-content: flex-start;
+}
+.form-certification fieldset.certificationStatus {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 4px;
+  border: 1px gray solid;
+  border-radius: 4px;
+  flex-basis: 132px;
+}
+.form-certification fieldset.certificationStatus legend {
+  flex-basis: 100%;
+}
+.form-certification fieldset.certificationStatus label {
+  display: flex;
+  margin: 8px;
+}
+.form-certification fieldset.datePublished {
+  flex-basis: content;
+}
+.form-certification fieldset.expires {
+  flex-basis: content;
+}
+@media (min-width: 640px) {
+  .form-certification fieldset.about {
+    flex-basis: 50%;
+  }
+  .form-certification fieldset.issuedBy {
+    flex-basis: 50%;
+  }
+}
+
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint h4 {

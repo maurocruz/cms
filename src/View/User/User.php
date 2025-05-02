@@ -103,7 +103,7 @@ class User
 	static private function formUser(string $case = 'new', $value = null): array
 	{
 		$id = isset($value) ? $value['iduser'] : null;
-		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-user']);
+		$form = CmsFactory::view()->fragment()->form("form-user",['class'=>'formPadrao form-user']);
 		$form->action("/admin/user/$case")->method('post');
 		// ID
 		if ($case == "edit") $form->fieldsetWithInput('iduser',(string) $id, 'ID', 'text', null, ['readonly']);

@@ -40,7 +40,7 @@ abstract class EventAbstract
 		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
 		$superEventTb = $superEvent ? CmsFactory::toolBox()::typeBuilder($superEvent) : null;
     // FROM
-    $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-event"]);
+    $form = CmsFactory::view()->fragment()->form("form-event",["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
 		$form->setIdform("form-event-".($this->idevent ?? "new"));
     // HIDDENS

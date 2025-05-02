@@ -26,7 +26,7 @@ class PostalAddressView
    */
   static private function formPostalAddress(string $tableHasPart, string $idHasPart, string $case = 'new', $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form(["class" => "formPadrao form-postalAddress"])->action("/admin/postalAddress/$case")->method("post");
+    $form = CmsFactory::view()->fragment()->form("form-postalAddress",["class" => "formPadrao form-postalAddress"])->action("/admin/postalAddress/$case")->method("post");
     // hiddens
     $form->input('tableHasPart', $tableHasPart, "hidden");
     if ($case == "new") $form->input('idHasPart', $idHasPart, "hidden");

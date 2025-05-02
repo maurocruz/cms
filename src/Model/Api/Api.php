@@ -104,7 +104,7 @@ class Api
 		} elseif (isset($returns['status'])) {
 			if ($returns['status'] === 'fail') {
 				CmsFactory::view()->Logger('apiHost')->critical("$method: Api failed", $returns);
-				return ['status'=>'fail', 'message' => "Get api failed: {$returns['message']};"];
+				return ['status'=>'fail', 'message' => "Get api failed: {$returns['message']};", 'data'=>$returns['data'] ?? null];
 			}
 		}
 		return $returns;

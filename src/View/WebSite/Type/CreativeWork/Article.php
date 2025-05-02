@@ -93,7 +93,7 @@ class Article implements TypeViewInterface
 		$author = $value['author'] ?? null;
 		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
 		// FORM
-    $form = CmsFactory::view()->fragment()->form(["class"=>"form-basic form-article"]);
+    $form = CmsFactory::view()->fragment()->form("form-article",["class"=>"form-basic form-article"]);
     $form->action("/admin/article/$case")->method('post');
 		$form->setIdform($case == 'new' ? "form-article-new" : "form-article-".$ID);
 		$form->addMandatories('headline','articleBody');

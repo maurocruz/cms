@@ -82,7 +82,7 @@ class WebSiteAbstract
     $case = $id ? 'edit' : 'new';
 
     // form
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webSite']);
+    $form = CmsFactory::view()->fragment()->form("form-webSite",['class'=>'form-basic form-webSite']);
     $form->action("/admin/webSite/$case")->method('post');
     // hidden
     if ($id) $form->input('idwebSite',(string) $id,'hidden');
@@ -109,7 +109,7 @@ class WebSiteAbstract
 	{
 		$sitemap = WebSiteController::getSitemap($type);
 		$sitemaName = $sitemap->exist_sitemap();
-		$form = CmsFactory::view()->fragment()->form(['class' => 'form-basic form-sitemap']);
+		$form = CmsFactory::view()->fragment()->form("form-sitemap",['class' => 'form-basic form-sitemap']);
 		$form->action("/admin/webSite/sitemap")->method('post');
 		$form->input('type',$type,'hidden');
 		if ($sitemaName) {

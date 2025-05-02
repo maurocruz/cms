@@ -81,7 +81,7 @@ class WebPageElement
 		$idthing = $typeBuilder->getPropertyValue('idthing');
     // FORM CONTENT
     $content[] = self::formWebPageElement("edit", $value);
-    // PROPERTY VALUE
+    // Properties
     $content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", $idthing, $value['identifier']));
     // IMAGES
 	  $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $idthing)->ready();
@@ -123,7 +123,7 @@ class WebPageElement
 		$headline = $value['headline'] ?? null;
 		$position = $value['position'] ?? null;
 		$text = $value['text'] ?? '';
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-webPageElement']);
+    $form = CmsFactory::view()->fragment()->form("form-webPageElement",['class'=>'form-basic form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
 		$form->setIdform($id ? "webPageElement$id" : "webPageElement$case");
 		$form->addMandatories('name');

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment;
 
 use Plinct\Cms\View\Authentication\AuthFragment;
@@ -42,12 +41,13 @@ class Fragment
     return new Buttons();
   }
 
-  /**
-   * @param array|null $attributes
-   * @return Form
-   */
-  public function form(array $attributes = null): Form {
-    return new Form($attributes);
+	/**
+	 * @param string $formName
+	 * @param array|null $attributes
+	 * @return Form
+	 */
+  public function form(string $formName, array $attributes = null): Form {
+    return new Form($formName, $attributes);
   }
 
 	/**

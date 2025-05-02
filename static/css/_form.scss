@@ -450,6 +450,36 @@ form {
   }
 }
 
+/* CERTIFICATION
+======================================================= */
+.form-certification {
+  justify-content: flex-start;
+
+  fieldset.certificationStatus {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 4px;
+    border: 1px gray solid;
+    border-radius: 4px;
+    flex-basis: 132px;
+    legend {
+      flex-basis: 100%;
+    }
+    label {
+      display: flex;
+      margin: 8px;
+    }
+  }
+  fieldset.datePublished { flex-basis: content; }
+  fieldset.expires { flex-basis: content; }
+
+  @media (min-width: 640px) {
+    fieldset.about { flex-basis: 50%; }
+    fieldset.issuedBy { flex-basis: 50%; }
+  }
+}
+
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint {

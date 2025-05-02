@@ -14,6 +14,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @var FormInterface
    */
   protected FormInterface $form;
+
+	protected string $formName;
 	/**
 	 * @var string|null
 	 */
@@ -26,8 +28,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
   /**
    * @param array|null $attributes
    */
-  public function __construct(array $attributes = null)
+  public function __construct(string $formName, array $attributes = null)
   {
+		$this->formName = $formName;
     $this->form = ElementFactory::form($attributes);
     $this->element = $this->form;
   }
@@ -157,7 +160,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	public function relationshipOneToOne(string $type, string $legend, string $propertyName, int $value = null): FormInterface
 	{
 		$this->content([
-			"<fieldset><legend>$legend</legend>",
+			"<fieldset class='$propertyName'><legend>". self::writeLegend($propertyName, $legend) ."</legend>",
 			CmsFactory::view()->fragment()->reactShell($type)->getItemType($legend, $propertyName, $value)->ready(),
 			"</fieldset>"
 		]);

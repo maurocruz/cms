@@ -133,7 +133,7 @@ abstract class OrderAbstract implements TypeViewInterface
   protected function formOrder(string $case = "new", $value = null): array
   {
 		$seller = $case == 'new' ? $value : $value['seller'];
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-order']);
+    $form = CmsFactory::view()->fragment()->form("form-order", ['class'=>'form-basic form-order']);
     $form->action("/admin/order/$case")->method('post');
 		$form->setIdform("form-order-".(self::$idOrder ?? "new"));
 		$form->addMandatories('seller','customer','orderDate','orderStatus','paymentDueDate');

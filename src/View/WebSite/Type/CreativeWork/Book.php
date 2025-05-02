@@ -95,7 +95,7 @@ class Book implements TypeViewInterface
 			$dateCreated = $typeBuider->getPropertyValue('dateCreated');
 			$dateModified = $typeBuider->getPropertyValue('dateModified');
 		}
-		$form = CmsFactory::view()->fragment()->form(['class'=>'form-basic form-book']);
+		$form = CmsFactory::view()->fragment()->form("form-book",['class'=>'form-basic form-book']);
 		$form->action('/admin/book/'.$case)->method('post');
 		// id
 		if ($case == 'edit') {

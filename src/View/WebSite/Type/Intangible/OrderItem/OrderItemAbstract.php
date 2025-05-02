@@ -119,7 +119,7 @@ abstract class OrderItemAbstract
    */
   protected function listSellerOfferedItems($sellerHasOfferCatalog): array
   {
-    $form = CmsFactory::view()->fragment()->form(['class'=>'form-basic']);
+    $form = CmsFactory::view()->fragment()->form("form-orderItem", ['class'=>'form-basic']);
     $form->action("/admin/orderItem/new")->method("post");
     // number of items
     $form->content("<p>" . sprintf(_("%s items available in the catalog"), $sellerHasOfferCatalog['numberOfItems']) . "</p>");

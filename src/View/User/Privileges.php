@@ -53,7 +53,7 @@ class Privileges
 		$actions = $value['actions'] ?? 'r';
 		$namespace = $value['namespace'] ?? 'public';
 
-		$form = CmsFactory::view()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
+		$form = CmsFactory::view()->fragment()->form("form-privileges",['class'=>'formPadrao form-user-privileges'])
 			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
 		$form->input('iduser', (string) $iduser, 'hidden');

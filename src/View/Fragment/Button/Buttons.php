@@ -15,7 +15,7 @@ class Buttons
    */
   public function buttonDelete(string $idIsPartOf, string $tableISPartOf, string $idHasPart = null, string $tableHasPart = null, array $attributes = null): array
   {
-    $form = CmsFactory::view()->fragment()->form($attributes);
+    $form = CmsFactory::view()->fragment()->form("form-buttonDelete",$attributes);
     $form->action("/admin/$tableISPartOf/erase")->method('post');
     $form->input('idIsPartOf', $idIsPartOf, 'hidden')
       ->input('tableIsPartOf', $tableISPartOf, 'hidden')
