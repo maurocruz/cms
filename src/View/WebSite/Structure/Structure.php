@@ -75,15 +75,22 @@ class Structure
 			->newTab("/admin/config", CmsFactory::view()->fragment()->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
+		$tabs = [];
     foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $value) {
 			if (in_array($value,['Organization','Event','Person','Place','Product','Taxon'])) {
-				$text = lcfirst($value);
-				$navbar->newTab("/admin/$value", _($text));
+				$url = lcfirst($value);
+				$tabs["/admin/$url"] =  ucfirst($value);
+				//$navbar->newTab("/admin/$value", _($text));
 			}
 			if (in_array($value,['Article','Book','Certification','MediaObject','WebPage','WebPageElement','WebSite'])) {
-				$navbar->newTab("/admin/creativeWork", _('Creative work'));
+				$tabs["/admin/creativeWork"] =  "Creative work";
+				//$navbar->newTab("/admin/creativeWork", _('Creative work'));
 			}
     }
+		foreach ($tabs as $key => $tab) {
+			$navbar->newTab($key, _($tab));
+		}
+
     return $navbar->ready();
   }
 

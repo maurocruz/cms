@@ -20,7 +20,7 @@ msgstr "Privilégios"
 msgid "Function"
 msgstr "Função"
 
-msgid "created"
+msgid "create"
 msgstr "Criar"
 
 msgid "read"
