@@ -1,19 +1,10 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\User;
 
 use Plinct\Cms\CmsFactory;
 
 class User
 {
-	/**
-	 * @param array $params
-	 * @return mixed|string[]
-	 */
-	public function get(array $params = []) {
-		return CmsFactory::model()->api()->get('user', $params)->ready();
-	}
-
 	/**
 	 * @return UserLogged
 	 */
@@ -25,7 +16,7 @@ class User
 	 * @param $params
 	 * @return void
 	 */
-	public function index($params)
+	public function index($params): void
 	{
 		$params['orderBy'] = $params['orderBy'] ?? 'dateModified';
 		$params['ordering'] = $params['ordering'] ?? 'desc';
@@ -46,10 +37,23 @@ class User
 	 * @param $iduser
 	 * @return void
 	 */
-	public function edit($iduser)	{
+	public function edit($iduser): void
+	{
 		// DATA
-		$data = CmsFactory::controller()->user()->get(['iduser' => $iduser]);
+		$data = CmsFactory::model()->type('user')->get(['iduser' => $iduser, 'properties' => 'privileges,userCreator']);
 		// VIEW
 		CmsFactory::view()->user()->edit($data);
+	}
+
+	public function hasPrivileges(?array $privileges, int $function, string $action, string $namespace): bool
+	{
+		if ($privileges) {
+			foreach ($privileges as $privilege) {
+				if ($privilege['function'] == $function && $privilege['action'] == $action && $privilege['namespace'] == $namespace) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

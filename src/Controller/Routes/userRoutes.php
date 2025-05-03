@@ -1,5 +1,4 @@
 <?php
-
 use Plinct\Cms\CmsFactory;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -23,15 +22,28 @@ return function (Route $route)
 
 			// NEW
 			if ($action == 'add' || $action == 'new' || $action == 'post') {
+				if(isset($params['action']) && is_array($params['action'])) {
+					$params['action'] = implode('',$params['action']);
+				}
+				if (isset($params['namespace']) && is_array($params['namespace'])) {
+					$params['namespace'] = implode(',',$params['namespace']);
+				}
 				$data = CmsFactory::model()->api()->post('user/privileges', $params)->ready();
 			}
 			// EDIT
 			elseif ($action == 'edit' || $action == 'update' || $action == 'put') {
+				if(isset($params['action']) && is_array($params['action'])) {
+					$params['action'] = implode('',$params['action']);
+				}
+				if (isset($params['namespace']) && is_array($params['namespace'])) {
+					$params['namespace'] = implode(',',$params['namespace']);
+				}
 				$data = CmsFactory::model()->api()->put('user/privileges', $params)->ready();
 			}
 			// DELETE
 			elseif ($action == 'delete' || $action == 'del' || $action == 'erase') {
-				$data = CmsFactory::model()->api()->delete('user/privileges', $params)->ready();
+				$iduser_privileges = $params['iduser_privileges'];
+				$data = CmsFactory::model()->api()->delete('user/privileges', ['iduser_privileges'=>$iduser_privileges])->ready();
 			} else {
 				$data = CmsFactory::view()->fragment()->message()->warning('No action found');
 			}

@@ -99,13 +99,13 @@ class FormDecorator extends ElementDecorator implements FormInterface
   }
   /**
    * @param string $name
-   * @param array $value
+   * @param array|string|null $value
    * @param array $list
    * @param string|null $legend
    * @param array|null $attributes
    * @return FormInterface
    */
-  public function fieldsetWithSelect(string $name, $value, array $list, string $legend = null, array $attributes = null): FormInterface
+  public function fieldsetWithSelect(string $name, array|string|null $value, array $list, string $legend = null, array $attributes = null): FormInterface
   {
     $this->form->fieldsetWithSelect($name, $value, $list, self::writeLegend($name, $legend), self::setAttr($attributes, $name));
     return $this;
@@ -136,6 +136,20 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null, array $attributes = null): FormInterface
 	{
 		$this->form->fieldsetWithRadio($name, $items, $valueChecked, self::writeLegend($name, $legend), self::setAttr($attributes, $name));
+		return $this;
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $items
+	 * @param array $valuesChecked
+	 * @param string|null $legend
+	 * @param array|null $attributes
+	 * @return FormInterface
+	 */
+	public function fieldsetWithCheckbox(string $name, array $items, array $valuesChecked, string $legend = null, array $attributes = null): FormInterface
+	{
+		$this->form->fieldsetWithCheckbox($name, $items, $valuesChecked, self::writeLegend($name, $legend), self::setAttr($attributes, $name));
 		return $this;
 	}
 

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\User;
 
 use Plinct\Cms\CmsFactory;
@@ -20,6 +19,7 @@ class Privileges
 	 */
 	public function getPrivileges($value): array
 	{
+		$content = [];
 		$privileges = $value['privileges'] ?? null;
 		$userLoggedPrivilegesArray = CmsFactory::controller()->user()->userLogged()->getPrivileges();
 		$userLoggedPrivileges = isset($userLoggedPrivilegesArray[0]) ? $userLoggedPrivilegesArray[0]['function'] : 1;
@@ -35,7 +35,9 @@ class Privileges
 			}
 		}
 		// new
-		$content[] = CmsFactory::view()->fragment()->box()->simpleBox($this->privilegesForm('new', $value), _('Add new'));
+		if (!CmsFactory::controller()->user()->hasPrivileges($privileges,5,'crud','all')) {
+			$content[] = CmsFactory::view()->fragment()->box()->simpleBox($this->privilegesForm('new', $value), _('Add new'));
+		}
 		// return
 		return $content;
 	}
@@ -47,13 +49,14 @@ class Privileges
 	 */
 	private function privilegesForm(string $case = 'add', array $value = null): array
 	{
+		//var_dump($value);
 		$iduser_privileges = $value['iduser_privileges'] ?? null;
 		$iduser = $value['iduser'] ?? null;
-		$function = $value['function'] ?? '1';
-		$actions = $value['actions'] ?? 'r';
-		$namespace = $value['namespace'] ?? 'public';
-
-		$form = CmsFactory::view()->fragment()->form("form-privileges",['class'=>'formPadrao form-user-privileges'])
+		$function = $value['function'] ?? null;
+		$action = $value['action'] ?? null;
+		$namespace = $value['namespace'] ?? null;
+		$userCreator = $value['userCreator'] ?? null;
+		$form = CmsFactory::view()->fragment()->form("form-privileges",['class'=>'form-basic form-user-privileges'])
 			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
 		$form->input('iduser', (string) $iduser, 'hidden');
@@ -62,16 +65,47 @@ class Privileges
 		}
 		// function
 		$form->fieldsetWithSelect('function', $function, $this->functionOptions, _('Function') );
-		// actions
-		$form->fieldsetWithInput('actions', $actions, _('Actions'));
-		// namespace
-		$form->fieldsetWithInput('namespace', $namespace, _('Namespace'));
-		// use creator
-		//$form->fieldsetWithInput('userCreator', $userCreator, _('User creator'));
+
+		// ACTION
+		$map = ['c'=>'create','r'=>'read','u'=>'update','d'=>'delete'];
+		$valuesChecked = [];
+		if ($action) {
+			foreach (str_split($action) as $char) {
+				if (isset($map[$char])) {
+					$valuesChecked[$char] = $map[$char];
+				}
+			}
+		}
+		$form->fieldsetWithCheckbox('action', $map, $valuesChecked, _('Action'));
+
+		// NAMESPACE
+		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
+		$items = [];
+		foreach ($modulesEnabled as $valueModule) {
+			$items[$valueModule] = $valueModule;
+		}
+		$items['all'] = 'all';
+		$valuesChecked = [];
+		if (is_string($namespace)) {
+			foreach (explode(',', $namespace) as $char) {
+				if (in_array($char, $modulesEnabled)) {
+					$valuesChecked[$char] = $char;
+				}
+			}
+			if ($namespace && empty($valuesChecked)) {
+				$valuesChecked[$namespace] = $namespace;
+			}
+		}
+		$form->fieldsetWithCheckbox('namespace', $items, $valuesChecked, _('Namespace'));
+
 		// buttons
 		$form->submitButtonSend();
 		if($case == 'edit') {
-			$form->submitButtonDelete('/admin/user/privileges');
+			$form->submitButtonDelete('/admin/user/privileges/erase');
+		}
+		//USE CREATOR
+		if (is_array($userCreator)) {
+			$form->content("<p class='userCreator'>". _('Privileged by:') . $userCreator['name']."</p>");
 		}
 		// ready
 		return $form->ready();

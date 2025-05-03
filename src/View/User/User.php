@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\User;
 
 use Plinct\Cms\CmsFactory;
@@ -10,14 +9,14 @@ class User
 	 * @param string|null $title
 	 * @return void
 	 */
-	public function navbarUser(string $title = null)
+	public function navbarUser(string $title = null): void
 	{
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('user')
 				->title(_("Users"))
-				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->newTab("/admin/user",CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/user/new", CmsFactory::view()->fragment()->icon()->plus())
 				->search()
 				->ready()
 		);
@@ -30,13 +29,14 @@ class User
 			);
 		}
 	}
+
 	/**
 	 * @param array $data
 	 * @param string $orderBy
 	 * @param string $ordering
 	 * @return void
 	 */
-	public function index(array $data, string $orderBy, string $ordering)
+	public function index(array $data, string $orderBy, string $ordering): void
 	{
 		// navbar
 		$this->navbarUser();
@@ -58,19 +58,22 @@ class User
 
 		CmsFactory::view()->addMain($list->ready());
 	}
+
 	/**
+	 * @return void
 	 */
-	public function new()
+	public function new(): void
 	{
 		$this->navbarUser(_("Add new"));
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->auth()->register()
 		);
 	}
+
 	/**
 	 * @param ?array $data
 	 */
-	public function edit(array $data = null)
+	public function edit(array $data = null): void
 	{
 		if (isset($data['status']) && $data['status'] === 'fail') {
 			$message = $data['message'];
@@ -103,10 +106,10 @@ class User
 	static private function formUser(string $case = 'new', $value = null): array
 	{
 		$id = isset($value) ? $value['iduser'] : null;
-		$form = CmsFactory::view()->fragment()->form("form-user",['class'=>'formPadrao form-user']);
+		$form = CmsFactory::view()->fragment()->form("form-user",['class'=>'form-basic form-user']);
 		$form->action("/admin/user/$case")->method('post');
 		// ID
-		if ($case == "edit") $form->fieldsetWithInput('iduser',(string) $id, 'ID', 'text', null, ['readonly']);
+		if ($case == "edit") $form->fieldsetWithInput('iduser',(string) $id, 'ID', 'text', null, ['disabled']);
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
 		// email
@@ -114,9 +117,9 @@ class User
 		// password
 		if ($case == 'new') $form->fieldsetWithInput('password', $value['password'] ?? null, _("Password"), 'password');
 		// created date
-		if ($case == 'edit') $form->fieldsetWithInput('dateCreated', $value['dateCreated'], _("Date Created"), 'text', null, ['readonly']);
+		if ($case == 'edit') $form->fieldsetWithInput('dateCreated', $value['dateCreated'], _("Date created"), 'text', null, ['disabled']);
 		// date modified
-		if ($case == 'edit') $form->fieldsetWithInput('dateModified', $value['dateModified'], _("Date modified"), 'text', null, ['readonly']);
+		if ($case == 'edit') $form->fieldsetWithInput('dateModified', $value['dateModified'], _("Date modified"), 'text', null, ['disabled']);
 		// submit buttons
 		$form->submitButtonSend();
 		if ($case == 'edit') $form->submitButtonDelete('/admin/user/erase');

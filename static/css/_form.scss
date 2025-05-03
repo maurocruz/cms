@@ -881,38 +881,72 @@ form {
 /* USER
 ===================================================== */
 .form-user {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(n) { width: 100%; }
-  fieldset:nth-of-type(1) { width: 40px; }
-  fieldset:nth-of-type(2) { width: calc(100% - 40px); }
-  fieldset:nth-of-type(4) { width: 50%; }
-  fieldset:nth-of-type(5) { width: 50%; }
+  justify-content: flex-start;
+
+  fieldset.iduser { flex-basis: 30px; }
+  fieldset.name { flex-basis: calc(100% - 30px); }
+  fieldset.dateCreated { flex-basis: 140px; }
+  fieldset.dateModified { flex-basis: 140px; }
 
   @media (min-width: 576px) {
-    fieldset:nth-of-type(2) { width: calc(50% - 40px); }
-    fieldset:nth-of-type(3) { width: 50%; }
+    fieldset.name { flex-basis: calc(50% - 15px); }
+    fieldset.email { flex-basis: calc(50% - 15px); }
   }
   @media (min-width: 768px) {
-    fieldset:nth-of-type(2) { width: calc(32% - 40px); }
-    fieldset:nth-of-type(3) { width: calc(68% - 276px); }
-    fieldset:nth-of-type(4) { width: 138px; }
-    fieldset:nth-of-type(5) { width: 138px; }
+    fieldset.name { flex-basis: calc(50% - 155px); }
+    fieldset.email { flex-basis: calc(50% - 155px); }
   }
   @media (min-width: 992px) {
-    fieldset:nth-of-type(2) { width: calc(32% - 80px); }
-    fieldset:nth-of-type(3) { width: calc(68% - 336px); }
+    fieldset.name { flex-basis: calc(50% - 185px); }
+    fieldset.email { flex-basis: calc(50% - 185px); }
   }
 }
 
 .form-user-privileges {
+  justify-content: flex-start;
 
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(n) { width: 50%; }
-  fieldset:nth-of-type(1) { width: 110px; }
-  fieldset:nth-of-type(2) { width: calc(40% - 96px); }
-  fieldset:nth-of-type(4) { width: calc(60% - 96px); }
+  fieldset.function { flex-basis: content; }
+
+  fieldset.action {
+    margin: 4px;
+    border: 1px gray solid;
+    border-radius: 4px;
+    padding-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: fit-content;
+
+    label {
+      margin: 2px 4px;
+      input { width: fit-content; }
+    }
+  }
+
+  fieldset.namespace {
+    margin: 2px;
+    border: 1px gray solid;
+    border-radius: 4px;
+    padding-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: fit-content;
+
+    label {
+      margin: 4px;
+      input { width: fit-content; }
+    }
+  }
+  fieldset.userCreator {
+    flex-basis: fit-content;
+  }
+
+  p.userCreator {
+    align-self: flex-end;
+  }
+
+  @media (min-width: 480px) {
+   // fieldset.action { flex-basis: 50%; }
+  }
 }
 
 /* WEBSITE

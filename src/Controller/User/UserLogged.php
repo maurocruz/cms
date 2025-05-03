@@ -72,7 +72,7 @@ class UserLogged
 	public function getPrivileges(): ?array
 	{
 		if (self::$iduser && !self::$privileges) {
-			$data = CmsFactory::controller()->user()->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
+			$data = CmsFactory::model()->type('user')->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
 			self::$privileges = $data[0]['privileges'];
 		}
 
@@ -84,13 +84,13 @@ class UserLogged
 		foreach ($this->getPrivileges() as $value)
 		{
 			$functionValue = $value['function'];
-			$actionsValue = $value['actions'];
+			$actionValue = $value['action'];
 			$namespaceValue = $value['namespace'];
 
-			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') return true;
+			if ($functionValue == 5 && $actionValue == 'crud' && $namespaceValue == 'all') return true;
 			return (
 				$functionValue > $function
-				&&  $this->permittedActions($actions, $actionsValue)
+				&&  $this->permittedActions($actions, $actionValue)
 				&& ($namespaceValue === 'all' || $namespaceValue == $namespace)
 			);
 		}
