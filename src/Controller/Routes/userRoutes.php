@@ -89,17 +89,14 @@ return function (Route $route)
 		if (!CmsFactory::controller()->user()->userLogged()->getIduser()) {
 			return CmsFactory::view()->writeBody($response);
 		}
-
 		$action = $args['action'];
 		$params = $request->getParsedBody();
 		$iduser = $params['iduser'] ?? $params['id'] ?? $params['idHasTable'] ?? null;
 		$params['dateModified'] = date('Y-m-d H:i:s');
 		unset($params['submit']);
-
 		// EDIT
 		if ($action == 'edit' && $iduser) {
 				$returns = CmsFactory::model()->api()->put('user',$params)->ready();
-
 				if (isset($returns['status']) && $returns['status'] == 'fail') {
 					CmsFactory::view()->addMain(
 						CmsFactory::view()->fragment()->message()->warning($returns['message'])
@@ -108,11 +105,9 @@ return function (Route $route)
 					$data = CmsFactory::model()->api()->get('user',['iduser' => $iduser, 'properties' => 'privileges'])->ready();
 					// VIEW
 					CmsFactory::view()->user()->edit($data);
-
 					return CmsFactory::view()->writeBody($response);
 				}
 				return $response->withHeader('Location', $_SERVER['HTTP_REFERER'])->withStatus(301);
-
 		} elseif ($action == 'erase' && $iduser) {
 			CmsFactory::model()->api()->delete('user',['iduser'=>$iduser])->ready();
 			return $response->withHeader('Location', '/admin/user')->withStatus(301);

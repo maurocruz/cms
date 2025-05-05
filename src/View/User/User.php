@@ -105,11 +105,14 @@ class User
 	 */
 	static private function formUser(string $case = 'new', $value = null): array
 	{
-		$id = isset($value) ? $value['iduser'] : null;
+		$iduser = isset($value) ? $value['iduser'] : null;
 		$form = CmsFactory::view()->fragment()->form("form-user",['class'=>'form-basic form-user']);
 		$form->action("/admin/user/$case")->method('post');
 		// ID
-		if ($case == "edit") $form->fieldsetWithInput('iduser',(string) $id, 'ID', 'text', null, ['disabled']);
+		if ($case == "edit") {
+			$form->input('iduser', $iduser, 'hidden');
+			$form->fieldsetWithInput('iduser', $iduser, 'ID', 'text', null, ['disabled']);
+		}
 		// name
 		$form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
 		// email
