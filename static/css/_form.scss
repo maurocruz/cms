@@ -335,7 +335,7 @@ form {
 .form-basic {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   background-color: #444444;
   padding: 5px;
   margin-bottom: 5px;
@@ -714,32 +714,32 @@ form {
 /* PERSON
 ======================================================= */
 .form-person {
-  display: flex;
-  flex-wrap: wrap;
+  fieldset.birthDate { flex-basis: fit-content; }
+  fieldset.deathDate { flex-basis: fit-content; }
 
-  fieldset:nth-of-type(8) { flex-basis: 49%; }
-  fieldset:nth-of-type(9) { flex-basis: 50%; }
-  fieldset:nth-of-type(10) { flex-basis: 130px; }
-  fieldset:nth-of-type(11) { flex-basis: calc(100% - 130px); }
-  fieldset:nth-of-type(12) { flex-basis: 130px; }
-  fieldset:nth-of-type(13) { flex-basis: calc(100% - 130px); }
-
-  @media (min-width: 576px) {
-    fieldset:nth-of-type(5) { flex-basis: 49%; }
-    fieldset:nth-of-type(6) { flex-basis: 50%; }
+  @media (min-width: 480px) {
+    fieldset.givenName { flex-basis: 50%; }
+    fieldset.familyName { flex-basis: 50%; }
+    fieldset.additionalName { flex-basis: 50%; }
+    fieldset.gender { flex-basis: 50%; }
+    fieldset.taxId { flex-basis: 50%; }
+    fieldset.hasOccupation { flex-basis: 50%; }
+    fieldset.birthPlace { flex-basis: calc(100% - 135px); }
+    fieldset.deathPlace { flex-basis: calc(100% - 135px); }
   }
   @media (min-width: 768px) {
-    fieldset:nth-of-type(1) { flex-basis: 49%; }
-    fieldset:nth-of-type(2) { flex-basis: 50%; }
-    fieldset:nth-of-type(7) { flex-basis: 33%; }
-    fieldset:nth-of-type(8) { flex-basis: 33%; }
-    fieldset:nth-of-type(9) { flex-basis: 33%; }
+    fieldset.birthPlace { flex-basis: calc(50% - 135px); }
+    fieldset.deathPlace { flex-basis: calc(50% - 135px); }
   }
   @media (min-width: 992px) {
-
-  }
-  @media (min-width: 1024px) {
-
+    fieldset.givenName { flex-basis: 25%; }
+    fieldset.familyName { flex-basis: 25%; }
+    fieldset.additionalName { flex-basis: 25%; }
+    fieldset.gender { flex-basis: 25%; }
+    fieldset.taxId { flex-basis: 120px; }
+    fieldset.hasOccupation { flex-basis: 25%; }
+    fieldset.birthPlace { flex-basis: calc(50% - 345px); }
+    fieldset.deathPlace { flex-basis: calc(50% - 345px); }
   }
 }
 

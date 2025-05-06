@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Plinct\Cms\CmsFactory;
@@ -23,20 +22,25 @@ abstract class PersonAbstract
 	/**
    *
    */
-  public static function navbarIndex()
+  public static function navbarIndex(): void
   {
 		CmsFactory::View()->addHeader(
 			CmsFactory::View()->fragment()->navbar()
         ->type('person')
         ->title(_("Person"))
-        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home(16,16))
-        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus(16,16))
+        ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home())
+        ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus())
         ->search()
         ->ready()
       );
   }
 
-  public static function navbarEdit(string $name, int $idperson)
+	/**
+	 * @param string $name
+	 * @param int $idperson
+	 * @return void
+	 */
+  public static function navbarEdit(string $name, int $idperson): void
   {
     // LEVEL 1
     self::navbarIndex();
@@ -46,7 +50,7 @@ abstract class PersonAbstract
       ->type('person')
       ->title($name)
       ->level(3)
-      ->newTab("/admin/person/edit/$idperson", CmsFactory::view()->fragment()->icon()->home(16,16))
+      ->newTab("/admin/person/edit/$idperson", CmsFactory::view()->fragment()->icon()->home())
       ->ready()
     );
   }
@@ -87,16 +91,16 @@ abstract class PersonAbstract
 	  $form->fieldsetWithInput('gender', $gender, _("Gender"));
 		// TAX ID
 	  $form->fieldsetWithInput('taxId', $taxId, _("Tax ID"));
-		// BIRTH DATA
-	  $form->fieldsetWithInput('birthDate', $birthDate, _("Birth date"), 'date');
-		// BIRTHPLACE
-	  $form->fieldsetWithInput('birthPlace', $birthPlace, _("Birth place"));
-	  // DEAth DATA
-	  $form->fieldsetWithInput('deathDate', $deathDate, _("Death date"), 'date');
-	  // DEATH PLACE
-	  $form->fieldsetWithInput('deathPlace', $deathPlace, _("Death place"));
 	  // HAS OCCUPATION
 	  $form->fieldsetWithInput('hasOccupation', $hasOccupation, _("Has occupation"));
+	  // BIRTHPLACE
+	  $form->fieldsetWithInput('birthPlace', $birthPlace, _("Birth place"));
+		// BIRTH DATA
+	  $form->fieldsetWithInput('birthDate', $birthDate, _("Birth date"), 'date');
+	  // DEATH PLACE
+	  $form->fieldsetWithInput('deathPlace', $deathPlace, _("Death place"));
+	  // DEAth DATA
+	  $form->fieldsetWithInput('deathDate', $deathDate, _("Death date"), 'date');
 		// SUBMIT
     $form->submitButtonSend();
     if ($case == 'edit') $form->submitButtonDelete("/admin/person/erase");
