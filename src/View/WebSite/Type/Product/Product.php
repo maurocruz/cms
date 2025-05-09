@@ -12,12 +12,13 @@ class Product extends ProductAbstract implements TypeViewInterface
 {
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
-		$tb = ToolBox::typeBuilder($value);
+		$tb = ToolBox::typeBuilder($data);
 		$this->manufacturer = $tb->getPropertyValue('idthing');
 		if ($tb->getType() == 'Organization') {
 			Organization::navbarIndex();
@@ -29,7 +30,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		);
 	}
 
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		parent::navbarIndex();
 		CmsFactory::view()->addMain(
@@ -38,9 +39,11 @@ class Product extends ProductAbstract implements TypeViewInterface
 	}
 
   /**
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit($data): void
+  public function edit($data, array $queryParams = null): void
   {
     $value = $data[0];
 	  parent::navbarIndex($value['name']);

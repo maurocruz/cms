@@ -10,15 +10,15 @@ use Plinct\Tool\ToolBox;
 class OrderView extends OrderAbstract
 {
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
-		parent::setVars($value);
-		$typeBuilder = ToolBox::typeBuilder($value);
+		$typeBuilder = ToolBox::typeBuilder($data);
 		$idthing = $typeBuilder->getPropertyValue('idthing');
-		parent::navbarIndex($value);
+		parent::navbarIndex($data);
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('order')->setIdHasPart($idthing)->ready()
 		);
@@ -28,11 +28,12 @@ class OrderView extends OrderAbstract
 	 * CREATE NEW ORDER
 	 *
 	 * @param null $value
+	 * @param array|null $queryParams
 	 */
-	public function new($value = null): void
+	public function new($value = null, array $queryParams = null): void
 	{
 		// NAVBAR
-		parent::navbarIndex($value);
+		parent::navbarIndex((array)$value);
 		// FORM NEW
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("new", $value), sprintf(_("Add new %s from %s"), _("order"), $value['name']))
@@ -40,11 +41,12 @@ class OrderView extends OrderAbstract
 	}
 
   /**
-   * EDIT A ORDER
+   * EDIT An ORDER
    *
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
 		if (empty($data)) {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->noContent());
@@ -78,7 +80,7 @@ class OrderView extends OrderAbstract
     // NAVBAR
     parent::navbarExpired($seller);
 		// TABLE
-		$table = CmsFactory::view()->fragment()->listTable(['class'=>'table-order-expired']);
+		$table = CmsFactory::view()->fragment()->table(['class'=>'table-order-expired']);
 		$table->setCaption(_("Expired or due orders"));
 		$table->labels(
 			'#',

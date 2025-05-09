@@ -9,9 +9,10 @@ class EventView extends EventAbstract implements TypeViewInterface
 {
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -23,8 +24,9 @@ class EventView extends EventAbstract implements TypeViewInterface
   /**
    *
    * @param array|null $value
+   * @param array|null $queryParams
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -33,9 +35,11 @@ class EventView extends EventAbstract implements TypeViewInterface
   }
 
   /**
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
     // NAVBAR
     $this->navbarEvent();

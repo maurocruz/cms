@@ -8,9 +8,10 @@ use Plinct\Tool\ToolBox;
 class WebSiteView extends WebSiteAbstract implements TypeViewInterface
 {
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     $this->navbarWebSite();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webSite')->setColumnsTable(['url'=>'Url'])->ready());
@@ -18,8 +19,9 @@ class WebSiteView extends WebSiteAbstract implements TypeViewInterface
 
   /**
    * @param array|null $value
+   * @param array|null $queryParams
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
     // NAVBAR
     $this->navbarWebSite();
@@ -28,9 +30,10 @@ class WebSiteView extends WebSiteAbstract implements TypeViewInterface
   }
 
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
     $value = $data[0] ?? null;
 		$typeBuilder = ToolBox::typeBuilder($value);

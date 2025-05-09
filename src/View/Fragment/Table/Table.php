@@ -1,10 +1,9 @@
 <?php
-declare(strict_types=1);
-namespace Plinct\Cms\View\Fragment\ListTable;
+namespace Plinct\Cms\View\Fragment\Table;
 
 use Plinct\Cms\CmsFactory;
 
-class ListTable extends ListTableAbstract implements ListTableInterface
+class Table extends TableAbstract implements TableInterface
 {
   /**
    * @param array|string[] $attributes
@@ -17,7 +16,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 	/**
 	 * @return void
 	 */
-	protected function buildLabels()
+	protected function buildLabels(): void
 	{
 		// BUTTON EDIT
 		if ($this->editButton || $this->buttonEdit) {
@@ -43,7 +42,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 	/**
 	 * @return void
 	 */
-	protected function buildCaption()
+	protected function buildCaption(): void
 	{
 		$numberShowing = $this->table->getNumberOfRows();
 		$numberOfItems = $this->numberOfItems ?? $numberShowing;
@@ -55,13 +54,14 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 	/**
 	 *
 	 */
-	protected function buildRows() {
-		if (!empty($this->itemListElement)) {
+	protected function buildRows(): void
+	{
+		/*if (!empty($this->itemListElement)) {
 			foreach ($this->itemListElement as $itemList) {
 				$item = $itemList['item'] ?? $itemList;
 				$id = $item['id'.lcfirst($item['@type'])];
 				if ($this->editButton || $this->buttonEdit) {
-					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], ($this->buttonEdit ?? $this->pathToEditButton) . $id);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['class'=>'table-button table-button-edit'], ($this->buttonEdit ?? $this->pathToEditButton) . $id);
 				}
 				foreach ($this->properties as $property) {
 					$explode = explode(":",$property);
@@ -71,28 +71,28 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 							$bodyCell = $bodyCell[$prop]['name'] ?? $bodyCell[$prop];
 						}
 					}
-					$this->table->bodyCell($bodyCell);
+					$this->table->bodyCell($bodyCell,['class'=>'table-row']);
 				}
 				if ($this->buttonDelete) {
-					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->delete(), ['style' => 'text-align: center;'], $this->buttonDelete . $id);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->delete(), ['class'=>'table-button table-button-delete'], $this->buttonDelete . $id);
 				}
 				$this->table->closeRow();
 			}
-		}
+		}*/
 		// AS ADD ROW
 		if (!empty($this->rows)) {
 			foreach ($this->rows as $key => $row) {
 				// edit buttom
 				if ($this->buttonEdit) {
-					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['style' => 'text-align: center;'], $this->buttonEdit[$key]);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->icon()->edit(), ['class'=>'table-button table-button-edit'], $this->buttonEdit[$key]);
 				}
 				// items
 				foreach ($row as $cell) {
-					$this->table->bodyCell($cell);
+					$this->table->bodyCell($cell,['class'=>'table-row']);
 				}
 				// delete buttom
 				if ($this->buttonDelete) {
-					$this->table->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($this->idIsPartOf, $this->tableIsPartOf, $this->idHasPart, $this->tableHasPart),['style' => 'text-align: center;']);
+					$this->table->bodyCell(CmsFactory::view()->fragment()->buttons()->buttonDelete($this->type, $this->idtype),['class'=>'table-button table-button-delete']);
 				}
 				// close
 				$this->table->closeRow();
@@ -103,7 +103,7 @@ class ListTable extends ListTableAbstract implements ListTableInterface
 		if ($this->table->getNumberOfRows() === 0) {
 			$countLabels = count($this->labels);
 			$colspan = $this->editButton ? $countLabels + 1 : $countLabels;
-			$this->table->bodyCell(_("No items found!"),['colspan'=>"$colspan",'style'=>'text-align: center; font-size:120%; font-weight: bold; color: yellow;'])->closeRow();
+			$this->table->bodyCell(_("No items found!"),['colspan'=>"$colspan",'class'=>'table-noitems', 'style'=>'text-align: center; font-size:120%; font-weight: bold; color: yellow;'])->closeRow();
 		}
 	}
   /**

@@ -43,7 +43,7 @@ class User
 		// showing
 		CmsFactory::view()->addMain(['tag'=>'p','content'=>sprintf(_("Showing %s items order by %s %s!"), count($data), $orderBy, $ordering )]);
 
-		$list = CmsFactory::view()->fragment()->listTable()
+		$list = CmsFactory::view()->fragment()->table()
 			->caption(_("Users"))
 			->labels(_("Name"), _('Email'), _('Date modified'))
 			->setOrderBy($orderBy)

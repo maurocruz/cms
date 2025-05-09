@@ -10,9 +10,10 @@ use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 class Person extends PersonAbstract implements TypeViewInterface
 {
   /**
-   * @param ?array $value
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     $this->navbarIndex();
 		CmsFactory::view()->addMain(
@@ -22,9 +23,10 @@ class Person extends PersonAbstract implements TypeViewInterface
 
   /**
    * @param array|null $value
+   * @param array|null $queryParams
    * @param
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
       $this->navbarIndex();
       CmsFactory::View()->addMain(
@@ -33,20 +35,21 @@ class Person extends PersonAbstract implements TypeViewInterface
   }
 
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
     if (!empty($data)) {
 			if (isset($data[0])) {
 				$value = $data[0];
 				$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
-				$this->idperson = (int)$typeBuilder->getId();
+				$this->idperson = $typeBuilder->getId();
 				$idthing = $typeBuilder->getIdthing();
 				$this->name = $value['name'];
 				// NAVBAR
-				$this->navbarEdit($this->name, $this->idperson);
+				$this->navbarEdit($this->name, $this->idperson, $idthing);
 				// FORM
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Edit person"), self::formPerson('edit', $value), true));
 				// CONTACT POINT

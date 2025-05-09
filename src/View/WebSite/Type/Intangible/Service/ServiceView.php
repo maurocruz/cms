@@ -10,12 +10,13 @@ use Plinct\Tool\ToolBox;
 class ServiceView extends ServiceAbstract implements TypeViewInterface
 {
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
-		$tb = ToolBox::typeBuilder($value);
+		$tb = ToolBox::typeBuilder($data);
 		$this->provider = $tb->getPropertyValue('idthing');
 		if ($tb->getType() == 'Organization') {
 			Organization::navbarIndex();
@@ -29,9 +30,10 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		if (empty($data)) {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message());
@@ -62,9 +64,10 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		if (!empty($value)) {
 			$tbProvider = ToolBox::typeBuilder($value);

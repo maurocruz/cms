@@ -6,8 +6,8 @@ use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
 use Plinct\Cms\View\Fragment\Button\Buttons;
 use Plinct\Cms\View\Fragment\Form\Form;
-use Plinct\Cms\View\Fragment\ListTable\ListTable;
-use Plinct\Cms\View\Fragment\ListTable\ListTableInterface;
+use Plinct\Cms\View\Fragment\Table\Table;
+use Plinct\Cms\View\Fragment\Table\TableInterface;
 use Plinct\Cms\View\Fragment\Message\Message;
 use Plinct\Cms\View\Fragment\Miscellaneous\Miscellaneous;
 use Plinct\Cms\View\Fragment\Miscellaneous\MiscellaneousInterface;
@@ -59,10 +59,10 @@ class Fragment
 
   /**
    * @param array|null $attributes
-   * @return ListTableInterface
+   * @return TableInterface
    */
-  public function listTable(array $attributes = null): ListTableInterface {
-    return new ListTable($attributes);
+  public function table(array $attributes = null): TableInterface {
+    return new Table($attributes);
   }
 
 	/**

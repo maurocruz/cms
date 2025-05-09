@@ -10,20 +10,22 @@ use Plinct\Tool\ToolBox;
 class Organization extends OrganizationAbstract implements TypeViewInterface
 {
 	/**
-	 * @param ?array $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
-		$this->navbarIndex();
+		parent::navbarIndex();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('organization')->ready()
 		);
 	}
   /**
    * @param array|null $value
+   * @param array|null $queryParams
    * @param
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
     // NAVBAR
     parent::navbarNew();
@@ -33,13 +35,13 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
     );
   }
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
 		// NAVBAR
-	  parent::navbarIndex();
 		if (isset($data['status']) && $data['status']=='fail') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));
 		} elseif (!empty($data)) {

@@ -1295,10 +1295,12 @@ form .mandatory-field {
     flex-basis: 25%;
   }
   .form-person fieldset.birthPlace {
-    flex-basis: calc(50% - 345px);
+    flex-basis: calc(50% - 380px);
+    min-width: 135px;
   }
   .form-person fieldset.deathPlace {
-    flex-basis: calc(50% - 345px);
+    flex-basis: calc(50% - 380px);
+    min-width: 135px;
   }
 }
 
@@ -1680,6 +1682,22 @@ table .table-delete-button {
   vertical-align: middle;
   padding: 4px !important;
   font-size: 1.2em;
+}
+
+.table .table-button {
+  text-align: center;
+}
+.table .table-button a svg {
+  width: 18px;
+  height: 18px;
+}
+.table .table-row {
+  vertical-align: middle;
+  font-size: 1.2em;
+}
+.table .table-button-delete .button-submit svg {
+  width: 22px;
+  height: 22px;
 }
 
 .plcm-section {

@@ -11,23 +11,25 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
 {
 
 	/**
-	 * @param ?array $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return bool|null
 	 */
-  public function index(?array $value): ?bool
+  public function index(?array $data, array $queryParams = null): ?bool
   {
-		$tb = CmsFactory::toolBox()->typeBuilder($value);
+		$tb = CmsFactory::toolBox()->typeBuilder($data);
 		$idIsPartOf = $tb->getId();
-		parent::navbarWebSite($value);
+		parent::navbarWebSite($data);
 		parent::navbarWebPage();
 		return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdIsPartOf($idIsPartOf)->setColumnsTable(['url'=>'Url'])->ready());
   }
 
   /**
    *
-   * @param ?array $value
+   * @param array|null $value
+   * @param array|null $queryParams
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
     // NAVBAR
 	  parent::navbarWebSite($value);
@@ -37,9 +39,12 @@ class WebPageView extends WebPageViewAbstract implements TypeViewInterface
   }
 
 	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return bool
 	 * @throws Exception
 	 */
-	public function edit(?array $data): bool {
+	public function edit(?array $data, array $queryParams = null): bool {
 		$typeBuilder = CmsFactory::toolBox()::typeBuilder($data);
 		$webSite = $typeBuilder->getValue("isPartOf");
 		$idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');

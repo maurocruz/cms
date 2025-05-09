@@ -9,11 +9,12 @@ class OfferView extends OfferAbstract implements TypeViewInterface
 {
 
 	/**
-   * @param ?array $value
-   */
-  public function index(?array $value)
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 */
+  public function index(?array $data, array $queryParams = null): void
   {
-		$this->navbarOfferedBy($value);
+		$this->navbarOfferedBy($data);
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('offer')->setIdHasPart(self::$offeredById)->ready()
 		);
@@ -21,17 +22,18 @@ class OfferView extends OfferAbstract implements TypeViewInterface
 
   /**
    * @param null $value
+   * @param array|null $queryParams
    */
-  public function new($value = null)
+  public function new($value = null, array $queryParams = null): void
   {
-	  $this->navbarOfferedBy($value);
+	  $this->navbarOfferedBy((array)$value);
 		//
 	  CmsFactory::view()->addMain(
 	    CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer(),_('New offer'))
 	  );
   }
 
-	public function edit(?array $data)
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		$value = $data[0];
 		$offeredBy = $value['offeredBy'];

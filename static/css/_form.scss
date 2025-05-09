@@ -738,8 +738,8 @@ form {
     fieldset.gender { flex-basis: 25%; }
     fieldset.taxId { flex-basis: 120px; }
     fieldset.hasOccupation { flex-basis: 25%; }
-    fieldset.birthPlace { flex-basis: calc(50% - 345px); }
-    fieldset.deathPlace { flex-basis: calc(50% - 345px); }
+    fieldset.birthPlace { flex-basis: calc(50% - 380px); min-width: 135px; }
+    fieldset.deathPlace { flex-basis: calc(50% - 380px);; min-width: 135px; }
   }
 }
 

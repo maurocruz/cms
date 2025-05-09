@@ -91,3 +91,22 @@ table {
     font-size: 1.2em;
   }
 }
+.table {
+  .table-button {
+    text-align: center;
+    a svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  .table-row {
+    vertical-align: middle;
+    font-size: 1.2em;
+  }
+  .table-button-delete {
+    .button-submit svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}

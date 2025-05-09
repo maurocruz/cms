@@ -15,9 +15,9 @@ abstract class OrderAbstract implements TypeViewInterface
    * @var ?string
    */
   protected static ?string $idOrder = null;
-
-	private string $sellerType;
-
+	/**
+	 * @var int
+	 */
 	protected int $idthingSeller;
   /**
    * @var int
@@ -35,19 +35,6 @@ abstract class OrderAbstract implements TypeViewInterface
 	 * @var ?string
 	 */
 	protected ?string $tags = null;
-
-	/**
-	 * @param $value
-	 * @return void
-	 */
-	protected function setVars($value): void
-	{
-		$typeBuilder = ToolBox::typeBuilder($value);
-		$type = $typeBuilder->getType();
-		if ($type !== 'Order') {
-			$this->sellerType = $type;
-		}
-	}
 
 	/**
 	 * @param array $value
@@ -74,15 +61,16 @@ abstract class OrderAbstract implements TypeViewInterface
 		}
 		if ($sellerType == 'Person') {
 			$idperson = $sellerTypeBuilder->getPropertyValue('idperson');
+			$idthing = $sellerTypeBuilder->getIdthing();
 			Person::navbarIndex();
-			Person::navbarEdit($sellerName, $idperson);
+			Person::navbarEdit($sellerName, $idperson, $idthing);
 		}
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('order')
 			->level(4)
 			->title(_('Orders'))
-			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home(16,16))
-			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus(16,16))
+			->newTab("/admin/order?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin/order/new?seller=$idthingSeller", CmsFactory::view()->fragment()->icon()->plus())
 			->newTab("/admin/invoice?provider=$idthingSeller", _('Invoices'))
 			->newTab("/admin/order/expired?seller=$idthingSeller", ucfirst(_("Due dates")));
 

@@ -5,22 +5,17 @@ use Plinct\Cms\CmsFactory;
 
 class Buttons
 {
-  /**
-   * @param string $idIsPartOf
-   * @param string $tableISPartOf
-   * @param string|null $idHasPart
-   * @param string|null $tableHasPart
-   * @param array|null $attributes
-   * @return array
-   */
-  public function buttonDelete(string $idIsPartOf, string $tableISPartOf, string $idHasPart = null, string $tableHasPart = null, array $attributes = null): array
+	/**
+	 * @param string $type
+	 * @param string $idtype
+	 * @param array|null $attributes
+	 * @return array
+	 */
+  public function buttonDelete(string $type, string $idtype, array $attributes = null): array
   {
     $form = CmsFactory::view()->fragment()->form("form-buttonDelete",$attributes);
-    $form->action("/admin/$tableISPartOf/erase")->method('post');
-    $form->input('idIsPartOf', $idIsPartOf, 'hidden')
-      ->input('tableIsPartOf', $tableISPartOf, 'hidden')
-      ->input('idHasPart', $idHasPart, 'hidden')
-      ->input('tableHasPart', $tableHasPart, 'hidden');
+    $form->action("/admin/$type/erase")->method('post');
+    $form->input("id$type", $idtype, 'hidden');
     $form->content("<button type='submit' class='button-submit form-submit-button-delete' onclick='return confirm(\"" . _("Do you really want to delete this item?") . "\")'>"
         . CmsFactory::view()->fragment()->icon()->delete()
       ."</button>");

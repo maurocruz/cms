@@ -15,16 +15,17 @@ class Intangible implements TypeViewInterface
 			CmsFactory::view()->fragment()->navbar()
 				->title(_('Intangible'))
 				->type('Intanglble')
-				->newTab('/admin/intangible',CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab('/admin/intangible',CmsFactory::view()->fragment()->icon()->home())
 				->ready()
 		);
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		self::navbar();
 		CmsFactory::view()->addMain(
@@ -37,18 +38,20 @@ class Intangible implements TypeViewInterface
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data)
+	public function edit(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement edit() method.
 	}
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

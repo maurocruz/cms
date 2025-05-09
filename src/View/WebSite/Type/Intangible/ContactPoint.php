@@ -19,7 +19,7 @@ class ContactPoint implements TypeViewInterface
 		);
 	}
 
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		Intangible::navbar();
 		self::navbar();
@@ -28,12 +28,12 @@ class ContactPoint implements TypeViewInterface
 		);
 	}
 
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		Intangible::navbar();
 	}
 
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

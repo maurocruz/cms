@@ -30,9 +30,10 @@ class Type
 
 	/**
 	 * @param array $params
+	 * @param array|null $queryParams
 	 * @return mixed|string|string[]
 	 */
-	public function post(array $params): mixed
+	public function post(array $params, array $queryParams = null): mixed
 	{
 		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
 		if ($isMultidimensional) {
@@ -56,7 +57,7 @@ class Type
 			}
 			// REDIRECT TO EDIT PAGE
 			if ($idvalue) {
-				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $idvalue;
+				return App::getURL() . dirname(filter_input(INPUT_SERVER, 'REQUEST_URI')) . DIRECTORY_SEPARATOR . "edit" . DIRECTORY_SEPARATOR . $idvalue . "?" . http_build_query($queryParams);
 			} else {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}
@@ -106,7 +107,7 @@ class Type
 		}
 		// TODO fazer redirecionameto para offer
 		// REDIRECT
-		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','propertyValue'];
+		$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','propertyValue','role'];
 		if (in_array($this->type, $redirectedPage)) {
 			if ($this->type == 'invoice' && (isset($params['output']) && $params['output'] == 'redirect_home')) {
 				return '/admin/order/edit/'.$params['referencesOrder'];

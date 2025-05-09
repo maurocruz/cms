@@ -14,10 +14,11 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['@type'=>_('Types')])->ready()
@@ -26,9 +27,10 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		if (isset($data[0])) {
 			$value = $data[0];
@@ -47,9 +49,10 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox(parent::form())

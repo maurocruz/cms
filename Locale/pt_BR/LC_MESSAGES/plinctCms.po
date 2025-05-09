@@ -11,6 +11,24 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "members"
+msgstr "membros"
+
+msgid "role"
+msgstr "função"
+
+msgid "Role"
+msgstr "Função"
+
+msgid "Role name"
+msgstr "Nome da função"
+
+msgid "Article name"
+msgstr "Nome do artigo"
+
+msgid "Person name"
+msgstr "Nome da pessoa"
+
 msgid "Edit user"
 msgstr "Editar usuário"
 

@@ -25,10 +25,11 @@ class Certification implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternamte name'),'certificationIdentification'=>_("Certification identification")])->ready()
@@ -37,18 +38,20 @@ class Certification implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new")));
 	}
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		if (!empty($data)) {
 			$value = $data[0];

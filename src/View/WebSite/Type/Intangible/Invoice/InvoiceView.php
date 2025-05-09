@@ -9,12 +9,13 @@ use Plinct\Tool\ToolBox;
 class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 {
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
-		$provider = $value['provider'] ?? null;
+		$provider = $data['provider'] ?? null;
 		if ($provider) {
 			parent::navbarIndex($provider);
 		}
@@ -23,7 +24,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 		);
 	}
 
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		if (!empty($data)) {
 			$provider = $data['provider'] ?? null;
@@ -131,7 +132,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 	}
 
 
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

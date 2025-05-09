@@ -7,7 +7,7 @@ use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class VideoObject implements TypeViewInterface
 {
-	private function navbar()
+	private function navbar(): void
 	{
 		CreativeWork::navbar();
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
@@ -17,7 +17,7 @@ class VideoObject implements TypeViewInterface
 			->ready());
 	}
 
-	public function index(?array $value)
+	public function index(?array $data, array $queryParams = null): void
 	{
 		self::navBar();
 		CmsFactory::view()->addMain(
@@ -25,12 +25,12 @@ class VideoObject implements TypeViewInterface
 		);
 	}
 
-	public function edit(?array $data)
+	public function edit(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement edit() method.
 	}
 
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

@@ -24,21 +24,22 @@ class MediaObject implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		$this->navbar();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('mediaObject')->ready());
 	}
 
-	public function edit(?array $data)
+	public function edit(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement edit() method.
 	}
 
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

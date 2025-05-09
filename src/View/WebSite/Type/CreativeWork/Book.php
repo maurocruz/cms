@@ -23,18 +23,19 @@ class Book implements TypeViewInterface
 			CmsFactory::view()->fragment()->navbar()
 				->type('book')
 				->setTitle(_('Book'))
-				->newTab("/admin/book", CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/book/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->newTab("/admin/book", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/book/new", CmsFactory::view()->fragment()->icon()->plus())
 				->search()
 				->ready()
 		);
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('book')->setColumnsTable(['name'=>_('Name'),'author'=>_('Author')])->ready()
@@ -43,9 +44,10 @@ class Book implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new"))
@@ -54,9 +56,10 @@ class Book implements TypeViewInterface
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(array $data = null): void
+	public function edit(array $data = null, array $queryParams = null): void
 	{
 		if (isset($data[0])) {
 
@@ -90,11 +93,7 @@ class Book implements TypeViewInterface
 		$locationCreated = $value['locationsCreated'] ?? null;
 		$datePublished = $value['datePublished'] ?? null;
 		$keywords = $value['keywords'] ?? null;
-		if ($case == 'edit') {
-			$typeBuider = new TypeBuilder('book', $value);
-			$dateCreated = $typeBuider->getPropertyValue('dateCreated');
-			$dateModified = $typeBuider->getPropertyValue('dateModified');
-		}
+
 		$form = CmsFactory::view()->fragment()->form("form-book",['class'=>'form-basic form-book']);
 		$form->action('/admin/book/'.$case)->method('post');
 		// id
@@ -121,6 +120,9 @@ class Book implements TypeViewInterface
 		$form->fieldsetWithInput('datePublished', $datePublished, _('Date published'), "datetime-local");
 		// dates
 		if ($case == "edit") {
+			$typeBuider = new TypeBuilder('book', $value);
+			$dateCreated = $typeBuider->getPropertyValue('dateCreated');
+			$dateModified = $typeBuider->getPropertyValue('dateModified');
 			$form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), "datetime-local", null, [ "disabled" ]);
 			$form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"), "datetime-local", null, [ "disabled" ]);
 		}

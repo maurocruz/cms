@@ -23,7 +23,14 @@ class ThingElements
 		return $form->ready();
 	}
 
-	public static function formContent(Form $form, array $value = null, array $excludes = []): Form
+	/**
+	 * @param Form $form
+	 * @param array|null $value
+	 * @param string|null $nameOfName
+	 * @param array $excludes
+	 * @return Form
+	 */
+	public static function formContent(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
 	{
 		$case = 'new';
 		$idthing = null;
@@ -44,7 +51,7 @@ class ThingElements
 		// CONTENT
 		$form->content("<div class='form-thing-extract'>");
 		// name
-		$form->fieldsetWithInput('name', $name, _('Name'));
+		$form->fieldsetWithInput('name', $name, $nameOfName ?? _('Name'));
 		// alternateName
 		if (!in_array('alternateName', $excludes)) {
 			$form->fieldsetWithInput('alternateName', $alternateName, _('Alternate name'));

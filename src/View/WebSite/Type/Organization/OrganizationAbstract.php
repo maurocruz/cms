@@ -3,7 +3,6 @@ namespace Plinct\Cms\View\WebSite\Type\Organization;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
-use Plinct\Tool\ArrayTool;
 
 abstract class OrganizationAbstract
 {
@@ -21,17 +20,6 @@ abstract class OrganizationAbstract
    * @var string
    */
   protected string $name;
-  /**
-   * @param array $value
-   * @return array
-   */
-  protected function setValues(array $value): array
-  {
-    $organization = $value['@type'] == 'Organization' ? $value : $value['provider'];
-    $this->idorganization = ArrayTool::searchByValue($organization['identifier'], "id",'value');
-    $this->name = $organization['name'];
-    return $value;
-  }
 
   /**
    * INDEX NAVBAR
@@ -42,8 +30,8 @@ abstract class OrganizationAbstract
 	    CmsFactory::view()->fragment()->navbar()
 		    ->type('Organization')
 		    ->setTitle(_("Organization"))
-		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home(16,16))
-		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+		    ->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home())
+		    ->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus())
 		    ->ready()
 		);
   }
@@ -61,14 +49,16 @@ abstract class OrganizationAbstract
    */
   public static function navbarEdit(string $name, int $idorganization, string $idthing): void
   {
+	  self::navbarIndex();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->title($name)
 				->level(3)
-				->newTab("/admin/organization/edit?idorganization=$idorganization", CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab("/admin/organization/edit?idorganization=$idorganization", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/service?provider=$idthing", _("Services"))
 				->newTab("/admin/product?manufacturer=$idthing", _("Products"))
 				->newTab("/admin/order?seller=$idthing", _("Orders"))
+				->newTab("/admin/role?refererType=Organization&refererName=$name&refererId=$idorganization&refererIdthing=$idthing", _("Members"))
 				->ready()
 		);
   }
@@ -91,7 +81,7 @@ abstract class OrganizationAbstract
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id
     $form->fieldsetWithInput("taxId", $value['taxId'] ?? null, _("Tax Id"));
-    // has offer catalog
+    // has offered a catalog
     $form->fieldsetWithInput("hasOfferCatalog", $value['hasOfferCatalog'] ?? null, _("Has offer catalog"));
     //submit
     $form->submitButtonSend();

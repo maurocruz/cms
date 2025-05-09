@@ -4,9 +4,9 @@ namespace Plinct\Cms\View\WebSite\Type;
 
 interface TypeViewInterface
 {
-	public function index(?array $value);
+	public function index(?array $data, array $queryParams = null);
 
-	public function edit(?array $data);
+	public function edit(?array $data, array $queryParams = null);
 
-	public function new(?array $value);
+	public function new(?array $value, array $queryParams = null);
 }

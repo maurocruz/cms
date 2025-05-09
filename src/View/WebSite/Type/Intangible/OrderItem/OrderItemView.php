@@ -16,21 +16,22 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
    */
   public static float $totalWithDiscount;
 
-	public function index(?array $value): bool
+	public function index(?array $data, array $queryParams = null): bool
 	{
 		return true;
 	}
 
-	public function new(?array $value): bool
+	public function new(?array $value, array $queryParams = null): bool
 	{
 		return true;
 	}
 
 	/**
-	 * @param ?array $data
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return array
 	 */
-  public function edit(?array $data): array
+  public function edit(?array $data, array $queryParams = null): array
   {
 		$typeBuilderOrder = ToolBox::typeBuilder($data);
     $this->orderItemNumber = $typeBuilderOrder->getId();

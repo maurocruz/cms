@@ -34,7 +34,7 @@ class ImageObject implements TypeViewInterface
 	}
 
 
-	public function index(?array $value): void
+	public function index(?array $data, array $queryParams = null): void
 	{
 		self::navBar();
 		CmsFactory::view()->addMain(
@@ -42,15 +42,17 @@ class ImageObject implements TypeViewInterface
 		);
 	}
 
-	public function new(?array $value): bool
+	public function new(?array $value, array $queryParams = null): bool
 	{
 		return false;
 	}
 
 	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @throws Exception
 	 */
-	public function edit(?array $data): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		self::navBar();
 		$value = $data[0];

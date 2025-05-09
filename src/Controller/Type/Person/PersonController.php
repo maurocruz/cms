@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Controller\Type\Person;
 
+use DOMException;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
@@ -46,7 +47,7 @@ class PersonController implements TypeControllerInterface
    * @param null $params
    * @return mixed
    */
-  public function product($params = null)
+  public function product($params = null): mixed
   {
     $id = $params['idperson'] ?? null;
     $action = $params['action'] ?? null;
@@ -59,10 +60,12 @@ class PersonController implements TypeControllerInterface
     }
     return $data[0];
   }
+
 	/**
 	 *
+	 * @throws DOMException
 	 */
-  public function saveSitemap()
+  public function saveSitemap(): void
   {
     $dataSitemap = null;
     $data = CmsFactory::model()->api()->get("person", [ "orderBy" => "dateModified desc", "properties" => "dateModified,image",'limit'=>'none'])->ready();

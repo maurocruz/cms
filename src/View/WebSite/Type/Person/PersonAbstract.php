@@ -37,10 +37,11 @@ abstract class PersonAbstract
 
 	/**
 	 * @param string $name
-	 * @param int $idperson
+	 * @param string $idperson
+	 * @param string $idthing
 	 * @return void
 	 */
-  public static function navbarEdit(string $name, int $idperson): void
+  public static function navbarEdit(string $name, string $idperson, string $idthing): void
   {
     // LEVEL 1
     self::navbarIndex();
@@ -51,6 +52,7 @@ abstract class PersonAbstract
       ->title($name)
       ->level(3)
       ->newTab("/admin/person/edit/$idperson", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin/role?refererType=Person&refererName=$name&refererId=$idperson&refererIdthing=$idthing", _('Member of'))
       ->ready()
     );
   }

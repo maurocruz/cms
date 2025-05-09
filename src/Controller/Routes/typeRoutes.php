@@ -3,7 +3,7 @@
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Server;
 use Plinct\Cms\Controller\Request\Server\Type\ClosureServer;
-use Plinct\Cms\Controller\Type\WebSite\Sitemap;
+use Plinct\Cms\Controller\Type\CreativeWork\Sitemap;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -34,6 +34,7 @@ return function (Route $route)
 		$type = $args['type'];
 		$action = $args['action'];
 		$params = $request->getParsedBody();
+		$queryParams = $request->getQueryParams();
 		unset($params['submit']);
 		unset($params['submit_x']);
 		unset($params['submit_y']);
@@ -45,7 +46,7 @@ return function (Route $route)
 		}
 		// NEW / POST
 		elseif ($action == "new" || $action == "post" || $action == "add") {
-			$returns = CmsFactory::model()->type($type)->post($params);
+			$returns = CmsFactory::model()->type($type)->post($params, $queryParams);
 		}
 		// DELETE
 		elseif ($action == "delete" || $action == "erase") {

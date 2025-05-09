@@ -13,7 +13,7 @@ class Action implements TypeViewInterface
 	 * @param string|null $title
 	 * @return void
 	 */
-	private function navbar(string $title = null)
+	private function navbar(string $title = null): void
 	{
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
@@ -35,10 +35,11 @@ class Action implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function index(?array $value)
+	public function index(?array $data, array $queryParams = null): void
 	{
 		$this->navbar();
 		CmsFactory::view()->addMain(
@@ -48,9 +49,10 @@ class Action implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value)
+	public function new(?array $value, array $queryParams = null): void
 	{
 		$this->navbar(_('Add new'));
 
@@ -61,9 +63,10 @@ class Action implements TypeViewInterface
 
 	/**
 	 * @param array|null $data
+	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data)
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		$this->navbar();
 		if (!empty($data)) {

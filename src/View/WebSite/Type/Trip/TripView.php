@@ -23,7 +23,7 @@ class TripView extends TripAbstract
 			$this->navbarIndex();
 			CmsFactory::view()->addMain(_('Show organization with trips'));
 			// TABLE
-			$table = CmsFactory::view()->fragment()->listTable();
+			$table = CmsFactory::view()->fragment()->table();
 			$table->labels(_('Name'));
 			foreach ($data['itemListElement'] as $item) {
 				$provider = $item['item']['provider'];

@@ -34,9 +34,10 @@ class Article implements TypeViewInterface
 
   /**
    *
-   * @param array|null $value
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     $this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status")])->ready());
@@ -44,19 +45,21 @@ class Article implements TypeViewInterface
 
 	/**
 	 * @param array|null $value
+	 * @param array|null $queryParams
 	 * @param
 	 */
-	public function new(?array $value): void
+	public function new(?array $value, array $queryParams = null): void
 	{
 		$this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
 	}
 
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
 		if (isset($data[0])) {
       $value = $data[0];
@@ -100,7 +103,7 @@ class Article implements TypeViewInterface
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		// THING
-		$form = Thing::formContent($form, $value, ['disambiguatingDescription']);
+		$form = Thing::formContent($form, $value, _('Article name'), ['disambiguatingDescription']);
 	  // about
 		$form->relationshipOneToOne('thing',_("About"), 'about', $about);
     // HEADLINE

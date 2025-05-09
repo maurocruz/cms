@@ -23,8 +23,8 @@ class Place implements TypeViewInterface
 	    CmsFactory::View()->fragment()->navbar()
 		    ->type('place')
 		    ->title(_('Place'))
-		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home(16,16))
-		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home())
+		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus())
 		    ->search()
 		    ->ready()
 		);
@@ -36,9 +36,10 @@ class Place implements TypeViewInterface
   }
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
+	 * @param array|null $queryParams
 	 */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     $this->navbarPlace();
 		CmsFactory::view()->addMain(
@@ -48,18 +49,20 @@ class Place implements TypeViewInterface
 
   /**
    * @param null $value
+   * @param array|null $queryParams
    */
-  public function new($value = null): void
+  public function new($value = null, array $queryParams = null): void
   {
     $this->navbarPlace();
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));
   }
 
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
 		if (empty($data)) {
 			CmsFactory::view()->addMain("<p>"._("Nothing found!")."</p>");

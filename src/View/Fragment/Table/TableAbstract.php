@@ -1,10 +1,9 @@
 <?php
-declare(strict_types=1);
-namespace Plinct\Cms\View\Fragment\ListTable;
+namespace Plinct\Cms\View\Fragment\Table;
 
 use Plinct\Web\Element\Table;
 
-abstract class ListTableAbstract
+abstract class TableAbstract
 {
   /**
    * @var Table
@@ -51,10 +50,8 @@ abstract class ListTableAbstract
    */
   protected ?string $pathToEditButton = null;
 
-  protected string $idIsPartOf;
-  protected string $tableIsPartOf;
-  protected string $idHasPart;
-  protected string $tableHasPart;
+	protected string $type;
+	protected string $idtype;
 
 	protected ?string $orderBy = null;
 	protected ?string $ordering = null;
@@ -69,9 +66,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string|null $caption
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function setCaption(?string $caption): ListTableInterface
+	public function setCaption(?string $caption): TableInterface
 	{
 		$this->caption = $caption;
 		return $this;
@@ -79,9 +76,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string $caption
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function caption(string $caption): ListTableInterface
+	public function caption(string $caption): TableInterface
 	{
 		$this->caption = $caption;
 		return $this;
@@ -89,9 +86,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string ...$label
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function labels(string ...$label): ListTableInterface
+	public function labels(string ...$label): TableInterface
 	{
 		$this->labels = func_get_args();
 		return $this;
@@ -99,9 +96,9 @@ abstract class ListTableAbstract
 
 	/**
    * @param array $properties
-   * @return ListTableAbstract
+   * @return TableAbstract
    */
-	public function setProperties(array $properties): ListTableAbstract
+	public function setProperties(array $properties): TableAbstract
   {
     $this->properties = $properties;
 		return $this;
@@ -109,9 +106,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string|null $numberOfItems
-	 * @return ListTableAbstract
+	 * @return TableAbstract
 	 */
-	public function setNumberOfItems(?string $numberOfItems): ListTableAbstract
+	public function setNumberOfItems(?string $numberOfItems): TableAbstract
 	{
 		$this->numberOfItems = $numberOfItems;
 		return $this;
@@ -120,26 +117,24 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param ...$list
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function addRow(...$list): ListTableInterface
+	public function addRow(...$list): TableInterface
 	{
 		$this->rows[] = func_get_args();
 		return $this;
 	}
 
-	public function buttonEdit(string $path): ListTableInterface
+	public function buttonEdit(string $path): TableInterface
 	{
 		$this->buttonEdit[] = $path;
 		return $this;
 	}
 
-	public function buttonDelete(string $idIsPartOf, string $tableIsPartOf, string $idHasPart = null, string $tableHasPart = null): ListTableInterface
+	public function buttonDelete(string $type, string $idType): TableInterface
 	{
-		$this->idIsPartOf = $idIsPartOf;
-		$this->tableIsPartOf = $tableIsPartOf;
-		$this->idHasPart = $idHasPart;
-		$this->tableHasPart = $tableHasPart;
+		$this->type = $type;
+		$this->idtype = $idType;
 		$this->buttonDelete = true;
 		return $this;
 	}
@@ -147,9 +142,9 @@ abstract class ListTableAbstract
 	/**
 	 * @param ?array $itemListElement
 	 * @param array $properties
-	 * @return ListTable
+	 * @return TableInterface
 	 */
-	public function rows(?array $itemListElement, array $properties): ListTableInterface
+	public function rows(?array $itemListElement, array $properties): TableInterface
 	{
 		$this->properties = $properties;
 		$this->itemListElement = $itemListElement;
@@ -158,9 +153,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string|null $pathToEditButton
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function setEditButton(string $pathToEditButton = null): ListTableInterface
+	public function setEditButton(string $pathToEditButton = null): TableInterface
 	{
 		$this->editButton = true;
 		$this->pathToEditButton = $pathToEditButton;
@@ -169,9 +164,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string $orderBy
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 * */
-	public function setOrderBy(string $orderBy): ListTableInterface
+	public function setOrderBy(string $orderBy): TableInterface
 	{
 		$this->orderBy = $orderBy;
 		return $this;
@@ -179,9 +174,9 @@ abstract class ListTableAbstract
 
 	/**
 	 * @param string $ordering
-	 * @return ListTableInterface
+	 * @return TableInterface
 	 */
-	public function setOrdering(string $ordering): ListTableInterface
+	public function setOrdering(string $ordering): TableInterface
 	{
 		$this->ordering = $ordering;
 		return $this;

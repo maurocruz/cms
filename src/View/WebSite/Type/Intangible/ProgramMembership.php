@@ -25,7 +25,7 @@ class ProgramMembership
 
 	/**
 	 * @param string $case
-	 * @param array|null $value
+	 * @param array $value
 	 * @return array
 	 */
 	private static function form(string $case, array $value): array

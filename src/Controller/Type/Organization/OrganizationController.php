@@ -30,8 +30,11 @@ class OrganizationController implements TypeControllerInterface
    */
   public function edit(array $params): bool
   {
-	  $data = CmsFactory::model()->api()->get("organization",['properties'=>'contactPoint,location,image'] + $params)->ready();
-	  return CmsFactory::view()->webSite()->type('organization')->setData($data)->setMethodName('edit')->ready();
+		$propertiesParams = $params['properties'] ?? null;
+	  $params['properties'] = "contactPoint,location,image";
+		if ($propertiesParams) $params['properties'] = $propertiesParams;
+	  $data = CmsFactory::model()->api()->get("organization",$params)->ready();
+	  return CmsFactory::view()->webSite()->type('organization')->setQueryParams($params)->setData($data)->setMethodName('edit')->ready();
   }
 
   /**

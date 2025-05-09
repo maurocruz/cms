@@ -21,8 +21,8 @@ class Taxon implements TypeViewInterface
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 	    ->type('taxon')
 	    ->title(_('Taxon'))
-	    ->newTab("/admin/taxon", CmsFactory::view()->fragment()->icon()->home(16,16))
-	    ->newTab("/admin/taxon/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+	    ->newTab("/admin/taxon", CmsFactory::view()->fragment()->icon()->home())
+	    ->newTab("/admin/taxon/new", CmsFactory::view()->fragment()->icon()->plus())
 			->search()
 	    ->ready()
 		);
@@ -33,19 +33,21 @@ class Taxon implements TypeViewInterface
 
   /**
    *
-   * @param array|null $value
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function index(?array $value): void
+  public function index(?array $data, array $queryParams = null): void
   {
     $this->navbar();
 	  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('taxon')->setColumnsTable(['taxonRank'=>_('Taxon rank')])->ready());
   }
 
   /**
-   * @param ?array $data
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit(?array $data): void
+  public function edit(?array $data, array $queryParams = null): void
   {
     if (!empty($data)) {
       $value = $data[0];
@@ -67,8 +69,9 @@ class Taxon implements TypeViewInterface
 
   /**
    * @param array|null $value
+   * @param array|null $queryParams
    */
-  public function new(?array $value): void
+  public function new(?array $value, array $queryParams = null): void
   {
     $this->navbar();
 		CmsFactory::view()->addMain(self::formTaxon());

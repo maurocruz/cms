@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Plinct\Cms\View\WebSite\Type\Intangible\ItemList;
 
-use Plinct\Cms\Controller\CmsFactory;
+use Plinct\Cms\CmsFactory;
 use Plinct\Web\Element\Table;
 
 class OfferCatalog implements ItemListInterface
@@ -32,7 +32,7 @@ class OfferCatalog implements ItemListInterface
             return $table->ready();
 
         } else {
-            return CmsFactory::response()->fragment()->miscellaneous()->message(_("No ItemList object found!"));
+            return CmsFactory::view()->fragment()->miscellaneous()->message(_("No ItemList object found!"));
         }
     }
 }
