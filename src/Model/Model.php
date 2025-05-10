@@ -1,18 +1,25 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Model;
 
+use Plinct\Cms\Controller\App;
 use Plinct\Cms\Model\Api\Api;
+use Plinct\Cms\Model\Api\WithConnectBd;
 use Plinct\Cms\Model\Authentication\Auth;
 use Plinct\Cms\Model\Type\Type;
 
 class Model
 {
 	/**
-	 * @return Api
+	 * @return Api|WithConnectBd
 	 */
-	public function api(): Api {
-		return new Api();
+	public function api(): Api|WithConnectBd
+	{
+		if (App::isRemoteApi()) {
+			return new Api();
+		} else {
+			return new WithConnectBd();
+		}
+
 	}
 
 	/**

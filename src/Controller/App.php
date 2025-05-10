@@ -1,7 +1,9 @@
 <?php
 namespace Plinct\Cms\Controller;
 
+use Exception;
 use Gitonomy\Git\Repository;
+use Plinct\Api\Request\Server\ConnectBd\PDOConnect;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\Locale;
 use Slim\App as Slim;
@@ -85,6 +87,10 @@ class App
 	 * @var string|null
 	 */
 	private static ?string $logdir = null;
+
+	private static bool $isRemoteApi = true;
+
+	public static string $DB_NAME;
   /**
    * @param Slim $slim
    */
@@ -102,19 +108,29 @@ class App
     self::setVersion();
 		// LANGUAGE
     self::$LANGUAGE = Locale::getServerLanguage();
-		// CONFIGURATION ITEMS
-		$configurationItems = CmsFactory::model()->api()->get($host.'/api/config')->ready();
-		$itemListElement = is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
-		foreach ($itemListElement as $value) {
-			$item = $value['item'];
-			if ($item['name'] == 'Modules Available') {
-				CmsFactory::controller()->configuration()->setModulesAvailable($item['itemListElement']);
-			}
-			if ($item['name'] == 'Modules Enabled') {
-				CmsFactory::controller()->configuration()->setModulesEnabled($item['itemListElement']);
-			}
-		}
   }
+
+	/**
+	 * @return string
+	 */
+	public static function getDBNAME(): string
+	{
+		return self::$DB_NAME;
+	}
+
+	/**
+	 * @param $driver
+	 * @param $host
+	 * @param $dbname
+	 * @param $username
+	 * @param $password
+	 * @param array $options
+	 */
+	public function connect($driver, $host, $dbname, $username, $password, array $options = []): void
+	{
+		self::$DB_NAME = $dbname;
+		PDOConnect::connect($driver, $host, $dbname, $username, $password, $options);
+	}
 
 	/**
 	 * @param string $BASE_DIR
@@ -273,7 +289,7 @@ class App
 		  } else {
 			  $versionTag = substr($commit,0,8);
 		  }
-		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+		  $version = "Working in local. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
 
 	  } else {
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
@@ -435,11 +451,42 @@ class App
     return self::$urlToResetPassword;
   }
 
-  /**
-   * @return mixed
-   */
+	/**
+	 * @return bool
+	 */
+	public static function isRemoteApi(): bool
+	{
+		return self::$isRemoteApi;
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function setConfig(): void
+	{
+		self::$isRemoteApi = App::getApiHost() != App::getURL().'/api/';
+		$configurationItems = CmsFactory::model()->api()->get('config')->ready();
+		// CONFIGURATION ITEMS
+		$itemListElement = is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
+		foreach ($itemListElement as $value) {
+			$item = $value['item'];
+			if ($item['name'] == 'Modules Available') {
+				CmsFactory::controller()->configuration()->setModulesAvailable($item['itemListElement']);
+			}
+			if ($item['name'] == 'Modules Enabled') {
+				CmsFactory::controller()->configuration()->setModulesEnabled($item['itemListElement']);
+			}
+		}
+	}
+
+	/**
+	 * @return mixed
+	 * @throws Exception
+	 */
   final public function run(): mixed
   {
+		$this->setConfig();
+
 		return CmsFactory::controller()->Routes()->home($this->slim);
   }
 }

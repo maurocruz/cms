@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Controller\Type;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,6 +40,7 @@ class TypeController
 
 	/**
 	 * @return true|null
+	 * @throws Exception
 	 */
 	public function ready(): ?bool
 	{
@@ -47,7 +49,7 @@ class TypeController
 		if ($this->type) {
 			// check if table SQL exists
 			$data = CmsFactory::model()->api()->get('config/database',['showTableStatus'=>lcfirst($this->type)])->ready();
-			if ($data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', CmsFactory::controller()->configuration()->getModulesEnabled()))) {
+			if (isset($data['message']) && $data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', CmsFactory::controller()->configuration()->getModulesEnabled()))) {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
 				// if moduyle has controller class

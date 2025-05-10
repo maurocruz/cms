@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Model\Type;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 
@@ -22,6 +23,7 @@ class Type
 	/**
 	 * @param array|null $params
 	 * @return array
+	 * @throws Exception
 	 */
 	public function get(?array $params): array
 	{
@@ -32,6 +34,7 @@ class Type
 	 * @param array $params
 	 * @param array|null $queryParams
 	 * @return mixed|string|string[]
+	 * @throws Exception
 	 */
 	public function post(array $params, array $queryParams = null): mixed
 	{
@@ -72,6 +75,7 @@ class Type
 	/**
 	 * @param array $params
 	 * @return mixed
+	 * @throws Exception
 	 */
 	public function put(array $params): mixed
 	{
@@ -95,6 +99,7 @@ class Type
 	/**
 	 * @param array $params
 	 * @return mixed|string
+	 * @throws Exception
 	 */
 	public function erase(array $params): mixed
 	{

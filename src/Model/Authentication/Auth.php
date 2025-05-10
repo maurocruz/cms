@@ -1,18 +1,19 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Model\Authentication;
 
+use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\ToolBox;
 
 class Auth
 {
-  /**
-   * @param string $email
-   * @param string $password
-   * @return array|null
-   */
+	/**
+	 * @param string $email
+	 * @param string $password
+	 * @return array|null
+	 * @throws Exception
+	 */
   public function login(string $email, string $password): ?array
   {
 	  if (filter_var(App::getApiHost(), FILTER_VALIDATE_URL)) {
@@ -53,10 +54,11 @@ class Auth
 		return null;
   }
 
-  /**
-   * @param string $email
-   * @return array
-   */
+	/**
+	 * @param string $email
+	 * @return array
+	 * @throws Exception
+	 */
   public function resetPassword(string $email): array
   {
     $params['email'] = $email;
@@ -74,7 +76,7 @@ class Auth
   public function changePassword(array $params): string
   {
 		unset($params['submit']);
-		$base = substr(App::getApiHost(),-1) !== '/' ? App::getApiHost() . 'Auth.php/' : App::getApiHost();
+		$base = !str_ends_with(App::getApiHost(), '/') ? App::getApiHost() . 'Auth.php/' : App::getApiHost();
     $url = $base . "auth/change_password";
     $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
     // for localhost
