@@ -464,7 +464,7 @@ class App
 	 */
 	private function setConfig(): void
 	{
-		self::$isRemoteApi = App::getApiHost() != App::getURL().'/api/';
+		self::$isRemoteApi = App::getApiHost() == App::getURL().'/api/';
 		$configurationItems = CmsFactory::model()->api()->get('config')->ready();
 		// CONFIGURATION ITEMS
 		$itemListElement = is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
