@@ -5,7 +5,7 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Plinct\Tool\Curl\v1\Curl;
 
-class Api
+class WithCurl
 {
 	/**
 	 * @var string|null
@@ -30,9 +30,9 @@ class Api
 
 	/**
 	 * @param string $url
-	 * @return Api
+	 * @return WithCurl
 	 */
-	public function setUrl(string $url): Api
+	public function setUrl(string $url): WithCurl
 	{
 		$this->apiHost = $url;
 		return $this;
@@ -41,9 +41,9 @@ class Api
 	/**
 	 * @param ?string $relativeUrl
 	 * @param array $params
-	 * @return $this
+	 * @return WithCurl
 	 */
-	public function get(string $relativeUrl = null, array $params = []): Api
+	public function get(string $relativeUrl = null, array $params = []): WithCurl
 	{
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->get($params)->returnWithJson();
 		return $this;
@@ -53,9 +53,9 @@ class Api
 	 * @param string $relativeUrl
 	 * @param array $data
 	 * @param array|null $FILES
-	 * @return $this
+	 * @return WithCurl
 	 */
-	public function post(string $relativeUrl, array $data, array $FILES = NULL): Api
+	public function post(string $relativeUrl, array $data, array $FILES = NULL): WithCurl
 	{
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->post($data, $FILES)->returnWithJson();
 		return $this;
@@ -64,9 +64,9 @@ class Api
 	/**
 	 * @param string $relativeUrl
 	 * @param array $data
-	 * @return $this
+	 * @return WithCurl
 	 */
-	public function put(string $relativeUrl, array $data): Api
+	public function put(string $relativeUrl, array $data): WithCurl
 	{
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->put($data)->returnWithJson();
 		return $this;
@@ -75,9 +75,9 @@ class Api
 	/**
 	 * @param string $relativeUrl
 	 * @param array $params
-	 * @return $this
+	 * @return WithCurl
 	 */
-	public function delete(string $relativeUrl, array $params): Api
+	public function delete(string $relativeUrl, array $params): WithCurl
 	{
 		$this->curl->setUrl($this->apiHost.$relativeUrl)->delete($params)->returnWithJson();
 		return $this;
