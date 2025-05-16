@@ -72,12 +72,7 @@ class Connect
 	{
 		$urltoCurl = ['config','auth/login','auth/register','auth/reset_password','change_password','user/privileges','user'];
 
-		var_dump($this->url);
-
 		if(App::isRemoteApi() || in_array($this->url, $urltoCurl)) {
-
-			var_dump("api");
-
 			$curl = new WithCurl();
 			if ($this->method == 'post') {
 				$curl->post($this->url, $this->params, $this->files);
@@ -86,9 +81,6 @@ class Connect
 			}
 			return $curl->ready();
 		} else {
-
-			var_dump("bd");
-
 			$connectBd = new WithDatabase();
 			$connectBd->{$this->method}($this->url, $this->params);
 			return $connectBd->ready();
