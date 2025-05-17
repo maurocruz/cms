@@ -2,6 +2,7 @@
 namespace Plinct\Cms\Controller\Type\Person;
 
 use DOMException;
+use Exception;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
@@ -13,10 +14,11 @@ class PersonController implements TypeControllerInterface
 	/**
 	 * @param array $params
 	 * @return bool
+	 * @throws Exception
 	 */
   public function edit(array $params): bool
   {
-    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint,homeLocation,image,memberOf,hasCertification'] + $params)->ready();
+    $data = CmsFactory::model()->api()->get("person",['properties'=>'contactPoint,address,hasCertification'] + $params)->ready();
 		return CmsFactory::view()->webSite()->type('person')->setData($data)->setMethodName('edit')->ready();
   }
 

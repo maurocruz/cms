@@ -51,10 +51,10 @@ class Type
 		// SUCCESS
 		else if (array_key_exists('status', $data) && $data['status'] == "success" ) {
 			$value = $data['data'][0];
-			$idvalue = is_array($value) ? $value["id".lcfirst($this->type)] : null;
+			$idvalue = is_array($value) ? ($value["id".lcfirst($this->type)] ?? null) : null;
 			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
 			// REDIRECT
-			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint','propertyValue'];
+			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint','propertyValue','postalAddress'];
 			if (in_array($this->type, $redirectedPage)) {
 				return filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			}

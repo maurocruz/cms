@@ -40,6 +40,15 @@ class Configuration
 	}
 
 	/**
+	 * @param string $moduleName
+	 * @return bool
+	 */
+	public function hasModulesAvailable(string $moduleName): bool
+	{
+		return in_array($moduleName, self::$modulesAvailable);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getModulesAvailable(): array

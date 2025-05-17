@@ -1314,6 +1314,35 @@ form .mandatory-field {
   width: 100%;
 }
 
+/* POSTAL ADDRESS
+======================================================= */
+.form-postalAddress fieldset.addressLocality {
+  flex-basis: 50%;
+}
+.form-postalAddress fieldset.addressRegion {
+  flex-basis: 50%;
+}
+.form-postalAddress fieldset.addressCountry {
+  flex-basis: 50%;
+}
+.form-postalAddress fieldset.postalCode {
+  flex-basis: 50%;
+}
+@media (min-width: 768px) {
+  .form-postalAddress fieldset.addressLocality {
+    flex-basis: 25%;
+  }
+  .form-postalAddress fieldset.addressRegion {
+    flex-basis: 25%;
+  }
+  .form-postalAddress fieldset.addressCountry {
+    flex-basis: 25%;
+  }
+  .form-postalAddress fieldset.postalCode {
+    flex-basis: 25%;
+  }
+}
+
 /* PRODUCT
 ======================================================= */
 .form-product {

@@ -751,6 +751,22 @@ form {
   fieldset:nth-of-type(n) { width: 100%; }
 }
 
+/* POSTAL ADDRESS
+======================================================= */
+.form-postalAddress {
+  fieldset.addressLocality { flex-basis: 50%; }
+  fieldset.addressRegion { flex-basis: 50%; }
+  fieldset.addressCountry { flex-basis: 50%; }
+  fieldset.postalCode { flex-basis: 50%; }
+
+  @media (min-width: 768px) {
+    fieldset.addressLocality { flex-basis: 25%; }
+    fieldset.addressRegion { flex-basis: 25%; }
+    fieldset.addressCountry { flex-basis: 25%; }
+    fieldset.postalCode { flex-basis: 25%; }
+  }
+}
+
 /* PRODUCT
 ======================================================= */
 .form-product {

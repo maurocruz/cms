@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
@@ -7,30 +6,22 @@ use Plinct\Cms\CmsFactory;
 class PostalAddressView
 {
   /**
-   * @param $tableHasPart
-   * @param $idHasPart
-   * @param $value
-   * @return array
-   */
-  public function getForm($tableHasPart, $idHasPart, $value): array
-  {
-    return self::formPostalAddress($tableHasPart, (string) $idHasPart, $value ? 'edit' : 'new', $value);
-  }
-
-  /**
-   * @param string $tableHasPart
+   * @param string $typeHasPart
    * @param string $idHasPart
    * @param string $case
    * @param null $value
    * @return array
    */
-  static private function formPostalAddress(string $tableHasPart, string $idHasPart, string $case = 'new', $value = null): array
+  public static function formPostalAddress(string $typeHasPart, string $idHasPart, string $case = 'new', $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form("form-postalAddress",["class" => "formPadrao form-postalAddress"])->action("/admin/postalAddress/$case")->method("post");
+		$tbAddress = CmsFactory::toolBox()::typeBuilder($value);
+		$idpostalAddress = $tbAddress->getId();
+    $form = CmsFactory::view()->fragment()->form("form-postalAddress",["class" => "form-basic form-postalAddress"]);
+		$form->action("/admin/postalAddress/$case")->method("post");
     // hiddens
-    $form->input('tableHasPart', $tableHasPart, "hidden");
-    if ($case == "new") $form->input('idHasPart', $idHasPart, "hidden");
-    if ($case == "edit") $form->input("idpostalAddress", $value['idpostalAddress'], "hidden");
+    $form->input('typeHasPart', $typeHasPart, "hidden");
+    $form->input('idHasPart', $idHasPart, "hidden");
+    if ($case == "edit") $form->input("idpostalAddress", $idpostalAddress, "hidden");
     // streetAddress
     $form->fieldsetWithInput("streetAddress", $value['streetAddress'] ?? null, _("Street address"));
     // addressLocality
