@@ -38,7 +38,7 @@ class EventController implements TypeControllerInterface
 	public function edit(array $params): bool
 	{
 		$idevent = $params['idevent'];
-		$data = CmsFactory::model()->type('event')->get(['idevent'=>$idevent,'properties'=>'location,superEvent,subEvent']);
+		$data = CmsFactory::model()->type('event')->get(['idevent'=>$idevent]);
 	  return CmsFactory::view()->webSite()->type('event')->setData($data)->setMethodName('edit')->ready();
 	}
 

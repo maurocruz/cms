@@ -32,16 +32,13 @@ abstract class EventAbstract
   protected function formEvent(string $case = "new", array $value = null): array
   {
     // VARS
-		$startDate = isset($value['startDate']) ? substr($value['startDate'],0,10) : null;
-		$startTime = isset($value['startDate']) ? substr($value['startDate'],11) : null;
-		$endDate = isset($value['endDate']) ? substr($value['endDate'],0,10) : null;
-		$endTime = isset($value['endDate']) ? substr($value['endDate'],11) : null;
-
-		$organizer = $value['organizer'] ?? null;
-		$location = $value['location'] ?? null;
-		$superEvent = $value['superEvent'] ?? null;
-		$typeLocation = CmsFactory::toolBox()::typeBuilder($location);
-		$superEventTb = $superEvent ? CmsFactory::toolBox()::typeBuilder($superEvent) : null;
+	  $startDate = isset($value['startDate']) ? substr($value['startDate'], 0, 10) : null;
+	  $startTime = isset($value['startDate']) ? substr($value['startDate'], 11) : null;
+	  $endDate = isset($value['endDate']) ? substr($value['endDate'], 0, 10) : null;
+	  $endTime = isset($value['endDate']) ? substr($value['endDate'], 11) : null;
+	  $location = $value['location'] ?? null;
+	  $organizer = $value['organizer'] ?? null;
+	  $superEvent = $value['superEvent'] ?? null;
     // FROM
     $form = CmsFactory::view()->fragment()->form("form-event",["class"=>"form-basic form-event"]);
     $form->action("/admin/event/$case")->method("post");
@@ -59,11 +56,11 @@ abstract class EventAbstract
     $form->fieldsetWithInput('endDate', $endDate, _("End date"), "date");
     $form->fieldsetWithInput('endTime', $endTime, _("End time"), "time");
 		// LOCATION
-	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getId());
+	  $form->relationshipOneToOne('place', _('Place'),'location', $location);
 		// ORGANIZER
 	  $form->relationshipOneToOne('organization,person',_('Organizer'),'organizer',$organizer);
 		// SUPER EVENT
-	  $form->relationshipOneToOne('event',_('Super event'),'superEvent', $superEvent ? $superEventTb->getIdthing(): null);
+	  $form->relationshipOneToOne('event',_('Super event'),'superEvent', $superEvent);
     // BUTTONS
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/event/erase");
