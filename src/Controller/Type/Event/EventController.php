@@ -3,6 +3,7 @@ namespace Plinct\Cms\Controller\Type\Event;
 
 use DateTime;
 use DOMException;
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
@@ -11,19 +12,28 @@ use Plinct\Tool\ToolBox;
 
 class EventController implements TypeControllerInterface
 {
-
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function index(array $params): bool
 	{
 		return CmsFactory::view()->webSite()->type('event')->ready();
 	}
 
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function new(array $params): bool
 	{
 		return false;
 	}
+
 	/**
-   * @param array $params
-   * @return bool
+	 * @param array $params
+	 * @return bool
+	 * @throws Exception
 	 */
 	public function edit(array $params): bool
 	{
@@ -32,8 +42,17 @@ class EventController implements TypeControllerInterface
 	  return CmsFactory::view()->webSite()->type('event')->setData($data)->setMethodName('edit')->ready();
 	}
 
+	public function update(array $params): array
+	{
+		$params['startDate'] = $params['startDate']." ".$params['startTime'];
+		$params['endDate'] = $params['endDate']." ".$params['endTime'];
+		unset($params['startTime'], $params['endTime']);
+		return $params;
+	}
+
 	/**
-	 * @throws DOMException|\DateMalformedStringException
+	 * @throws DOMException
+	 * @throws Exception
 	 */
 	public function sitemap(?array $params): ?bool
 	{

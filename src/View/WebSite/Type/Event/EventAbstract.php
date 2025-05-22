@@ -17,8 +17,8 @@ abstract class EventAbstract
 			CmsFactory::view()->fragment()->navbar()
 				->type('event')
 				->title(_("Events"))
-				->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home(16,16))
-				->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus(16,16))
+				->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus())
 				->search()
 				->ready()
 		);
@@ -32,8 +32,11 @@ abstract class EventAbstract
   protected function formEvent(string $case = "new", array $value = null): array
   {
     // VARS
-    $startDate = $value['startDate'] ?? null;
-    $endDate = $value['endDate'] ??  null;
+		$startDate = isset($value['startDate']) ? substr($value['startDate'],0,10) : null;
+		$startTime = isset($value['startDate']) ? substr($value['startDate'],11) : null;
+		$endDate = isset($value['endDate']) ? substr($value['endDate'],0,10) : null;
+		$endTime = isset($value['endDate']) ? substr($value['endDate'],11) : null;
+
 		$organizer = $value['organizer'] ?? null;
 		$location = $value['location'] ?? null;
 		$superEvent = $value['superEvent'] ?? null;
@@ -50,11 +53,13 @@ abstract class EventAbstract
 		// THING
 		$form = Thing::formContent($form, $value);
     // START DATE
-    $form->fieldsetWithInput('startDate', $startDate, _("Start date"), "datetime-local");
+    $form->fieldsetWithInput('startDate', $startDate, _("Start date"), "date");
+    $form->fieldsetWithInput('startTime', $startTime, _("Start time"), "time");
     // END DATE
-    $form->fieldsetWithInput('endDate', $endDate, _("End date"), "datetime-local");
+    $form->fieldsetWithInput('endDate', $endDate, _("End date"), "date");
+    $form->fieldsetWithInput('endTime', $endTime, _("End time"), "time");
 		// LOCATION
-	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getIdthing());
+	  $form->relationshipOneToOne('place', _('Place'),'location', $typeLocation->getId());
 		// ORGANIZER
 	  $form->relationshipOneToOne('organization,person',_('Organizer'),'organizer',$organizer);
 		// SUPER EVENT

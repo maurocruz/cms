@@ -87,7 +87,7 @@ class Type
 			$params =	$classType->update($params);
 			}
 		}
-		$data = CmsFactory::model()->api()->put($this->type, $params)->ready();
+		$data = CmsFactory::model()->api()->put($this->type, array_filter($params))->ready();
 		if ($data['status'] === "success") {
 			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
 		} elseif($data['status'] === 'fail') {

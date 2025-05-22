@@ -14,14 +14,17 @@ class PostalAddressView
    */
   public static function formPostalAddress(string $typeHasPart, string $idHasPart, string $case = 'new', $value = null): array
   {
-		$tbAddress = CmsFactory::toolBox()::typeBuilder($value);
-		$idpostalAddress = $tbAddress->getId();
+		$idpostalAddress = null;
+	  if ($value) {
+		  $tbAddress = CmsFactory::toolBox()::typeBuilder($value);
+		  $idpostalAddress = $tbAddress->getId();
+    }
     $form = CmsFactory::view()->fragment()->form("form-postalAddress",["class" => "form-basic form-postalAddress"]);
 		$form->action("/admin/postalAddress/$case")->method("post");
     // hiddens
     $form->input('typeHasPart', $typeHasPart, "hidden");
     $form->input('idHasPart', $idHasPart, "hidden");
-    if ($case == "edit") $form->input("idpostalAddress", $idpostalAddress, "hidden");
+    if ($idpostalAddress) $form->input("idpostalAddress", $idpostalAddress, "hidden");
     // streetAddress
     $form->fieldsetWithInput("streetAddress", $value['streetAddress'] ?? null, _("Street address"));
     // addressLocality

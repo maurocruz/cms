@@ -529,13 +529,10 @@ form {
 /* EVENT
 ======================================================= */
 .form-event {
-  justify-content: flex-start;
-
-  @media (min-width: 480px) {
-    fieldset.startDate { flex-basis: 210px;  }
-    fieldset.endDate { flex-basis: 210px;  }
-  }
-
+  fieldset.startDate { flex-basis: fit-content; }
+  fieldset.startTime { flex-basis: fit-content; }
+  fieldset.endDate { flex-basis: fit-content }
+  fieldset.endTime { flex-basis: fit-content }
 }
 
 /* IMAGE OBJECT

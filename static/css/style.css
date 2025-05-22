@@ -943,16 +943,17 @@ form .mandatory-field {
 ======================================================= */
 /* EVENT
 ======================================================= */
-.form-event {
-  justify-content: flex-start;
+.form-event fieldset.startDate {
+  flex-basis: fit-content;
 }
-@media (min-width: 480px) {
-  .form-event fieldset.startDate {
-    flex-basis: 210px;
-  }
-  .form-event fieldset.endDate {
-    flex-basis: 210px;
-  }
+.form-event fieldset.startTime {
+  flex-basis: fit-content;
+}
+.form-event fieldset.endDate {
+  flex-basis: fit-content;
+}
+.form-event fieldset.endTime {
+  flex-basis: fit-content;
 }
 
 /* IMAGE OBJECT
