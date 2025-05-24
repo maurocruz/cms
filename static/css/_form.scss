@@ -361,8 +361,15 @@ form {
     margin-right: 4px;
   }
 
-  input[type='dateTime-local'], {
+  input[type='dateTime-local'], input[type='date'], input[type='time'] {
     width: fit-content;
+    flex-basis: fit-content;
+  }
+
+  input[type='radio'] {
+    width: fit-content;
+    flex-basis: fit-content;
+    margin: 5px;
   }
 
   select {
@@ -743,9 +750,10 @@ form {
 /* PLACE
 ====================================================== */
 .form-place {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(n) { width: 100%; }
+  @media (min-width: 576px) {
+    fieldset.keywords { flex-basis: 50%; }
+    fieldset.publicAccess { flex-basis: fit-content; margin-right: 12px; }
+  }
 }
 
 /* POSTAL ADDRESS

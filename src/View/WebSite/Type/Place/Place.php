@@ -74,6 +74,8 @@ class Place implements TypeViewInterface
 			$this->placeId = isset($value) ? $idplace : null;
 			// NAVBAR
 			$this->navbarPlace($value['name']);
+			// form
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace('edit', $value), _("Edit")));
 			CmsFactory::view()->addMain([
 				CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready()
 			]);
@@ -85,15 +87,34 @@ class Place implements TypeViewInterface
   }
 
 	/**
+	 * @param string $case
+	 * @param array|null $value
 	 * @return array
 	 */
-  private function formPlace(): array
+  private function formPlace(string $case = 'new', array $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form("form-place", [ "id" => "form-place-new", "name" => "place-form-new", "class" => "form-basic form-place" ]);
-    $form->action("/admin/place/new")->method("post");
-    $form = Thing::formContent($form);
+		$idplace = null;
+		$keywords = $value['keywords'] ?? null;
+		$publicAccess = $value['publicAccess'] ?? null;
+    $form = CmsFactory::view()->fragment()->form("form-place", ["class" => "form-basic form-place" ]);
+    $form->action("/admin/place/$case")->method("post");
+		if ($case == 'edit' && !!$value) {
+			$tb = CmsFactory::toolBox()::typeBuilder($value);
+			$idplace = $tb->getId();
+			$form->input('idplace',$idplace,'hidden');
+		}
+		$form->setIdform($idplace ? "form-place-edit-$idplace" : "form-place-new");
+		// THING
+    $form = Thing::formContent($form, $value);
+		// KEYWORDS
+	  $form->fieldsetWithInput('keywords',$keywords,_("Keywords"));
+	  // PUBLIC ACCESS
+	  $form->fieldsetWithRadio('publicAccess',[_('No'), _('Yes')],$publicAccess ? 1 : 0 , _('Public access'));
     // submit
     $form->submitButtonSend();
+		if ($case == 'edit') {
+			$form->submitButtonDelete('/admin/place/erase');
+		}
     return $form->ready();
   }
 }

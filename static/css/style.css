@@ -730,8 +730,14 @@ form .mandatory-field {
   background-color: #ccc;
   margin-right: 4px;
 }
-.form-basic input[type=dateTime-local] {
+.form-basic input[type=dateTime-local], .form-basic input[type=date], .form-basic input[type=time] {
   width: fit-content;
+  flex-basis: fit-content;
+}
+.form-basic input[type=radio] {
+  width: fit-content;
+  flex-basis: fit-content;
+  margin: 5px;
 }
 .form-basic select {
   width: fit-content;
@@ -1307,12 +1313,14 @@ form .mandatory-field {
 
 /* PLACE
 ====================================================== */
-.form-place {
-  display: flex;
-  flex-wrap: wrap;
-}
-.form-place fieldset:nth-of-type(n) {
-  width: 100%;
+@media (min-width: 576px) {
+  .form-place fieldset.keywords {
+    flex-basis: 50%;
+  }
+  .form-place fieldset.publicAccess {
+    flex-basis: fit-content;
+    margin-right: 12px;
+  }
 }
 
 /* POSTAL ADDRESS
