@@ -42,14 +42,6 @@ class EventController implements TypeControllerInterface
 	  return CmsFactory::view()->webSite()->type('event')->setData($data)->setMethodName('edit')->ready();
 	}
 
-	public function update(array $params): array
-	{
-		$params['startDate'] = $params['startDate']." ".$params['startTime'];
-		$params['endDate'] = $params['endDate']." ".$params['endTime'];
-		unset($params['startTime'], $params['endTime']);
-		return $params;
-	}
-
 	/**
 	 * @throws DOMException
 	 * @throws Exception

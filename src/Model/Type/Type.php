@@ -38,6 +38,14 @@ class Type
 	 */
 	public function post(array $params, array $queryParams = null): mixed
 	{
+		$namespaceClass = __NAMESPACE__ . "\\".ucfirst($this->type).'Model';
+		if (class_exists($namespaceClass)) {
+			$classType = new $namespaceClass();
+			if (method_exists($classType, 'create')) {
+				$params =	$classType->update($params);
+			}
+		}
+
 		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
 		if ($isMultidimensional) {
 			$newParams['multidimensional'] = json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -80,7 +88,7 @@ class Type
 	public function put(array $params): mixed
 	{
 		$id = $params["id$this->type"];
-		$namespaceClass = "Plinct\\Cms\\Controller\\Type\\".ucfirst($this->type)."\\".ucfirst($this->type).'Controller';
+		$namespaceClass = __NAMESPACE__ . "\\".ucfirst($this->type).'Model';
 		if (class_exists($namespaceClass)) {
 			$classType = new $namespaceClass();
 			if (method_exists($classType, 'update')) {

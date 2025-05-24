@@ -22,22 +22,6 @@ class ArticleController implements TypeControllerInterface
 		return CmsFactory::view()->webSite()->type('article')->setData($data)->setMethodName('edit')->ready();
   }
 
-	/**
-	 * @param array $params
-	 * @return array
-	 */
-	public function update(array $params): array
-	{
-		$creativeWorkStatus = $params['creativeWorkStatus'];
-		$datePublished = $params['datePublished'];
-		if ($creativeWorkStatus == 'published' && ($datePublished == '' || $datePublished == '00-00-00 00:00:00')) {
-			$params['datePublished'] = (new DateTime())->format('Y:m:d h:i:s');
-		} else if($creativeWorkStatus !== 'published') {
-			$params['datePublished'] = '';
-		}
-		return $params;
-	}
-
 	public function index(array $params): bool
 	{
 		return false;
