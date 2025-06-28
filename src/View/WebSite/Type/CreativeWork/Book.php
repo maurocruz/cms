@@ -6,7 +6,7 @@ use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Book implements TypeViewInterface
+class Book extends CreativeWorkView implements TypeViewInterface
 {
 	/**
 	 * @var int|null
@@ -16,9 +16,8 @@ class Book implements TypeViewInterface
 	/**
 	 *
 	 */
-	public function __construct()
+	public function __destruct()
 	{
-		CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('book')
@@ -83,7 +82,7 @@ class Book implements TypeViewInterface
 	 * @param array|null $value
 	 * @return array
 	 */
-	private function form(string $case = 'new', array $value = null ): array
+	protected function form(string $case = 'new', array $value = null ): array
 	{
 		$author = $value['author'] ?? null;
 		$version = $value['version'] ?? null;

@@ -4,14 +4,13 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class MediaObject implements TypeViewInterface
+class MediaObject extends CreativeWorkView implements TypeViewInterface
 {
 	/**
 	 * @return void
 	 */
 	public static function navbar(): void
 	{
-		CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 			->type('mediaObject')
 			->title(_("Media Object"))
@@ -34,12 +33,12 @@ class MediaObject implements TypeViewInterface
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('mediaObject')->ready());
 	}
 
-	public function edit(?array $data, array $queryParams = null)
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		// TODO: Implement edit() method.
 	}
 
-	public function new(?array $data, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null): void
 	{
 		// TODO: Implement new() method.
 	}

@@ -41,7 +41,7 @@ class Intangible implements TypeViewInterface
 	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data, array $queryParams = null)
+	public function edit(?array $data, array $queryParams = null): void
 	{
 		// TODO: Implement edit() method.
 	}
@@ -51,7 +51,7 @@ class Intangible implements TypeViewInterface
 	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $data, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null): void
 	{
 		// TODO: Implement new() method.
 	}

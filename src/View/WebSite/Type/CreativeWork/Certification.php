@@ -6,12 +6,11 @@ use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Certification implements TypeViewInterface
+class Certification extends CreativeWorkView implements TypeViewInterface
 {
 
-	public function __construct()
+	public function __destruct()
 	{
-		CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 				->type('certification')
@@ -32,7 +31,7 @@ class Certification implements TypeViewInterface
 	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternamte name'),'certificationIdentification'=>_("Certification identification")])->ready()
+			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternate name'),'certificationIdentification'=>_("Certification identification")])->ready()
 		);
 	}
 
@@ -73,14 +72,14 @@ class Certification implements TypeViewInterface
 		$content = [];
 		if (isset($data['hasCertification']) && is_array($data['hasCertification'])) {
 			foreach ($data['hasCertification'] as $value) {
-				$content[] = CmsFactory::view()->fragment()->box()->expandingBox($value['name'], self::form('edit', $value), false, 'margin: 3px 5px;');
+				$content[] = CmsFactory::view()->fragment()->box()->expandingBox($value['name'], (new Certification)->form('edit', $value), false, 'margin: 3px 5px;');
 			}
 		}
-		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new")." "._("certification"), self::form('new', null, (int) $idType), false, 'margin: 3px 5px;');
+		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new")." "._("certification"), (new Certification)->form('new', null, (int) $idType), false, 'margin: 3px 5px;');
 		return $content;
 	}
 
-	private static function form(string $case = "new", array $value = null, int $about = null): array
+	protected function form(string $case = "new", array $value = null, int $about = null): array
 	{
 		$about = $about ?? $value['about'] ?? null;
 		$issuedBy = $value['issuedBy'] ?? null;

@@ -16,22 +16,20 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
    */
   public static float $totalWithDiscount;
 
-	public function index(?array $data, array $queryParams = null): bool
+	public function index(?array $data, array $queryParams = null): void
 	{
-		return true;
 	}
 
-	public function new(?array $data, array $queryParams = null): bool
+	public function new(?array $data, array $queryParams = null): void
 	{
-		return true;
 	}
 
 	/**
 	 * @param array|null $data
 	 * @param array|null $queryParams
-	 * @return array
+	 * @return void
 	 */
-  public function edit(?array $data, array $queryParams = null): array
+  public function edit(?array $data, array $queryParams = null): void
   {
 		$typeBuilderOrder = ToolBox::typeBuilder($data);
     $this->orderItemNumber = $typeBuilderOrder->getId();
@@ -40,10 +38,10 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
 		$typeBuilderSeller = ToolBox::typeBuilder($seller);
     $this->sellerId = $typeBuilderSeller->getId();
     $this->sellerType = $seller['@type'];
-		return [
+		CmsFactory::view()->addMain([
 			parent::listOrderedItems($data),
 	    CmsFactory::view()->fragment()->box()->expandingBox(_("Include new item"), parent::listSellerOfferedItems($seller['hasOfferCatalog']))
-	  ];
+	  ]);
   }
 
   /**

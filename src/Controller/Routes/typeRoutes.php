@@ -3,7 +3,6 @@
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Request\Server\Server;
 use Plinct\Cms\Controller\Request\Server\Type\ClosureServer;
-use Plinct\Cms\Controller\Type\CreativeWork\Sitemap;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteCollectorProxy as Route;

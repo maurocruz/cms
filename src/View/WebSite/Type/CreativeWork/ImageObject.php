@@ -6,13 +6,9 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\Image\Image;
 
-class ImageObject implements TypeViewInterface
+class ImageObject extends MediaObject implements TypeViewInterface
 {
-	/**
-	 * @param string|null $title
-	 * @return void
-	 */
-	protected function navBar(string $title = null): void
+	public function __destruct()
 	{
 		MediaObject::navbar();
 		CmsFactory::view()->addHeader(
@@ -23,28 +19,19 @@ class ImageObject implements TypeViewInterface
 				->search()
 				->ready()
 		);
-		if ($title) {
-			CmsFactory::view()->addHeader(
-				CmsFactory::view()->fragment()->navbar()
-					->title($title)
-					->level(3)
-					->ready()
-			);
-		}
 	}
 
 
 	public function index(?array $data, array $queryParams = null): void
 	{
-		self::navBar();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('imageObject')->ready()
 		);
 	}
 
-	public function new(?array $data, array $queryParams = null): bool
+	public function new(?array $data, array $queryParams = null): void
 	{
-		return false;
+
 	}
 
 	/**
@@ -54,7 +41,6 @@ class ImageObject implements TypeViewInterface
 	 */
 	public function edit(?array $data, array $queryParams = null): void
 	{
-		self::navBar();
 		$value = $data[0];
 		CmsFactory::view()->addMain(
 			$this->formImageObjectEdit($value)
@@ -70,7 +56,6 @@ class ImageObject implements TypeViewInterface
 		$idimageObject = $tb->getId();
 		$dateModified = $tb->getPropertyValue('dateModified');
 		// FIGURE
-		//var_dump($value);
 		$name = $value['name'];
 		$contentUrl = $value['contentUrl'];
 		$contentSize = $value['contentSize'] ?? null;

@@ -7,7 +7,7 @@ use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Article implements TypeViewInterface
+class Article extends CreativeWorkView implements TypeViewInterface
 {
 	/**
 	 * @param string|null $title
@@ -15,7 +15,6 @@ class Article implements TypeViewInterface
 	 */
   protected function navbarArticle(string $title = null): void
   {
-	  CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
 		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(18,18),
