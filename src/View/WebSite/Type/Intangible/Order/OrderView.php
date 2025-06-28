@@ -60,7 +60,7 @@ class OrderView extends OrderAbstract
       // ORDER
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("edit", $value), _("Order")));
       // ORDERED ITEMS
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->edit($value), _("Ordered items")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new OrderItemView())->editItems($value), _("Ordered items")));
       // INVOICES
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox((new InvoiceView())->editWithPart($value), _("Invoices")));
       // HISTORY

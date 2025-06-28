@@ -25,23 +25,22 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $data
-	 * @param array|null $queryParams
-	 * @return void
+	 * @param array|null $value
+	 * @return array
 	 */
-  public function edit(?array $data, array $queryParams = null): void
+  public function editItems(?array $value): array
   {
-		$typeBuilderOrder = ToolBox::typeBuilder($data);
+		$typeBuilderOrder = ToolBox::typeBuilder($value);
     $this->orderItemNumber = $typeBuilderOrder->getId();
-    $this->orderedItem = $data['orderedItem'] ?? null;
-	  $seller = $data['seller'];
+    $this->orderedItem = $value['orderedItem'] ?? null;
+	  $seller = $value['seller'];
 		$typeBuilderSeller = ToolBox::typeBuilder($seller);
     $this->sellerId = $typeBuilderSeller->getId();
     $this->sellerType = $seller['@type'];
-		CmsFactory::view()->addMain([
-			parent::listOrderedItems($data),
+		return [
+			parent::listOrderedItems($value),
 	    CmsFactory::view()->fragment()->box()->expandingBox(_("Include new item"), parent::listSellerOfferedItems($seller['hasOfferCatalog']))
-	  ]);
+	  ];
   }
 
   /**
@@ -51,4 +50,14 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
   {
     return self::$TOTAL_BILL;
   }
+
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
+	public function edit(?array $data, array $queryParams = null): void
+	{
+		// TODO: Implement edit() method.
+	}
 }
