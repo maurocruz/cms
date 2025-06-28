@@ -30,7 +30,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		);
 	}
 
-	public function new(?array $value, array $queryParams = null): void
+	public function new(?array $data, array $queryParams = null): void
 	{
 		parent::navbarIndex();
 		CmsFactory::view()->addMain(

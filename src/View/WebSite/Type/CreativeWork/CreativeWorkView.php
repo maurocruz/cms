@@ -5,9 +5,11 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
+class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInterface
 {
-
+	/**
+	 *
+	 */
 	public function __construct()
 	{
 		parent::navbar();
@@ -48,11 +50,11 @@ class CreativeWork extends CreativeWorkAbstract implements TypeViewInterface
 	}
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
 	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $value, array $queryParams = null): void
+	public function new(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox(parent::form())

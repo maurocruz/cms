@@ -27,16 +27,16 @@ class OrderView extends OrderAbstract
 	/**
 	 * CREATE NEW ORDER
 	 *
-	 * @param null $value
+	 * @param null $data
 	 * @param array|null $queryParams
 	 */
-	public function new($value = null, array $queryParams = null): void
+	public function new($data = null, array $queryParams = null): void
 	{
 		// NAVBAR
-		parent::navbarIndex((array)$value);
+		parent::navbarIndex((array)$data);
 		// FORM NEW
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("new", $value), sprintf(_("Add new %s from %s"), _("order"), $value['name']))
+			CmsFactory::view()->fragment()->box()->simpleBox(self::formOrder("new", $data), sprintf(_("Add new %s from %s"), _("order"), $data['name']))
 		);
 	}
 

@@ -1,6 +1,8 @@
 <?php
 namespace Plinct\Cms\View\Fragment;
 
+use Exception;
+use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
@@ -117,5 +119,22 @@ class Fragment
 	public function reactShell(string $type, array $attributes = []): ReactShell
 	{
 		return new ReactShell($type, $attributes);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function sitemap(string $type, array $params = null): bool
+	{
+		CmsFactory::view()->addMain("<h1>Sitemap</h1>");
+		$sitemap = CmsFactory::helpers()->sitemap($type);
+		$sitemap->setParams($params);
+		if ($sitemap->saveSitemap()) {
+			CmsFactory::view()->addMain("<p class='warning'>Sitemap criado com sucesso!</p><p><a href='".$sitemap->getCurrentSitemap()."' target='_blank'>Ver sitemap.</a></p>");
+			return true;
+		} else {
+			CmsFactory::view()->addMain("<p class='warning'>Ops! Algo de ruim aconteceu! O sitemap não foi criado!</p>");
+			return false;
+		}
 	}
 }

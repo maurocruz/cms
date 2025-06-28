@@ -33,7 +33,7 @@ class ContactPoint implements TypeViewInterface
 		Intangible::navbar();
 	}
 
-	public function new(?array $value, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null): void
 	{
 		// TODO: Implement new() method.
 	}

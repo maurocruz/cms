@@ -23,11 +23,11 @@ class Person extends PersonAbstract implements TypeViewInterface
   }
 
   /**
-   * @param array|null $value
+   * @param array|null $data
    * @param array|null $queryParams
    * @param
    */
-  public function new(?array $value, array $queryParams = null): void
+  public function new(?array $data, array $queryParams = null): void
   {
       $this->navbarIndex();
       CmsFactory::View()->addMain(
@@ -68,7 +68,6 @@ class Person extends PersonAbstract implements TypeViewInterface
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
 
 			} elseif (isset($data['status'])) {
-				var_dump($data);
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['status'].": ".$data['message']));
 			}
     } else {
@@ -76,4 +75,13 @@ class Person extends PersonAbstract implements TypeViewInterface
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Person is not exists!")));
     }
   }
+
+	/**
+	 * @throws Exception
+	 */
+	public function sitemap(): bool
+	{
+		$this->navbarIndex();
+		return CmsFactory::view()->fragment()->sitemap('person');
+	}
 }

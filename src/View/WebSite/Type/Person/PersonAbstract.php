@@ -30,6 +30,7 @@ abstract class PersonAbstract
         ->title(_("Person"))
         ->newTab('/admin/person', CmsFactory::View()->fragment()->icon()->home())
         ->newTab('/admin/person/new', CmsFactory::View()->fragment()->icon()->plus())
+        ->newTab('/admin/person/sitemap', CmsFactory::View()->fragment()->icon()->sitemap())
         ->search()
         ->ready()
       );

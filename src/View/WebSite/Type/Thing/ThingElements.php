@@ -62,7 +62,7 @@ class ThingElements
 		}
 		// description
 		$form->content(
-			CmsFactory::view()->fragment()->box()->expandingBox(_('Description'),"<textarea name='description' class='thing-description' id='description$idthing'>$description</textarea>", false,'width: 100%;')
+			CmsFactory::view()->fragment()->box()->expandingBox(_('Description'),"<textarea name='description' class='thing-description' id='description$idthing' style='min-height: 300px;'>$description</textarea>", false,'width: 100%;')
 		);
 		$form->setEditor("description$idthing", "editor$case$idthing");
 		// url

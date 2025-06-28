@@ -23,10 +23,10 @@ class EventView extends EventAbstract implements TypeViewInterface
 
   /**
    *
-   * @param array|null $value
+   * @param array|null $data
    * @param array|null $queryParams
    */
-  public function new(?array $value, array $queryParams = null): void
+  public function new(?array $data, array $queryParams = null): void
   {
     // NAVBAR
     $this->navbarEvent();

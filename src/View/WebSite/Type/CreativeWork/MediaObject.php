@@ -11,7 +11,7 @@ class MediaObject implements TypeViewInterface
 	 */
 	public static function navbar(): void
 	{
-		CreativeWork::navbar();
+		CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 			->type('mediaObject')
 			->title(_("Media Object"))
@@ -39,7 +39,7 @@ class MediaObject implements TypeViewInterface
 		// TODO: Implement edit() method.
 	}
 
-	public function new(?array $value, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

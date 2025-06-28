@@ -34,14 +34,4 @@ class WebSiteController implements TypeControllerInterface
     $data = CmsFactory::model()->api()->get('webSite',['idwebSite'=>$id])->ready();
 		return CmsFactory::view()->webSite()->type('webSite')->setMethodName('edit')->setData($data)->ready();
   }
-
-	/**
-	 * @param string $type
-	 * @param array|null $params
-	 * @return Sitemap
-	 */
-	public static function getSitemap(string $type, array $params = null): Sitemap
-	{
-		return new Sitemap($type, $params);
-	}
 }

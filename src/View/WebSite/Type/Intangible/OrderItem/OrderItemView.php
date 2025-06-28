@@ -21,7 +21,7 @@ class OrderItemView extends OrderItemAbstract implements TypeViewInterface
 		return true;
 	}
 
-	public function new(?array $value, array $queryParams = null): bool
+	public function new(?array $data, array $queryParams = null): bool
 	{
 		return true;
 	}

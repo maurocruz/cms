@@ -30,6 +30,7 @@ class Type
 		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
 		$classNameView = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
+		$classNameCreativeWorkView = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName).'View';
 		$classNameCreativeWorkItem = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
 		$classNameIntagible = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName);
 		$classNameIntagibleView = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'View';
@@ -40,6 +41,8 @@ class Type
 			$this->object = new $classNameView();
 		} elseif (class_exists($classNameCreativeWork)) {
 			$this->object = new $classNameCreativeWork();
+		} elseif(class_exists($classNameCreativeWorkView)) {
+			$this->object = new $classNameCreativeWorkView();
 		} elseif (class_exists($classNameCreativeWorkItem)) {
 			$this->object = new $classNameCreativeWorkItem();
 		} elseif (class_exists($classNameIntagible)) {

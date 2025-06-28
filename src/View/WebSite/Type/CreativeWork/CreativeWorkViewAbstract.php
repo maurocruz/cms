@@ -5,12 +5,16 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 
-abstract class CreativeWorkAbstract
+abstract class CreativeWorkViewAbstract
 {
 	/**
 	 * @var int|null
 	 */
 	protected ?int $idcreativeWork;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $idthing;
 
 	/**
 	 * @return void
@@ -27,7 +31,7 @@ abstract class CreativeWorkAbstract
 		;
 		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
 		if ($modulesEnabled) {
-			foreach ($modulesEnabled as $key => $type) {
+			foreach ($modulesEnabled as $type) {
 				// MEDIA OBJECT
 				if (in_array($type, ['ImageObject','VideoObject'])) {
 					$navbar->newTab("/admin/mediaObject", _('Media object'));

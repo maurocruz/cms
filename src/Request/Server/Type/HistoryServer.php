@@ -1,8 +1,7 @@
 <?php
 namespace Plinct\Cms\Controller\Request\Server\Type;
 
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\Controller\Request\Api\Api;
+use Plinct\Cms\CmsFactory;
 
 class HistoryServer
 {
@@ -21,13 +20,13 @@ class HistoryServer
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;
-    $this->userId = CmsFactory::request()->user()->userLogged()->getIduser();
+    $this->userId = CmsFactory::controller()->user()->userLogged()->getIduser();
   }
 
   /**
    * @param mixed $summary
    */
-  public function setSummary($summary): void
+  public function setSummary(mixed $summary): void
   {
     $this->summary = $summary;
   }
@@ -51,14 +50,14 @@ class HistoryServer
 /**
  * @param $action
  * @param null $summary
- * @return Api
+ * @return array|string[]
  */
-  public function register($action, $summary = null): Api
+  public function register($action, $summary = null): array
   {
     $this->action = $action;
     $this->summary = $summary ?? $this->summary;
     $params = $this->setParams();
-    return CmsFactory::request()->api()->post("history", $params);
+    return CmsFactory::model()->api()->post("history", $params)->ready();
   }
 
   /**

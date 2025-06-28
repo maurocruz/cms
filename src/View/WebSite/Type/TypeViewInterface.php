@@ -1,12 +1,26 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type;
 
 interface TypeViewInterface
 {
-	public function index(?array $data, array $queryParams = null);
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
+	public function index(?array $data, array $queryParams = null): void;
 
-	public function edit(?array $data, array $queryParams = null);
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
+	public function edit(?array $data, array $queryParams = null): void;
 
-	public function new(?array $value, array $queryParams = null);
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
+	public function new(?array $data, array $queryParams = null): void;
 }

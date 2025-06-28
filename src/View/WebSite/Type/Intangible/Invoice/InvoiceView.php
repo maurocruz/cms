@@ -132,7 +132,7 @@ class InvoiceView extends InvoiceAbstract implements TypeViewInterface
 	}
 
 
-	public function new(?array $value, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

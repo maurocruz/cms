@@ -15,7 +15,7 @@ class Article implements TypeViewInterface
 	 */
   protected function navbarArticle(string $title = null): void
   {
-	  CreativeWork::navbar();
+	  CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
 		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(18,18),
@@ -44,11 +44,11 @@ class Article implements TypeViewInterface
   }
 
 	/**
-	 * @param array|null $value
+	 * @param array|null $data
 	 * @param array|null $queryParams
 	 * @param
 	 */
-	public function new(?array $value, array $queryParams = null): void
+	public function new(?array $data, array $queryParams = null): void
 	{
 		$this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));

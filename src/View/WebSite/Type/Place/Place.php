@@ -48,10 +48,10 @@ class Place implements TypeViewInterface
   }
 
   /**
-   * @param null $value
+   * @param null $data
    * @param array|null $queryParams
    */
-  public function new($value = null, array $queryParams = null): void
+  public function new($data = null, array $queryParams = null): void
   {
     $this->navbarPlace();
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));

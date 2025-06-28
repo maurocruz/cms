@@ -42,7 +42,7 @@ class ImageObject implements TypeViewInterface
 		);
 	}
 
-	public function new(?array $value, array $queryParams = null): bool
+	public function new(?array $data, array $queryParams = null): bool
 	{
 		return false;
 	}

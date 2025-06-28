@@ -57,13 +57,6 @@ return function (Route $route)
 			(new Server())->createSqlTable($type);
 			$returns = $_SERVER['HTTP_REFERER'];
 		}
-		// SITEMAP
-		elseif (($action == "sitemap")) {
-			$returns = $_SERVER['HTTP_REFERER'];
-			// sitemap
-			$sitemap = new Sitemap($type, $params);
-			$sitemap->saveSitemap();
-		}
 		// CLOSURE
 		elseif($type == "closure") {
 			$server = new ClosureServer($params);

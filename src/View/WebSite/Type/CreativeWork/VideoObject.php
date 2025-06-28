@@ -9,7 +9,7 @@ class VideoObject implements TypeViewInterface
 {
 	private function navbar(): void
 	{
-		CreativeWork::navbar();
+		CreativeWorkViewView::navbar();
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 			->type('videoObject')
 			->title(_('Video'))
@@ -30,7 +30,7 @@ class VideoObject implements TypeViewInterface
 		// TODO: Implement edit() method.
 	}
 
-	public function new(?array $value, array $queryParams = null)
+	public function new(?array $data, array $queryParams = null)
 	{
 		// TODO: Implement new() method.
 	}

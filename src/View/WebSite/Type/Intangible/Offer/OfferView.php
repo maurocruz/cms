@@ -21,12 +21,12 @@ class OfferView extends OfferAbstract implements TypeViewInterface
   }
 
   /**
-   * @param null $value
+   * @param null $data
    * @param array|null $queryParams
    */
-  public function new($value = null, array $queryParams = null): void
+  public function new($data = null, array $queryParams = null): void
   {
-	  $this->navbarOfferedBy((array)$value);
+	  $this->navbarOfferedBy((array)$data);
 		//
 	  CmsFactory::view()->addMain(
 	    CmsFactory::view()->fragment()->box()->simpleBox(parent::formOffer(),_('New offer'))

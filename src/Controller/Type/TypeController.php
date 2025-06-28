@@ -44,7 +44,7 @@ class TypeController
 	 */
 	public function ready(): ?bool
 	{
-		$returns = false;
+		$returns = null;
 		$object = null;
 		if ($this->type) {
 			// check if table SQL exists
@@ -52,7 +52,7 @@ class TypeController
 			if (isset($data['message']) && $data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', CmsFactory::controller()->configuration()->getModulesEnabled()))) {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
-				// if moduyle has controller class
+				// if module has controller class
 				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller';
 				$classNameCreativeWork = __NAMESPACE__ . "\\CreativeWork\\" . ucfirst($this->type).'Controller';
 				$classNameIntangible = __NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller';
@@ -65,9 +65,11 @@ class TypeController
 				}
 				if ($object && method_exists($object, $this->methodName)) {
 					$returns = $object->{$this->methodName}($this->queryParams);
+				} elseif ($this->methodName == 'sitemap') {
+					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($this->queryParams)->ready();
 				}
 				// if not module controller class
-				if ($returns === false) { // generic model
+				if ($returns === null) { // generic model
 					$dataType = CmsFactory::model()->api()->get($this->type, $this->queryParams)->ready();
 					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($dataType)->ready();
 				}

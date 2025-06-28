@@ -4,6 +4,7 @@ namespace Plinct\Cms;
 
 use Plinct\Cms\Controller\App;
 use Plinct\Cms\Controller\Controller;
+use Plinct\Cms\Helpers\Helpers;
 use Plinct\Cms\Model\Model;
 use Plinct\Cms\View\View;
 
@@ -25,6 +26,15 @@ class CmsFactory
 	public static function controller(): Controller {
 		return new Controller();
 	}
+
+	/**
+	 * @return Helpers
+	 */
+	public static function helpers(): Helpers
+	{
+		return new Helpers();
+	}
+
 	/**
 	 * @return Model
 	 */
@@ -32,6 +42,9 @@ class CmsFactory
 		return new Model();
 	}
 
+	/**
+	 * @return ToolBox
+	 */
 	public static function toolBox(): ToolBox
 	{
 		return new ToolBox();

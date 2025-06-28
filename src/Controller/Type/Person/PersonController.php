@@ -11,6 +11,16 @@ use Plinct\Tool\Sitemap;
 
 class PersonController implements TypeControllerInterface
 {
+	public function index(array $params): bool
+	{
+		return CmsFactory::view()->webSite()->type('person')->ready();
+	}
+
+	public function new(array $params): bool
+	{
+		return CmsFactory::view()->webSite()->type('person')->setMethodName('new')->ready();
+	}
+
 	/**
 	 * @param array $params
 	 * @return bool
@@ -83,14 +93,4 @@ class PersonController implements TypeControllerInterface
     }
     (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-person.xml"))->saveSitemap($dataSitemap);
   }
-
-	public function index(array $params): bool
-	{
-		return false;
-	}
-
-	public function new(array $params): bool
-	{
-		return false;
-	}
 }
