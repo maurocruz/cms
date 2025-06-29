@@ -3,6 +3,7 @@ namespace Plinct\Cms\Helpers;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Tool\DateTime;
 
 class Sitemap
 {
@@ -111,7 +112,7 @@ class Sitemap
 					$url = CmsFactory::controller()->getHost().$url;
 				}
 				$dataSitemap[$key]['loc'] = $url;
-				$dataSitemap[$key]['lastmod'] = $dateModified;
+				$dataSitemap[$key]['lastmod'] =  DateTime::formatISO8601($dateModified);
 			}
 		}
 		$this->currentSitemap = "/sitemap-$this->type.xml";
