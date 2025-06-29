@@ -111,11 +111,31 @@ class Sitemap
 				if (!str_contains($url,'http')) {
 					$url = CmsFactory::controller()->getHost().$url;
 				}
-				$dataSitemap[$key]['loc'] = htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+				$dataSitemap[$key]['loc'] = $this->encodeUrlForSitemap($url);
 				$dataSitemap[$key]['lastmod'] =  DateTime::formatISO8601($dateModified);
 			}
 		}
 		$this->currentSitemap = "/sitemap-$this->type.xml";
 		return (new \Plinct\Tool\Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-$this->type.xml"))->saveSitemap($dataSitemap);
 	}
+
+	/**
+	 * @param $url
+	 * @return string
+	 */
+	private function encodeUrlForSitemap($url): string
+	{
+		$parsed = parse_url($url);
+		$scheme = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : '';
+		$host   = $parsed['host'] ?? '';
+		$port   = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+		$path   = isset($parsed['path']) ? implode('/', array_map('rawurlencode', explode('/', $parsed['path']))) : '';
+		$query  = '';
+		if (isset($parsed['query'])) {
+			parse_str($parsed['query'], $queryParams);
+			$query = '?' . http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+		}
+		return $scheme . $host . $port . '/' . ltrim($path, '/') . $query;
+	}
+
 }
