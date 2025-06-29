@@ -23,4 +23,23 @@ class Helpers
 	{
 		return ToolBox::typeBuilder($value);
 	}
+
+	/**
+	 * @param $url
+	 * @return string
+	 */
+	public function encodeUrlForSitemap($url): string
+	{
+		$parsed = parse_url($url);
+		$scheme = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : '';
+		$host   = $parsed['host'] ?? '';
+		$port   = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+		$path   = isset($parsed['path']) ? implode('/', array_map('rawurlencode', explode('/', $parsed['path']))) : '';
+		$query  = '';
+		if (isset($parsed['query'])) {
+			parse_str($parsed['query'], $queryParams);
+			$query = '?' . http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+		}
+		return $scheme . $host . $port . '/' . ltrim($path, '/') . $query;
+	}
 }

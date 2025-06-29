@@ -19,6 +19,7 @@ abstract class EventAbstract
 				->title(_("Events"))
 				->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/event/sitemap", CmsFactory::view()->fragment()->icon()->sitemap())
 				->search()
 				->ready()
 		);

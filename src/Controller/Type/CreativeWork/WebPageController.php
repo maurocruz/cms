@@ -1,8 +1,10 @@
 <?php
 namespace Plinct\Cms\Controller\Type\CreativeWork;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
+use Plinct\Cms\Helpers\Sitemap;
 
 class WebPageController implements TypeControllerInterface
 {
@@ -43,5 +45,15 @@ class WebPageController implements TypeControllerInterface
 			return false;
 		}
 		return isset($data[0]) && is_array($data[0]) && CmsFactory::view()->webSite()->type('webPage')->setMethodName('edit')->setData($data[0])->ready();
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function sitemap(array $params = []): bool
+	{
+		$data = CmsFactory::model()->type('webPage')->get(['orderBy'=>'dateModified','ordering'=>'desc','fields'=>'name,url,dateModified']);
+		$dataSitemap = Sitemap::buildSimpleSitemap($data);
+		return CmsFactory::view()->webSite()->type('webPage')->setData($dataSitemap)->setQueryParams($params)->setMethodName('sitemap')->ready();
 	}
 }

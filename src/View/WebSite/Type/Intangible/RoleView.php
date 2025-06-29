@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
-use Plinct\Cms\View\WebSite\Type\Person\Person;
+use Plinct\Cms\View\WebSite\Type\Person\PersonView;
 use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
@@ -23,7 +23,7 @@ class RoleView implements TypeViewInterface
 			if (strtolower($this->refererType) == "organization") {
 				Organization::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
 			} else if (strtolower($this->refererType) == "person") {
-				Person::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
+				PersonView::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
 			}
 			$querystring = "refererType=$this->refererType&refererName=$this->refererName&refererId=$this->refererId&refererIdthing=$this->refererIdthing";
 			$this->querystring = $querystring;

@@ -65,8 +65,6 @@ class TypeController
 				}
 				if ($object && method_exists($object, $this->methodName)) {
 					$returns = $object->{$this->methodName}($this->queryParams);
-				} elseif ($this->methodName == 'sitemap') {
-					$returns = CmsFactory::view()->webSite()->type($this->type)->setMethodName($this->methodName)->setData($this->queryParams)->ready();
 				}
 				// if not module controller class
 				if ($returns === null) { // generic model

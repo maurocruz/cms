@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Order;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
-use Plinct\Cms\View\WebSite\Type\Person\Person;
+use Plinct\Cms\View\WebSite\Type\Person\PersonView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\DateTime;
 use Plinct\Tool\StringTool;
@@ -62,8 +62,8 @@ abstract class OrderAbstract implements TypeViewInterface
 		if ($sellerType == 'Person') {
 			$idperson = $sellerTypeBuilder->getPropertyValue('idperson');
 			$idthing = $sellerTypeBuilder->getIdthing();
-			Person::navbarIndex();
-			Person::navbarEdit($sellerName, $idperson, $idthing);
+			PersonView::navbarIndex();
+			PersonView::navbarEdit($sellerName, $idperson, $idthing);
 		}
 		$navbar = CmsFactory::view()->fragment()->navbar()
 			->type('order')

@@ -1,13 +1,10 @@
 <?php
 namespace Plinct\Cms\Controller\Type\Person;
 
-use DOMException;
 use Exception;
-use Plinct\Cms\Controller\App;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
-use Plinct\Tool\DateTime;
-use Plinct\Tool\Sitemap;
+use Plinct\Cms\Helpers\Sitemap;
 
 class PersonController implements TypeControllerInterface
 {
@@ -74,23 +71,13 @@ class PersonController implements TypeControllerInterface
   }
 
 	/**
-	 *
-	 * @throws DOMException
+	 * @return bool
+	 * @throws Exception
 	 */
-  public function saveSitemap(): void
+  public function sitemap(): bool
   {
-    $dataSitemap = null;
-    $data = CmsFactory::model()->api()->get("person", [ "orderBy" => "dateModified desc", "properties" => "dateModified,image",'limit'=>'none'])->ready();
-    $loc = App::getURL() ."/t/Person/";
-    foreach ($data as $value) {
-      $id = $value['idperson'];
-      $lastmod = DateTime::formatISO8601($value['dateModified']);
-      $dataSitemap[] = [
-        "loc" => $loc.$id,
-        "lastmod" => $lastmod,
-        "image" => $value['image']
-      ];
-    }
-    (new Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-person.xml"))->saveSitemap($dataSitemap);
+		$data = CmsFactory::model()->type('person')->get(['orderBy'=>'dateModified','ordering'=>'desc','fields'=>'name,url,dateModified']);
+    $dataSitemap = Sitemap::buildSimpleSitemap($data);
+	  return CmsFactory::view()->webSite()->type('person')->setData($dataSitemap)->setMethodName('sitemap')->ready();
   }
 }

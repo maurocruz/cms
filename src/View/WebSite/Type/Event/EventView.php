@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\Event;
 
+use DOMException;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
@@ -65,4 +66,20 @@ class EventView extends EventAbstract implements TypeViewInterface
 	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
     }
   }
+
+	/**
+	 * @param array|null $data
+	 * @return void
+	 * @throws DOMException
+	 */
+	public function sitemap(?array $data): void
+	{
+		$this->navbarEvent();
+		$sitemap = CmsFactory::helpers()->sitemap('event');
+		$sitemap->setFilename('sitemap-event.xml');
+		$sitemap->setNamespace('news');
+		$sitemap->setDataSitemap($data);
+		$result = $sitemap->saveSitemap();
+		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
+	}
 }

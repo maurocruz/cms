@@ -1,8 +1,9 @@
 <?php
 namespace Plinct\Cms\Helpers;
 
-use Exception;
+use DOMException;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\App;
 use Plinct\Tool\DateTime;
 
 class Sitemap
@@ -11,10 +12,12 @@ class Sitemap
 	 * @var string
 	 */
 	private string $type;
-	/**
-	 * @var ?array
-	 */
-	private ?array $params = null;
+
+	private string $namespace = 'simple';
+
+	private string $filename = 'sitemap.xml';
+
+	private array $dataSitemap = [];
 	/**
 	 * @var array|null
 	 */
@@ -41,11 +44,35 @@ class Sitemap
 	}
 
 	/**
-	 * @param ?array $params
+	 * @param string $namespace
 	 */
-	public function setParams(?array $params = null): void
+	public function setNamespace(string $namespace): void
 	{
-		$this->params = $params;
+		$this->namespace = $namespace;
+	}
+
+	/**
+	 * @param string $filename
+	 */
+	public function setFilename(string $filename): void
+	{
+		$this->filename = $filename;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFilename(): string
+	{
+		return $this->filename;
+	}
+
+	/**
+	 * @param array $dataSitemap
+	 */
+	public function setDataSitemap(array $dataSitemap): void
+	{
+		$this->dataSitemap = $dataSitemap;
 	}
 
 	/**
@@ -54,6 +81,54 @@ class Sitemap
 	public function getCurrentSitemap(): ?string
 	{
 		return $this->currentSitemap;
+	}
+
+	/**
+	 * @param array $data
+	 * @return array
+	 */
+	public static function buildSimpleSitemap(array $data): array
+	{
+		$dataSitemap = [];
+		foreach ($data as $key => $item) {
+			$typeBuilder = CmsFactory::helpers()->typeBuilder($item);
+			$url = $item['url'] ?? null;
+			$dateModified = $typeBuilder->getPropertyValue('dateModified');
+			if ($url) {
+				if (!str_contains($url, 'http')) {
+					$url = CmsFactory::controller()->getHost() . $url;
+				}
+				$dataSitemap[$key]['loc'] = CmsFactory::helpers()->encodeUrlForSitemap($url);
+				$dataSitemap[$key]['lastmod'] = DateTime::formatISO8601($dateModified);
+			}
+		}
+		return $dataSitemap;
+	}
+
+	/**
+	 * @param array $data
+	 * @return array
+	 */
+	public static function buildNewsSitemap(array $data): array
+	{
+		$dataSitemap = [];
+		foreach ($data as $item) {
+			$typeBuilder = CmsFactory::helpers()->typeBuilder($item);
+			$loc = CmsFactory::controller()->getHost()."/".substr($item['startDate'],0,10)."/".urlencode($item['name']);
+			$dateModified = $typeBuilder->getPropertyValue('dateModified');
+			$dateCreated = $typeBuilder->getPropertyValue('dateCreated');
+			$dataSitemap[] = [
+				"loc" => CmsFactory::helpers()->encodeUrlForSitemap($loc),
+				'lastmod' => DateTime::formatISO8601($dateModified),
+				"news" => [
+					"name" => App::getTitle(),
+					"language" => App::getLanguage(),
+					"publication_date" => DateTime::formatISO8601($dateCreated),
+					"title" => $item['name']
+				]
+			];
+		}
+		return $dataSitemap;
 	}
 
 	/**
@@ -96,46 +171,13 @@ class Sitemap
 	}
 
 	/**
-	 * @return bool
-	 * @throws Exception
+	 * @throws DOMException
 	 */
 	public function saveSitemap(): bool
 	{
-		$dataSitemap = [];
-		$data = CmsFactory::model()->type($this->type)->get($this->params ?? ['limit'=>'none','orderBy'=>'dateModified','ordering'=>'desc']);
-		foreach ($data as $key => $item) {
-			$typeBuilder = CmsFactory::helpers()->typeBuilder($item);
-			$url = $item['url'] ?? null;
-			$dateModified = $typeBuilder->getPropertyValue('dateModified');
-			if ($url) {
-				if (!str_contains($url,'http')) {
-					$url = CmsFactory::controller()->getHost().$url;
-				}
-				$dataSitemap[$key]['loc'] = $this->encodeUrlForSitemap($url);
-				$dataSitemap[$key]['lastmod'] =  DateTime::formatISO8601($dateModified);
-			}
-		}
-		$this->currentSitemap = "/sitemap-$this->type.xml";
-		return (new \Plinct\Tool\Sitemap($_SERVER['DOCUMENT_ROOT'].'/'."sitemap-$this->type.xml"))->saveSitemap($dataSitemap);
-	}
-
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	private function encodeUrlForSitemap($url): string
-	{
-		$parsed = parse_url($url);
-		$scheme = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : '';
-		$host   = $parsed['host'] ?? '';
-		$port   = isset($parsed['port']) ? ':' . $parsed['port'] : '';
-		$path   = isset($parsed['path']) ? implode('/', array_map('rawurlencode', explode('/', $parsed['path']))) : '';
-		$query  = '';
-		if (isset($parsed['query'])) {
-			parse_str($parsed['query'], $queryParams);
-			$query = '?' . http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
-		}
-		return $scheme . $host . $port . '/' . ltrim($path, '/') . $query;
+		$sitemap = new \Plinct\Tool\Sitemap($_SERVER['DOCUMENT_ROOT'].'/'.$this->filename);
+		$sitemap->setNamespace($this->namespace);
+		return $sitemap->saveSitemap($this->dataSitemap);
 	}
 
 }

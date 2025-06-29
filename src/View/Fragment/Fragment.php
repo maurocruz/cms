@@ -3,6 +3,7 @@ namespace Plinct\Cms\View\Fragment;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Helpers\Sitemap;
 use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Box\BoxInterface;
@@ -124,17 +125,23 @@ class Fragment
 	/**
 	 * @throws Exception
 	 */
-	public function sitemap(string $type, array $params = null): bool
+	public function sitemap(string $type): Sitemap
+	{
+		return new Sitemap($type);
+	}
+
+	/**
+	 * @param bool $boolean
+	 * @param string $filename
+	 * @return void
+	 */
+	public function sitemapReturn(bool $boolean, string $filename): void
 	{
 		CmsFactory::view()->addMain("<h1>Sitemap</h1>");
-		$sitemap = CmsFactory::helpers()->sitemap($type);
-		$sitemap->setParams($params);
-		if ($sitemap->saveSitemap()) {
-			CmsFactory::view()->addMain("<p class='warning'>Sitemap criado com sucesso!</p><p><a href='".$sitemap->getCurrentSitemap()."' target='_blank'>Ver sitemap.</a></p>");
-			return true;
+		if ($boolean) {
+			CmsFactory::view()->addMain("<p class='warning'>Sitemap criado com sucesso!</p><p><a href='/$filename' target='_blank'>Ver sitemap.</a></p>");
 		} else {
 			CmsFactory::view()->addMain("<p class='warning'>Ops! Algo de ruim aconteceu! O sitemap não foi criado!</p>");
-			return false;
 		}
 	}
 }

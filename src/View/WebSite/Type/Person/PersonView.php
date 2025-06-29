@@ -8,7 +8,7 @@ use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Person extends PersonAbstract implements TypeViewInterface
+class PersonView extends PersonAbstract implements TypeViewInterface
 {
   /**
    * @param array|null $data
@@ -79,9 +79,13 @@ class Person extends PersonAbstract implements TypeViewInterface
 	/**
 	 * @throws Exception
 	 */
-	public function sitemap(): bool
+	public function sitemap(array $data): void
 	{
 		$this->navbarIndex();
-		return CmsFactory::view()->fragment()->sitemap('person');
+		$sitemap = CmsFactory::helpers()->sitemap('person');
+		$sitemap->setFilename('sitemap-person.xml');
+		$sitemap->setDataSitemap($data);
+		$result = $sitemap->saveSitemap();
+		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
 	}
 }

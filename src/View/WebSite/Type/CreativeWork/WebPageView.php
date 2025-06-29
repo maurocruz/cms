@@ -175,9 +175,13 @@ class WebPageView extends CreativeWorkView
 	/**
 	 * @throws Exception
 	 */
-	public function sitemap(array $queryParams): bool
+	public function sitemap(array $data, array $queryParams): void
 	{
 		$this->idIsPartOf = $queryParams['idwebSite'] ?? null;
-		return CmsFactory::view()->fragment()->sitemap('webPage');
+		$sitemap = CmsFactory::helpers()->sitemap('webPage');
+		$sitemap->setFilename('sitemap-webPage.xml');
+		$sitemap->setDataSitemap($data);
+		$result = $sitemap->saveSitemap();
+		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
 	}
 }
