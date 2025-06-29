@@ -111,7 +111,7 @@ class Sitemap
 				if (!str_contains($url,'http')) {
 					$url = CmsFactory::controller()->getHost().$url;
 				}
-				$dataSitemap[$key]['loc'] = $url;
+				$dataSitemap[$key]['loc'] = htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 				$dataSitemap[$key]['lastmod'] =  DateTime::formatISO8601($dateModified);
 			}
 		}
