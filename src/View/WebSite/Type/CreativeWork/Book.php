@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
@@ -49,7 +49,7 @@ class Book extends CreativeWorkView implements TypeViewInterface
 	public function new(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new"))
+			CmsFactory::view()->fragment()->box()->simpleBox($this->formCreativeWork(), _("Add new"))
 		);
 	}
 
@@ -67,7 +67,7 @@ class Book extends CreativeWorkView implements TypeViewInterface
 			$this->idbook = $typeBuilder->getId();
 			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->simpleBox($this->form('edit', $data[0]), _("Edit"))
+				CmsFactory::view()->fragment()->box()->simpleBox($this->formCreativeWork('edit', $data[0]), _("Edit"))
 			);
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready()
@@ -82,7 +82,7 @@ class Book extends CreativeWorkView implements TypeViewInterface
 	 * @param array|null $value
 	 * @return array
 	 */
-	protected function form(string $case = 'new', array $value = null ): array
+	protected function formCreativeWork(string $case = 'new', array $value = null ): array
 	{
 		$author = $value['author'] ?? null;
 		$version = $value['version'] ?? null;
@@ -100,7 +100,7 @@ class Book extends CreativeWorkView implements TypeViewInterface
 			$form->input('idbook', (string) $this->idbook, 'hidden');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// author
 		$form->fieldsetWithInput('author', $author, _('Author'));
 		// version

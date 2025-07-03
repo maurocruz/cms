@@ -4,7 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
 class WebPageView extends CreativeWorkView
 {
@@ -28,9 +28,9 @@ class WebPageView extends CreativeWorkView
 	/**
 	 *
 	 */
-	public function __construct()
+	public function __construct($type = 'webPage')
 	{
-		parent::__construct();
+		parent::__construct($type);
 	}
 
 	/**
@@ -146,6 +146,7 @@ class WebPageView extends CreativeWorkView
 		// VARS
 		$headline = $value['headline'] ?? null;
 		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
+		$text = $value['text'] ?? null;
 		$author = $value['author'] ?? null;
 		$case = $value ? 'edit' : 'new';
 		// FORM
@@ -158,11 +159,14 @@ class WebPageView extends CreativeWorkView
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// HEADLINE
 		$form->fieldsetWithInput('headline', $headline, _('Headline'));
 		// ALTERNATIVE HEADLINE
 		$form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
+		// TEXT
+		$form->fieldsetWithTextarea('text', htmlentities($text), _("Content"), ['style'=>'width: 100%;'], ['id'=>'contentTextareaWebPage']);
+		$form->setEditor('contentTextareaWebPage');
 		// AUTHOR
 		$form->relationshipOneToOne('person',_('Author'),'author',(int) $author);
 		// submit
@@ -175,13 +179,10 @@ class WebPageView extends CreativeWorkView
 	/**
 	 * @throws Exception
 	 */
-	public function sitemap(array $data, array $queryParams): void
+	public function sitemap(array $data, array $queryParams = null): void
 	{
 		$this->idIsPartOf = $queryParams['idwebSite'] ?? null;
-		$sitemap = CmsFactory::helpers()->sitemap('webPage');
-		$sitemap->setFilename('sitemap-webPage.xml');
-		$sitemap->setDataSitemap($data);
-		$result = $sitemap->saveSitemap();
-		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
+		$this->sitemapFilename = 'sitemap-webPage.xml';
+		parent::sitemap($data);
 	}
 }

@@ -3,8 +3,22 @@ namespace Plinct\Cms\View\WebSite\Configuration;
 
 use Plinct\Cms\CmsFactory;
 
-class Configuration extends ConfigurationAbstract
+class Configuration
 {
+	/**
+	 * @return void
+	 */
+	protected function navbar(): void
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title(_('Configuration'))
+				->newTab('/admin/configuration', CmsFactory::view()->fragment()->icon()->home())
+				->newTab('/admin/thing', _('Thing'))
+				->ready()
+		);
+	}
+
 	/**
 	 * @return void
 	 */
@@ -13,7 +27,7 @@ class Configuration extends ConfigurationAbstract
 		$modulesAvailable = CmsFactory::controller()->configuration()->getModulesAvailable();
 		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
 		// NAVBAR
-		parent::navbar();
+		self::navbar();
 		// write
 		CmsFactory::view()->addMain("<h1>"._("Configuration")."</h1>");
 		CmsFactory::view()->addMain("<dl>");

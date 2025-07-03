@@ -1,13 +1,43 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\Event;
 
-use DOMException;
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class EventView extends EventAbstract implements TypeViewInterface
+class EventView extends ThingView implements TypeViewInterface
 {
+	/**
+	 * @var ?int
+	 */
+	protected ?int $idevent = null;
+
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'event', string $sitemapFilename = 'sitemap-event.xml')
+	{
+		$this->sitemapExtension = 'news';
+		parent::__construct($type, $sitemapFilename);
+	}
+
+	/**
+	 *
+	 */
+	public function __destruct() {
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('event')
+				->title(_("Events"))
+				->newTab("/admin/event", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/event/new", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/event/sitemap", CmsFactory::view()->fragment()->icon()->sitemap())
+				->search()
+				->ready()
+		);
+	}
 
 	/**
 	 * @param array|null $data
@@ -15,8 +45,6 @@ class EventView extends EventAbstract implements TypeViewInterface
 	 */
   public function index(?array $data, array $queryParams = null): void
   {
-    // NAVBAR
-    $this->navbarEvent();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('Event')->setColumnsTable(["startDate"=>"Início"])->ready()
 		);
@@ -29,10 +57,8 @@ class EventView extends EventAbstract implements TypeViewInterface
    */
   public function new(?array $data, array $queryParams = null): void
   {
-    // NAVBAR
-    $this->navbarEvent();
     // FORM
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(parent::formEvent(), _("Add new")));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent(), _("Add new")));
   }
 
   /**
@@ -42,8 +68,6 @@ class EventView extends EventAbstract implements TypeViewInterface
    */
   public function edit(?array $data, array $queryParams = null): void
   {
-    // NAVBAR
-    $this->navbarEvent();
     if (!$data) {
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->miscellaneous()->message(_("Event not found")));
     } else {
@@ -68,18 +92,47 @@ class EventView extends EventAbstract implements TypeViewInterface
   }
 
 	/**
-	 * @param array|null $data
-	 * @return void
-	 * @throws DOMException
+	 * @param string $case
+	 * @param array|null $value
+	 * @return array
 	 */
-	public function sitemap(?array $data): void
+	protected function formEvent(string $case = "new", array $value = null): array
 	{
-		$this->navbarEvent();
-		$sitemap = CmsFactory::helpers()->sitemap('event');
-		$sitemap->setFilename('sitemap-event.xml');
-		$sitemap->setNamespace('news');
-		$sitemap->setDataSitemap($data);
-		$result = $sitemap->saveSitemap();
-		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
+		// VARS
+		$startDate = isset($value['startDate']) ? substr($value['startDate'], 0, 10) : null;
+		$startTime = isset($value['startDate']) ? substr($value['startDate'], 11) : null;
+		$endDate = isset($value['endDate']) ? substr($value['endDate'], 0, 10) : null;
+		$endTime = isset($value['endDate']) ? substr($value['endDate'], 11) : null;
+		$location = $value['location'] ?? null;
+		$organizer = $value['organizer'] ?? null;
+		$superEvent = $value['superEvent'] ?? null;
+		// FROM
+		$form = CmsFactory::view()->fragment()->form("form-event",["class"=>"form-basic form-event"]);
+		$form->action("/admin/event/$case")->method("post");
+		$form->setIdform("form-event-".($this->idevent ?? "new"));
+		$form->addMandatories('startDate','endDate','location');
+		// HIDDENS
+		if ($case == "edit") {
+			$form->input('idevent', (string)$this->idevent, 'hidden');
+		}
+		// THING
+		$form = ThingView::formContent($form, $value);
+		// START DATE
+		$form->fieldsetWithInput('startDate', $startDate, _("Start date"), "date");
+		$form->fieldsetWithInput('startTime', $startTime, _("Start time"), "time");
+		// END DATE
+		$form->fieldsetWithInput('endDate', $endDate, _("End date"), "date");
+		$form->fieldsetWithInput('endTime', $endTime, _("End time"), "time");
+		// LOCATION
+		$form->relationshipOneToOne('place', _('Place'),'location', $location);
+		// ORGANIZER
+		$form->relationshipOneToOne('organization,person',_('Organizer'),'organizer',$organizer);
+		// SUPER EVENT
+		$form->relationshipOneToOne('event',_('Super event'),'superEvent', $superEvent);
+		// BUTTONS
+		$form->submitButtonSend();
+		if ($case == "edit") $form->submitButtonDelete("/admin/event/erase");
+		// READY
+		return $form->ready();
 	}
 }

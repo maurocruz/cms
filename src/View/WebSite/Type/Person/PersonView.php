@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\CreativeWork\Certification;
+use Plinct\Cms\View\WebSite\Type\CreativeWork\CertificationView;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
 use Plinct\Cms\View\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
@@ -61,7 +61,7 @@ class PersonView extends PersonAbstract implements TypeViewInterface
 				// HAS CERTIFICATION
 				if(CmsFactory::controller()->configuration()->hasModulesAvailable('Certification')) {
 					CmsFactory::view()->addMain(
-						CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), Certification::hasCertification($value))
+						CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), CertificationView::hasCertification($value))
 					);
 				}
 				// IMAGE

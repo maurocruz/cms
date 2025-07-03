@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Taxon;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class Taxon implements TypeViewInterface
@@ -90,7 +90,7 @@ class Taxon implements TypeViewInterface
     // id
     if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');
 		// THING
-	  $form = Thing::formContent($form, $value);
+	  $form = ThingView::formContent($form, $value);
     // scientificNameAuthorship
     $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName

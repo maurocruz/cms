@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Action;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
@@ -98,7 +98,7 @@ class Action implements TypeViewInterface
 			$form->input('idaction', (string) $idaction, 'hiddern');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// AGENT
 		$form->content(CmsFactory::view()->fragment()->reactShell('organization')->getItemType(_("Agent"), 'agent', $agent)->ready());
 		// OBJECT

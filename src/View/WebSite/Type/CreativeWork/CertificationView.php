@@ -1,12 +1,13 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
+use DOMException;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Certification extends CreativeWorkView implements TypeViewInterface
+class CertificationView extends CreativeWorkView implements TypeViewInterface
 {
 
 	public function __destruct()
@@ -16,8 +17,9 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 				->type('certification')
 				->title(_("Certification"))
 				->level(3)
-				->newTab('/admin/certification',  CmsFactory::view()->fragment()->icon()->home(18,18))
-				->newTab('/admin/certification/new',  CmsFactory::view()->fragment()->icon()->plus(18,18))
+				->newTab('/admin/certification',  CmsFactory::view()->fragment()->icon()->home())
+				->newTab('/admin/certification/new',  CmsFactory::view()->fragment()->icon()->plus())
+				->newTab('/admin/certification/sitemap',  CmsFactory::view()->fragment()->icon()->sitemap())
 				->search()
 				->ready()
 		);
@@ -42,7 +44,7 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 	 */
 	public function new(?array $data, array $queryParams = null): void
 	{
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox($this->form(), _("Add new")));
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formCertification(), _("Add new")));
 	}
 
 	/**
@@ -54,7 +56,9 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 	{
 		if (!empty($data)) {
 			$value = $data[0];
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"),$this->form('edit', $value), true));
+			$tbCertification = CmsFactory::helpers()->typeBuilder($value);
+			$this->idcreativeWork = $tbCertification->getPropertyValue('idcreativeWork');
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"),self::formCertification('edit', $value), true));
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(sprintf(_("No %s were found!"), _('certification'))));
 		}
@@ -72,14 +76,14 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 		$content = [];
 		if (isset($data['hasCertification']) && is_array($data['hasCertification'])) {
 			foreach ($data['hasCertification'] as $value) {
-				$content[] = CmsFactory::view()->fragment()->box()->expandingBox($value['name'], (new Certification)->form('edit', $value), false, 'margin: 3px 5px;');
+				$content[] = CmsFactory::view()->fragment()->box()->expandingBox($value['name'], self::formCertification('edit', $value), false, 'margin: 3px 5px;');
 			}
 		}
-		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new")." "._("certification"), (new Certification)->form('new', null, (int) $idType), false, 'margin: 3px 5px;');
+		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(_("Add new")." "._("certification"), self::formCertification('new', null, (int) $idType), false, 'margin: 3px 5px;');
 		return $content;
 	}
 
-	protected function form(string $case = "new", array $value = null, int $about = null): array
+	protected static function formCertification(string $case = "new", array $value = null, int $about = null): array
 	{
 		$about = $about ?? $value['about'] ?? null;
 		$issuedBy = $value['issuedBy'] ?? null;
@@ -99,7 +103,7 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 			$form->input('action','redirectToSamePage', 'hidden');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// certificationIdentification
 		$form->fieldsetWithInput('certificationIdentification', $certificationIdentification, _('Certification identification'));
 		// about
@@ -118,5 +122,17 @@ class Certification extends CreativeWorkView implements TypeViewInterface
 			$form->submitButtonDelete('/admin/certification/delete');
 		}
 		return $form->ready();
+	}
+
+	/**
+	 * @param array $data
+	 * @param array|null $queryParams
+	 * @return void
+	 * @throws DOMException
+	 */
+	public function sitemap(array $data, array $queryParams = null): void
+	{
+		$this->sitemapFilename = 'sitemap-certification.xml';
+		parent::sitemap($data);
 	}
 }

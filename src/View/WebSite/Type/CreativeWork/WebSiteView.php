@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -124,7 +124,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 		// hidden
 		if ($id) $form->input('idwebSite',(string) $id,'hidden');
 		// thing
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// copyrightHolder
 		$form->chooseType(_( 'Copyright holder' ), 'copyrightHolder', array("Organization","Person"),$copyrightHolder);
 		// author

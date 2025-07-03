@@ -89,6 +89,10 @@ class Type
 	 */
 	public function ready(): bool
 	{
+		if (isset($this->data['status']) && $this->data['status'] === "fail") {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($this->data['message']));
+			return false;
+		}
 		if (isset($this->object)) {
 			switch ($this->methodName) {
 				case 'edit': $this->object->edit($this->data, $this->queryParams); break;
@@ -100,6 +104,7 @@ class Type
 			}
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_("Object does not exist")));
+			return false;
 		}
 		return true;
 	}

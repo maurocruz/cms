@@ -87,7 +87,7 @@ class Sitemap
 	 * @param array $data
 	 * @return array
 	 */
-	public static function buildSimpleSitemap(array $data): array
+	public static function buildGenericSitemap(array $data): array
 	{
 		$dataSitemap = [];
 		foreach ($data as $key => $item) {
@@ -114,7 +114,11 @@ class Sitemap
 		$dataSitemap = [];
 		foreach ($data as $item) {
 			$typeBuilder = CmsFactory::helpers()->typeBuilder($item);
-			$loc = CmsFactory::controller()->getHost()."/".substr($item['startDate'],0,10)."/".urlencode($item['name']);
+			if ($typeBuilder->getType() == 'event') {
+				$loc = CmsFactory::controller()->getHost()."/".substr($item['startDate'],0,10)."/".urlencode($item['name']);
+			} else {
+				$loc = $item['url'];
+			}
 			$dateModified = $typeBuilder->getPropertyValue('dateModified');
 			$dateCreated = $typeBuilder->getPropertyValue('dateCreated');
 			$dataSitemap[] = [

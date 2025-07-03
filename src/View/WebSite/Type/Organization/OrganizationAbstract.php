@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Organization;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
 abstract class OrganizationAbstract
 {
@@ -76,7 +76,7 @@ abstract class OrganizationAbstract
 		// HIDDEN
     if ($case == "edit") $form->input("idorganization", (string) $this->idorganization, 'hidden');
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// legal name
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id

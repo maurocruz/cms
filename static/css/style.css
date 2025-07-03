@@ -237,10 +237,12 @@ dd {
   padding: 0;
   line-height: 0;
   border-width: 1px;
-  height: 27px;
+  height: 25px;
+  width: 25px !important;
 }
 .search-box .search-box-form button svg {
-  font-size: 26px;
+  width: 22px;
+  height: 22px;
   color: #444444;
 }
 .search-box .search-box-form-input {
@@ -846,6 +848,9 @@ form .mandatory-field {
 .form-certification fieldset.certificationStatus label {
   display: flex;
   margin: 8px;
+}
+.form-certification fieldset.certificationStatus label input[type=radio] {
+  margin: 0 5px 0 0;
 }
 .form-certification fieldset.datePublished {
   flex-basis: content;

@@ -7,10 +7,16 @@ use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInterface
 {
+
+	public function __construct(string $type = 'creativeWork', string $sitemapFilename = 'sitemap-creativeWork.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
+
 	/**
 	 *
 	 */
-	public function __construct()
+	public function __destruct()
 	{
 		parent::navbar();
 	}
@@ -39,7 +45,7 @@ class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInter
 			$typeBuilder = new TypeBuilder('creativeWork', $value);
 			$this->idcreativeWork = $typeBuilder->getId();
 			$idthing = $typeBuilder->getPropertyValue('idthing');
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::form('edit', $value), true));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::formCreativeWork('edit', $value), true));
 			// images
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int)$idthing)->ready()
@@ -57,7 +63,7 @@ class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInter
 	public function new(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->box()->simpleBox(parent::form())
+			CmsFactory::view()->fragment()->box()->simpleBox(parent::formCreativeWork())
 		);
 	}
 }

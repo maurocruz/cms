@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Tool\ToolBox;
 
 abstract class ServiceAbstract
@@ -69,7 +69,7 @@ abstract class ServiceAbstract
     //$form->input('provider',$this->provider,'hidden');
     if ($case == 'edit') $form->input('idservice', $idservice,'hidden');
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 	  // PROVIDER
 	  $form->chooseType(_('Provider'),'provider','Organization,Person', $this->provider);
 		// IS RELATED TO

@@ -4,7 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\Product;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -69,7 +69,7 @@ class Product extends ProductAbstract implements TypeViewInterface
 		} else {
 			$form->action('/admin/product/new');
 		}
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// category
 		$form->fieldsetWithInput('category',$value['category'] ?? null, _('Category'));
 		// manufacturer

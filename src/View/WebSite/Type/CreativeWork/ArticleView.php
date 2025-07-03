@@ -3,12 +3,36 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Article extends CreativeWorkView implements TypeViewInterface
+class ArticleView extends CreativeWorkView implements TypeViewInterface
 {
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'article', string $sitemapFilename = 'sitemap-article.xml')
+	{
+		$this->sitemapExtension = 'news';
+		parent::__construct($type, $sitemapFilename);
+	}
+
+	public function __destruct()
+	{
+		parent::__destruct();
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar(_("Article"), [
+				"/admin/article" => CmsFactory::view()->fragment()->icon()->home(),
+				"/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus(),
+				"/admin/article/sitemap" => CmsFactory::view()->fragment()->icon()->sitemap()
+			])
+				->level(3)
+				->type('Article')
+				->ready()
+		);
+	}
+
 	/**
 	 * @param string|null $title
 	 * @return void
@@ -17,8 +41,8 @@ class Article extends CreativeWorkView implements TypeViewInterface
   {
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar(_("Article"), [
-		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(18,18),
-		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus(18,18)
+		      "/admin/article" => CmsFactory::view()->fragment()->icon()->home(),
+		      "/admin/article/new" => CmsFactory::view()->fragment()->icon()->plus()
 	      ])
 				->type('Article')
 				->ready()
@@ -38,7 +62,6 @@ class Article extends CreativeWorkView implements TypeViewInterface
    */
   public function index(?array $data, array $queryParams = null): void
   {
-    $this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status")])->ready());
   }
 
@@ -49,7 +72,6 @@ class Article extends CreativeWorkView implements TypeViewInterface
 	 */
 	public function new(?array $data, array $queryParams = null): void
 	{
-		$this->navbarArticle();
 		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle(),_("Article")));
 	}
 
@@ -65,7 +87,6 @@ class Article extends CreativeWorkView implements TypeViewInterface
 			$typeBuilder = new TypeBuilder('article', $value);
 			$idarticle = $typeBuilder->getId();
 			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
-      $this->navbarArticle($value['headline'] ?? null);
       if (empty($value)) {
         $content[] = CmsFactory::view()->fragment()->noContent();
       } else {
@@ -102,7 +123,7 @@ class Article extends CreativeWorkView implements TypeViewInterface
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		// THING
-		$form = Thing::formContent($form, $value, _('Article name'), ['disambiguatingDescription']);
+		$form = parent::formContent($form, $value, _('Article name'));
 	  // about
 		$form->relationshipOneToOne('thing',_("About"), 'about', $about);
     // HEADLINE

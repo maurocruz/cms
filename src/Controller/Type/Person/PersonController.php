@@ -3,16 +3,31 @@ namespace Plinct\Cms\Controller\Type\Person;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\ThingController;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
-use Plinct\Cms\Helpers\Sitemap;
 
-class PersonController implements TypeControllerInterface
+class PersonController extends ThingController implements TypeControllerInterface
 {
+	/**
+	 */
+	public function __construct()
+	{
+		parent::__construct('person');
+	}
+
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function index(array $params): bool
 	{
 		return CmsFactory::view()->webSite()->type('person')->ready();
 	}
 
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function new(array $params): bool
 	{
 		return CmsFactory::view()->webSite()->type('person')->setMethodName('new')->ready();
@@ -68,16 +83,5 @@ class PersonController implements TypeControllerInterface
       $data[0]['products'] = CmsFactory::model()->api()->get('product', ['format' => 'ItemList', 'manufacturer' => $id, 'manufacturerType' => 'person', 'orderBy' => 'dateModified desc'])->ready();
     }
     return $data[0];
-  }
-
-	/**
-	 * @return bool
-	 * @throws Exception
-	 */
-  public function sitemap(): bool
-  {
-		$data = CmsFactory::model()->type('person')->get(['orderBy'=>'dateModified','ordering'=>'desc','fields'=>'name,url,dateModified']);
-    $dataSitemap = Sitemap::buildSimpleSitemap($data);
-	  return CmsFactory::view()->webSite()->type('person')->setData($dataSitemap)->setMethodName('sitemap')->ready();
   }
 }

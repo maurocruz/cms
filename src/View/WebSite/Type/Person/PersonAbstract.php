@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
 abstract class PersonAbstract
 {
@@ -83,7 +83,7 @@ abstract class PersonAbstract
 			$form->input('idperson', (string) $this->idperson, 'hidden');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// GIVEN NAME
 	  $form->fieldsetWithInput('givenName', $givenName, _("Given name") );
 	  // FAMILY NAME

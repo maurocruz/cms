@@ -476,6 +476,9 @@ form {
     label {
       display: flex;
       margin: 8px;
+      input[type=radio] {
+        margin: 0 5px 0 0;
+      }
     }
   }
   fieldset.datePublished { flex-basis: content; }

@@ -62,6 +62,8 @@ class TypeController
 					$object = new $classNameIntangible();
 				} elseif(class_exists($classNameCreativeWork)) {
 					$object = new $classNameCreativeWork();
+				} elseif ($this->type == 'thing') {
+					$object = new ThingController();
 				}
 				if ($object && method_exists($object, $this->methodName)) {
 					$returns = $object->{$this->methodName}($this->queryParams);

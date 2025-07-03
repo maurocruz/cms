@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Place;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -105,7 +105,7 @@ class Place implements TypeViewInterface
 		}
 		$form->setIdform($idplace ? "form-place-edit-$idplace" : "form-place-new");
 		// THING
-    $form = Thing::formContent($form, $value);
+    $form = ThingView::formContent($form, $value);
 		// KEYWORDS
 	  $form->fieldsetWithInput('keywords',$keywords,_("Keywords"));
 	  // PUBLIC ACCESS

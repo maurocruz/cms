@@ -4,7 +4,7 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
 use Plinct\Cms\View\WebSite\Type\Person\PersonView;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
 class RoleView implements TypeViewInterface
@@ -164,7 +164,7 @@ class RoleView implements TypeViewInterface
 		// PERSON
 		$form->relationshipOneToOne('Person',_('Person'),'person',$idperson);
 		// THING
-		$form = Thing::formContent($form, $value, _('Role name'));
+		$form = ThingView::formContent($form, $value, _('Role name'));
 		// SECUNDARY TYPE
 		$form->fieldsetWithInput('secondaryRole',$value['secondaryRole'] ?? null, _('Secondary role'));
 		// START DATE

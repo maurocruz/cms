@@ -3,9 +3,9 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\Fragment\Form\Form;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
-abstract class CreativeWorkViewAbstract
+abstract class CreativeWorkViewAbstract extends ThingView
 {
 	/**
 	 * @var int|null
@@ -46,7 +46,7 @@ abstract class CreativeWorkViewAbstract
 	 * @param array|null $value
 	 * @return array
 	 */
-	protected function form(string $case = 'new', array $value = null): array
+	protected function formCreativeWork(string $case = 'new', array $value = null): array
 	{
 		$form = CmsFactory::view()->fragment()->form("form-creativeWork", ['class'=>'form-basic form-creativeWork']);
 		$form->method('post');
@@ -56,7 +56,7 @@ abstract class CreativeWorkViewAbstract
 			$form->input('idcreativeWork', (string) $this->idcreativeWork, 'hidden');
 		}
 		// creative properties
-		$form = self::formContent($case, $form, $value);
+		$form = self::formCreativeWorkContent($case, $form, $value);
 		//button
 		$form->submitButtonSend();
 		if ($case == 'edit') {
@@ -72,12 +72,18 @@ abstract class CreativeWorkViewAbstract
 	 * @param array|null $value
 	 * @return Form
 	 */
-	public static function formContent(string $case, Form $form, array $value = null): Form
+	public static function formCreativeWorkContent(string $case, Form $form, array $value = null): Form
 	{
+		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
+		$editor = isset($value['editor']) ? (string) $value['editor'] : null;
+		$isPartOf = isset($value['isPartOf']) ? (string) $value['isPartOf'] : null;
+		$maintainer = isset($value['maintainer']) ? (string) $value['maintainer'] : null;
+		$position = isset($value['position']) ? (string) $value['position'] : null;
+		$publisher = isset($value['publisher']) ? (string) $value['publisher'] : null;
 		// thing
-		$form = Thing::formContent($form, $value);
+		$form = self::formContent($form, $value);
 		// alternativeHeadline
-		$form->fieldsetWithInput('alternativeHeadline', $value['alternativeHeadline'] ?? null, _('Alternative headline'));
+		$form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
 		// text
 		$form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'));
 		// author
@@ -89,11 +95,11 @@ abstract class CreativeWorkViewAbstract
 		// copyrightHolder
 		$form->fieldsetWithInput('copyrightHolder', $value['copyrightHolder'] ?? null, _('Copyright holder'));
 		// editor
-		if ($case === 'edit') $form->fieldsetWithInput('editor',  (string) $value['editor'] ?? null, _('Editor'));
+		if ($case === 'edit') $form->fieldsetWithInput('editor',  $editor, _('Editor'));
 		// headline
 		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));
 		// isPartOf
-		$form->fieldsetWithInput('isPartOf', (string) $value['isPartOf'] ?? null, _('Is part of'));
+		$form->fieldsetWithInput('isPartOf', $isPartOf, _('Is part of'));
 		// keywords
 		$form->fieldsetWithInput('keywords', $value['keywords'] ?? null, _('Keywords'));
 		// license
@@ -101,11 +107,11 @@ abstract class CreativeWorkViewAbstract
 		// locationCreated
 		$form->fieldsetWithInput('locationCreated', $value['locationCreated'] ?? null, _('Location created'));
 		// maintainer
-		if ($case === 'edit') $form->fieldsetWithInput('maintainer', (string) $value['maintainer'] ?? null, _('Maintainer'));
+		if ($case === 'edit') $form->fieldsetWithInput('maintainer', $maintainer, _('Maintainer'));
 		// position
-		if ($case === 'edit') $form->fieldsetWithInput('position', (string) $value['position'] ?? null, _('Position'));
+		if ($case === 'edit') $form->fieldsetWithInput('position', $position, _('Position'));
 		// publisher
-		if ($case === 'edit') $form->fieldsetWithInput('publisher', (string) $value['publisher'] ?? null, _('Publisher'));
+		if ($case === 'edit') $form->fieldsetWithInput('publisher', $publisher, _('Publisher'));
 		// thumbnail
 		$form->fieldsetWithInput('thumbnail', $value['thumbnail'] ?? null, _('Thumbnail'));
 		// datePublished

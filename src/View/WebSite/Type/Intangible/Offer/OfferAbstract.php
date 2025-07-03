@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Offer;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Organization\Organization;
-use Plinct\Cms\View\WebSite\Type\Thing\Thing;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Tool\ToolBox;
 
 abstract class OfferAbstract
@@ -60,7 +60,7 @@ abstract class OfferAbstract
 			$form->setIdform('form-offer-new');
 		}
 		// THING
-		$form = Thing::formContent($form, $value);
+		$form = ThingView::formContent($form, $value);
 		// OFFERED BY
 		if (!self::$offeredById) {
 			$form->chooseType(_('Offered by'), 'offeredBy', "organization,person", self::$offeredById);
