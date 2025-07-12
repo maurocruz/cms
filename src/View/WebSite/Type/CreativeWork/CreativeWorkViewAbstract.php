@@ -81,7 +81,7 @@ abstract class CreativeWorkViewAbstract extends ThingView
 		$position = isset($value['position']) ? (string) $value['position'] : null;
 		$publisher = isset($value['publisher']) ? (string) $value['publisher'] : null;
 		// thing
-		$form = self::formContent($form, $value);
+		$form = self::formThing($form, $value);
 		// alternativeHeadline
 		$form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
 		// text

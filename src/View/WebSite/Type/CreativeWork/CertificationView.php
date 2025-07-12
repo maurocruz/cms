@@ -103,7 +103,7 @@ class CertificationView extends CreativeWorkView implements TypeViewInterface
 			$form->input('action','redirectToSamePage', 'hidden');
 		}
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// certificationIdentification
 		$form->fieldsetWithInput('certificationIdentification', $certificationIdentification, _('Certification identification'));
 		// about

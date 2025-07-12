@@ -116,7 +116,7 @@ class EventView extends ThingView implements TypeViewInterface
 			$form->input('idevent', (string)$this->idevent, 'hidden');
 		}
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// START DATE
 		$form->fieldsetWithInput('startDate', $startDate, _("Start date"), "date");
 		$form->fieldsetWithInput('startTime', $startTime, _("Start time"), "time");

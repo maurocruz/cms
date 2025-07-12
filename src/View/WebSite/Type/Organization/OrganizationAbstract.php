@@ -76,7 +76,7 @@ abstract class OrganizationAbstract
 		// HIDDEN
     if ($case == "edit") $form->input("idorganization", (string) $this->idorganization, 'hidden');
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// legal name
     $form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
     // tax id

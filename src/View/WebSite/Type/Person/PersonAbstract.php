@@ -83,7 +83,7 @@ abstract class PersonAbstract
 			$form->input('idperson', (string) $this->idperson, 'hidden');
 		}
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// GIVEN NAME
 	  $form->fieldsetWithInput('givenName', $givenName, _("Given name") );
 	  // FAMILY NAME

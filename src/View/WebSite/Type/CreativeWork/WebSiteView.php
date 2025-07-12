@@ -124,7 +124,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 		// hidden
 		if ($id) $form->input('idwebSite',(string) $id,'hidden');
 		// thing
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// copyrightHolder
 		$form->chooseType(_( 'Copyright holder' ), 'copyrightHolder', array("Organization","Person"),$copyrightHolder);
 		// author

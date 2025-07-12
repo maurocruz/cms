@@ -159,7 +159,7 @@ class WebPageView extends CreativeWorkView
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
 		}
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// HEADLINE
 		$form->fieldsetWithInput('headline', $headline, _('Headline'));
 		// ALTERNATIVE HEADLINE

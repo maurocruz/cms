@@ -60,7 +60,7 @@ abstract class OfferAbstract
 			$form->setIdform('form-offer-new');
 		}
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 		// OFFERED BY
 		if (!self::$offeredById) {
 			$form->chooseType(_('Offered by'), 'offeredBy', "organization,person", self::$offeredById);

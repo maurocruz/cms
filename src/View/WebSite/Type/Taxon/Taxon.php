@@ -90,7 +90,7 @@ class Taxon implements TypeViewInterface
     // id
     if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');
 		// THING
-	  $form = ThingView::formContent($form, $value);
+	  $form = ThingView::formThing($form, $value);
     // scientificNameAuthorship
     $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName

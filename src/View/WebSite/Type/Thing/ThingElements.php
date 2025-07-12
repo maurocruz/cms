@@ -10,7 +10,7 @@ class ThingElements
 	{
 		$form = CmsFactory::view()->fragment()->form("form-thing", ['class'=>'form-basic form-thing']);
 		$form->method('post')->action("/admin/thing/$case");
-		$form = self::formContent($form, $value);
+		$form = self::formThing($form, $value);
 		//button
 		$form->submitButtonSend();
 		if ($case === 'edit') {
@@ -30,7 +30,7 @@ class ThingElements
 	 * @param array $excludes
 	 * @return Form
 	 */
-	public static function formContent(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
+	public static function formThing(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
 	{
 		$case = 'new';
 		$idthing = null;

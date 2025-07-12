@@ -164,7 +164,7 @@ class RoleView implements TypeViewInterface
 		// PERSON
 		$form->relationshipOneToOne('Person',_('Person'),'person',$idperson);
 		// THING
-		$form = ThingView::formContent($form, $value, _('Role name'));
+		$form = ThingView::formThing($form, $value, _('Role name'));
 		// SECUNDARY TYPE
 		$form->fieldsetWithInput('secondaryRole',$value['secondaryRole'] ?? null, _('Secondary role'));
 		// START DATE

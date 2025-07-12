@@ -69,7 +69,7 @@ abstract class ServiceAbstract
     //$form->input('provider',$this->provider,'hidden');
     if ($case == 'edit') $form->input('idservice', $idservice,'hidden');
 		// THING
-		$form = ThingView::formContent($form, $value);
+		$form = ThingView::formThing($form, $value);
 	  // PROVIDER
 	  $form->chooseType(_('Provider'),'provider','Organization,Person', $this->provider);
 		// IS RELATED TO
