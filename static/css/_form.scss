@@ -279,6 +279,32 @@ form {
 .form-back-gray input { background-color: rgba(20,20,20,0.2); }
 .form-back-white input { background-color: rgba(255,255,255,1) !important; }
 
+/* ACTION
+======================================================= */
+.form-action {
+  fieldset.actionStatus { flex-basis: fit-content; }
+  fieldset.endTime { flex-basis: fit-content; }
+  fieldset.startTime { flex-basis: fit-content; }
+
+  @media (min-width: 576px) {
+    fieldset.actionProcess { flex-basis: calc(100% - 155px); }
+  }
+
+  @media (min-width: 768px) {
+    fieldset.agent { flex-basis: 50%; }
+    fieldset.provider { flex-basis: 50%; }
+    fieldset.targetCollection { flex-basis: calc(100% - 480px); }
+  }
+
+  @media (min-width: 992px) {
+    fieldset.object { flex-basis: 33.3%; }
+    fieldset.actionProcess { flex-basis: calc(66.6% - 166px); }
+  }
+
+  @media (min-width: 1024px) {
+  }
+}
+
 /* ARTICLE
 ======================================================= */
 .form-article {
@@ -778,13 +804,40 @@ form {
 /* PRODUCT
 ======================================================= */
 .form-product {
-  display: flex;
-  flex-wrap: wrap;
-  line-height: normal;
+  fieldset.productionDate { flex-basis: min-content; }
+  fieldset.purchaseDate { flex-basis: min-content; }
 
+  @media (min-width: 576px) {
+    fieldset.brand { flex-basis: 50%; }
+    fieldset.category { flex-basis: 50%; }
+    fieldset.material { flex-basis: 50%; }
+    fieldset.color { flex-basis: 50%; }
+    fieldset.mpn { flex-basis: 50%; }
+    fieldset.model { flex-basis: 50%; }
+    fieldset.keywords { flex-basis: 50%; }
+  }
   @media (min-width: 768px) {
-    fieldset:nth-of-type(1) { flex-basis: 49%; }
-    fieldset:nth-of-type(2) { flex-basis: 50%; }
+    fieldset.manufacturer { flex-basis: 50%; }
+  }
+  @media (min-width: 992px) {
+    fieldset.manufacturer { flex-basis: 33.3%; }
+    fieldset.brand { flex-basis: 33.3%; }
+    fieldset.model { flex-basis: 33.3%; }
+    fieldset.material { flex-basis: 33.3%; }
+    fieldset.color { flex-basis: 33.3%; }
+    fieldset.mpn { flex-basis: 33.3%; }
+    fieldset.category { flex-basis: 33.3%; }
+    fieldset.keywords { flex-basis: 33.3%; }
+  }
+  @media (min-width: 1024px) {
+    fieldset.manufacturer { flex-basis: 25%; }
+    fieldset.brand { flex-basis: 25%; }
+    fieldset.model { flex-basis: 25%; }
+    fieldset.material { flex-basis: 25%; }
+    fieldset.color { flex-basis: 25%; }
+    fieldset.mpn { flex-basis: 25%; }
+    fieldset.category { flex-basis: 25%; }
+    fieldset.keywords { flex-basis: 25%; }
   }
 }
 

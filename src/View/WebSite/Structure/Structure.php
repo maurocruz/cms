@@ -77,14 +77,12 @@ class Structure
 			->level(1);
 		$tabs = [];
     foreach (CmsFactory::controller()->configuration()->getModulesEnabled() as $value) {
-			if (in_array($value,['Organization','Event','Person','Place','Product','Taxon'])) {
+			if (in_array($value,['Action','Organization','Event','Person','Place','Product','Taxon'])) {
 				$url = lcfirst($value);
 				$tabs["/admin/$url"] =  ucfirst($value);
-				//$navbar->newTab("/admin/$value", _($text));
 			}
 			if (in_array($value,['Article','Book','Certification','MediaObject','WebPage','WebPageElement','WebSite'])) {
 				$tabs["/admin/creativeWork"] =  "Creative work";
-				//$navbar->newTab("/admin/creativeWork", _('Creative work'));
 			}
     }
 		foreach ($tabs as $key => $tab) {

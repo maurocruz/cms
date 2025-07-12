@@ -61,7 +61,7 @@ class Configuration
 	 */
 	public function index(): void
 	{
-		CmsFactory::view()->webSite()->configuration()->index();
+		CmsFactory::view()->webSite()->configuration()->index(self::$modulesAvailable, self::$modulesEnabled);
 	}
 
 	/**

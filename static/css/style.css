@@ -103,6 +103,7 @@ dd {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  box-sizing: border-box;
 }
 .menu h1 {
   margin: 5px;
@@ -612,6 +613,41 @@ form .mandatory-field {
   background-color: rgb(255, 255, 255) !important;
 }
 
+/* ACTION
+======================================================= */
+.form-action fieldset.actionStatus {
+  flex-basis: fit-content;
+}
+.form-action fieldset.endTime {
+  flex-basis: fit-content;
+}
+.form-action fieldset.startTime {
+  flex-basis: fit-content;
+}
+@media (min-width: 576px) {
+  .form-action fieldset.actionProcess {
+    flex-basis: calc(100% - 155px);
+  }
+}
+@media (min-width: 768px) {
+  .form-action fieldset.agent {
+    flex-basis: 50%;
+  }
+  .form-action fieldset.provider {
+    flex-basis: 50%;
+  }
+  .form-action fieldset.targetCollection {
+    flex-basis: calc(100% - 480px);
+  }
+}
+@media (min-width: 992px) {
+  .form-action fieldset.object {
+    flex-basis: 33.3%;
+  }
+  .form-action fieldset.actionProcess {
+    flex-basis: calc(66.6% - 166px);
+  }
+}
 /* ARTICLE
 ======================================================= */
 .form-article .form-article-creativeWorkStatus select {
@@ -1359,17 +1395,90 @@ form .mandatory-field {
 
 /* PRODUCT
 ======================================================= */
-.form-product {
-  display: flex;
-  flex-wrap: wrap;
-  line-height: normal;
+.form-product fieldset.productionDate {
+  flex-basis: min-content;
+}
+.form-product fieldset.purchaseDate {
+  flex-basis: min-content;
+}
+@media (min-width: 576px) {
+  .form-product fieldset.brand {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.category {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.material {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.color {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.mpn {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.model {
+    flex-basis: 50%;
+  }
+  .form-product fieldset.keywords {
+    flex-basis: 50%;
+  }
 }
 @media (min-width: 768px) {
-  .form-product fieldset:nth-of-type(1) {
-    flex-basis: 49%;
-  }
-  .form-product fieldset:nth-of-type(2) {
+  .form-product fieldset.manufacturer {
     flex-basis: 50%;
+  }
+}
+@media (min-width: 992px) {
+  .form-product fieldset.manufacturer {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.brand {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.model {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.material {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.color {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.mpn {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.category {
+    flex-basis: 33.3%;
+  }
+  .form-product fieldset.keywords {
+    flex-basis: 33.3%;
+  }
+}
+@media (min-width: 1024px) {
+  .form-product fieldset.manufacturer {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.brand {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.model {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.material {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.color {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.mpn {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.category {
+    flex-basis: 25%;
+  }
+  .form-product fieldset.keywords {
+    flex-basis: 25%;
   }
 }
 

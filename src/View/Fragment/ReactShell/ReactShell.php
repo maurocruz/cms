@@ -31,10 +31,10 @@ class ReactShell
 	}
 	/**
 	 * @param string $name
-	 * @param string $value
+	 * @param ?string $value
 	 * @return $this
 	 */
-	public function setDataset(string $name, string $value): ReactShell
+	public function setDataset(string $name, ?string $value): ReactShell
 	{
 		$this->setAttribute("data-$name", $value);
 		return $this;
@@ -74,10 +74,10 @@ class ReactShell
 
 	/**
 	 * @param string $name
-	 * @param string|int $value
+	 * @param int|string $value
 	 * @return $this
 	 */
-	public function setAttribute(string $name, $value ): ReactShell
+	public function setAttribute(string $name, int|string $value ): ReactShell
 	{
 		$this->attributes[$name] = $value;
 		return $this;
@@ -118,15 +118,6 @@ class ReactShell
 	}
 
 	/**
-	 * @param string $name
-	 * @return $this
-	 */
-	public function setTypeIsPartOf(string $name): ReactShell
-	{
-		return $this;
-	}
-
-	/**
 	 * @param ?int $idHasPart
 	 * @return $this
 	 */
@@ -147,12 +138,11 @@ class ReactShell
 	}
 
 	/**
-	 * @param string $legend
 	 * @param string $propertyName
 	 * @param int|null $value
 	 * @return $this
 	 */
-	public function getItemType(string $legend, string $propertyName, int $value = null): ReactShell
+	public function getItemType(string $propertyName, int $value = null): ReactShell
 	{
 		$this->setAttribute('data-action','getItemType')
 			->setAttribute('data-propertyName',$propertyName)

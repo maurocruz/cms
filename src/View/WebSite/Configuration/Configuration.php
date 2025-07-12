@@ -20,12 +20,12 @@ class Configuration
 	}
 
 	/**
+	 * @param array $modulesAvailable
+	 * @param array $modulesEnabled
 	 * @return void
 	 */
-	public function index(): void
+	public function index(array $modulesAvailable, array $modulesEnabled): void
 	{
-		$modulesAvailable = CmsFactory::controller()->configuration()->getModulesAvailable();
-		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
 		// NAVBAR
 		self::navbar();
 		// write
@@ -45,7 +45,6 @@ class Configuration
 			CmsFactory::view()->addMain("</ul>");
 		}
 		CmsFactory::view()->addMain("</dd>");
-
 		CmsFactory::view()->addMain("</dl>");
 
 		// MODULES AVAILABLE
