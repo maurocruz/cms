@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Controller\Middleware;
 
 use Firebase\JWT\JWT;

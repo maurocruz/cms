@@ -22,7 +22,7 @@ return function (Route $route)
 		  CmsFactory::view()->Logger('warning', 'warn.log')->info("This session not found");
 	  }
     unset($_SESSION['userLogin']);
-    setcookie("API_TOKEN", "", time() - 3600);
+    setcookie("API_TOKEN", "", time() - 3600,'/');
     return $response->withHeader("Location", $_SERVER['HTTP_REFERER'] ?? "/admin")->withStatus(302);
   });
 	/**
@@ -37,7 +37,7 @@ return function (Route $route)
 			if ($token) {
 				$tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
 				// cookie
-				setcookie('API_TOKEN', $token, $tokenDecode->exp);
+				setcookie('API_TOKEN', $token, $tokenDecode->exp,'/');
 				// session
 				$_SESSION['userLogin']['name'] = $tokenDecode->name;
 				$_SESSION['userLogin']['uid'] = $tokenDecode->uid;
@@ -137,7 +137,7 @@ return function (Route $route)
 			$route->group('/change_password', function (Route $route)
 			{
 				/**
-				 * change password get
+				 * change password gets
 				 */
 				$route->get('', function (Request $request, Response $response)
 				{

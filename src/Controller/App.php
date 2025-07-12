@@ -87,10 +87,15 @@ class App
 	 * @var string|null
 	 */
 	private static ?string $logdir = null;
-
+	/**
+	 * @var bool
+	 */
 	private static bool $isRemoteApi = true;
-
+	/**
+	 * @var string
+	 */
 	public static string $DB_NAME;
+
   /**
    * @param Slim $slim
    */
@@ -189,6 +194,15 @@ class App
     self::$API_SECRET_KEY = $apiSecretKey;
     return $this;
   }
+
+	/**
+	 * @param string $apiUrl
+	 * @return void
+	 */
+	public static function setApiHost(string $apiUrl): void
+	{
+		self::$API_HOST = $apiUrl;
+	}
 
   /**
    * @param bool $richTextEditor

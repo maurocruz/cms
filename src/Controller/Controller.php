@@ -19,6 +19,11 @@ class Controller
 		return App::getApiHost();
 	}
 
+	public function setApiHost(string $apiHost): void
+	{
+		App::setApiHost($apiHost);
+	}
+
 	/**
 	 * @return string|null
 	 */

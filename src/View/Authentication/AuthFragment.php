@@ -43,7 +43,7 @@ class AuthFragment
     $returns = null;
     if ($response) {
       if ($response['status'] == 'fail') {
-        $returns[] = CmsFactory::response()->message()->warning($response['message']);
+        $returns[] = CmsFactory::view()->fragment()->message()->warning($response['message']);
       } elseif ($response['status'] == 'success') {
         return ["<p class='warning'>{$response['data']['mail']['message']}</p>"];
       }

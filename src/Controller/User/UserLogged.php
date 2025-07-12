@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Controller\User;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
 
 class UserLogged
@@ -68,6 +69,7 @@ class UserLogged
 
 	/**
 	 * @return ?array
+	 * @throws Exception
 	 */
 	public function getPrivileges(): ?array
 	{
@@ -79,6 +81,9 @@ class UserLogged
 		return self::$privileges;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function hasPrivileges(int $function, string $actions, string $namespace): bool
 	{
 		foreach ($this->getPrivileges() as $value)
