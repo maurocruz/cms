@@ -11,6 +11,60 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Object"
+msgstr "Objeto"
+
+msgid "Collection"
+msgstr "Coleção"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Process"
+msgstr "Processo"
+
+msgid "Active"
+msgstr "Ativa"
+
+msgid "Completed"
+msgstr "Completada"
+
+msgid "Failed"
+msgstr "Falhada"
+
+msgid "Potential"
+msgstr "Em espera"
+
+msgid "Canceled"
+msgstr "Cancelada"
+
+msgid "Deleted"
+msgstr "Excluída"
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "MPN"
+msgstr "Número de série"
+
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+msgid "Brand"
+msgstr "Marca"
+
+msgid "Model"
+msgstr "Modelo"
+
+msgid "Production date"
+msgstr "Data de fabricação"
+
+msgid "Product Not Found"
+msgstr "Produto não encontrado"
+
+msgid "Purchase date"
+msgstr "Data da aquisição"
+
 msgid "Thing"
 msgstr "Coisa"
 

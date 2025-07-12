@@ -175,7 +175,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	{
 		$this->content([
 			"<fieldset class='$propertyName'><legend>". self::writeLegend($propertyName, $legend) ."</legend>",
-			CmsFactory::view()->fragment()->reactShell($type)->getItemType($legend, $propertyName, $value)->ready(),
+			CmsFactory::view()->fragment()->reactShell($type)->getItemType($propertyName, $value)->ready(),
 			"</fieldset>"
 		]);
 		return $this;
