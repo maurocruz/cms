@@ -8,11 +8,23 @@ use Plinct\Cms\Controller\Type\TypeControllerInterface;
 class CreativeWorkController extends ThingController implements TypeControllerInterface
 {
 	/**
+	 * @param string $type
+	 */
+	public function __construct(string $type = 'creativeWork')
+	{
+		parent::__construct($type);
+	}
+
+	/**
 	 * @param array $params
 	 * @return bool
 	 */
-	public function index(array $params): bool
+	public function edit(array $params): bool
 	{
-		return CmsFactory::view()->webSite()->type('creativeWork')->ready();
+		$idcreativeWork = $params['idcreativeWork'] ?? null;
+		if($idcreativeWork) {
+			$this->data = CmsFactory::model()->api()->get('creativeWork', ['idcreativeWork' => $idcreativeWork, 'properties'=>'isPartOf'])->ready();
+		}
+		return parent::edit($params);
 	}
 }

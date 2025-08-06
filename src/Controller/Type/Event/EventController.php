@@ -13,7 +13,6 @@ class EventController extends ThingController implements TypeControllerInterface
 	 */
 	public function __construct(string $type = 'event')
 	{
-		$this->sitemapExtension = 'news';
 		parent::__construct($type);
 	}
 

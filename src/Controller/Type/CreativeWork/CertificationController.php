@@ -17,9 +17,15 @@ class CertificationController extends CreativeWorkController
 	/**
 	 * @param array $params
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function index(array $params): bool
 	{
+		$about = $params['about'] ?? null;
+		if ($about) {
+			$data = CmsFactory::model()->type('certification')->get(['about' => $about]);
+			return CmsFactory::view()->webSite()->type('certification')->setData($data)->setQueryParams($params)->setMethodName('index')->ready();
+		}
 		return CmsFactory::view()->webSite()->type('certification')->ready();
 	}
 

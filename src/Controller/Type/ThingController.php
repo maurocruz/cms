@@ -15,6 +15,10 @@ class ThingController implements TypeControllerInterface
 	 * @var string
 	 */
 	protected string $sitemapExtension = 'generic';
+	/**
+	 * @var array
+	 */
+	protected array $data = [];
 
 	/**
 	 * @param string $type
@@ -25,11 +29,19 @@ class ThingController implements TypeControllerInterface
 	}
 
 	/**
+	 * @param array $data
+	 */
+	public function setData(array $data): void
+	{
+		$this->data = $data;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function index(array $params): bool
 	{
-		return CmsFactory::view()->webSite()->type('thing')->ready();
+		return CmsFactory::view()->webSite()->type($this->type)->setQueryParams($params)->ready();
 	}
 
 	/**
@@ -37,7 +49,7 @@ class ThingController implements TypeControllerInterface
 	 */
 	public function new(array $params): bool
 	{
-		return CmsFactory::view()->webSite()->type('thing')->setMethodName('new')->setQueryParams($params)->ready();
+		return CmsFactory::view()->webSite()->type($this->type)->setMethodName('new')->setQueryParams($params)->ready();
 	}
 
 	/**
@@ -45,7 +57,7 @@ class ThingController implements TypeControllerInterface
 	 */
 	public function edit(array $params): bool
 	{
-		return true;
+		return CmsFactory::view()->webSite()->type($this->type)->setMethodName('edit')->setQueryParams($params)->setData($this->data)->ready();
 	}
 
 	/**

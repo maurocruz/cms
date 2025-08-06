@@ -105,7 +105,7 @@ class Place implements TypeViewInterface
 		}
 		$form->setIdform($idplace ? "form-place-edit-$idplace" : "form-place-new");
 		// THING
-    $form = ThingView::formThing($form, $value);
+    $form = ThingView::formThingContent($form, $value);
 		// KEYWORDS
 	  $form->fieldsetWithInput('keywords',$keywords,_("Keywords"));
 	  // PUBLIC ACCESS

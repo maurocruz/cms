@@ -9,11 +9,27 @@ use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
 class ProductController extends ThingController implements TypeControllerInterface
 {
+	/**
+	 * @param string $type
+	 */
+	public function __construct(string $type = 'product')
+	{
+		parent::__construct($type);
+	}
+
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function index(array $params): bool
 	{
 		return CmsFactory::view()->webSite()->type('product')->ready();
 	}
 
+	/**
+	 * @param array $params
+	 * @return bool
+	 */
 	public function new(array $params): bool
 	{
 		return CmsFactory::view()->webSite()->type('product')->setMethodName('new')->ready();

@@ -8,6 +8,12 @@ use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
 class ActionController extends ThingController implements TypeControllerInterface
 {
+
+	public function __construct(string $type = 'action')
+	{
+		parent::__construct($type);
+	}
+
 	/**
 	 * @throws Exception
 	 */
