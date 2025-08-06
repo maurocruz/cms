@@ -11,6 +11,87 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Working in localhost"
+msgstr "Trabalhando em localhost"
+
+msgid "Files on the server"
+msgstr "Arquivos no servidor"
+
+msgid "Upload files"
+msgstr "Subir arquivos"
+
+msgid "Has part"
+msgstr "Faz parte"
+
+msgid "This item is not part of any other"
+msgstr "Este item não faz parte de nenhum outro"
+
+msgid "Roles"
+msgstr "Funções"
+
+msgid "Certifications"
+msgstr "Certificados"
+
+msgid "Video object"
+msgstr "Vídeos"
+
+msgid "Active action status"
+msgstr "Ativo"
+
+msgid "Completed action status"
+msgstr "Completado"
+
+msgid "Failed action status"
+msgstr "Falhado"
+
+msgid "Potential action status"
+msgstr "Em potencial"
+
+msgid "Suspended action status"
+msgstr "Suspenso"
+
+msgid "Cancel action status"
+msgstr "Cancelado"
+
+msgid "Delete action status"
+msgstr "Excluído"
+
+msgid "Publisher"
+msgstr "Editora"
+
+msgid "Location created"
+msgstr "Local de criação"
+
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+msgid "Copyright holder"
+msgstr "Detentor dos direitos autorais"
+
+msgid "Acquire license page"
+msgstr "Página de aquisição de licença"
+
+msgid "Edit image"
+msgstr "Editar imagem"
+
+msgid "Media object"
+msgstr "Multimídia"
+
+msgid "media object"
+msgstr "multimídia"
+
+msgid "Image object"
+msgstr "Imagens"
+
+msgid "Audio object"
+msgstr "Áudio"
+
+msgid "Is part of"
+msgstr "É parte de"
+
+msgid "properties"
+msgstr "propriedades"
+
 msgid "Object"
 msgstr "Objeto"
 
