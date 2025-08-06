@@ -1,18 +1,15 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Controller\Request\Server;
 
-use Plinct\Cms\Controller\Enclave\Enclave;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Enclave\Enclave;
 
 class Server
 {
-
   /**
    * @param $type
    */
-  public function createSqlTable($type)
+  public function createSqlTable($type): void
   {
     $classname = "Plinct\\Api\\Type\\".ucfirst($type);
     (new $classname())->createSqlTable($type);
@@ -26,8 +23,8 @@ class Server
    */
   public function request($type, $action, $params): string
   {
-		if (method_exists($this->api(), $action)) {
-			$this->api()->$action($type, $params)->ready();
+		if (method_exists(CmsFactory::model()->type($type), $action)) {
+			CmsFactory::model()->type($type)->$action($params);
 		}
     return filter_input(INPUT_SERVER, 'HTTP_REFERER');
   }

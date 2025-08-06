@@ -293,17 +293,16 @@ class App
 	  if ($gitDirectory) {
 		  $repository = new Repository($gitDirectory);
 		  $head = $repository->getHead();
-		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
-		  $commit = $head->getCommitHash();
-
+		  $revision = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
+		  $commitHash = $head->getCommitHash();
 		  $references = $repository->getReferences();
-		  $tags = $references->resolveTags($commit);
+		  $tags = $references->resolveTags($commitHash);
 		  if (!empty($tags)) {
-			  $versionTag = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
+			  $commit = rtrim(preg_replace("/(.*?\/){2}/", '', $tags[0]->getFullname()));
 		  } else {
-			  $versionTag = substr($commit,0,8);
+			  $commit = substr($commitHash,0,8);
 		  }
-		  $version = "Working in local. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+		  $version = _('Working in localhost').". "._('Version').": <b>$revision</b>; Commit: <b>$commit</b>";
 
 	  } else {
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");

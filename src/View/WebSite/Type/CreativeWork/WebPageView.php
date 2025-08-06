@@ -5,8 +5,9 @@ use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
+use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class WebPageView extends CreativeWorkView
+class WebPageView extends WebSiteView implements TypeViewInterface
 {
 	/**
 	 * @var string|null
@@ -26,11 +27,12 @@ class WebPageView extends CreativeWorkView
 	protected ?string $webPageName = null;
 
 	/**
-	 *
+	 * @param string $type
+	 * @param string $sitemapFilename
 	 */
-	public function __construct($type = 'webPage')
+	public function __construct(string $type = 'WebPage', string $sitemapFilename = 'sitemap-webPage.xml')
 	{
-		parent::__construct($type);
+		parent::__construct($type, $sitemapFilename);
 	}
 
 	/**
@@ -38,8 +40,30 @@ class WebPageView extends CreativeWorkView
 	 */
 	public function __destruct()
 	{
-		if($this->idIsPartOf) {
-			self::navbarWebPage($this->idIsPartOf, $this->idwebPage, $this->webPageName, $this->idHasPart);
+		parent::__destruct();
+
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('webPage')
+				->level(5)
+				->title(_("Pages"))
+				->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/webPage/sitemap?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->sitemap())
+				->search()
+				->ready()
+		);
+
+		if($this->idwebPage) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()
+					->level(6)
+					->title($this->name)
+					->type('webPage')
+					->newTab("/admin/webPage/edit/$this->idwebPage", CmsFactory::view()->fragment()->icon()->home())
+					->newTab("/admin/webPageElement?idHasPart=$this->idcreativeWork&typeHasPart=webPage",_('WebPage elements'))
+					->ready()
+			);
 		}
 	}
 
@@ -83,12 +107,10 @@ class WebPageView extends CreativeWorkView
   public function index(?array $data, array $queryParams = null): void
   {
 		$tbIsPartOf = CmsFactory::toolBox()->typeBuilder($data);
-	  $webSiteName = $tbIsPartOf->getValue('name');
-		$this->idIsPartOf = $tbIsPartOf->getId();
-		// navbar
-		WebSiteView::navbarWebSite($webSiteName, $this->idIsPartOf);
+	  $this->name = $tbIsPartOf->getValue('name');
+		$this->idwebSite = $tbIsPartOf->getId();
 		// list
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdIsPartOf($this->idIsPartOf)->setColumnsTable(['url'=>'Url'])->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdIsPartOf($this->idwebSite)->setColumnsTable(['url'=>'Url'])->ready());
   }
 
   /**
@@ -100,10 +122,10 @@ class WebPageView extends CreativeWorkView
   {
     // NAVBAR
 	  $tbWebSite = CmsFactory::toolBox()::typeBuilder($data);
-		$this->idIsPartOf = $tbWebSite->getId();
+		$this->idwebSite = $tbWebSite->getId();
 		$webSiteName = $tbWebSite->getValue('name');
 	  // navbar
-	  WebSiteView::navbarWebSite($webSiteName, $this->idIsPartOf);
+	  //WebSiteView::navbarWebSite($webSiteName, $this->idwebSite);
     // FORM
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage(), _("Add new webpage")));
   }
@@ -116,17 +138,19 @@ class WebPageView extends CreativeWorkView
 	 */
 	public function edit(?array $data, array $queryParams = null): void
 	{
+		// webPage
 		$typeBuilder = CmsFactory::toolBox()::typeBuilder($data);
+		$this->idwebPage = $typeBuilder->getId();
+		$this->name = $typeBuilder->getValue('name');
+		$this->idthing = $typeBuilder->getPropertyValue('idthing');
+		$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
+		// webSite
 		$webSite = $typeBuilder->getValue("isPartOf");
 		$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($webSite);
-	  $this->idIsPartOf = $typeBuilderWebSite->getId();
-		$webSiteName = $typeBuilderWebSite->getValue('name');
-	  $this->idwebPage = $typeBuilder->getId();
-		$this->webPageName = $typeBuilder->getValue('name');
-		$this->idthing = $typeBuilder->getPropertyValue('idthing');
-		$this->idHasPart = $typeBuilder->getPropertyValue('idcreativeWork');
+	  $this->idwebSite = $typeBuilderWebSite->getId();
+		$this->webSiteName = $typeBuilderWebSite->getValue('name');
 		// NAVBAR
-		WebSiteView::navbarWebSite($webSiteName, $this->idIsPartOf);
+		//WebSiteView::navbarWebSite($webSiteName, $this->idIsPartOf);
     // FORM EDIT
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
     // PROPERTIES
@@ -159,7 +183,7 @@ class WebPageView extends CreativeWorkView
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
 		}
 		// THING
-		$form = ThingView::formThing($form, $value);
+		$form = ThingView::formThingContent($form, $value);
 		// HEADLINE
 		$form->fieldsetWithInput('headline', $headline, _('Headline'));
 		// ALTERNATIVE HEADLINE

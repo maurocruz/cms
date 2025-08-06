@@ -139,10 +139,10 @@ class ReactShell
 
 	/**
 	 * @param string $propertyName
-	 * @param int|null $value
+	 * @param int|string|null $value
 	 * @return $this
 	 */
-	public function getItemType(string $propertyName, int $value = null): ReactShell
+	public function getItemType(string $propertyName, int|string|null $value = null): ReactShell
 	{
 		$this->setAttribute('data-action','getItemType')
 			->setAttribute('data-propertyName',$propertyName)

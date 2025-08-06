@@ -11,6 +11,16 @@ use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 class ActionView extends ThingView implements TypeViewInterface
 {
 	private ?string $querystring = null;
+
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'action', string $sitemapFilename = 'sitemap-action.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
+
 	/**
 	 * @return void
 	 */
@@ -46,7 +56,7 @@ class ActionView extends ThingView implements TypeViewInterface
 		}
 		$params = $queryParams ? http_build_query($queryParams)."&properties=object" : "properties=object";
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('Action')->setColumnsTable(['object'=>_('Object')])->setDataset('params',$params)->ready()
+			CmsFactory::view()->fragment()->reactShell('action')->setColumnsTable(['object'=>_('Object')])->setDataset('params',$params)->ready()
 		);
 	}
 
@@ -131,7 +141,7 @@ class ActionView extends ThingView implements TypeViewInterface
 			$form->content("<h3>".sprintf(_('Add new %s'),_('Action'))."</h3>");
 		}
 		// THING
-		$form = parent::formThing($form, $value);
+		$form = parent::formThingContent($form, $value);
 		// OBJECT
 		$form->relationshipOneToOne('thing', _('Object'), 'object', (int) $object);
 		// ACTION PROCESS

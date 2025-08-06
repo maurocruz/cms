@@ -2,26 +2,51 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Organization\Organization;
+use Plinct\Cms\View\WebSite\Type\Organization\OrganizationView;
 use Plinct\Cms\View\WebSite\Type\Person\PersonView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
-use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class RoleView implements TypeViewInterface
+class RoleView  extends ThingView
 {
+	/**
+	 * @var string|null
+	 */
 	private ?string $refererType;
+	/**
+	 * @var string|null
+	 */
 	private ?string $refererName;
+	/**
+	 * @var string|null
+	 */
 	private ?string $refererId;
+	/**
+	 * @var string|null
+	 */
 	private ?string $refererIdthing;
+	/**
+	 * @var string|null
+	 */
 	private ?string $querystring = null;
+
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'role', string $sitemapFilename = 'sitemap-role.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
 
 	/**
 	 * @return void
 	 */
-	private function navbar(): void {
+	public function __destruct()
+	{
+		parent::__destruct();
 		if($this->refererType && $this->refererName && $this->refererId && $this->refererIdthing) {
 			if (strtolower($this->refererType) == "organization") {
-				Organization::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
+				OrganizationView::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
 			} else if (strtolower($this->refererType) == "person") {
 				PersonView::navbarEdit($this->refererName, $this->refererId, $this->refererIdthing);
 			}
@@ -63,9 +88,6 @@ class RoleView implements TypeViewInterface
 		} else {
 			$rows = null;
 		}
-		// NAVBAR
-		self::navbar();
-
 		$table = CmsFactory::view()->fragment()->table(['class'=>'table table-role']);
 		$table->setCaption(_('Roles'));
 		$table->labels(_('Person name'), _('Role name'),  _('Organization'));
@@ -107,8 +129,6 @@ class RoleView implements TypeViewInterface
 		$this->refererIdthing = $queryParams['refererIdthing'] ?? null;
 		if (isset($data[0])) {
 			$value = $data[0];
-			// NAVBAR
-			self::navbar();
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox($this->formRole($value), _("Role"))
 			);
@@ -126,8 +146,6 @@ class RoleView implements TypeViewInterface
 		$this->refererName = $queryParams['refererName'] ?? null;
 		$this->refererId = $queryParams['refererId'] ?? null;
 		$this->refererIdthing = $queryParams['refererIdthing'] ?? null;
-		// NAVBAR
-		self::navbar();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox($this->formRole(), _("Role"))
 		);
@@ -164,7 +182,7 @@ class RoleView implements TypeViewInterface
 		// PERSON
 		$form->relationshipOneToOne('Person',_('Person'),'person',$idperson);
 		// THING
-		$form = ThingView::formThing($form, $value, _('Role name'));
+		$form = parent::formThingContent($form, $value, _('Role name'));
 		// SECUNDARY TYPE
 		$form->fieldsetWithInput('secondaryRole',$value['secondaryRole'] ?? null, _('Secondary role'));
 		// START DATE

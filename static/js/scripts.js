@@ -40,10 +40,10 @@ function checkRegisterForm(form) {
 function CheckRequiredFieldsInForm(event, fields) {
     const form = event.target;
     const elements = form.elements;
-    for (var i=0; i<elements.length; i++) {        
-        var item = elements.item(i);
-        
-       if (fields.includes(item.name)) {
+    for (let i=0; i<elements.length; i++) {
+      const item = elements.item(i);
+
+      if (fields.includes(item.name)) {
            if (item.value === "") {
                alert("You must fill in mandatory fields!");
                return false;
@@ -59,9 +59,9 @@ function CheckRequiredFieldsInForm(event, fields) {
  * @returns {Boolean}
  */
 function setHistory(obj){
-    var summary = prompt("Descreva a sua ação:");
-    
-    if (summary === null) {
+  let summary = prompt("Descreva a sua ação:");
+
+  if (summary === null) {
         return false;
         
     } else {
@@ -81,26 +81,25 @@ function setHistory(obj){
 // EXPANDIR BOX DE EDIÇÃO DE POSTAGEM
 function expandBox(object, objectId)
 {
-    let target = objectId ? document.getElementById(objectId) : target = object.parentNode;
+  let target = objectId ? document.getElementById(objectId) : object.parentNode;
 
-    if (object.className === 'button-dropdown button-dropdown-contracted') {
-        target.className = "box";
-        object.className = 'button-dropdown button-dropdown-expanded'
-        
-    } else {
-        target.className = "box box-expanding";
-        object.className = 'button-dropdown button-dropdown-contracted'
-    }
+  if (object.className === 'button-dropdown button-dropdown-contracted') {
+    target.className = target.className.replace("box-expanding", " ")
+    object.className = 'button-dropdown button-dropdown-expanded'
+  } else {
+    target.className = target.className.slice(0,4)+" box-expanding "+target.className.slice(3);
+    object.className = 'button-dropdown button-dropdown-contracted'
+  }
 }
 
 // EXPANDIR CAIXA DE TEXT
 function expandTextarea(objectId,increase = 100)
 {
-    var textarea = document.getElementById(objectId);
-    // obtém a altura atual
-    var atualHeight = textarea.clientHeight;
-    // configura nova altura
-    textarea.style.height = (atualHeight+increase)+'px';
+  const textarea = document.getElementById(objectId);
+  // obtém a altura atual
+  const atualHeight = textarea.clientHeight;
+  // configura nova altura
+  textarea.style.height = (atualHeight+increase)+'px';
 }
 
 /**

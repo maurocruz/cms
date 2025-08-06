@@ -1,10 +1,9 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Box;
 
 use Plinct\Web\Element\Element;
 
-class Box implements BoxInterface
+class Box
 {
 	/**
 	 * @param $content
@@ -20,11 +19,13 @@ class Box implements BoxInterface
     return $div->ready();
   }
 
-  /**
-   * @param string $caption
-   * @param $content
-   * @return array
-   */
+	/**
+	 * @param string $caption
+	 * @param $content
+	 * @param bool $open
+	 * @param string|null $style
+	 * @return array
+	 */
   public function expandingBox(string $caption, $content, bool $open = false, string $style = null): array
   {
     $id = "form-expanding-". mt_rand(111,999);
@@ -37,5 +38,13 @@ class Box implements BoxInterface
     $div->content($content);
     // READY
     return $div->ready();
+  }
+
+	public function expandigBoxWithoutContent(string $caption, string $class = null): string
+  {
+	  $id = "form-expanding-". mt_rand(111,999);
+    $returns = "<div id='$id' class='box box-expanding $class' style='width: 100%;'>";
+			$returns .= "<p class='button-dropdown button-dropdown-contracted' onclick='expandBox(this,\"$id\");' style='width: 100%;'>$caption</p>";
+    return $returns;
   }
 }

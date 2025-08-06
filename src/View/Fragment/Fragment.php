@@ -6,7 +6,6 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Helpers\Sitemap;
 use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
-use Plinct\Cms\View\Fragment\Box\BoxInterface;
 use Plinct\Cms\View\Fragment\Button\Buttons;
 use Plinct\Cms\View\Fragment\Form\Form;
 use Plinct\Cms\View\Fragment\Table\Table;
@@ -22,6 +21,11 @@ use Plinct\Web\Fragment\PageNavigation\PageNavigation;
 
 class Fragment
 {
+	public function audio(string $contentUrl, ?array $attributes = null): string
+	{
+		$attr = CmsFactory::toolBox()->convertAttributesToString($attributes);
+		return "<audio src='$contentUrl' $attr controls></audio>";
+	}
   /**
    * @return AuthFragment
    */
@@ -30,9 +34,9 @@ class Fragment
   }
 
   /**
-   * @return BoxInterface
+   * @return Box
    */
-  public function box(): BoxInterface
+  public function box(): Box
   {
     return new Box();
   }
@@ -143,5 +147,16 @@ class Fragment
 		} else {
 			CmsFactory::view()->addMain("<p class='warning'>Ops! Algo de ruim aconteceu! O sitemap não foi criado!</p>");
 		}
+	}
+
+	/**
+	 * @param string $contentUrl
+	 * @param array|null $attributes
+	 * @return string
+	 */
+	public function video(string $contentUrl, ?array $attributes = null): string
+	{
+		$attr = CmsFactory::toolBox()->convertAttributesToString($attributes);
+		return "<video $attr controls><source src='$contentUrl' type='video/mp4'></video>";
 	}
 }

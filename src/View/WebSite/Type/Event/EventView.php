@@ -46,7 +46,7 @@ class EventView extends ThingView implements TypeViewInterface
   public function index(?array $data, array $queryParams = null): void
   {
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('Event')->setColumnsTable(["startDate"=>"Início"])->ready()
+			CmsFactory::view()->fragment()->reactShell('event')->setColumnsTable(["startDate"=>"Início"])->ready()
 		);
   }
 
@@ -116,7 +116,7 @@ class EventView extends ThingView implements TypeViewInterface
 			$form->input('idevent', (string)$this->idevent, 'hidden');
 		}
 		// THING
-		$form = ThingView::formThing($form, $value);
+		$form = ThingView::formThingContent($form, $value);
 		// START DATE
 		$form->fieldsetWithInput('startDate', $startDate, _("Start date"), "date");
 		$form->fieldsetWithInput('startTime', $startTime, _("Start time"), "time");

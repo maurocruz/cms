@@ -2,12 +2,13 @@
 /* COMPONENT _ box
 ============================================================================= */
 .box {
-  margin: 4px;
+  margin: 4px 0;
   border: 1px gray solid;
   border-radius: 4px;
+  padding: 4px;
 
   p {
-    margin: 10px;
+    margin: 10px 6px 12px 6px;
   }
 
   form fieldset {

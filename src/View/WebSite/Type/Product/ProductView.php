@@ -12,13 +12,8 @@ class ProductView extends ThingView implements TypeViewInterface
 	/**
 	 * @var string|null
 	 */
-	private ?string $name = null;
-	/**
-	 * @var string|null
-	 */
 	private ?string $idproduct = null;
 
-	private ?string $thing = null;
 
 	/**
 	 *
@@ -34,14 +29,14 @@ class ProductView extends ThingView implements TypeViewInterface
 				->newTab("/admin/product/new", CmsFactory::view()->fragment()->icon()->plus())
 				->ready()
 		);
-		if ($this->name && $this->idproduct && $this->thing) {
+		if ($this->name && $this->idproduct && $this->idthing) {
 			CmsFactory::view()->addHeader(
 				CmsFactory::view()->fragment()->navbar()
 					->title($this->name)
 					->type('product')
 					->level(3)
 					->newTab("/admin/product/edit/$this->idproduct", CmsFactory::view()->fragment()->icon()->home())
-					->newTab("/admin/action?object=$this->thing", CmsFactory::view()->fragment()->icon()->action())
+					->newTab("/admin/action?object=$this->idthing", CmsFactory::view()->fragment()->icon()->action())
 					->ready()
 			);
 		}
@@ -111,12 +106,12 @@ class ProductView extends ThingView implements TypeViewInterface
 			$value = $data[0];
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$this->idproduct = $typeBuilder->getId();
-			$this->thing = $typeBuilder->getPropertyValue('idthing');
+			$this->idthing = $typeBuilder->getPropertyValue('idthing');
 			$this->name = $value['name'];
 
 			CmsFactory::view()->addMain([
 					CmsFactory::view()->fragment()->box()->simpleBox(self::formProduct($value)),
-					CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->thing)->ready()
+					CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->ready()
 				]
 			);
 		} else {
@@ -151,7 +146,7 @@ class ProductView extends ThingView implements TypeViewInterface
 		} else {
 			$form->action('/admin/product/new');
 		}
-		$form = parent::formThing($form, $value);
+		$form = parent::formThingContent($form, $value);
 		// manufacturer
 		$form->relationshipOneToOne('Organization',_('Manufacturer'),'manufacturer', $manufacturer);
 		// brand

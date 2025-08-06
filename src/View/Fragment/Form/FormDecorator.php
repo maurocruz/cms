@@ -52,6 +52,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
   public function method(string $method): FormInterface
   {
 		$this->form->method($method);
+		if (strtolower($method) == 'post') {
+			$this->form->attributes(['enctype'=>'multipart/form-data']);
+		}
 		return $this;
   }
 
@@ -168,10 +171,10 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 * @param string $type
 	 * @param string $legend
 	 * @param string $propertyName
-	 * @param int|null $value
+	 * @param int|string|null $value
 	 * @return FormInterface
 	 */
-	public function relationshipOneToOne(string $type, string $legend, string $propertyName, int $value = null): FormInterface
+	public function relationshipOneToOne(string $type, string $legend, string $propertyName, int|string $value = null): FormInterface
 	{
 		$this->content([
 			"<fieldset class='$propertyName'><legend>". self::writeLegend($propertyName, $legend) ."</legend>",

@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Intangible\Service;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\Offer\OfferView;
-use Plinct\Cms\View\WebSite\Type\Organization\Organization;
+use Plinct\Cms\View\WebSite\Type\Organization\OrganizationView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -19,8 +19,8 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 		$tb = ToolBox::typeBuilder($data);
 		$this->provider = $tb->getPropertyValue('idthing');
 		if ($tb->getType() == 'Organization') {
-			Organization::navbarIndex();
-			Organization::navbarEdit($tb->getValue('name'), $tb->getId(), $this->provider);
+			OrganizationView::navbarIndex();
+			OrganizationView::navbarEdit($tb->getValue('name'), $tb->getId(), $this->provider);
 		}
 		parent::navbarIndex();
 		CmsFactory::view()->addMain(
@@ -45,8 +45,8 @@ class ServiceView extends ServiceAbstract implements TypeViewInterface
 			$TBProvider = ToolBox::typeBuilder($provider);
 			$this->provider = $TBProvider->getIdthing();
 			if($TBProvider->getType() == 'Organization') {
-				Organization::navbarIndex();
-				Organization::navbarEdit($TBProvider->getValue('name'), $TBProvider->getId(), $this->provider);
+				OrganizationView::navbarIndex();
+				OrganizationView::navbarEdit($TBProvider->getValue('name'), $TBProvider->getId(), $this->provider);
 			}
 			parent::navbarIndex();
 			parent::navbarEdit($data['name']);

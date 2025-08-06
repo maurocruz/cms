@@ -34,7 +34,6 @@ class Type
 	 * @param array $params
 	 * @param array|null $queryParams
 	 * @return mixed|string|string[]
-	 * @throws Exception
 	 */
 	public function post(array $params, array $queryParams = null): mixed
 	{
@@ -45,13 +44,12 @@ class Type
 				$params =	$classType->update($params);
 			}
 		}
-
 		$isMultidimensional = array_reduce($params,function ($params, $item) { return is_array($item); });
 		if ($isMultidimensional) {
 			$newParams['multidimensional'] = json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 			$params = $newParams;
 		}
-		$data = CmsFactory::model()->api()->post($this->type, $params)->ready();
+		$data = CmsFactory::model()->api()->post($this->type, $params, $_FILES)->ready();
 		// ERROR OR FAIL
 		if (array_key_exists('status', $data) && ($data['status'] == 'fail' || $data['status'] == 'error')) {
 			return $data;

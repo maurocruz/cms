@@ -4,18 +4,56 @@ namespace Plinct\Cms\View\WebSite\Type\Organization;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
-class Organization extends OrganizationAbstract implements TypeViewInterface
+class OrganizationView extends ThingView implements TypeViewInterface
 {
+	/**
+	 * @var string|null
+	 */
+	private ?string $idorganization = null;
+
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'organization', string $sitemapFilename = 'sitemap-organization.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
+
+	public function __destruct()
+	{
+		parent::__destruct();
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('Organization')
+				->setTitle(_("Organization"))
+				->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus())
+				->ready()
+		);
+		if($this->name && $this->idorganization && $this->idthing) CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->title($this->name)
+				->level(3)
+				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/service?provider=$this->idthing", _("Services"))
+				->newTab("/admin/product?manufacturer=$this->idthing", _("Products"))
+				->newTab("/admin/order?seller=$this->idthing", _("Orders"))
+				->newTab("/admin/role?refererType=Organization&refererName=$this->name&refererId=$this->idorganization&refererIdthing=$this->idthing", _("Members"))
+				->ready()
+		);
+	}
+
 	/**
 	 * @param array|null $data
 	 * @param array|null $queryParams
 	 */
 	public function index(?array $data, array $queryParams = null): void
 	{
-		parent::navbarIndex();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('organization')->ready()
 		);
@@ -27,9 +65,6 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
    */
   public function new(?array $data, array $queryParams = null): void
   {
-    // NAVBAR
-    parent::navbarNew();
-    //
     CmsFactory::View()->addMain(
 			CmsFactory::view()->fragment()->box()->simpleBox( self::formOrganization(), _("Add organization"))
     );
@@ -50,8 +85,6 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 			$this->idorganization =  $typeBuilder->getId();
 			$this->idthing = $typeBuilder->getPropertyValue('idthing');
 			$this->name = $value['name'];
-			// NAVBAR
-			parent::navbarEdit($this->name, $this->idorganization, $this->idthing);
 			// ORGANIZATION
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(_("Organization"), self::formOrganization('edit', $value), true)
@@ -66,4 +99,31 @@ class Organization extends OrganizationAbstract implements TypeViewInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Organization is not exists!")));
 		}
   }
+
+	/**
+	 * FORM EDIT AND NEW
+	 * @param string $case
+	 * @param null $value
+	 * @return array
+	 */
+	private function formOrganization(string $case = 'new', $value = null): array
+	{
+		$form = CmsFactory::view()->fragment()->form("form-organization", ["class" => "form-basic form-organization"]);
+		$form->action("/admin/organization/$case")->method("post");
+		// HIDDEN
+		if ($case == "edit") $form->input("idorganization", (string) $this->idorganization, 'hidden');
+		// THING
+		$form = parent::formThingContent($form, $value);
+		// legal name
+		$form->fieldsetWithInput("legalName", $value['legalName'] ?? null, _("Legal Name"));
+		// tax id
+		$form->fieldsetWithInput("taxId", $value['taxId'] ?? null, _("Tax Id"));
+		// has offered a catalog
+		$form->fieldsetWithInput("hasOfferCatalog", $value['hasOfferCatalog'] ?? null, _("Has offer catalog"));
+		//submit
+		$form->submitButtonSend();
+		if ($case == "edit") $form->submitButtonDelete('/admin/organization/delete');
+		// READY
+		return $form->ready();
+	}
 }

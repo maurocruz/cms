@@ -6,8 +6,12 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class WebPageElementView extends CreativeWorkView implements TypeViewInterface
+class WebPageElementView extends WebPageView implements TypeViewInterface
 {
+	/**
+	 * @var string|null
+	 */
+	private ?string $idwebPageElement = null;
 	/**
 	 * @var string|null
 	 */
@@ -19,39 +23,37 @@ class WebPageElementView extends CreativeWorkView implements TypeViewInterface
 	/**
 	 * @var string|null
 	 */
-	private ?string $idwebPageElement = null;
-	/**
-	 * @var string|null
-	 */
 	private ?string $webPageElementName = null;
+
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
+	public function __construct(string $type = 'webPageElement', string $sitemapFilename = 'sitemap-webPageElement.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
 
 	/**
 	 *
 	 */
 	public function __destruct()
 	{
-		self::navBarWebPageElement();
-	}
-
-	/**
-	 * @return void
-	 */
-  private function navBarWebPageElement(): void
-  {
+		parent::__destruct();
 	  CmsFactory::view()->addHeader(
 		  CmsFactory::view()->fragment()->navbar()
 			  ->type('WebPageElement')
 			  ->title('WebPage Element')
-			  ->level(7)
+			  ->level(3)
 			  ->newTab("/admin/webPageElement?idHasPart=$this->idHasPart&typeHasPart=$this->typeHasPart",CmsFactory::view()->fragment()->icon()->home())
 			  ->newTab("/admin/webPageElement/new?idHasPart=$this->idHasPart&typeHasPart=$this->typeHasPart",CmsFactory::view()->fragment()->icon()->plus())
 			  ->ready()
 	  );
-    if ($this->idwebPageElement && $this->webPageElementName) {
+    if ($this->idwebPageElement && $this->name) {
 			CmsFactory::view()->addHeader(
         CmsFactory::view()->fragment()->navbar()->type('WebPageElement')
-	        ->title($this->webPageElementName)
-	        ->level(7)
+	        ->title($this->name)
+	        ->level(4)
 	        ->newTab('/admin/webPageElement/edit/'.$this->idwebPageElement, CmsFactory::view()->fragment()->icon()->home())
 	        ->newTab("/admin/webPageElement?idHasPart=$this->idcreativeWork&typeHasPart=webPageElement",_('WebPage elements'))
 	        ->ready()
@@ -76,8 +78,8 @@ class WebPageElementView extends CreativeWorkView implements TypeViewInterface
 			// IS PART OF
 			$tbIsPartOf = CmsFactory::toolBox()::typeBuilder($isPartOf);
 			if ($this->typeHasPart == 'WebPage') {
-				WebSiteView::navbarWebSite($tbIsPartOf->getValue('name'), $tbIsPartOf->getId());
-				WebPageView::navbarWebPage($tbIsPartOf->getId(), $tbHasPart->getId(), $tbHasPart->getValue('name'), $this->idHasPart);
+				//WebSiteView::navbarWebSite($tbIsPartOf->getValue('name'), $tbIsPartOf->getId());
+				//WebPageView::navbarWebPage($tbIsPartOf->getId(), $tbHasPart->getId(), $tbHasPart->getValue('name'), $this->idHasPart);
 			}
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPageElement')->setDataset('params',"isPartOf=$this->idHasPart")->setColumnsTable(['url'=>'Url'])->ready());
 		} else {
@@ -103,8 +105,8 @@ class WebPageElementView extends CreativeWorkView implements TypeViewInterface
 			if ($this->typeHasPart == 'WebPage') {
 				$webSite = $value['isPartOf'];
 				$tbWebSite = CmsFactory::toolBox()::typeBuilder($webSite);
-				WebSiteView::navbarWebSite($tbWebSite->getValue('name'), $tbWebSite->getId());
-				WebPageView::navbarWebPage($isPartOf, $tbHasPast->getId(), $tbHasPast->getValue('name'), $tbHasPast->getPropertyValue('idcreativeWork'));
+				//WebSiteView::navbarWebSite($tbWebSite->getValue('name'), $tbWebSite->getId());
+				//WebPageView::navbarWebPage($isPartOf, $tbHasPast->getId(), $tbHasPast->getValue('name'), $tbHasPast->getPropertyValue('idcreativeWork'));
 			}
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPageElement())
@@ -127,14 +129,14 @@ class WebPageElementView extends CreativeWorkView implements TypeViewInterface
 			$value = $data[0];
 			$tbWebPageElement = CmsFactory::toolBox()::typeBuilder($value);
 			$this->idwebPageElement = $tbWebPageElement->getId();
-			$this->webPageElementName = $tbWebPageElement->getValue('name');
+			$this->name = $tbWebPageElement->getValue('name');
 			$this->idthing = $tbWebPageElement->getIdthing();
 			$this->idcreativeWork = $tbWebPageElement->getPropertyValue('idcreativeWork');
 			$tbIsPartOf = CmsFactory::toolBox()::typeBuilder($value['isPartOf']);
 			$this->idHasPart = $tbIsPartOf->getPropertyValue('idcreativeWork');
 			$this->typeHasPart = $tbIsPartOf->getType();
 			if ($tbIsPartOf->getType() == "WebPage") {
-				WebPageView::navbarWebPage($tbIsPartOf->getValue('isPartOf'), $tbIsPartOf->getId(), $tbIsPartOf->getValue('name'), $this->idHasPart);
+				//WebPageView::navbarWebPage($tbIsPartOf->getValue('isPartOf'), $tbIsPartOf->getId(), $tbIsPartOf->getValue('name'), $this->idHasPart);
 			}
 			// FORM
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::editForms($value), _("Web page element")));

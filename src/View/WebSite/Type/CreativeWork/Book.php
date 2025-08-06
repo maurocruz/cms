@@ -100,7 +100,7 @@ class Book extends CreativeWorkView implements TypeViewInterface
 			$form->input('idbook', (string) $this->idbook, 'hidden');
 		}
 		// THING
-		$form = ThingView::formThing($form, $value);
+		$form = ThingView::formThingContent($form, $value);
 		// author
 		$form->fieldsetWithInput('author', $author, _('Author'));
 		// version

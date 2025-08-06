@@ -123,7 +123,7 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		// THING
-		$form = parent::formThing($form, $value, _('Article name'));
+		$form = parent::formThingContent($form, $value, _('Article name'));
 	  // about
 		$form->relationshipOneToOne('thing',_("About"), 'about', $about);
     // HEADLINE

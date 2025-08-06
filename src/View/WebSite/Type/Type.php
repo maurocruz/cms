@@ -27,30 +27,21 @@ class Type
 	 */
 	public function __construct(string $typeName)
 	{
-		$className = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName);
-		$classNameView = __NAMESPACE__.'\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
-		$classNameCreativeWork = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName);
-		$classNameCreativeWorkView = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName).'View';
-		$classNameCreativeWorkItem = __NAMESPACE__.'\\CreativeWork\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
-		$classNameIntagible = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName);
-		$classNameIntagibleView = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'View';
-		$classNameIntagibleIntoFolder = __NAMESPACE__.'\\Intangible\\'.ucfirst($typeName).'\\'.ucfirst($typeName).'View';
-		if (class_exists($className)) {
-			$this->object = new $className();
-		} elseif(class_exists($classNameView)) {
-			$this->object = new $classNameView();
-		} elseif (class_exists($classNameCreativeWork)) {
-			$this->object = new $classNameCreativeWork();
-		} elseif(class_exists($classNameCreativeWorkView)) {
-			$this->object = new $classNameCreativeWorkView();
-		} elseif (class_exists($classNameCreativeWorkItem)) {
-			$this->object = new $classNameCreativeWorkItem();
-		} elseif (class_exists($classNameIntagible)) {
-			$this->object = new $classNameIntagible();
-		} elseif (class_exists($classNameIntagibleView)) {
-			$this->object = new $classNameIntagibleView();
-		} elseif (class_exists($classNameIntagibleIntoFolder)) {
-			$this->object = new $classNameIntagibleIntoFolder();
+		$classes = [
+			__NAMESPACE__ . '\\' . ucfirst($typeName) . '\\' . ucfirst($typeName),
+			__NAMESPACE__ . '\\' . ucfirst($typeName) . '\\' . ucfirst($typeName) . 'View',
+			__NAMESPACE__ . '\\CreativeWork\\' . ucfirst($typeName),
+			__NAMESPACE__ . '\\CreativeWork\\' . ucfirst($typeName) . 'View',
+			__NAMESPACE__ . '\\CreativeWork\\' . ucfirst($typeName) . '\\' . ucfirst($typeName) . 'View',
+			__NAMESPACE__ . '\\Intangible\\' . ucfirst($typeName),
+			__NAMESPACE__ . '\\Intangible\\' . ucfirst($typeName) . 'View',
+			__NAMESPACE__ . '\\Intangible\\' . ucfirst($typeName) . '\\' . ucfirst($typeName) . 'View'
+		];
+		foreach ($classes as $class) {
+			if (class_exists($class)) {
+				$this->object = new $class();
+				break;
+			}
 		}
 	}
 

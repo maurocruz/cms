@@ -53,16 +53,17 @@ class TypeController
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
 				// if module has controller class
-				$className = __NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller';
-				$classNameCreativeWork = __NAMESPACE__ . "\\CreativeWork\\" . ucfirst($this->type).'Controller';
-				$classNameIntangible = __NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller';
-				if (class_exists($className)) {
-					$object = new $className();
-				} elseif(class_exists($classNameIntangible)) {
-					$object = new $classNameIntangible();
-				} elseif(class_exists($classNameCreativeWork)) {
-					$object = new $classNameCreativeWork();
-				} elseif ($this->type == 'thing') {
+				$classController = [
+					__NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller',
+					__NAMESPACE__ . "\\CreativeWork\\" . ucfirst($this->type).'Controller',
+					__NAMESPACE__ . "\\Intangible\\" . ucfirst($this->type).'Controller'
+				];
+				foreach ($classController as $className) {
+					if (class_exists($className)) {
+						$object = new $className();
+					}
+				}
+				if ($object === null && $this->type == 'thing') {
 					$object = new ThingController();
 				}
 				if ($object && method_exists($object, $this->methodName)) {

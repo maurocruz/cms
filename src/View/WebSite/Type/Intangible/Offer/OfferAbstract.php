@@ -2,7 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible\Offer;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Organization\Organization;
+use Plinct\Cms\View\WebSite\Type\Organization\OrganizationView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Tool\ToolBox;
 
@@ -31,8 +31,8 @@ abstract class OfferAbstract
 		$tbOfferedBy = ToolBox::typeBuilder($offeredBy);
 		self::$offeredById = $tbOfferedBy->getPropertyValue('idthing');
 		if ($tbOfferedBy->getType() == 'Organization') {
-			Organization::navbarIndex();
-			Organization::navbarEdit($tbOfferedBy->getValue('name'), $tbOfferedBy->getId(), self::$offeredById);
+			OrganizationView::navbarIndex();
+			OrganizationView::navbarEdit($tbOfferedBy->getValue('name'), $tbOfferedBy->getId(), self::$offeredById);
 		}
 		$this->navbarOffer();
 	}
@@ -60,7 +60,7 @@ abstract class OfferAbstract
 			$form->setIdform('form-offer-new');
 		}
 		// THING
-		$form = ThingView::formThing($form, $value);
+		$form = ThingView::formThingContent($form, $value);
 		// OFFERED BY
 		if (!self::$offeredById) {
 			$form->chooseType(_('Offered by'), 'offeredBy', "organization,person", self::$offeredById);

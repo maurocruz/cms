@@ -8,7 +8,6 @@ class Index
 {
 	public function view(): void
 	{
-		CmsFactory::view()->addMain("<p>Control Panel CMSCruz - version " . App::getVersion() . ".</p>");
+		CmsFactory::view()->addMain("<p>Control Panel CMSCruz - " . App::getVersion() . ".</p>");
 	}
-
 }

@@ -7,18 +7,24 @@ use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
-class Place implements TypeViewInterface
+class PlaceView extends ThingView implements TypeViewInterface
 {
   /**
    * @var int
    */
   protected int $placeId;
 
-  /**
+	public function __construct(string $type = 'place', string $sitemapFilename = 'sitemap-place.xml')
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
+
+	/**
    *
    */
-  public function navbarPlace(string $title = null): void
+  public function __destruct()
   {
+		parent::__destruct();
 		CmsFactory::view()->addHeader(
 	    CmsFactory::View()->fragment()->navbar()
 		    ->type('place')
@@ -28,9 +34,9 @@ class Place implements TypeViewInterface
 		    ->search()
 		    ->ready()
 		);
-    if ($title) {
+    if ($this->name) {
 	    CmsFactory::view()->addHeader(
-        CmsFactory::view()->fragment()->navbar($title, [], 3)->ready()
+        CmsFactory::view()->fragment()->navbar($this->name, [], 3)->ready()
 	    );
     }
   }
@@ -41,7 +47,6 @@ class Place implements TypeViewInterface
 	 */
   public function index(?array $data, array $queryParams = null): void
   {
-    $this->navbarPlace();
 		CmsFactory::view()->addMain(
 			CmsFactory::view()->fragment()->reactShell('place')->ready()
 		);
@@ -53,7 +58,6 @@ class Place implements TypeViewInterface
    */
   public function new($data = null, array $queryParams = null): void
   {
-    $this->navbarPlace();
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));
   }
 
@@ -72,8 +76,6 @@ class Place implements TypeViewInterface
 			$idplace = $typeBuilder->getId();
 			$idthing = $typeBuilder->getIdthing();
 			$this->placeId = isset($value) ? $idplace : null;
-			// NAVBAR
-			$this->navbarPlace($value['name']);
 			// form
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace('edit', $value), _("Edit")));
 			CmsFactory::view()->addMain([

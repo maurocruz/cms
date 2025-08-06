@@ -53,7 +53,8 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 			foreach ($modulesEnabled as $key => $type) {
 				if (in_array($type, $modulesAvailable)) {
 					$title = is_array($type) ? $key : $type;
-					$this->newTab("/admin/" . lcfirst($title), _($title));
+					$nameTitle = CmsFactory::helpers()->camelCaseToSentence($title);
+					$this->newTab("/admin/" . lcfirst($title), _($nameTitle));
 				}
 			}
 		}

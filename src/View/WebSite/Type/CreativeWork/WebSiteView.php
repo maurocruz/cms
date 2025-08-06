@@ -2,7 +2,6 @@
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -12,17 +11,16 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 * @var string|null
 	 */
 	protected ?string $idwebSite = null;
-	/**
-	 * @var string|null
-	 */
+
 	protected ?string $webSiteName = null;
 
 	/**
-	 *
+	 * @param string $type
+	 * @param string $sitemapFilename
 	 */
-	public function __construct()
+	public function __construct(string $type = 'WebSite', string $sitemapFilename = 'sitemap-webSite.xml')
 	{
-		parent::__construct();
+		parent::__construct($type, $sitemapFilename);
 	}
 
 	/**
@@ -30,7 +28,29 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 */
 	public function __destruct()
 	{
-		self::navbarWebSite($this->webSiteName, $this->idwebSite);
+		parent::__destruct();
+
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+				->type('webSite')
+				->title("WebSite")
+				->level(3)
+				->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
+				->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
+				->search()
+				->ready()
+		);
+
+		if ($this->idwebSite) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()
+					->title(_($this->webSiteName ?? $this->name))
+					->level(4)
+					->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+					->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("Pages"))
+					->ready()
+			);
+		}
 	}
 
 	/**
@@ -93,7 +113,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	  if ($value) {
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$this->idwebSite = $typeBuilder->getId();
-			$this->webSiteName = $value['name'];
+			$this->name = $value['name'];
 			$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
 			// form
 			CmsFactory::view()->addMain(
@@ -110,12 +130,10 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 * @param array|null $value
 	 * @return array
 	 */
-	protected static function formWebSite(array $value = null): array
+	protected function formWebSite(array $value = null): array
 	{
 		//vars
 		$id = $value['idwebSite'] ?? null;
-		$copyrightHolder = $value['copyrightHolder'] ?? null;
-		$author = $value['author'] ?? null;
 		$case = $id ? 'edit' : 'new';
 
 		// form
@@ -123,15 +141,11 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 		$form->action("/admin/webSite/$case")->method('post');
 		// hidden
 		if ($id) $form->input('idwebSite',(string) $id,'hidden');
-		// thing
-		$form = ThingView::formThing($form, $value);
-		// copyrightHolder
-		$form->chooseType(_( 'Copyright holder' ), 'copyrightHolder', array("Organization","Person"),$copyrightHolder);
-		// author
-		$form->relationshipOneToOne('person',_('Author'),'author',(int) $author);
+		// CREATIVE WORK
+		$form = parent::formCreativeWorkContent($form, $value);
 		// submit
 		$form->submitButtonSend(['class'=>'form-submit-button form-submit-button-send']);
-		if ($id) {
+		if ($this->idwebSite) {
 			$form->submitButtonDelete('/admin/webSite/erase',['class'=>'form-submit-button form-submit-button-delete']);
 		}
 		// ready

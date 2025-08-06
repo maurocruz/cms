@@ -2,12 +2,21 @@
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\Fragment\Form\Form;
+use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInterface
+class CreativeWorkView extends ThingView
 {
+	/**
+	 * @var string|null
+	 */
+	protected ?string $idcreativeWork = null;
 
+	/**
+	 * @param string $type
+	 * @param string $sitemapFilename
+	 */
 	public function __construct(string $type = 'creativeWork', string $sitemapFilename = 'sitemap-creativeWork.xml')
 	{
 		parent::__construct($type, $sitemapFilename);
@@ -18,7 +27,16 @@ class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInter
 	 */
 	public function __destruct()
 	{
-		parent::navbar();
+		//parent::__destruct();
+		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
+			->type('creativeWork')
+			->setTitle(_('Creative work'))
+			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home())
+			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus())
+			->setModulesAvailable(['Article','Book','Certification','Collection','MediaObject','WebPage','WebPageElement','WebSite'])
+			->search()
+			->ready()
+		);
 	}
 
 	/**
@@ -38,21 +56,11 @@ class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInter
 	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function edit(?array $data, array $queryParams = null): void
+	public function new(?array $data, array $queryParams = null): void
 	{
-		if (isset($data[0])) {
-			$value = $data[0];
-			$typeBuilder = new TypeBuilder('creativeWork', $value);
-			$this->idcreativeWork = $typeBuilder->getId();
-			$idthing = $typeBuilder->getPropertyValue('idthing');
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Creative work"), parent::formCreativeWork('edit', $value), true));
-			// images
-			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int)$idthing)->ready()
-			);
-		} else {
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No creative work were found!")));
-		}
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->box()->simpleBox(self::formCreativeWork())
+		);
 	}
 
 	/**
@@ -60,10 +68,108 @@ class CreativeWorkView extends CreativeWorkViewAbstract implements TypeViewInter
 	 * @param array|null $queryParams
 	 * @return void
 	 */
-	public function new(?array $data, array $queryParams = null): void
+	public function edit(?array $data, array $queryParams = null): void
 	{
-		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->box()->simpleBox(parent::formCreativeWork())
-		);
+		if (isset($data[0])) {
+			$value = $data[0];
+			$typeBuilder = new TypeBuilder('creativeWork', $value);
+			$this->idcreativeWork = $typeBuilder->getId();
+			$this->idthing = $typeBuilder->getPropertyValue('idthing');
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formCreativeWork('edit', $value), _("Creative work")));
+		} else {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No creative work were found!")));
+		}
+	}
+
+	/**
+	 * @param string $case
+	 * @param array|null $value
+	 * @return array
+	 */
+	private function formCreativeWork(string $case = 'new', array $value = null): array
+	{
+		// FORM
+		$form = CmsFactory::view()->fragment()->form("form-creativeWork", ['class'=>'form-basic form-creativeWork']);
+		$form->method('post');
+		$form->action("/admin/creativeWork/$case");
+		// id
+		if ($case == 'edit') {
+			$form->input('idcreativeWork', (string) $this->idcreativeWork, 'hidden');
+		}
+		// creativeWork form
+		self::formCreativeWorkContent($form, $value);
+		//button
+		$form->submitButtonSend();
+		if ($case == 'edit') {
+			$form->submitButtonDelete("/admin/creativeWork/erase");
+		}
+		//return
+		return $form->ready();
+	}
+
+	/**
+	 * @param Form $form
+	 * @param array|null $value
+	 * @return Form
+	 */
+	public function formCreativeWorkContent(Form $form, array $value = null): Form
+	{
+		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
+		//$isPartOf = isset($value['isPartOf']) ? (string) $value['isPartOf'] : null;
+		$position = isset($value['position']) ? (string) $value['position'] : null;
+		$publisher = isset($value['publisher']) ? (string) $value['publisher'] : null;
+		$editor = isset($value['editor']) ? (string) $value['editor'] : null;
+		$datePublished = $value['datePublished'] ?? null;
+		// thing
+		$form = self::formThingContent($form, $value);
+		if ($this->type !== 'CreativeWork') {
+			$form->content(CmsFactory::view()->fragment()->box()->expandigBoxWithoutContent(_("Creative work")." "._('properties'), "form-creativeWork"));
+		}
+		// headline
+		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));
+		// alternativeHeadline
+		$form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
+		// text
+		$form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'));
+		// author
+		$form->relationshipOneToOne('person,organization',_('Author'), 'author', $value['author'] ?? null);
+
+		// copyrightHolder
+		//var_dump($value['copyrightHolder']); TODO: consertar
+		$form->relationshipOneToOne('person,organization',_('Copyright holder'), 'copyrightHolder', $value['copyrightHolder'] ?? null);
+
+		// isPartOf
+		//$form->relationshipOneToOne('creativeWork',_('Is part of'), 'isPartOf', $isPartOf);
+
+		// keywords
+		$form->fieldsetWithInput('keywords', $value['keywords'] ?? null, _('Keywords'));
+		// position
+		if ($position) $form->fieldsetWithInput('position', $position, _('Position'));
+		// version
+		$form->fieldsetWithInput('version', $value['version'] ?? null, _('Version'));
+		// license
+		$form->fieldsetWithInput('license', $value['license'] ?? null, _('License'));
+		// acquireLicensePage
+		$form->fieldsetWithInput('acquireLicensePage', $value['acquireLicensePage'] ?? null, _('Acquire license page'));
+
+		// locationCreated
+		//var_dump($value['locationCreated']); TODO: consertar
+		$form->relationshipOneToOne('place',_('Location created'), 'locationCreated', $value['locationCreated'] ?? null);
+
+		// editor
+		//var_dump($editor); TODO: consertar
+		$form->relationshipOneToOne('person',_('Editor'), 'editor', $editor);
+
+		// publisher
+		if ($publisher) $form->fieldsetWithInput('publisher', $publisher, _('Publisher'));
+		// datePublished
+		if ($datePublished) {
+			$form->fieldsetWithInput('datePublished', $datePublished, _('Date published'), 'datetime-local', null, ['disable']);
+		}
+		if ($this->type !== 'CreativeWork') {
+			$form->content("</div>");
+		}
+		return $form;
+
 	}
 }

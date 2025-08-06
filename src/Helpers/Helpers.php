@@ -25,6 +25,15 @@ class Helpers
 	}
 
 	/**
+	 * @param string $input
+	 * @return string
+	 */
+	function camelCaseToSentence(string $input): string
+	{
+		return ToolBox::camelCaseToSentence($input);
+	}
+
+	/**
 	 * @param $url
 	 * @return string
 	 */

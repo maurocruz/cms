@@ -3,11 +3,9 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use DOMException;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class CertificationView extends CreativeWorkView implements TypeViewInterface
+class CertificationView extends CreativeWorkView
 {
 
 	public function __destruct()
@@ -33,7 +31,7 @@ class CertificationView extends CreativeWorkView implements TypeViewInterface
 	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternate name'),'certificationIdentification'=>_("Certification identification")])->ready()
+			CmsFactory::view()->fragment()->reactShell('certification')->setColumnsTable(['alternateName'=>_('Alternate name'),'certificationIdentification'=>_("Certification identification")])->setDataset('params',http_build_query($queryParams))->ready()
 		);
 	}
 
@@ -68,7 +66,7 @@ class CertificationView extends CreativeWorkView implements TypeViewInterface
 	 * @param array|null $data
 	 * @return array
 	 */
-	public static function hasCertification(array $data = null): array
+	public function hasCertification(array $data = null): array
 	{
 		$type = $data['@type'];
 		$typeBuilder = new TypeBuilder($type,$data);
@@ -83,7 +81,7 @@ class CertificationView extends CreativeWorkView implements TypeViewInterface
 		return $content;
 	}
 
-	protected static function formCertification(string $case = "new", array $value = null, int $about = null): array
+	protected function formCertification(string $case = "new", array $value = null, int $about = null): array
 	{
 		$about = $about ?? $value['about'] ?? null;
 		$issuedBy = $value['issuedBy'] ?? null;
@@ -103,7 +101,7 @@ class CertificationView extends CreativeWorkView implements TypeViewInterface
 			$form->input('action','redirectToSamePage', 'hidden');
 		}
 		// THING
-		$form = ThingView::formThing($form, $value);
+		$form = parent::formThingContent($form, $value);
 		// certificationIdentification
 		$form->fieldsetWithInput('certificationIdentification', $certificationIdentification, _('Certification identification'));
 		// about
