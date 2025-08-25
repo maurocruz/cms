@@ -67,6 +67,15 @@
 .menu4 { background-color: #C1E7F8; }
 .menu5 { background-color: #d4ecf7; }
 
+.navbar-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  .menu {
+    width: fit-content;
+    background-color: inherit;
+  }
+}
 /* FOOTER
 ============================================================================= */
 .footer {

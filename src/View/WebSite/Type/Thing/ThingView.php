@@ -33,12 +33,12 @@ class ThingView implements TypeViewInterface
 
 	/**
 	 * @param string $type
-	 * @param string $sitemapFilename
+	 * @param string|null $sitemapFilename
 	 */
-	public function __construct(string $type = 'thing', string $sitemapFilename = 'sitemap.xml')
+	public function __construct(string $type = 'thing', string $sitemapFilename = null)
 	{
 		$this->type = $type;
-		$this->sitemapFilename = $sitemapFilename;
+		$this->sitemapFilename = $sitemapFilename ?? "sitemap-$type.xml";
 	}
 
 	/**
@@ -141,6 +141,7 @@ class ThingView implements TypeViewInterface
 		$alternateName = $value['alternateName'] ?? null;
 		$description = $value['description'] ?? null;
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
+		$apihost = CmsFactory::controller()->getApiHost();
 		$url = $value['url'] ?? null;
 		if ($value) {
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
@@ -171,6 +172,8 @@ class ThingView implements TypeViewInterface
 		$form->setEditor("description$idthing", "editor$case$idthing");
 		// url
 		$form->fieldsetWithInput('url', $url, _('url'));
+		// additionalType
+		$form->content("<div class='plinct-shell' data-property='additionalType' data-idhaspart='$this->idthing' data-apihost='$apihost'></div>");
 		// attachments
 		if (!$value) {
 			$accept = match ($this->type) {

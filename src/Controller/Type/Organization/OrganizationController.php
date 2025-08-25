@@ -2,10 +2,19 @@
 namespace Plinct\Cms\Controller\Type\Organization;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\ThingController;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
-class OrganizationController implements TypeControllerInterface
+class OrganizationController extends ThingController
 {
+	/**
+	 * @param string $type
+	 */
+	public function __construct(string $type = 'organization')
+	{
+		parent::__construct($type);
+	}
+
 	/**
 	 * @param array $params
 	 * @return bool

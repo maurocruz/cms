@@ -74,7 +74,7 @@ class PlaceView extends ThingView implements TypeViewInterface
 			$value = $data[0];
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$idplace = $typeBuilder->getId();
-			$idthing = $typeBuilder->getIdthing();
+			$this->idthing = $typeBuilder->getIdthing();
 			$this->placeId = isset($value) ? $idplace : null;
 			// form
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace('edit', $value), _("Edit")));
@@ -83,7 +83,7 @@ class PlaceView extends ThingView implements TypeViewInterface
 			]);
 			// IMAGEOBJECT
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready()
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->ready()
 			);
 		}
   }
@@ -107,7 +107,7 @@ class PlaceView extends ThingView implements TypeViewInterface
 		}
 		$form->setIdform($idplace ? "form-place-edit-$idplace" : "form-place-new");
 		// THING
-    $form = ThingView::formThingContent($form, $value);
+    $form = parent::formThingContent($form, $value);
 		// KEYWORDS
 	  $form->fieldsetWithInput('keywords',$keywords,_("Keywords"));
 	  // PUBLIC ACCESS

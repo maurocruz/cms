@@ -2,10 +2,9 @@
 namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class ContactPoint implements TypeViewInterface
+class ContactPointView implements TypeViewInterface
 {
 	public static function navbar(): void
 	{
@@ -14,7 +13,7 @@ class ContactPoint implements TypeViewInterface
 				->title(_('Contact point'))
 				->type('ContactPoint')
 				->level(3)
-				->newTab('/admin/contactPoint', CmsFactory::view()->fragment()->icon()->home(16,16))
+				->newTab('/admin/contactPoint', CmsFactory::view()->fragment()->icon()->home())
 				->ready()
 		);
 	}
@@ -44,12 +43,11 @@ class ContactPoint implements TypeViewInterface
    * @param $data
    * @return array
    */
-  public function getForm($tableHasPart, $idHasPart, $data): array
+  public static function getForm($tableHasPart, $idHasPart, $data): array
   {
     if ($data) {
       foreach ($data as $key => $value) {
         $content[] = self::formContactPoint($tableHasPart, $idHasPart, "edit", $value);
-        $content[] = [ "tag" => "hr" ];
       }
     }
     $pos = isset($key) ? ($key+2) : 1;
@@ -68,36 +66,32 @@ class ContactPoint implements TypeViewInterface
   static private function formContactPoint(string $typeHasPart, $idHasPart, string $case = 'new', $value = null, $key = null): array
   {
 		if ($value) {
-			$typeBuilder = new TypeBuilder('contactPoint', $value);
+			$typeBuilder = CmsFactory::helpers()->typeBuilder($value);
 			$idcontactPoint = $typeBuilder->getId();
+			$idthing = $typeBuilder->getIdthing();
+			$position = $typeBuilder->getPropertyValue('position');
 		}
     $form = CmsFactory::view()->fragment()->form("form-contactPoint",["class" => "form-basic form-contactPoint"]);
     $form->action("/admin/contactPoint/$case")->method("post");
     // hiddens
     $form->input('typeHasPart', $typeHasPart, "hidden");
+	  $form->input('idHasPart', $idHasPart, 'hidden');
     if ($case === "new") {
-      $form->input('idHasPart', (string) $idHasPart, "hidden");
       $form->content("<h4>"._('New').": </h4>");
     } elseif ($value) {
       $form->input('idcontactPoint', (string) $idcontactPoint, 'hidden');
-      $form->input('idIsPartOf', (string) $idcontactPoint, 'hidden');
+      $form->input('idIsPartOf', $idthing, 'hidden');
     }
     // POSITION
-    $form->fieldsetWithInput("position", (isset($value['position']) ? (string) $value['position'] : (string) $key), "#", "number", null, [ "min" => "1"]);
+    $form->fieldsetWithInput("position", ($value ? $position : (string) $key), "#", "number", null, [ "min" => "1"]);
     // NAME
     $form->fieldsetWithInput("name", $value['name'] ?? null, _("Contact name"));
     // CONTACT TYPE
     $form->fieldsetWithInput("contactType", $value['contactType'] ?? null, _("Contact type"));
     // TELEPHONE
     $form->fieldsetWithInput("telephone", $value['telephone'] ?? null, _("Telephone"));
-    // WHATSAPP
-    $whatsapp = isset($value['whatsapp']) ? (int) $value['whatsapp'] : 0;
-		$form->fieldsetWithRadio('whatsapp', [1=>'Sim',0=>'Não'], $whatsapp, _("Whatsapp"));
-
     // EMAIL
     $form->fieldsetWithInput("email", $value['email'] ?? null, _("Email"));
-    // OBS
-    $form->fieldsetWithInput("obs", $value['obs'] ?? null, _("Obs"));
     // SUBMIT
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/contactPoint/erase");

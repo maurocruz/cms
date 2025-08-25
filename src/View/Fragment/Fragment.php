@@ -8,6 +8,7 @@ use Plinct\Cms\View\Authentication\AuthFragment;
 use Plinct\Cms\View\Fragment\Box\Box;
 use Plinct\Cms\View\Fragment\Button\Buttons;
 use Plinct\Cms\View\Fragment\Form\Form;
+use Plinct\Cms\View\Fragment\Navbar\NavbarRow;
 use Plinct\Cms\View\Fragment\Table\Table;
 use Plinct\Cms\View\Fragment\Table\TableInterface;
 use Plinct\Cms\View\Fragment\Message\Message;
@@ -21,6 +22,11 @@ use Plinct\Web\Fragment\PageNavigation\PageNavigation;
 
 class Fragment
 {
+	/**
+	 * @param string $contentUrl
+	 * @param array|null $attributes
+	 * @return string
+	 */
 	public function audio(string $contentUrl, ?array $attributes = null): string
 	{
 		$attr = CmsFactory::toolBox()->convertAttributesToString($attributes);
@@ -97,6 +103,14 @@ class Fragment
   public function navbar(string $title = null, array $list = null, int $level = 2, array $searchInput = null): NavbarInterface {
     return new Navbar($title, $list, $level, $searchInput);
   }
+
+	/**
+	 * @return NavbarRow
+	 */
+	public function navbarRow(): NavbarRow
+	{
+		return new NavbarRow();
+	}
 
   /**
    * @param string|null $message

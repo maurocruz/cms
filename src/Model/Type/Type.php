@@ -93,7 +93,7 @@ class Type
 			$params =	$classType->update($params);
 			}
 		}
-		$data = CmsFactory::model()->api()->put($this->type, array_filter($params))->ready();
+		$data = CmsFactory::model()->api()->put($this->type, $params)->ready(); // não coloque array_filter($params) aqui, pois ele remove os campos vazios do array
 		if ($data['status'] === "success") {
 			CmsFactory::view()->Logger('type')->info("UPDATE DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "id"=>$id]);
 		} elseif($data['status'] === 'fail') {

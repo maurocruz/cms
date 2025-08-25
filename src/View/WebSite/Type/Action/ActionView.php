@@ -14,11 +14,10 @@ class ActionView extends ThingView implements TypeViewInterface
 
 	/**
 	 * @param string $type
-	 * @param string $sitemapFilename
 	 */
-	public function __construct(string $type = 'action', string $sitemapFilename = 'sitemap-action.xml')
+	public function __construct(string $type = 'action')
 	{
-		parent::__construct($type, $sitemapFilename);
+		parent::__construct($type);
 	}
 
 	/**

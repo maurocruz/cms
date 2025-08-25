@@ -11,7 +11,9 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 * @var string|null
 	 */
 	protected ?string $idwebSite = null;
-
+	/**
+	 * @var string|null
+	 */
 	protected ?string $webSiteName = null;
 
 	/**
@@ -29,28 +31,26 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	public function __destruct()
 	{
 		parent::__destruct();
-
-		CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-				->type('webSite')
-				->title("WebSite")
-				->level(3)
-				->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
-				->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
-				->search()
-				->ready()
-		);
-
+		$navbar = CmsFactory::view()->fragment()->navbar()
+			->type('webSite')
+			->title("WebSite")
+			->level(3)
+			->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
+			->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
+			->search()
+			->ready();
 		if ($this->idwebSite) {
-			CmsFactory::view()->addHeader(
-				CmsFactory::view()->fragment()->navbar()
-					->title(_($this->webSiteName ?? $this->name))
-					->level(4)
-					->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
-					->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("Pages"))
-					->ready()
-			);
+			$navbarItem = CmsFactory::view()->fragment()->navbar()
+				->title(_($this->webSiteName ?? $this->name))
+				->level(4)
+				->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("Pages"))
+				->ready();
 		}
+		$navbarRow = CmsFactory::view()->fragment()->navbarRow();
+		$navbarRow->setItems($navbar,$navbarItem ?? null);
+		CmsFactory::view()->addHeader($navbarRow->render());
+
 	}
 
 	/**

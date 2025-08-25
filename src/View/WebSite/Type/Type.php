@@ -94,7 +94,7 @@ class Type
 						: CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_(sprintf("Method '%s' on '%s' does not exist", $this->methodName, get_class($this->object)))));
 			}
 		} else {
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_("Object does not exist")));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_("Object view does not exist")));
 			return false;
 		}
 		return true;

@@ -27,7 +27,6 @@ class CreativeWorkView extends ThingView
 	 */
 	public function __destruct()
 	{
-		//parent::__destruct();
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
 			->type('creativeWork')
 			->setTitle(_('Creative work'))
@@ -123,7 +122,7 @@ class CreativeWorkView extends ThingView
 		// thing
 		$form = self::formThingContent($form, $value);
 		if ($this->type !== 'CreativeWork') {
-			$form->content(CmsFactory::view()->fragment()->box()->expandigBoxWithoutContent(_("Creative work")." "._('properties'), "form-creativeWork"));
+			$form->content(CmsFactory::view()->fragment()->box()->expandigBoxWithoutContent(_("Creative work"), "form-creativeWork"));
 		}
 		// headline
 		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));

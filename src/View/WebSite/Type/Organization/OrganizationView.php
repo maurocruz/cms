@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Organization;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\Intangible\ContactPointView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
@@ -17,11 +17,10 @@ class OrganizationView extends ThingView implements TypeViewInterface
 
 	/**
 	 * @param string $type
-	 * @param string $sitemapFilename
 	 */
-	public function __construct(string $type = 'organization', string $sitemapFilename = 'sitemap-organization.xml')
+	public function __construct(string $type = 'organization')
 	{
-		parent::__construct($type, $sitemapFilename);
+		parent::__construct($type);
 	}
 
 	public function __destruct()
@@ -33,6 +32,7 @@ class OrganizationView extends ThingView implements TypeViewInterface
 				->setTitle(_("Organization"))
 				->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/localBusiness",_("Local Business"))
 				->ready()
 		);
 		if($this->name && $this->idorganization && $this->idthing) CmsFactory::view()->addHeader(
@@ -40,6 +40,7 @@ class OrganizationView extends ThingView implements TypeViewInterface
 				->title($this->name)
 				->level(3)
 				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/localBusiness?organization=$this->idorganization",_("Local Business"))
 				->newTab("/admin/service?provider=$this->idthing", _("Services"))
 				->newTab("/admin/product?manufacturer=$this->idthing", _("Products"))
 				->newTab("/admin/order?seller=$this->idthing", _("Orders"))
@@ -91,7 +92,7 @@ class OrganizationView extends ThingView implements TypeViewInterface
 			);
 			// CONTACT POINT
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('organization', $this->idthing, $value['contactPoint'] ?? null))
+				CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), ContactPointView::getForm('organization', $this->idthing, $value['contactPoint'] ?? null))
 			);
 			// IMAGE
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart((int) $this->idthing)->ready());

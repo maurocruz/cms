@@ -539,41 +539,30 @@ COLLECTION
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint {
-  h4 { flex-basis: 100%; }
+  border: 1px solid gray;
+  border-radius: 4px;
+  h4 { flex-basis: 100%; margin: 0; }
+
   fieldset.position { flex-basis: 60px; }
   fieldset.name { flex-basis: calc(100% - 60px); }
-  fieldset.contactType { flex-basis: calc(50% - 70px); }
-  fieldset.telephone { flex-basis: calc(50% - 30px); }
-  fieldset.whatsapp {
-    flex-basis: 96px;
-    display: flex;
-    legend { width: 100%; }
-    label {
-      display: flex;
-      margin-right: 8px;
-    }
+  fieldset.contactType { flex-basis: 50%; }
+  fieldset.telephone { flex-basis: 50%; }
+
+  @media (min-width: 480px) {
+    fieldset.email { flex-basis: calc(100% - 60px); }
   }
   @media (min-width: 576px) {
-    fieldset.name { flex-basis: calc(33.33% - 60px); }
-    fieldset.contactType { flex-basis: calc(33.33% - 70px); }
-    fieldset.telephone { flex-basis: calc(33.33% - 30px); }
-    fieldset.email { flex-basis: 50%; }
-    fieldset.obs { flex-basis: 50%; }
+    fieldset.name { flex-basis: calc(33.33% - 20px); }
+    fieldset.contactType { flex-basis: calc(33.33% - 20px); }
+    fieldset.telephone { flex-basis: calc(33.33% - 20px); }
+    fieldset.email { flex-basis: 350px; }
   }
   @media (min-width: 768px) {
-    fieldset.name { flex-basis: calc(20% - 60px); }
-    fieldset.contactType { flex-basis: calc(20% - 70px); }
-    fieldset.telephone { flex-basis: calc(20% - 30px); }
-    fieldset.email { flex-basis: 20%; }
-    fieldset.obs { flex-basis: 20%; }
+    fieldset.name { flex-basis: 180px; }
+    fieldset.contactType { flex-basis: 180px; }
+    fieldset.telephone { flex-basis: 180px; }
   }
   @media (min-width: 992px) {
-    justify-content: flex-start;
-    fieldset.name { flex-basis: 120px; }
-    fieldset.contactType { flex-basis: 130px; }
-    fieldset.telephone { flex-basis: 160px; }
-    fieldset.email { flex-basis: calc(50% - 315px); }
-    fieldset.obs { flex-basis: calc(50% - 315px); }
   }
 }
 

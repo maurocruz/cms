@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\View\WebSite\Type\Intangible\ContactPointView;
 use Plinct\Cms\View\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
@@ -113,7 +113,7 @@ class PersonView extends ThingView
 				// FORM
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Edit person"), self::formPerson('edit', $value), true));
 				// CONTACT POINT
-				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm('person', $this->idthing, $value['contactPoint'] ?? null)));
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), ContactPointView::getForm('person', $this->idthing, $value['contactPoint'] ?? null)));
 				// ADDRESS
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Postal address"), PostalAddressView::formPostalAddress('person',$this->idperson, $address ? 'edit' : 'new', $address)));
 				// HAS CERTIFICATION

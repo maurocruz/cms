@@ -145,6 +145,15 @@ dd {
   background-color: #d4ecf7;
 }
 
+.navbar-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.navbar-row .menu {
+  width: fit-content;
+  background-color: inherit;
+}
+
 /* FOOTER
 ============================================================================= */
 .footer {
@@ -925,8 +934,13 @@ COLLECTION
 
 /* CONTACT POINT
 ======================================================= */
+.form-contactPoint {
+  border: 1px solid gray;
+  border-radius: 4px;
+}
 .form-contactPoint h4 {
   flex-basis: 100%;
+  margin: 0;
 }
 .form-contactPoint fieldset.position {
   flex-basis: 60px;
@@ -935,77 +949,41 @@ COLLECTION
   flex-basis: calc(100% - 60px);
 }
 .form-contactPoint fieldset.contactType {
-  flex-basis: calc(50% - 70px);
+  flex-basis: 50%;
 }
 .form-contactPoint fieldset.telephone {
-  flex-basis: calc(50% - 30px);
+  flex-basis: 50%;
 }
-.form-contactPoint fieldset.whatsapp {
-  flex-basis: 96px;
-  display: flex;
-}
-.form-contactPoint fieldset.whatsapp legend {
-  width: 100%;
-}
-.form-contactPoint fieldset.whatsapp label {
-  display: flex;
-  margin-right: 8px;
+@media (min-width: 480px) {
+  .form-contactPoint fieldset.email {
+    flex-basis: calc(100% - 60px);
+  }
 }
 @media (min-width: 576px) {
   .form-contactPoint fieldset.name {
-    flex-basis: calc(33.33% - 60px);
+    flex-basis: calc(33.33% - 20px);
   }
   .form-contactPoint fieldset.contactType {
-    flex-basis: calc(33.33% - 70px);
+    flex-basis: calc(33.33% - 20px);
   }
   .form-contactPoint fieldset.telephone {
-    flex-basis: calc(33.33% - 30px);
+    flex-basis: calc(33.33% - 20px);
   }
   .form-contactPoint fieldset.email {
-    flex-basis: 50%;
-  }
-  .form-contactPoint fieldset.obs {
-    flex-basis: 50%;
+    flex-basis: 350px;
   }
 }
 @media (min-width: 768px) {
   .form-contactPoint fieldset.name {
-    flex-basis: calc(20% - 60px);
+    flex-basis: 180px;
   }
   .form-contactPoint fieldset.contactType {
-    flex-basis: calc(20% - 70px);
+    flex-basis: 180px;
   }
   .form-contactPoint fieldset.telephone {
-    flex-basis: calc(20% - 30px);
-  }
-  .form-contactPoint fieldset.email {
-    flex-basis: 20%;
-  }
-  .form-contactPoint fieldset.obs {
-    flex-basis: 20%;
+    flex-basis: 180px;
   }
 }
-@media (min-width: 992px) {
-  .form-contactPoint {
-    justify-content: flex-start;
-  }
-  .form-contactPoint fieldset.name {
-    flex-basis: 120px;
-  }
-  .form-contactPoint fieldset.contactType {
-    flex-basis: 130px;
-  }
-  .form-contactPoint fieldset.telephone {
-    flex-basis: 160px;
-  }
-  .form-contactPoint fieldset.email {
-    flex-basis: calc(50% - 315px);
-  }
-  .form-contactPoint fieldset.obs {
-    flex-basis: calc(50% - 315px);
-  }
-}
-
 /* CREATIVE WORK
 ======================================================= */
 .form-creativeWork {
@@ -2024,21 +2002,6 @@ table .table-delete-button {
 }
 
 @media (min-width: 576px) {
-  .menu2 {
-    padding-left: 6px;
-  }
-  .menu3 {
-    padding-left: 12px;
-  }
-  .menu4 {
-    padding-left: 18px;
-  }
-  .menu5 {
-    padding-left: 24px;
-  }
-  .menu6 {
-    padding-left: 30px;
-  }
   .form-postalAddress fieldset:nth-of-type(1) {
     width: 100%;
   }

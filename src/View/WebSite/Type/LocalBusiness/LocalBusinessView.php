@@ -1,118 +1,108 @@
 <?php
-namespace Plinct\Cms\Controller\WebSite\Type\LocalBusiness;
+namespace Plinct\Cms\View\WebSite\Type\LocalBusiness;
 
 use Exception;
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\ContactPoint;
+use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Intangible\ContactPointView;
+use Plinct\Cms\View\WebSite\Type\Organization\OrganizationView;
 
-class LocalBusinessView
+class LocalBusinessView extends OrganizationView
 {
+	/**
+	 * @var string
+	 */
+	private string $idlocalBusiness;
+
+	/**
+	 * @param string $type
+	 */
+	public function __construct(string $type = 'localBusiness')
+	{
+		parent::__construct($type);
+	}
+
+	/**
+	 *
+	 */
+	public function __destruct()
+	{
+		CmsFactory::view()->addHeader(
+			CmsFactory::view()->fragment()->navbar()
+			->type('localBusiness')
+			->title(_('Local business'))
+			->newTab('/admin/localBusiness', CmsFactory::view()->fragment()->icon()->home())
+			->newTab('/admin/localBusiness/new', CmsFactory::view()->fragment()->icon()->plus())
+			->ready()
+		);
+	}
+
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
+	public function index(?array $data, array $queryParams = null): void
+	{
+		CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->reactShell('localBusiness')->ready()
+		);
+	}
+
   /**
    *
+   * @param array|null $data
+   * @param array|null $queryParams
    */
-  public function navbarLocalBussines(string $title = null): void
+  public function new(?array $data, array $queryParams = null): void
   {
-    CmsFactory::webSite()->navbar(_("Locals business"), [
-        "/admin/localBusiness" => CmsFactory::response()->fragment()->icon()->home(),
-        "/admin/localBusiness/new" => CmsFactory::response()->fragment()->icon()->plus()
-    ], 2, ['table'=>'localBusiness']);
-
-    if ($title) CmsFactory::webSite()->navbar($title, [], 3);
-  }
-
-  /**
-   * @param $data
-   */
-  public function index($data): void
-  {
-		$apiHost = App::getApiHost();
-    $this->navbarLocalBussines();
-		CmsFactory::webSite()->addMain("<div class='plinct-shell' data-type='localBusiness' data-apihost='$apiHost'></div>");
-  }
-
-  /**
-   *
-   */
-  public function new(): void
-  {
-    $this->navbarLocalBussines();
-    CmsFactory::webSite()->addMain(
-			CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness(), _("Localbusiness"))
+    CmsFactory::view()->addMain(
+			CmsFactory::view()->fragment()->box()->simpleBox(self::formLocalBussiness(), _("Localbusiness"))
     );
   }
 
   /**
+   * @param array|null $data
+   * @param array|null $queryParams
    * @throws Exception
    */
-  public function edit($data): void
+  public function edit($data, array $queryParams = null): void
   {
-    $value = $data[0];
-    $id = $value['idlocalBusiness'];
-		$apiHost = App::getApiHost();
-		$userToken = CmsFactory::request()->user()->userLogged()->getToken();
-		// NAVBAR
-    $this->navbarLocalBussines($value['name']);
-    // LOCAL BUSINESS
-		CmsFactory::webSite()->addMain("<div
-			class='plinct-shell'
-			data-type='localBusiness'
-			data-idispartof='{$value['idlocalBusiness']}'
-			data-apihost='{$apiHost}'
-			data-usertoken='{$userToken}'
-		></div>");
-    //$content[] = "<script src='https://plinct.com.br/static/dist/plinct-thing/main.js'></script>";
-    //$content[] = "<div id='plinctThing' data-type='LocalBusiness' data-id='$id' data-apiHost='$apiHost'></div>";
-
-    //$content[] = CmsFactory::response()->fragment()->box()->simpleBox(self::formLocalBussiness("edit", $value), _("LocalBusiness"));
-		// ADDITIONAL TYPE
-		//$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Additional type"), '<div>Development additional type functions</div>');
-    // LOCATION
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Place"), CmsFactory::response()->fragment()->form()->relationshipOneToOne("localBusiness", $id, "location", "place", $value['location']));
-    // CONTACT POINT
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Contact point"), (new ContactPoint())->getForm("localBusiness", $id, $value['contactPoint']));
-    // ORGANIZATION
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Organization"), CmsFactory::response()->fragment()->form()->relationshipOneToOne("localBusiness", $id, "organization", "organization", $value['organization']));
-    // MEMBER
-    $content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Persons"), CmsFactory::response()->fragment()->form()->relationshipOneToMany("localBusiness", $id, "person", $value['member']));
-    // IMAGE
-		/*$content[] = "<div
-			class='plinct-shell'
-			data-type='imageObject'
-			data-tablehaspart='localBusiness'
-			data-idhaspart='{$value['idlocalBusiness']}'
-			data-apihost='{$apiHost}'
-			data-usertoken='{$userToken}'
-		></div>";*/
-    //$content[] = CmsFactory::response()->fragment()->box()->expandingBox(_("Images"), (new ImageObjectView())->getForm("localBusiness", $id, $value['image']));
-
-    CmsFactory::webSite()->addMain($content);
+    $value = $data[0] ?? null;
+		if ($value) {
+			$tbLocalBusiness = CmsFactory::helpers()->typeBuilder($value);
+			$this->idlocalBusiness = $tbLocalBusiness->getId();
+			$this->idthing = $tbLocalBusiness->getIdthing();
+			$this->name = $tbLocalBusiness->getValue('name');
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->simpleBox(self::formLocalBussiness($value), _("Localbusiness"))
+			);
+			// CONTACT POINT
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->box()->expandingBox(_('Contact point'),ContactPointView::getForm('localBusiness', $this->idthing, $value['contactPoint'] ?? null))
+			);
+			// HAS PART
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('localBusiness')->setProperty('hasPart')->setIdHasPart((int) $this->idthing)->ready());
+		} else {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent());
+		}
   }
 
-  /**
-   * @return array
-   */
-  private static function formLocalBussiness(): array
+	/**
+	 * @param array|null $value
+	 * @return array
+	 */
+  private function formLocalBussiness(array $value = null): array
   {
-    $form = CmsFactory::response()->fragment()->form(["id"=>"form-localBusiness", "class" => "formPadrao form-localBusiness"]);
+    $form = CmsFactory::view()->fragment()->form('form-localBusiness',['class'=>'formPadrao form-localBusiness']);
     $form->action("/admin/localBusiness/new")->method('post');
-    // name
-    $form->fieldsetWithInput("name", null['name'] ?? null, _("Name"));
-    // description
-    $form->fieldsetWithTextarea("description", null['description'] ?? null, _("Description"));
-    // disambiguatingDescription
-    $form->fieldsetWithTextarea("disambiguatingDescription", null['disambiguatingDescription'] ?? null, _("Disambiguating description"));
-    // hasOfferCatalog
-    $form->fieldsetWithInput("hasOfferCatalog", null['hasOfferCatalog'] ?? null, _("Offer catalog"));
-    // url
-    $form->fieldsetWithInput("url", null['url'] ?? null, "Url");
-    // dateCreated
-    if ("new" == "edit") $form->fieldsetWithInput("dateCreated", null['dateCreated'] ?? null, _("Date created"), "datetime", null, [ "disabled" ]);
-    // dateModified
-    if ("new" == "edit") $form->fieldsetWithInput("dateModified", null['dateModified'] ?? null, _("Date modified"), "datetime", null, [ "disabled" ]);
+		if ($value) {
+			$form->input('idlocalBusiness', $this->idlocalBusiness, 'hidden');
+		}
+		// THING
+	  $form = parent::formThingContent($form, $value);
     // submit buttons
     $form->submitButtonSend();
-    if ("new" == "edit") $form->submitButtonDelete("/admin/localBusiness/erase");
+    if ($value) $form->submitButtonDelete("/admin/localBusiness/erase");
     // ready
     return $form->ready();
   }
