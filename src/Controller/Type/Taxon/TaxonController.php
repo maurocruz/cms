@@ -1,10 +1,12 @@
 <?php
 namespace Plinct\Cms\Controller\Type\Taxon;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\Controller\Type\ThingController;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
-class TaxonController implements TypeControllerInterface
+class TaxonController extends ThingController implements TypeControllerInterface
 {
 	/**
 	 * @param array $params
@@ -27,16 +29,17 @@ class TaxonController implements TypeControllerInterface
 	/**
 	 * @param array $params
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function edit(array $params): bool
 	{
-		$data = CmsFactory::model()->api()->get("taxon", $params)->ready();
-		if (!empty($data)) {
+		$data = CmsFactory::model()->type("taxon")->get($params);
+		if (isset($data[0])) {
 			$taxonRank = $data[0]['taxonRank'];
 			$parentTaxonType = $taxonRank == 'species' ? 'genus' : ($taxonRank == 'genus'
 				? 'family'
 				: []);
-			$parentTaxonList = CmsFactory::model()->api()->get('taxon', ['taxonRank' => $parentTaxonType, 'orderBy' => 'name'])->ready();
+			$parentTaxonList = CmsFactory::model()->type('taxon')->get(['taxonRank' => $parentTaxonType, 'orderBy' => 'name', 'limit'=>'none']);
 			foreach ($parentTaxonList as $parentTaxonListValue) {
 				$td = CmsFactory::toolBox()::typeBuilder($parentTaxonListValue);
 				$idtaxon = $td->getId();

@@ -6,30 +6,36 @@ use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class Taxon implements TypeViewInterface
+class TaxonView extends ThingView implements TypeViewInterface
 {
 	/**
 	 * @var ?int
 	 */
 	private ?int $idtaxon = null;
 
-  /**
-   * @param string|null $title
-   */
-  private function navbar(string $title = null): void
-  {
+	private ?string $title = null;
+
+
+	public function __construct(string $type = 'taxon', string $sitemapFilename = null)
+	{
+		parent::__construct($type, $sitemapFilename);
+	}
+
+	public function __destruct()
+	{
 		CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()
-	    ->type('taxon')
-	    ->title(_('Taxon'))
-	    ->newTab("/admin/taxon", CmsFactory::view()->fragment()->icon()->home())
-	    ->newTab("/admin/taxon/new", CmsFactory::view()->fragment()->icon()->plus())
+			->type('taxon')
+			->title(_('Taxon'))
+			->newTab("/admin/taxon", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin/taxon/new", CmsFactory::view()->fragment()->icon()->plus())
 			->search()
-	    ->ready()
+			->ready()
 		);
-    if ($title) {
-      CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()->type('taxon')->title($title)->ready());
-    }
-  }
+		if ($this->title) {
+			CmsFactory::view()->addHeader(CmsFactory::view()->fragment()->navbar()->type('taxon')->title($this->title)->ready());
+		}
+	}
+
 
   /**
    *
@@ -38,7 +44,6 @@ class Taxon implements TypeViewInterface
    */
   public function index(?array $data, array $queryParams = null): void
   {
-    $this->navbar();
 	  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('taxon')->setColumnsTable(['taxonRank'=>_('Taxon rank')])->ready());
   }
 
@@ -55,14 +60,13 @@ class Taxon implements TypeViewInterface
 			$idthing = $tb->getIdthing();
       $idtaxon = $tb->getId();
 			$this->idtaxon = $idtaxon;
-      $this->navbar($value['name'] . " (" . $value['taxonRank'] . ")");
+			$this->title = $value['name'] . " (" . $value['taxonRank'] . ")";
       // form taxon
       CmsFactory::view()->addMain([
-				self::formTaxon('edit', $value, $data['parentTaxonList']),
-	      CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready()
+				self::formTaxon('edit', $value, $data['parentTaxonList'] ?? null),
+	      CmsFactory::view()->fragment()->reactShell('taxon')->setProperty('hasPart')->setIdHasPart($idthing)->ready()
       ]);
     } else {
-      $this->navbar();
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No item found!")));
     }
   }
@@ -73,7 +77,6 @@ class Taxon implements TypeViewInterface
    */
   public function new(?array $data, array $queryParams = null): void
   {
-    $this->navbar();
 		CmsFactory::view()->addMain(self::formTaxon());
   }
 
@@ -90,7 +93,7 @@ class Taxon implements TypeViewInterface
     // id
     if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');
 		// THING
-	  $form = ThingView::formThingContent($form, $value);
+	  $form = parent::formThingContent($form, $value);
     // scientificNameAuthorship
     $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName
