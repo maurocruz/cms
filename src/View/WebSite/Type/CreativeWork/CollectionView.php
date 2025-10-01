@@ -66,12 +66,8 @@ class CollectionView extends CreativeWorkView implements TypeViewInterface
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox(self::formCollection('edit', $data[0]), _('Edit') . " " . _('collection'))
 			);
-			// HAS PART
-			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->expandingBox(_('Add new')." "._('item'),self::formCollectionHasPart())
-			);
 			// HAS PART REACT
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('collection')->setIdHasPart($this->idthing)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('collection')->setProperty('hasPart')->setIdHasPart($this->idthing)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('No collection found!'));
 		}

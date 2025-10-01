@@ -132,20 +132,17 @@ class CreativeWorkView extends ThingView
 		$form->fieldsetWithTextarea('text', $value['text'] ?? null, _('Text'));
 		// author
 		$form->relationshipOneToOne('person,organization',_('Author'), 'author', $value['author'] ?? null);
-
 		// copyrightHolder
 		//var_dump($value['copyrightHolder']); TODO: consertar
 		$form->relationshipOneToOne('person,organization',_('Copyright holder'), 'copyrightHolder', $value['copyrightHolder'] ?? null);
-
-		// isPartOf
-		//$form->relationshipOneToOne('creativeWork',_('Is part of'), 'isPartOf', $isPartOf);
-
 		// keywords
 		$form->fieldsetWithInput('keywords', $value['keywords'] ?? null, _('Keywords'));
 		// position
 		if ($position) $form->fieldsetWithInput('position', $position, _('Position'));
 		// version
 		$form->fieldsetWithInput('version', $value['version'] ?? null, _('Version'));
+		// size
+		$form->fieldsetWithInput('size', $value['size'] ?? null, _('Size'));
 		// license
 		$form->fieldsetWithInput('license', $value['license'] ?? null, _('License'));
 		// acquireLicensePage

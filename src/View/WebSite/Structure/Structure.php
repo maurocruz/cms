@@ -36,7 +36,7 @@ class Structure
         config.toolbar_mytoolbar = "{bold,italic,underline,strike,superscript,subscript}|{fontsize,paragraphs}|{forecolor,backcolor}|{justifyleft,justifycenter,justifyright,justifyfull}|{insertorderedlist,insertunorderedlist}|{insertchars}|{insertlink,unlink,insertimage}|removeformat|insertcode"
         +"#{undo,redo,fullscreenenter,fullscreenexit,code}";
 			</script> ';
-	  $returns .= '<script src="https://plinct.local/static/dist/plinct-shell/v3/main.js"></script>';
+	  $returns .= '<script src="https://plinct.com.br/static/dist/plinct-shell/v4/main.js"></script>';
 	  $returns .= '<title>Plinct CMS [' . App::getTitle() . ']</title>';
 		$returns .= '<meta name="description" content="CMS for Plinct">';
 		return $returns;

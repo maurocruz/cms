@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
-use DOMException;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
 
@@ -120,17 +119,5 @@ class CertificationView extends CreativeWorkView
 			$form->submitButtonDelete('/admin/certification/delete');
 		}
 		return $form->ready();
-	}
-
-	/**
-	 * @param array $data
-	 * @param array|null $queryParams
-	 * @return void
-	 * @throws DOMException
-	 */
-	public function sitemap(array $data, array $queryParams = null): void
-	{
-		$this->sitemapFilename = 'sitemap-certification.xml';
-		parent::sitemap($data);
 	}
 }

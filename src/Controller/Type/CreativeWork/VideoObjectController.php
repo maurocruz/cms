@@ -29,7 +29,7 @@ class VideoObjectController extends MediaObjectController implements TypeControl
 	 */
 	public function edit(array $params): bool
 	{
-		$data = CmsFactory::model()->type('videoObject')->get($params);
-		return CmsFactory::view()->webSite()->type('videoObject')->setData($data)->setMethodName('edit')->ready();
+		$this->data = CmsFactory::model()->api()->get('videoObject', ['idvideoObject' => $params['idvideoObject'], 'properties'=>'isPartOf'])->ready();
+		return CmsFactory::view()->webSite()->type('videoObject')->setMethodName('edit')->setData($this->data)->ready();
 	}
 }

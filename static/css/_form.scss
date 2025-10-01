@@ -573,11 +573,11 @@ COLLECTION
   flex-wrap: wrap;
 
   fieldset.position { flex-basis: 50px; }
-  fieldset.version { flex-basis: calc(100% - 50px); }
   fieldset.datePublished { flex-basis: fit-content; }
 
   @media (min-width: 480px) {
-    fieldset.version { flex-basis: calc(50% - 50px); }
+    fieldset.version { flex-basis: 50%; }
+    fieldset.size { flex-basis: 50%; }
     fieldset.license { flex-basis: 50%; }
     fieldset.acquireLicensePage { flex-basis: 50%; }
     fieldset.locationCreated { flex-basis: 50%; }
@@ -590,14 +590,23 @@ COLLECTION
     fieldset.alternativeHeadline { flex-basis: 50%; }
     fieldset.isPartOf { flex-basis: 50%; }
     fieldset.keywords { flex-basis: 50%; }
-    fieldset.version { flex-basis: 33.3%; }
-    fieldset.license { flex-basis: 33.3%; }
-    fieldset.acquireLicensePage { flex-basis: 33.3%; }
+    fieldset.version { flex-basis: 50%; }
+    fieldset.size { flex-basis: 50%; }
+    fieldset.license { flex-basis: 50%; }
+    fieldset.acquireLicensePage { flex-basis: 50%; }
   }
 
   @media (min-width: 768px) {
     fieldset.author { flex-basis: 50%; }
     fieldset.copyrightHolder { flex-basis: 50%; }
+    fieldset.version { flex-basis: 25%; }
+    fieldset.size { flex-basis: 25%; }
+  }
+
+  @media (min-width: 992px) {
+    fieldset.license { flex-basis: 33.3%; }
+    fieldset.acquireLicensePage { flex-basis: 33.3%; }
+    fieldset.locationCreated { flex-basis: 33.3%; }
   }
 
 }

@@ -993,15 +993,15 @@ COLLECTION
 .form-creativeWork fieldset.position {
   flex-basis: 50px;
 }
-.form-creativeWork fieldset.version {
-  flex-basis: calc(100% - 50px);
-}
 .form-creativeWork fieldset.datePublished {
   flex-basis: fit-content;
 }
 @media (min-width: 480px) {
   .form-creativeWork fieldset.version {
-    flex-basis: calc(50% - 50px);
+    flex-basis: 50%;
+  }
+  .form-creativeWork fieldset.size {
+    flex-basis: 50%;
   }
   .form-creativeWork fieldset.license {
     flex-basis: 50%;
@@ -1033,13 +1033,16 @@ COLLECTION
     flex-basis: 50%;
   }
   .form-creativeWork fieldset.version {
-    flex-basis: 33.3%;
+    flex-basis: 50%;
+  }
+  .form-creativeWork fieldset.size {
+    flex-basis: 50%;
   }
   .form-creativeWork fieldset.license {
-    flex-basis: 33.3%;
+    flex-basis: 50%;
   }
   .form-creativeWork fieldset.acquireLicensePage {
-    flex-basis: 33.3%;
+    flex-basis: 50%;
   }
 }
 @media (min-width: 768px) {
@@ -1048,6 +1051,23 @@ COLLECTION
   }
   .form-creativeWork fieldset.copyrightHolder {
     flex-basis: 50%;
+  }
+  .form-creativeWork fieldset.version {
+    flex-basis: 25%;
+  }
+  .form-creativeWork fieldset.size {
+    flex-basis: 25%;
+  }
+}
+@media (min-width: 992px) {
+  .form-creativeWork fieldset.license {
+    flex-basis: 33.3%;
+  }
+  .form-creativeWork fieldset.acquireLicensePage {
+    flex-basis: 33.3%;
+  }
+  .form-creativeWork fieldset.locationCreated {
+    flex-basis: 33.3%;
   }
 }
 

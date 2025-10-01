@@ -71,9 +71,14 @@ class VideoObjectView extends MediaObjectView implements TypeViewInterface
 	{
 		if (isset($data[0])) {
 			$value = $data[0];
+			$tbVideoObject = CmsFactory::toolBox()->typeBuilder($value);
+			$this->idvideoObject = $tbVideoObject->getId();
+			$this->name = $tbVideoObject->getValue('name');
+			$this->idthing = $tbVideoObject->getIdthing();
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox(self::formVideoObject('edit', $value), _('Edit') . " " . _('video'))
 			);
+			parent::tableIsPartOf($value['isPartOf'] ?? null);
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('No video found!'));
 		}
@@ -83,6 +88,7 @@ class VideoObjectView extends MediaObjectView implements TypeViewInterface
 	{
 		$form = CmsFactory::view()->fragment()->form('form-videoObject',['class'=>'form-basic form-videoObject']);
 		$form->action("/admin/videoObject/$case")->method('post');
+		//
 		if ($value) {
 			$form->content(CmsFactory::view()->fragment()->video($value['contentUrl'],['class'=>'form-videoObject-video']));
 			$tbVideoObject = CmsFactory::toolBox()->typeBuilder($value);

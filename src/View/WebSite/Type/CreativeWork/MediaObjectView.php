@@ -118,6 +118,11 @@ class MediaObjectView extends CreativeWorkView implements TypeViewInterface
 		$form = CmsFactory::view()->fragment()->form('form-mediaObject',['class'=>'form-basic form-creativeWork form-mediaObject']);
 		$form->action("/admin/mediaObject/$case")->method('post');
 		if ($value) {
+			$encodingFormat = $value['encodingFormat'] ?? null;
+			$contentUrl = $value['contentUrl'] ?? null;
+			if ($encodingFormat == 'application/pdf') {
+				$form->content("<iframe src='$contentUrl' width='60%' height='600px' style='margin: 0 20%'></iframe>");
+			}
 			$tbMediaObject = CmsFactory::toolBox()->typeBuilder($value);
 			$idmediaObject = $tbMediaObject->getId();
 			$form->input('idmediaObject',(string) $idmediaObject,'hidden');

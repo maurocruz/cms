@@ -1,7 +1,6 @@
 <?php
 namespace Plinct\Cms\View\WebSite\Type\Thing;
 
-use DOMException;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Helpers\CmsHelper;
 use Plinct\Cms\View\Fragment\CmsFragment;
@@ -143,6 +142,7 @@ class ThingView implements TypeViewInterface
 		$disambiguatingDescription = $value['disambiguatingDescription'] ?? null;
 		$apihost = CmsFactory::controller()->getApiHost();
 		$url = $value['url'] ?? null;
+		$image = $value['image'] ?? null;
 		if ($value) {
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
 			$idthing = $typeBuilder->getPropertyValue('idthing') ?? null;
@@ -172,6 +172,8 @@ class ThingView implements TypeViewInterface
 		$form->setEditor("description$idthing", "editor$case$idthing");
 		// url
 		$form->fieldsetWithInput('url', $url, _('url'));
+		// image url
+		$form->fieldsetWithInput('image',$image, _('Image url'));
 		// additionalType
 		$form->content("<div class='plinct-shell' data-property='additionalType' data-idhaspart='$this->idthing' data-apihost='$apihost'></div>");
 		// attachments
@@ -243,13 +245,13 @@ class ThingView implements TypeViewInterface
 				$idIsPartOf = $tbIsPartOf->getId();
 				$name = $tbIsPartOf->getValue('name');
 				$encodingFormat = $tbIsPartOf->getValue('encodingFormat');
-				$dateModified = $tbIsPartOf->getPropertyValue('dateModified');
+				$lastModified = $tbIsPartOf->getPropertyValue('lastModified');
 				$table->addRow(
 					"<a href='/admin/$typeIsPartOf/edit/$idIsPartOf'>".CmsFactory::view()->fragment()->icon()->edit(18,18)."</a>",
 					$idIsPartOf,
 					$name,
 					$encodingFormat,
-					CmsHelper::dateTime($dateModified)->readyDateTimeWithLiteral(),
+					CmsHelper::dateTime($lastModified)->readyDateTimeWithLiteral(),
 				);
 			}
 			CmsFactory::view()->addMain($table->ready());
@@ -272,21 +274,4 @@ class ThingView implements TypeViewInterface
 		$form->submitButtonSend();
 		return $form->ready();
 	}
-
-	/**
-	 * @param array $data
-	 * @param array|null $queryParams
-	 * @return void
-	 * @throws DOMException
-	 */
-	public function sitemap(array $data, array $queryParams = null): void
-	{
-		$sitemap = CmsFactory::helpers()->sitemap($this->type);
-		$sitemap->setFilename($this->sitemapFilename);
-		$sitemap->setNamespace($this->sitemapExtension);
-		$sitemap->setDataSitemap($data);
-		$result = $sitemap->saveSitemap();
-		CmsFactory::view()->fragment()->sitemapReturn($result, $sitemap->getFilename());
-	}
-
 }
