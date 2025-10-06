@@ -54,9 +54,13 @@ class ThingController implements TypeControllerInterface
 
 	/**
 	 * @inheritDoc
+	 * @throws Exception
 	 */
 	public function edit(array $params): bool
 	{
+		if (empty($this->data)) {
+			$this->data = CmsFactory::model()->type($this->type)->get($params);
+		}
 		return CmsFactory::view()->webSite()->type($this->type)->setMethodName('edit')->setQueryParams($params)->setData($this->data)->ready();
 	}
 
