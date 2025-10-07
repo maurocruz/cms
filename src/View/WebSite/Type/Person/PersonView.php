@@ -116,16 +116,8 @@ class PersonView extends ThingView
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), ContactPointView::getForm('person', $this->idthing, $value['contactPoint'] ?? null)));
 				// ADDRESS
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Postal address"), PostalAddressView::formPostalAddress('person',$this->idperson, $address ? 'edit' : 'new', $address)));
-				// HAS CERTIFICATION
-				// TODO: fazer link para certification
-				/*if(CmsFactory::controller()->configuration()->hasModulesAvailable('Certification')) {
-					CmsFactory::view()->addMain(
-						CmsFactory::view()->fragment()->box()->expandingBox(_("Certification"), CertificationView::hasCertification($value))
-					);
-				}*/
-				// IMAGE
-				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->ready());
-
+				// HAS PART
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('person')->setIdHasPart($this->idthing)->setProperty("hasPart")->ready());
 			} elseif (isset($data['status'])) {
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['status'].": ".$data['message']));
 			}
