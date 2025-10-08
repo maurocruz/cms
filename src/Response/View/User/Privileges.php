@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Response\View\User;
 
 use Plinct\Cms\CmsFactory;
@@ -50,12 +47,12 @@ class Privileges
 		$form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-user-privileges'])
 			->action("/admin/user/privileges/$case")->method('post');
 		// HIDDEN
-		$form->input('iduser', $iduser, 'hidden');
+		$form->input('iduser', (string) $iduser, 'hidden');
 		if ($iduser_privileges) {
-			$form->input('iduser_privileges', $iduser_privileges, 'hidden');
+			$form->input('iduser_privileges', (string) $iduser_privileges, 'hidden');
 		}
 		// function
-		$form->fieldsetWithSelect('function', $function, self::FUNCTIONS, _('Function') );
+		$form->fieldsetWithSelect('function', (string) $function, self::FUNCTIONS, _('Function') );
 		// actions
 		$form->fieldsetWithInput('actions', $actions, _('Actions'));
 		// namespace

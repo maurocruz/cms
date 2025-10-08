@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Event;
 
 use Plinct\Cms\CmsFactory;
@@ -9,9 +6,9 @@ use Plinct\Cms\CmsFactory;
 abstract class EventAbstract
 {
   /**
-   * @var ?string
+   * @var ?string | ?int
    */
-  protected ?string $idevent = null;
+  protected string|int|null $idevent = null;
 
   /**
    * @param string $case

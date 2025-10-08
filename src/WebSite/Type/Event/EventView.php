@@ -1,18 +1,16 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\WebSite\Type\Event;
 
 use Exception;
 use Plinct\Cms\App;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\WebSite\Type\ImageObject\ImageObjectView;
 
 class EventView extends EventAbstract
 {
   /**
    *
    */
-  protected function navbarEvent()
+  protected function navbarEvent(): void
   {
     CmsFactory::webSite()->navbar(_("Events"), [
       "/admin/event" => CmsFactory::response()->fragment()->icon()->home(),
@@ -22,7 +20,7 @@ class EventView extends EventAbstract
 
 	/**
 	 */
-  public function index()
+  public function index(): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -39,7 +37,7 @@ class EventView extends EventAbstract
   /**
    *
    */
-  public function new()
+  public function new(): void
   {
     // NAVBAR
     $this->navbarEvent();
@@ -50,7 +48,7 @@ class EventView extends EventAbstract
   /**
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
     // NAVBAR
     $this->navbarEvent();

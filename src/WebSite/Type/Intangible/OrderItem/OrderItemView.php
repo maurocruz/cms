@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\OrderItem;
 
 use Plinct\Cms\CmsFactory;

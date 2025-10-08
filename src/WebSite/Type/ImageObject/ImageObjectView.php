@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Exception;
@@ -14,7 +11,7 @@ class ImageObjectView extends ImageObjectWidget
 	 * @param array $data
 	 * @param $params
 	 */
-  public function index(array $data, $params)
+  public function index(array $data, $params): void
   {
 		$listBy = $params['listBy'] ?? null;
 
@@ -33,7 +30,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @param null $data
    */
-  public function new($data = null)
+  public function new($data = null): void
   {
 		// NAVBAR
 		parent::navBarLevel2(_('Add'));
@@ -43,7 +40,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
     if (!empty($data)) {
       $id = ArrayTool::searchByValue($data['identifier'], "id")['value'];
@@ -69,7 +66,7 @@ class ImageObjectView extends ImageObjectWidget
   /**
    * @throws Exception
    */
-  public function getForm(string $tableHasPart, string $idHasPart, array $data = null): array
+  public function getForm(string $tableHasPart, string|int $idHasPart, array $data = null): array
   {
     $this->tableHasPart = $tableHasPart;
     $this->idHasPart = $idHasPart;

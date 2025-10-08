@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Request\Api;
 
 use Plinct\Cms\App;
@@ -20,7 +19,7 @@ class Api
 
 	/**
 	 * @param string $relativeUrl
-	 * @param ?array $params
+	 * @param array $params
 	 * @return $this
 	 */
 	public function get(string $relativeUrl, array $params = []): Api
@@ -70,7 +69,8 @@ class Api
 	/**
 	 * @return mixed
 	 */
-	public function ready() {
+	public function ready(): mixed
+	{
 		$token = CmsFactory::request()->user()->userLogged()->getToken();
 		if($token) {
 			$this->curl->authorizationBear($token);

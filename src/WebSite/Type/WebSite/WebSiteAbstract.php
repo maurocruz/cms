@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\WebSite;
 
 use Plinct\Cms\CmsFactory;
@@ -17,7 +14,7 @@ class WebSiteAbstract
    */
   protected string $idwebSite;
 
-  protected function navbarWebSite($title = null)
+  protected function navbarWebSite($title = null): void
   {
     CmsFactory::webSite()->addHeader(
       CmsFactory::response()->fragment()->navbar()
@@ -72,7 +69,7 @@ class WebSiteAbstract
     $form = CmsFactory::response()->fragment()->form(['class'=>'formPadrao form-webSite']);
     $form->action("/admin/webSite/$case")->method('post');
     // hidden
-    if ($id) $form->input('idwebSite',$id,'hidden');
+    if ($id) $form->input('idwebSite', (string) $id,'hidden');
     // name
     $form->fieldsetWithInput('name',$name,_('Name'));
     // url

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Response\Fragment\Form;
 
 use Plinct\Cms\App;
@@ -46,16 +43,16 @@ class FormDecorator extends ElementDecorator implements FormInterface
 		return $this;
   }
 
-  /**
-   * @param string $name
-   * @param string $value
-   * @param string $type
-   * @param array|null $attributes
-   * @return FormInterface
-   */
-  public function input(string $name, string $value, string $type = 'text', array $attributes = null): FormInterface
+	/**
+	 * @param string $name
+	 * @param string|int $value
+	 * @param string $type
+	 * @param array|null $attributes
+	 * @return FormInterface
+	 */
+  public function input(string $name, string | int $value, string $type = 'text', array $attributes = null): FormInterface
   {
-     $this->form->input($name, $value, $type, $attributes);
+     $this->form->input($name, (string) $value, $type, $attributes);
      return $this;
   }
 
@@ -76,14 +73,14 @@ class FormDecorator extends ElementDecorator implements FormInterface
 
   /**
    * @param string $name
-   * @param string|null $value
+   * @param string|int|null $value
    * @param string|null $legend
    * @param string $type
    * @param array|null $attributes
    * @param array|null $attributesInput
    * @return FormInterface
    */
-  public function fieldsetWithInput(string $name, string $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
+  public function fieldsetWithInput(string $name, string|int $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
   {
       $this->form->fieldsetWithInput($name, $value, $legend, $type, $attributes, $attributesInput);
       return $this;
@@ -122,7 +119,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param array $params
    * @return mixed
    */
-  protected static function getData(array $params) {
+  protected static function getData(array $params): mixed
+  {
       $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
       return json_decode((ServerFactory::soloine())->get($params), true);
   }
@@ -169,7 +167,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param string $editorName
    * @return void
    */
-  public function setEditor(string $id, string $editorName = 'editor')
+  public function setEditor(string $id, string $editorName = 'editor'): void
   {
       if(App::getRichTextEditor())   $this->form->setEditor($id, $editorName, App::getStaticFolder());
   }
@@ -194,4 +192,16 @@ class FormDecorator extends ElementDecorator implements FormInterface
       $this->form->submitButtonDelete($formaction, $attributes);
       return $this;
   }
+
+	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
+		return $this;
+	}
+
+	public function fieldsetWithCheckbox(string $name, array $items, array $valuesChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithCheckbox($name, $items, $valuesChecked, $legend);
+		return $this;
+	}
 }

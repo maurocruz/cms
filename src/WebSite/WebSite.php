@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite;
 
 use Plinct\Cms\App;
@@ -20,7 +17,7 @@ class WebSite extends WebSiteAbstract
   /**
    * @return void
    */
-  public function create()
+  public function create(): void
   {
     if (session_status() === PHP_SESSION_NONE) session_start();
     // LANGUAGE
@@ -34,7 +31,7 @@ class WebSite extends WebSiteAbstract
 	/**
 	 * @return void
 	 */
-	public function buildBodyStructure()
+	public function buildBodyStructure(): void
 	{
 		// HEADER
 		if (CmsFactory::request()->user()->userLogged()->getIduser()) { parent::addHeader(Structure::mainMenu(), true); }
@@ -47,14 +44,17 @@ class WebSite extends WebSiteAbstract
 	 * @param string $bundle
 	 * @return void
 	 */
-	final public function addBundle(string $bundle)
+	final public function addBundle(string $bundle): void
 	{
 		if (in_array($bundle,parent::$BUNDLES) === false) {
 			parent::$BUNDLES[] = $bundle;
 		}
 	}
 
-	public function clearMain()
+	/**
+	 * @return void
+	 */
+	public function clearMain(): void
 	{
 		parent::$MAIN['content'] = null;
 	}
@@ -69,7 +69,7 @@ class WebSite extends WebSiteAbstract
 	/**
 	 * @throws ReflectionException
 	 */
-	public function getContent(array $params = null, array $queryStrings = null)
+	public function getContent(array $params = null, array $queryStrings = null): void
 	{
 		$type = $queryStrings['type'] ?? $params['type'] ?? null;
 		$methodName =  $params['methodName'] ?? $queryStrings['part'] ?? $queryStrings['action'] ?? 'index';
@@ -102,7 +102,7 @@ class WebSite extends WebSiteAbstract
 	 * @param int|null $level
 	 * @param array|null $searchInput
 	 */
-	public function navbar(string $title = null, array $list = null, int $level = null, array $searchInput = null)
+	public function navbar(string $title = null, array $list = null, int $level = null, array $searchInput = null): void
 	{
 		$fragment = CmsFactory::response()->fragment()
 			->navbar()
@@ -161,7 +161,8 @@ class WebSite extends WebSiteAbstract
 	 * @param string $message
 	 * @return void
 	 */
-	public function warning(string $message) {
+	public function warning(string $message): void
+	{
 		$this->addMain([ "tag" => "p", "attributes" => [ "class" => "warning" ], "content" => $message ]);
 	}
 }
