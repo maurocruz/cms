@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\ImageObject;
 
 use Exception;
@@ -19,18 +16,22 @@ class ImageObjectWidget
    */
   protected string $tableHasPart;
   /**
-   * @var string
+   * @var string|int
    */
-  protected string $idHasPart;
-
+  protected string|int $idHasPart;
+	/**
+	 * @var int
+	 */
 	protected int $limit = 40;
-
+	/**
+	 * @var int
+	 */
 	protected int $offset = 0;
 
 	/**
 	 * @return void
 	 */
-	protected function navBarLevel1()
+	protected function navBarLevel1(): void
 	{
 		CmsFactory::webSite()->addHeader(
 			CmsFactory::response()->fragment()->navbar()
@@ -44,7 +45,11 @@ class ImageObjectWidget
 		);
 	}
 
-	protected function navBarLevel2($title)
+	/**
+	 * @param $title
+	 * @return void
+	 */
+	protected function navBarLevel2($title): void
 	{
 		self::navBarLevel1();
 		CmsFactory::webSite()->addHeader(

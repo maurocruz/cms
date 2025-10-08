@@ -10,9 +10,9 @@ use Plinct\Tool\ArrayTool;
 class WebPageElementView
 {
   /**
-   * @var string
+   * @var string|int
    */
-  protected string $idwebPage;
+  protected string|int $idwebPage;
   /**
    * @var ?string
    */
@@ -21,7 +21,7 @@ class WebPageElementView
   /**
    * @param $title
    */
-  private function navBarWebPageElement($title)
+  private function navBarWebPageElement($title): void
   {
     if ($title) {
       CmsFactory::webSite()->navbar($title, [], 2);
@@ -31,7 +31,7 @@ class WebPageElementView
   /**
    * @return void
    */
-  public function index()
+  public function index(): void
   {
     $this->navBarWebPageElement(_("Web page element"));
   }
@@ -50,7 +50,7 @@ class WebPageElementView
    * @param array $data
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
     // IDS
     $this->idwebPageElement = ArrayTool::searchByValue($data['identifier'], "id")['value'];

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Response\Fragment\ListTable;
 
 use Plinct\Web\Element\Table;
@@ -51,9 +50,9 @@ abstract class ListTableAbstract
    */
   protected ?string $pathToEditButton = null;
 
-  protected string $idIsPartOf;
+  protected string|int $idIsPartOf;
   protected string $tableIsPartOf;
-  protected string $idHasPart;
+  protected string|int $idHasPart;
   protected string $tableHasPart;
 
 	protected ?string $orderBy = null;
@@ -134,7 +133,7 @@ abstract class ListTableAbstract
 		return $this;
 	}
 
-	public function buttonDelete(string $idIsPartOf, string $tableIsPartOf, string $idHasPart = null, string $tableHasPart = null): ListTableInterface
+	public function buttonDelete(string|int $idIsPartOf, string $tableIsPartOf, string|int $idHasPart = null, string $tableHasPart = null): ListTableInterface
 	{
 		$this->idIsPartOf = $idIsPartOf;
 		$this->tableIsPartOf = $tableIsPartOf;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Plinct\Cms\Request\Server\Server;
 use Plinct\Cms\Request\Server\Sitemap;
 use Plinct\Cms\Request\Server\Type\ClosureServer;
@@ -19,7 +17,18 @@ return function (Route $route)
 	$route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
 	{
 		if (CmsFactory::request()->user()->userLogged()->getIduser()) {
-			CmsFactory::webSite()->getContent($args, $request->getQueryParams());
+			$type = $args['type'] ?? null;
+			if ($type === 'login') {
+				return $response->withHeader("Location", "/admin")->withStatus(302);
+			} else {
+				if (!CmsFactory::request()->user()->userLogged()->hasPrivileges(1,'r',$type)) {
+					CmsFactory::webSite()->addMain(
+						CmsFactory::response()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
+					);
+				} else {
+					CmsFactory::webSite()->getContent($args, $request->getQueryParams());
+				}
+			}
 		}
 		return CmsFactory::response()->writeBody($response);
 	});

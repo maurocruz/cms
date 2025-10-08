@@ -8,14 +8,14 @@ use Plinct\Cms\CmsFactory;
 class PlaceView
 {
   /**
-   * @var string
+   * @var string|int
    */
-  protected string $placeId;
+  protected string|int $placeId;
 
   /**
    *
    */
-  public function navbarPlace(string $title = null)
+  public function navbarPlace(string $title = null): void
   {
     CmsFactory::webSite()->navbar(_("Place"), [
         "/admin/place" => CmsFactory::response()->fragment()->icon()->home(16,16),
@@ -29,7 +29,7 @@ class PlaceView
 
 	/**
 	 */
-  public function index()
+  public function index(): void
   {
     $this->navbarPlace();
 		CmsFactory::webSite()->addMain('<div class="plinct-shell" data-type="place" data-tablehaspart="place" data-apihost="'.App::getApiHost().'"></div>');
@@ -38,7 +38,7 @@ class PlaceView
   /**
    * @param null $data
    */
-  public function new($data = null)
+  public function new($data = null): void
   {
     $this->navbarPlace();
     CmsFactory::webSite()->addMain(CmsFactory::response()->fragment()->box()->simpleBox(self::formPlace(), _("Add new")));
@@ -48,7 +48,7 @@ class PlaceView
    * @param array $data
    * @throws Exception
    */
-  public function edit(array $data)
+  public function edit(array $data): void
   {
 		if (empty($data)) {
 			CmsFactory::webSite()->addMain("<p>"._("Nothing found!")."</p>");

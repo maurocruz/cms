@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Response\View\User;
 
 use Plinct\Cms\CmsFactory;
@@ -10,7 +9,7 @@ class User
 	 * @param string|null $title
 	 * @return void
 	 */
-	public function navbarUser(string $title = null)
+	public function navbarUser(string $title = null): void
 	{
 		CmsFactory::webSite()->addHeader(
 			CmsFactory::response()->fragment()->navbar()
@@ -37,7 +36,7 @@ class User
 	 * @param string $ordering
 	 * @return void
 	 */
-	public function index(array $data, string $orderBy, string $ordering)
+	public function index(array $data, string $orderBy, string $ordering): void
 	{
 		// navbar
 		$this->navbarUser();
@@ -60,19 +59,23 @@ class User
 
 		CmsFactory::webSite()->addMain($list->ready());
 	}
+
 	/**
+	 * @param $params
+	 * @return void
 	 */
-	public function new($params = null)
+	public function new($params = null): void
 	{
 		$this->navbarUser(_("Add new"));
 		CmsFactory::webSite()->addMain(
 			CmsFactory::response()->fragment()->auth()->register()
 		);
 	}
+
 	/**
 	 * @param ?array $data
 	 */
-	public function edit(array $data = null)
+	public function edit(array $data = null): void
 	{
 		if($data) {
 			$value = $data[0];
@@ -92,6 +95,7 @@ class User
 			CmsFactory::response()->message()->noContent();
 		}
 	}
+
 	/**
 	 * @param string $case
 	 * @param null $value

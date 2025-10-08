@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\WebSite\Type\Intangible\OrderItem;
 
 use Plinct\Cms\CmsFactory;
@@ -16,9 +13,9 @@ abstract class OrderItemAbstract
    */
   protected string $id;
   /**
-   * @var string
+   * @var string|int
    */
-  protected string $referencesOrder;
+  protected string|int $referencesOrder;
   /**
    * @var array
    */

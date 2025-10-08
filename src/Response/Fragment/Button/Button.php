@@ -6,14 +6,14 @@ use Plinct\Cms\CmsFactory;
 class Button
 {
     /**
-     * @param string $idIsPartOf
+     * @param string|int $idIsPartOf
      * @param string $tableISPartOf
-     * @param string|null $idHasPart
+     * @param string|int|null $idHasPart
      * @param string|null $tableHasPart
      * @param array|null $attributes
      * @return array
      */
-    public function buttonDelete(string $idIsPartOf, string $tableISPartOf, string $idHasPart = null, string $tableHasPart = null, array $attributes = null): array
+    public function buttonDelete(string|int $idIsPartOf, string $tableISPartOf, string|int $idHasPart = null, string $tableHasPart = null, array $attributes = null): array
     {
         $form = CmsFactory::response()->fragment()->form($attributes);
         $form->action("/admin/$tableISPartOf/erase")->method('post');

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Middleware;
 
 use Firebase\JWT\JWT;
@@ -41,6 +40,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
 			  CmsFactory::response()->fragment()->auth()->login()
 		  );
 	  }
+
     return $handler->handle($request);
   }
 }

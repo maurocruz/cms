@@ -14,9 +14,9 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	 */
 	private string $tableHasPart;
 	/**
-	 * @var string
+	 * @var string|int
 	 */
-	private string $idHasPart;
+	private string|int $idHasPart;
 	/**
 	 * @var string
 	 */
@@ -50,7 +50,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
      * @param string $class
      * @param string|null $value
      */
-    public function selectCategory(string $class = "thing", string $value = null)
+    public function selectCategory(string $class = "thing", string $value = null): void
     {
         $this->form->fieldset(self::selectReady('category', self::getData(['class'=>$class,'source'=>'category']), $value), _("Category"));
     }
@@ -90,13 +90,13 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
     }
 
 	/**
-	 * For print forms of the relationships tables
+	 * For print forms of the relationship tables
 	 * @param string $tableHasPart
-	 * @param string $idHasPart
+	 * @param string|int $idHasPart
 	 * @param string $tableIsPartOf
 	 * @return RelationshipInterface
 	 */
-	public function relationship(string $tableHasPart, string $idHasPart, string $tableIsPartOf): RelationshipInterface
+	public function relationship(string $tableHasPart, string | int $idHasPart, string $tableIsPartOf): RelationshipInterface
 	{
 		$this->tableHasPart = $tableHasPart;
 		$this->idHasPart = $idHasPart;
@@ -149,7 +149,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 				$form = CmsFactory::response()->fragment()->form(["class" => "formPadrao"])
 					->action("/admin/$table/edit")->method("post");
 				$form->input("tableHasPart", $this->tableHasPart, "hidden")
-					->input("idHasPart", $this->idHasPart, "hidden")
+					->input("idHasPart", (string) $this->idHasPart, "hidden")
 					->input("tableIsPartOf", $this->tableIsPartOf, "hidden")
 					->input("idIsPartOf", $id, "hidden")
 					->fieldsetWithInput("name", $item['name'], _($item['@type']) . " <a href=\"/admin/$table/edit/$id\">".("edit this")."</a>", "text", null, ["disabled"])
@@ -160,7 +160,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 		$this->form->attributes(["class" => "formPadrao form-relationship"]);
 		$this->form->action("/admin/" . lcfirst($this->tableIsPartOf) . "/new")->method("post");
 		$this->form->input("tableHasPart", $this->tableHasPart, "hidden")
-			->input("idHasPart", $this->idHasPart, "hidden")
+			->input("idHasPart", (string) $this->idHasPart, "hidden")
 			->content([ "tag" => "div", "attributes" => [ "class" => "add-existent", "data-type" => $table, "data-idHasPart" => $this->idHasPart, "data-orderBy" => $orberBy  ] ]);
 
 		$return[] = $this->form->ready();
@@ -180,7 +180,7 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
     public function relationshipOneToOne($tableHasPart, $idHasPart, $propertyName, $tableIsPartOf, $value = null): array
     {
 	    $this->tableHasPart = $tableHasPart;
-	    $this->idHasPart = (string) $idHasPart;
+	    $this->idHasPart = $idHasPart;
 	    $this->tableIsPartOf = $tableIsPartOf;
 			return $this->oneToOne($propertyName, $value);
     }
@@ -194,10 +194,10 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
 	 * @param string|null $orberBy
 	 * @return array
 	 */
-    public function relationshipOneToMany(string $tableHasPart, $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
+    public function relationshipOneToMany(string $tableHasPart, string|int $idHasPart, string $tableIsPartOf, array $value = null, string $orberBy = null): array
     {
 	    $this->tableHasPart = $tableHasPart;
-	    $this->idHasPart = (string) $idHasPart;
+	    $this->idHasPart = $idHasPart;
 	    $this->tableIsPartOf = $tableIsPartOf;
 			return $this->oneToMany($value, $orberBy);
 
@@ -217,15 +217,15 @@ class Form extends FormDecorator implements FormInterface, RelationshipInterface
         return "<datalist id='$id'>$content</datalist>";
     }
 
-    /**
-     * Creates a type selection form and chooses the type from a pop-up in an input form
-     * @param string $property
-     * @param string|array $typesForChoose
-     * @param array|bool $value
-     * @param string $nameLike
-     * @param array|null $attributes
-     * @return array
-     */
+	/**
+	 * Creates a type selection form and chooses the type from a pop-up in an input form
+	 * @param string $property
+	 * @param string|array $typesForChoose
+	 * @param array|bool $value
+	 * @param string $nameLike
+	 * @param array $attributes
+	 * @return array
+	 */
     public function chooseType(string $property, $typesForChoose, $value, string $nameLike = "name", array $attributes = []) : array
     {
         $attributes2['class'] = "choose-type";

@@ -20,9 +20,9 @@ class App
    */
   private static string $IMAGES_FOLDER = "/public/images/";
   /**
-   * @var string
+   * @var int
    */
-  private static $IMAGE_MAX_WIDTH = 1080;
+  private static int $IMAGE_MAX_WIDTH = 1080;
   /**
    * @var Slim
    */
@@ -54,11 +54,11 @@ class App
   /**
    * @var string|null
    */
-  private static string $API_SECRET_KEY = "";
+  private static ?string $API_SECRET_KEY = "";
   /**
    * @var float|int
    */
-  private static $API_USER_EXPIRE = 60*60*24*7;
+  private static int|float $API_USER_EXPIRE = 60*60*24*7;
   /**
    * @var string
    */
@@ -66,7 +66,7 @@ class App
   /**
    * @var
    */
-  private static $soloineUrl;
+  private static mixed $soloineUrl;
   /**
    * @var bool
    */
@@ -155,7 +155,7 @@ class App
   /**
    * @return mixed
    */
-  public static function getSoloineUrl()
+  public static function getSoloineUrl(): mixed
   {
     return self::$soloineUrl;
   }
@@ -218,7 +218,7 @@ class App
   /**
    *
    */
-  public static function setVersion()
+  public static function setVersion(): void
   {
 		$version = 'NAN';
 
@@ -228,7 +228,7 @@ class App
 		  $repository = new Repository($gitDirectory);
 		  $head = $repository->getHead();
 		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
-		  $commit = $head->getCommitHash();
+		  $commit = $head->getHash();
 
 		  $references = $repository->getReferences();
 		  $tags = $references->resolveTags($commit);
@@ -237,13 +237,13 @@ class App
 		  } else {
 			  $versionTag = substr($commit,0,8);
 		  }
-		  $version = "working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
+		  $version = "Working in localhost. Branch: <b>$branch</b>; Version: <b>$versionTag</b>";
 
 	  } else {
 		  $installedFile = realpath($_SERVER['DOCUMENT_ROOT'] . "/../vendor/composer/installed.json");
 		  $packages = json_decode(file_get_contents($installedFile));
 		  foreach ($packages->packages as $package) {
-			  if ($package->name && $package->name == "plinct/cms") {
+			  if ($package->name == "plinct/cms") {
 				  $version = $package->version;
 			  }
 		  }
@@ -257,12 +257,12 @@ class App
    */
   public static function getApiHost(): ?string
   {
-    return substr(self::$API_HOST,-1) === "/" ? self::$API_HOST : self::$API_HOST. "/";
+    return str_ends_with(self::$API_HOST, "/") ? self::$API_HOST : self::$API_HOST. "/";
   }
 
-  /**
-   * @return string|null
-   */
+	/**
+	 * @return string
+	 */
   public static function getApiSecretKey(): string
   {
     return self::$API_SECRET_KEY;
@@ -271,7 +271,7 @@ class App
   /**
    * @return float|int
    */
-  public static function getApiUserExpire()
+  public static function getApiUserExpire(): float|int
   {
     return self::$API_USER_EXPIRE;
   }
@@ -407,7 +407,7 @@ class App
   /**
    * @return mixed
    */
-  final public function run()
+  final public function run(): mixed
   {
 		return CmsFactory::request()->routes()->home($this->slim);
   }

@@ -58,15 +58,21 @@ return function (Route $route)
 		if (!CmsFactory::request()->user()->userLogged()->getIduser()) {
 			return CmsFactory::response()->writeBody($response);
 		}
-		$action = $args['action'] ?? 'index';
-		$iduser = $args['iduser'] ?? null;
-		$params = $request->getQueryParams();
-		if ($action == 'new') {
-			CmsFactory::response()->view()->user()->new($params);
-		} elseif($iduser && $action == 'edit') {
-			CmsFactory::request()->user()->edit($iduser, $params);
+		if (!CmsFactory::request()->user()->userLogged()->hasPrivileges(1,'r','user')) {
+			CmsFactory::webSite()->addMain(
+				CmsFactory::response()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
+			);
 		} else {
-			CmsFactory::request()->user()->index($params);
+			$action = $args['action'] ?? 'index';
+			$iduser = $args['iduser'] ?? null;
+			$params = $request->getQueryParams();
+			if ($action == 'new') {
+				CmsFactory::response()->view()->user()->new($params);
+			} elseif ($iduser && $action == 'edit') {
+				CmsFactory::request()->user()->edit($iduser, $params);
+			} else {
+				CmsFactory::request()->user()->index($params);
+			}
 		}
 		// RESPONSE
 		return CmsFactory::response()->writeBody($response);

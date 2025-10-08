@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace Plinct\Cms\Request\User;
 
 use Plinct\Cms\CmsFactory;
@@ -76,7 +73,7 @@ class UserLogged
 	{
 		if (self::$iduser && !self::$privileges) {
 			$data = CmsFactory::request()->user()->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
-			self::$privileges = $data[0]['privileges'];
+			self::$privileges = $data[0]['privileges'] ?? null;
 		}
 
 		return self::$privileges;
@@ -84,35 +81,17 @@ class UserLogged
 
 	public function hasPrivileges(int $function, string $actions, string $namespace): bool
 	{
-		foreach ($this->getPrivileges() as $value)
-		{
+		if ($this->getPrivileges() === null) return false;
+		foreach ($this->getPrivileges() as $value) {
 			$functionValue = $value['function'];
 			$actionsValue = $value['actions'];
 			$namespaceValue = $value['namespace'];
-
-			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') return true;
-			return (
-				$functionValue > $function
-				&& $this->permittedActions($actions, $actionsValue)
-				&& ($namespaceValue === 'all' || $namespaceValue == $namespace)
-			);
+			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') {
+				return true;
+			}
+			return $functionValue >= $function && str_contains($actionsValue, $actions) && str_contains(strtolower($namespaceValue), strtolower($namespace));
 		}
 
 		return false;
-	}
-
-	/**
-	 * @param string $needled
-	 * @param string $haystacked
-	 * @return bool
-	 */
-	private function permittedActions(string $needled, string $haystacked): bool
-	{
-		$returns = false;
-		if (strpos($needled,'c') !== false) $returns = strpos($haystacked,'c') !== false;
-		if (strpos($needled,'r') !== false) $returns = strpos($haystacked,'r') !== false;
-		if (strpos($needled,'u') !== false) $returns = strpos($haystacked,'u') !== false;
-		if (strpos($needled,'d') !== false) $returns = strpos($haystacked,'d') !== false;
-		return $returns;
 	}
 }

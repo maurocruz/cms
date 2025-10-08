@@ -43,14 +43,14 @@ class FormDecorator extends ElementDecorator implements FormInterface
 		return $this;
   }
 
-  /**
-   * @param string $name
-   * @param string|int $value
-   * @param string $type
-   * @param array|null $attributes
-   * @return FormInterface
-   */
-  public function input(string $name, $value, string $type = 'text', array $attributes = null): FormInterface
+	/**
+	 * @param string $name
+	 * @param string|int $value
+	 * @param string $type
+	 * @param array|null $attributes
+	 * @return FormInterface
+	 */
+  public function input(string $name, string | int $value, string $type = 'text', array $attributes = null): FormInterface
   {
      $this->form->input($name, (string) $value, $type, $attributes);
      return $this;
@@ -80,9 +80,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param array|null $attributesInput
    * @return FormInterface
    */
-  public function fieldsetWithInput(string $name, $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
+  public function fieldsetWithInput(string $name, string|int $value = null, string $legend = null, string $type = 'text', array $attributes = null, array $attributesInput = null): FormInterface
   {
-      $this->form->fieldsetWithInput($name, (string) $value, $legend, $type, $attributes, $attributesInput);
+      $this->form->fieldsetWithInput($name, $value, $legend, $type, $attributes, $attributesInput);
       return $this;
   }
 
@@ -113,19 +113,6 @@ class FormDecorator extends ElementDecorator implements FormInterface
       $this->form->fieldsetWithTextarea($name, $value, $legend, $attributesFieldset, $attributesTextarea);
       return $this;
   }
-
-	/**
-	 * @param string $name
-	 * @param array $items
-	 * @param $valueChecked
-	 * @param string|null $legend
-	 * @return FormInterface
-	 */
-	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
-	{
-		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
-		return $this;
-	}
 
   /**
    * GET A DATA FROM SOLOINE SERVER
@@ -191,13 +178,8 @@ class FormDecorator extends ElementDecorator implements FormInterface
    */
   public function submitButtonSend(array $attributes = null): FormInterface
   {
-		if ($attributes) {
-			$attr = array_merge(['class'=>'form-submit-button-send'], $attributes);
-		} else {
-			$attr = ['class'=>'form-submit-button-send'];
-		}
-		$this->form->submitButtonSend($attr);
-    return $this;
+      $this->form->submitButtonSend($attributes);
+      return $this;
   }
 
   /**
@@ -210,4 +192,16 @@ class FormDecorator extends ElementDecorator implements FormInterface
       $this->form->submitButtonDelete($formaction, $attributes);
       return $this;
   }
+
+	public function fieldsetWithRadio(string $name, array $items, $valueChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithRadio($name, $items, $valueChecked, $legend);
+		return $this;
+	}
+
+	public function fieldsetWithCheckbox(string $name, array $items, array $valuesChecked, string $legend = null): FormInterface
+	{
+		$this->form->fieldsetWithCheckbox($name, $items, $valuesChecked, $legend);
+		return $this;
+	}
 }
