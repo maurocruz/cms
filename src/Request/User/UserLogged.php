@@ -89,9 +89,8 @@ class UserLogged
 			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') {
 				return true;
 			}
-			return $functionValue >= $function && str_contains($actionsValue, $actions) && str_contains(strtolower($namespaceValue), strtolower($namespace));
+			return $functionValue >= $function && str_contains($actionsValue, $actions) && (str_contains(strtolower($namespaceValue), strtolower($namespace)) || $namespaceValue == 'all');
 		}
-
 		return false;
 	}
 }

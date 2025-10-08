@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Plinct\Cms;
 
 use Gitonomy\Git\Repository;
@@ -228,7 +226,7 @@ class App
 		  $repository = new Repository($gitDirectory);
 		  $head = $repository->getHead();
 		  $branch = rtrim(preg_replace("/(.*?\/){2}/", '', $head->getRevision()));
-		  $commit = $head->getHash();
+		  $commit = method_exists($head,'getHash') ? $head->getHash() : $head->getCommitHash();
 
 		  $references = $repository->getReferences();
 		  $tags = $references->resolveTags($commit);
