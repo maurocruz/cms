@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 namespace Plinct\Cms\Controller\Middleware;
 
 use Plinct\Cms\CmsFactory;
@@ -11,6 +9,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MessageOrientedMiddleware implements MiddlewareInterface
 {
+	/**
+	 * @param ServerRequestInterface $request
+	 * @param RequestHandlerInterface $handler
+	 * @return ResponseInterface
+	 */
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 	{
 		$RPC_Attr = $request->getAttribute('RPC');
@@ -21,7 +24,7 @@ class MessageOrientedMiddleware implements MiddlewareInterface
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('You need to create the database before starting the application.')));
 		} else if ($RPC_Attr['schema'] === 'no') {
 			CmsFactory::View()->addMain("<div class='warning'><p>"._('Tables do not exist!')."</p><button class='button'><a href='/admin/config/initApplication'>"._('Launch application?')."</a></button> </div>");
-		} else if (!$authAttr['uid']) {
+		} else if (!$authAttr['uid'] && $request->getUri()->getPath() !== '/admin/auth/change_password') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login());
 		}
 		return $handler->handle($request);

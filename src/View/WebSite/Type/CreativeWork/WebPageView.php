@@ -11,10 +11,6 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 	/**
 	 * @var string|null
 	 */
-	private ?string $idIsPartOf = null;
-	/**
-	 * @var string|null
-	 */
 	protected ?string $idwebPage = null;
 	/**
 	 * @var string|null
@@ -51,7 +47,6 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 				->title($this->webPageName)
 				->type('webPage')
 				->newTab("/admin/webPage/edit/$this->idwebPage", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/webPageElement?idHasPart=$this->idcreativeWork&typeHasPart=webPage",_('WebPage elements'))
 				->ready();
 		}
 		$navbarRow = CmsFactory::view()->fragment()->navbarRow()->setItems($navbar,$navbarItem ?? null)->setLevel(2);
@@ -71,7 +66,7 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 		$this->idwebSite = $tbIsPartOf->getId();
 		$this->idcreativeWork = $tbIsPartOf->getPropertyValue('idcreativeWork');
 		// list
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdIsPartOf($this->idcreativeWork)->setColumnsTable(['url'=>'Url'])->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart($this->idthing)->setColumnsTable(['url'=>'Url'])->ready());
   }
 
   /**
@@ -103,17 +98,23 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 		$this->name = $typeBuilder->getValue('name');
 		$this->idthing = $typeBuilder->getPropertyValue('idthing');
 		$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
-		// webSite
-		$webSite = $typeBuilder->getValue("isPartOf");
-		$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($webSite);
-	  $this->idwebSite = $typeBuilderWebSite->getId();
-		$this->webSiteName = $typeBuilderWebSite->getValue('name');
+		// is part of
+		$isPartOf = $data['isPartOf'] ?? null;
+		if ($isPartOf) {
+			array_walk($isPartOf, function($item) {
+				if ($item['@type'] === 'WebSite') {
+					$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($item);
+					$this->idwebSite = $typeBuilderWebSite->getId();
+					$this->webSiteName = $typeBuilderWebSite->getValue('name');
+				}
+			});
+		}
     // FORM EDIT
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
-    // PROPERTIES
+    // PROPERTIES;
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idthing, $data['identifier'])));
 		// HAS PART
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart((int) $this->idthing)->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
   }
 
 	/**

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\Model\Authentication;
 
 use Exception;
@@ -72,9 +71,9 @@ class Auth
 
 	/**
 	 * @param array $params
-	 * @return string
+	 * @return mixed
 	 */
-  public function changePassword(array $params): string
+  public function changePassword(array $params): mixed
   {
 		unset($params['submit']);
 		$base = !str_ends_with(App::getApiHost(), '/') ? App::getApiHost() . 'Auth.php/' : App::getApiHost();
@@ -82,7 +81,6 @@ class Auth
     $handleCurl = ToolBox::Curl()->setUrl($url)->post($params)->returnWithJson();
     // for localhost
     if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == "::1") $handleCurl->connectWithLocalhost();
-
     return json_decode($handleCurl->ready(), true);
   }
 }

@@ -1116,10 +1116,6 @@ COLLECTION
   p.userCreator {
     align-self: flex-end;
   }
-
-  @media (min-width: 480px) {
-   // fieldset.action { flex-basis: 50%; }
-  }
 }
 
 /* VIDEO OBJECT
@@ -1148,9 +1144,5 @@ COLLECTION
 /* WEB PAGE ELEMENT
 ====================================================== */
 .form-webPageElement {
-  fieldset.name { flex-basis: calc(100% - 50px); }
-  fieldset.position { flex-basis: 50px;
-    input { text-align: right; }
-  }
   fieldset.text textarea { min-height: 150px;}
 }

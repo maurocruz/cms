@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\WebSite\Type\Intangible;
 
 use Plinct\Cms\CmsFactory;
@@ -39,21 +38,30 @@ class PropertyValueView
 		$form->addMandatories('name');
 	  // HIDDENS
 	  $form->input('typeHasPart', $typeHasPart, 'hidden');
+		$idpropertyValue = null;
 	  // NEW
 	  if ($case == 'new') {
 		  $form->content("<p style='width: 100%; margin: 0;'>"._('New ')."</p>");
 			$form->input('idHasPart', $idHasPart, 'hidden');
     } else {
 			$tb = CmsFactory::toolBox()::typeBuilder($value);
-			$form->input('idpropertyValue',$tb->getId(), 'hidden');
+		  $idpropertyValue = $tb->getId();
+			if ($idpropertyValue) {
+				$form->input('idpropertyValue', $tb->getId(), 'hidden');
+			}
 	  }
 		// NAME
-	  $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'));
+	  $form->fieldsetWithInput('name', $value['name'] ?? null, _('Name'), 'text', null, !$idpropertyValue ? ['readonly'] : null);
 		// VALUE
-	  $form->fieldsetWithInput('value', $value['value'] ?? null, _('Value'));
+	  $form->fieldsetWithInput('value', $value['value'] ?? null, _('Value'), 'text', null, !$idpropertyValue ? ['readonly'] : null);
 		// SUBMIT BUTTONS
-	  $form->submitButtonSend();
-		if ($case == 'edit') $form->submitButtonDelete('/admin/propertyValue/erase');
+	  if ($case == 'edit' && $idpropertyValue) {
+		  $form->submitButtonSend();
+	  } elseif ($case == 'new') {
+		  $form->submitButtonSend();
+	  }
+		if ($case == 'edit' && $idpropertyValue) $form->submitButtonDelete('/admin/propertyValue/erase');
+
 		return $form->ready();
   }
 }

@@ -33,6 +33,11 @@ class OfferView extends OfferAbstract implements TypeViewInterface
 	  );
   }
 
+	/**
+	 * @param array|null $data
+	 * @param array|null $queryParams
+	 * @return void
+	 */
 	public function edit(?array $data, array $queryParams = null): void
 	{
 		$value = $data[0];

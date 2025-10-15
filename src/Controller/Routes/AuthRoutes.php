@@ -108,6 +108,9 @@ return function (Route $route)
 				 * GET
 				 */
 				$route->get('', function (Request $request, Response $response) {
+					if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
+						return $response->withHeader("Location", "/admin")->withStatus(302);
+					}
 					if (App::getMailHost() && App::getMailUsername() && App::getMailpassword() && App::getUrlToResetPassword()) {
 						CmsFactory::view()->clearMain();
 						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->resetPassword());
@@ -125,7 +128,9 @@ return function (Route $route)
 				{
 					$email = $request->getParsedBody()['email'];
 					$data = CmsFactory::model()->auth()->resetPassword($email);
-					CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->resetPassword($data, $email));
+					CmsFactory::view()->addMain(
+						CmsFactory::view()->fragment()->auth()->resetPassword($data, $email)
+					);
 					// RESPONSE
 					return CmsFactory::view()->writeBody($response);
 				});
@@ -146,7 +151,7 @@ return function (Route $route)
 					if ($selector && $validator) {
 						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->changePassword($request->getQueryParams()));
 					} else {
-						CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("Missing data!")));
+						return $response->withHeader('Location', '/admin')->withStatus(301);
 					}
 					// RESPONSE
 					return CmsFactory::view()->writeBody($response);

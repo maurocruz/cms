@@ -15,14 +15,6 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
 	/**
 	 * @var string|null
 	 */
-	protected ?string $idHasPart = null;
-	/**
-	 * @var string|null
-	 */
-	protected ?string $typeHasPart = null;
-	/**
-	 * @var string|null
-	 */
 	private ?string $webPageElementName = null;
 
 	/**
@@ -44,7 +36,7 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
 		  ->type('WebPageElement')
 		  ->title('WebPage Element')
 		  ->level(3)
-		  ->newTab("/admin/webPageElement?idHasPart=$this->idHasPart&typeHasPart=$this->typeHasPart",CmsFactory::view()->fragment()->icon()->home())
+			->newTab('/admin/webPageElement/edit/'.$this->idwebPageElement, CmsFactory::view()->fragment()->icon()->home())
 		  ->newTab("/admin/webPageElement/new?idHasPart=$this->idHasPart&typeHasPart=$this->typeHasPart",CmsFactory::view()->fragment()->icon()->plus())
 		  ->ready();
     if ($this->idwebPageElement && $this->webPageElementName) {
@@ -52,8 +44,6 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
 				->type('WebPageElement')
 	      ->title($this->webPageElementName)
         ->level(4)
-        ->newTab('/admin/webPageElement/edit/'.$this->idwebPageElement, CmsFactory::view()->fragment()->icon()->home())
-        ->newTab("/admin/webPageElement?idHasPart=$this->idcreativeWork&typeHasPart=webPageElement",_('WebPage elements'))
         ->ready();
     }
 		$navbarRow = CmsFactory::view()->fragment()->navbarRow();
@@ -127,24 +117,35 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
 			$this->name = $tbWebPageElement->getValue('name');
 			$this->idthing = $tbWebPageElement->getIdthing();
 			$this->idcreativeWork = $tbWebPageElement->getPropertyValue('idcreativeWork');
-			// web page
-			$webPage = $value['isPartOf'];
-			$tbIsPartOf = CmsFactory::toolBox()::typeBuilder($webPage);
-			$this->idwebPage = $tbIsPartOf->getId();
-			$this->webPageName = $tbIsPartOf->getValue('name');
-			$this->idHasPart = $tbIsPartOf->getPropertyValue('idcreativeWork');
-			$this->typeHasPart = $tbIsPartOf->getType();
-			// webSite
-			$webSite = $webPage['isPartOf'];
-			$tbWebSite = CmsFactory::toolBox()::typeBuilder($webSite);
-			$this->idwebSite = $tbWebSite->getId();
-			$this->webSiteName = $tbWebSite->getValue('name');
+			// is part of
+			$webPageElementIsPartOf = $value['isPartOf'] ?? null;
+			if ($webPageElementIsPartOf) {
+				array_walk($webPageElementIsPartOf, function ($item) {
+					if ($item['@type'] === 'WebPage') {
+						$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($item);
+						$this->idwebPage = $typeBuilderWebSite->getId();
+						$this->webPageName = $typeBuilderWebSite->getValue('name');
+						$this->idHasPart = $typeBuilderWebSite->getIdthing();
+						$this->typeHasPart = $typeBuilderWebSite->getType();
+						$webPageIspartOf = $item['isPartOf'] ?? null;
+						if ($webPageIspartOf) {
+							array_walk($webPageIspartOf, function ($item) {
+								if ($item['@type'] === 'WebSite') {
+									$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($item);
+									$this->idwebSite = $typeBuilderWebSite->getId();
+									$this->webSiteName = $typeBuilderWebSite->getValue('name');
+								}
+							});
+						}
+					}
+				});
+			}
 			// FORM
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPageElement('edit',$value), _("Web page element")));
 			// Properties
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", $this->idthing, $value['identifier'])));
 			// HAS PART REACT
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPageElement')->setIdHasPart($this->idthing)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPageElement')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
 		} else {
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->noContent(_("No items found!"))
@@ -160,9 +161,6 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
   private function formWebPageElement(string $case = "new", $value = null): array
   {
     $id = $this->idwebPageElement;
-		$headline = $value['headline'] ?? null;
-		$position = $value['position'] ?? null;
-		$text = $value['text'] ?? '';
     $form = CmsFactory::view()->fragment()->form("form-webPageElement",['class'=>'form-basic form-webPageElement']);
     $form->action("/admin/webPageElement/$case")->method('post');
 		$form->setIdform($id ? "webPageElement$id" : "webPageElement$case");

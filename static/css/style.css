@@ -1861,6 +1861,7 @@ COLLECTION
 .form-user-privileges p.userCreator {
   align-self: flex-end;
 }
+
 /* VIDEO OBJECT
 ====================================================== */
 .form-videoObject .form-videoObject-video {
@@ -1884,15 +1885,6 @@ COLLECTION
 
 /* WEB PAGE ELEMENT
 ====================================================== */
-.form-webPageElement fieldset.name {
-  flex-basis: calc(100% - 50px);
-}
-.form-webPageElement fieldset.position {
-  flex-basis: 50px;
-}
-.form-webPageElement fieldset.position input {
-  text-align: right;
-}
 .form-webPageElement fieldset.text textarea {
   min-height: 150px;
 }

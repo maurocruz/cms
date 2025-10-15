@@ -15,9 +15,20 @@ return function (Route $route)
 	/**
 	 * GET
 	 */
-	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response) {
+	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args) {
 		if (CmsFactory::controller()->user()->userLogged()->getIduser()) {
-			CmsFactory::controller()->typeController($request)->ready();
+			$type = $args['type'] ?? null;
+			if ($type === 'login') {
+				return $response->withHeader("Location", "/admin")->withStatus(302);
+			} else {
+				if ($type && !CmsFactory::controller()->user()->userLogged()->hasPrivileges(1,'r',$type)) {
+					CmsFactory::view()->addMain(
+						CmsFactory::view()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
+					);
+				} else {
+					CmsFactory::controller()->typeController($request)->ready();
+				}
+			}
 		}
 		return CmsFactory::view()->writeBody($response);
 	});

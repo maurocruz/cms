@@ -44,11 +44,7 @@ class WebPageElementController implements TypeControllerInterface
 	 */
 	public function edit(array $params): bool
 	{
-		$idwebPageElement = $params['idwebPageElement'] ?? null;
-		if ($idwebPageElement) {
-			$data = CmsFactory::model()->type('webPageElement')->get(['idwebPageElement'=>$idwebPageElement, 'properties'=>'hasPart,isPartOf']);
-			return CmsFactory::view()->webSite()->type('webPageElement')->setData($data)->setMethodName('edit')->ready();
-		}
-		return false;
+		$data = CmsFactory::model()->type('webPageElement')->get(['properties'=>'hasPart,isPartOf'] + $params);
+		return CmsFactory::view()->webSite()->type('webPageElement')->setData($data)->setMethodName('edit')->ready();
 	}
 }

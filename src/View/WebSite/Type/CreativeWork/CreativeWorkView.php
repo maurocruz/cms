@@ -12,6 +12,22 @@ class CreativeWorkView extends ThingView
 	 * @var string|null
 	 */
 	protected ?string $idcreativeWork = null;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $idHasPart = null;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $typeHasPart = null;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $idIsPartOf = null;
+	/**
+	 * @var string|null
+	 */
+	protected ?string $typeIsPartOf = null;
 
 	/**
 	 * @param string $type

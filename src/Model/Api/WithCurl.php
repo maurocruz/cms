@@ -84,9 +84,9 @@ class WithCurl
 	}
 
 	/**
-	 * @return array
+	 * @return mixed
 	 */
-	public function ready(): array
+	public function ready(): mixed
 	{
 		$token = CmsFactory::controller()->user()->userLogged()->getToken();
 		if($token) {

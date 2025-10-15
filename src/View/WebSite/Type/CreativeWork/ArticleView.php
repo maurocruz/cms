@@ -107,7 +107,7 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
    * @param null $ID
    * @return array
    */
-  static private function formArticle(string $case = "new", $value = null, $ID = null): array
+  private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
 	  $headline = $value['headline'] ?? null;
 	  $alternativeHeadline = $value['alternativeHeadline'] ?? null;

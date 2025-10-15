@@ -44,7 +44,6 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 				->title(_($this->webSiteName ?? $this->name))
 				->level(4)
 				->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/webPage?idwebSite=$this->idwebSite", _("Pages"))
 				->ready();
 		}
 		$navbarRow = CmsFactory::view()->fragment()->navbarRow();
@@ -112,6 +111,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
     $value = $data[0] ?? null;
 	  if ($value) {
 			$typeBuilder = ToolBox::typeBuilder($value);
+			$this->idthing = $typeBuilder->getIdthing();
 			$this->idwebSite = $typeBuilder->getId();
 			$this->name = $value['name'];
 			$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
@@ -119,8 +119,12 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->simpleBox(self::formWebSite($value), $value['name'])
 			);
+			// has part
+		  CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->reactShell('webSite')->setProperty('hasPart')->setIdHasPart($this->idthing)->ready()
+		  );
 			// list of webPages
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIdIsPartOf($this->idcreativeWork)->ready());
+			//CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIdIsPartOf($this->idcreativeWork)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('Nothing found!'));
 		}

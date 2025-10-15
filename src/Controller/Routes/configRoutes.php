@@ -10,8 +10,16 @@ return function (Route $route) {
 
 		$route->get('[/{method}]', function (Request $request, Response $response) {
 			$method = $request->getAttribute('method') ?? 'index';
-			$controller = CmsFactory::controller()->configuration();
-			$controller->$method();
+			$functionRequired = 4;
+			if (CmsFactory::controller()->user()->userLogged()->hasPrivileges($functionRequired, 'crud', 'config')) {
+				$controller = CmsFactory::controller()->configuration();
+				$controller->$method();
+			} else {
+				var_dump($request->getAttributes());
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
+				);
+			}
 			return CmsFactory::view()->writeBody($response);
 		});
 

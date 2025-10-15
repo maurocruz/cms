@@ -11,6 +11,9 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "You don't have privileges to access this page!"
+msgstr "Você não tem privilégio para acessar esta página!"
+
 msgid "Working in localhost"
 msgstr "Trabalhando em localhost"
 

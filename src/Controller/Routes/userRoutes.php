@@ -70,12 +70,17 @@ return function (Route $route)
 		$action = $args['action'] ?? 'index';
 		$iduser = $args['iduser'] ?? null;
 		$params = $request->getQueryParams();
-		if ($action == 'new') {
+		$functionRequired = 2;
+		if ($action == 'new' && CmsFactory::controller()->user()->userLogged()->hasPrivileges($functionRequired,'c','user')) {
 			CmsFactory::view()->user()->new();
-		} elseif($iduser && $action == 'edit') {
+		} elseif($iduser && $action == 'edit' && CmsFactory::controller()->user()->userLogged()->hasPrivileges($functionRequired,'u','user')) {
 			CmsFactory::controller()->user()->edit($iduser);
-		} else {
+		} elseif ($action == 'index' && CmsFactory::controller()->user()->userLogged()->hasPrivileges($functionRequired,'r','user')) {
 			CmsFactory::controller()->user()->index($params);
+		} else {
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
+			);
 		}
 		// RESPONSE
 		return CmsFactory::view()->writeBody($response);

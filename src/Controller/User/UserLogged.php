@@ -75,9 +75,8 @@ class UserLogged
 	{
 		if (self::$iduser && !self::$privileges) {
 			$data = CmsFactory::model()->type('user')->get(['iduser' => self::$iduser, 'properties'=>'privileges']);
-			self::$privileges = $data[0]['privileges'];
+			self::$privileges = $data[0]['privileges'] ?? null;
 		}
-
 		return self::$privileges;
 	}
 
@@ -86,35 +85,16 @@ class UserLogged
 	 */
 	public function hasPrivileges(int $function, string $actions, string $namespace): bool
 	{
-		foreach ($this->getPrivileges() as $value)
-		{
+		if ($this->getPrivileges() === null) return false;
+		foreach ($this->getPrivileges() as $value) {
 			$functionValue = $value['function'];
-			$actionValue = $value['action'];
+			$actionsValue = $value['action'];
 			$namespaceValue = $value['namespace'];
-
-			if ($functionValue == 5 && $actionValue == 'crud' && $namespaceValue == 'all') return true;
-			return (
-				$functionValue > $function
-				&&  $this->permittedActions($actions, $actionValue)
-				&& ($namespaceValue === 'all' || $namespaceValue == $namespace)
-			);
+			if ($functionValue == 5 && $actionsValue == 'crud' && $namespaceValue == 'all') {
+				return true;
+			}
+			return $functionValue >= $function && str_contains($actionsValue, $actions) && (str_contains(strtolower($namespaceValue), strtolower($namespace)) || $namespaceValue == 'all');
 		}
-
 		return false;
-	}
-
-	/**
-	 * @param string $needled
-	 * @param string $haystacked
-	 * @return bool
-	 */
-	private function permittedActions(string $needled, string $haystacked): bool
-	{
-		$returns = false;
-		if (str_contains($needled, 'c')) $returns = str_contains($haystacked, 'c');
-		if (str_contains($needled, 'r')) $returns = str_contains($haystacked, 'r');
-		if (str_contains($needled, 'u')) $returns = str_contains($haystacked, 'u');
-		if (str_contains($needled, 'd')) $returns = str_contains($haystacked, 'd');
-		return $returns;
 	}
 }
