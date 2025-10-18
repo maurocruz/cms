@@ -20,7 +20,7 @@ class MediaObjectController extends CreativeWorkController implements TypeContro
 	 */
 	public function edit(array $params): bool
 	{
-		$this->data = CmsFactory::model()->api()->get('mediaObject', ['idmediaObject' => $params['idmediaObject'], 'properties'=>'isPartOf'])->ready();
+		$this->data = CmsFactory::model()->api()->get('mediaObject', ['properties'=>'isPartOf'] + $params)->ready();
 		return CmsFactory::view()->webSite()->type('mediaObject')->setMethodName('edit')->setData($this->data)->ready();
 	}
 

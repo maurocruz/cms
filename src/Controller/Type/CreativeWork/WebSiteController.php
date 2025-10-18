@@ -30,8 +30,7 @@ class WebSiteController implements TypeControllerInterface
 	 */
   public function edit(?array $params): bool
   {
-    $id = $params['id'] ?? $params['idwebSite'] ?? null;
-    $data = CmsFactory::model()->api()->get('webSite',['idwebSite'=>$id])->ready();
+    $data = CmsFactory::model()->api()->get('webSite',$params)->ready();
 		return CmsFactory::view()->webSite()->type('webSite')->setMethodName('edit')->setData($data)->ready();
   }
 }

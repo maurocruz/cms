@@ -27,11 +27,7 @@ class ImageObjectController extends MediaObjectController implements TypeControl
 	 */
 	public function edit(array $params): bool
 	{
-		$idimageObject = $params['idimageObject'] ?? null;
-		if($idimageObject) {
-			$dataImageObject = CmsFactory::model()->api()->get('imageObject', ['idimageObject' => $idimageObject, 'properties'=>'isPartOf'])->ready();
-			return CmsFactory::view()->webSite()->type('imageObject')->setData($dataImageObject)->setMethodName('edit')->ready();
-		}
-		return true;
+		$dataImageObject = CmsFactory::model()->api()->get('imageObject', ['properties'=>'isPartOf'] + $params)->ready();
+		return CmsFactory::view()->webSite()->type('imageObject')->setData($dataImageObject)->setMethodName('edit')->ready();
 	}
 }
