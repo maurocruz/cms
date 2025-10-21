@@ -168,7 +168,7 @@ class MediaObjectView extends CreativeWorkView implements TypeViewInterface
 			// height
 			$form->fieldsetWithInput('height', $height, _('Height'), 'number', null, ['step' => '1','disabled']);
 			// duration
-			$form->fieldsetWithInput('duration', $duration, _('Duration'), 'time', null, ['disabled']);
+			$form->fieldsetWithInput('duration', $duration, _('Duration'), 'time');
 			// contentSize
 			$form->fieldsetWithInput('contentSize', $contentSize, _('Content size'), 'number', null, ['disabled']);
 			// bitrate
