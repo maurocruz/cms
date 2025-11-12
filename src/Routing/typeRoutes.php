@@ -14,14 +14,14 @@ return function (Route $route)
 	/**
 	 * GET
 	 */
-	$route->get('[/{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
+	$route->get('/[{type}[/{methodName}[/{id}]]]', function (Request $request, Response $response, $args)
 	{
 		if (CmsFactory::request()->user()->userLogged()->getIduser()) {
 			$type = $args['type'] ?? null;
 			if ($type === 'login') {
 				return $response->withHeader("Location", "/admin")->withStatus(302);
 			} else {
-				if (!CmsFactory::request()->user()->userLogged()->hasPrivileges(1,'r',$type)) {
+				if (!CmsFactory::request()->user()->userLogged()->hasPrivileges(1,'r',$type ?? 'index')) {
 					CmsFactory::webSite()->addMain(
 						CmsFactory::response()->fragment()->miscellaneous()->message(_("You don't have privileges to access this page!"))
 					);
