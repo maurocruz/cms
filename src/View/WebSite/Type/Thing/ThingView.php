@@ -107,6 +107,9 @@ class ThingView implements TypeViewInterface
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function formThing(string $case = 'new', array $value = null): array
 	{
 		$form = CmsFactory::view()->fragment()->form("form-thing", ['class'=>'form-basic form-thing']);
@@ -146,46 +149,61 @@ class ThingView implements TypeViewInterface
 		if ($value) {
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
 			$idthing = $typeBuilder->getPropertyValue('idthing') ?? null;
+			$dateRegistered = $typeBuilder->getPropertyValue('dateRegistered') ?? null;
+			$lastModified = $typeBuilder->getPropertyValue('lastModified') ?? null;
 			$case = 'edit';
 		}
+		// Expandig box
+		$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Thing"), "form-thing"));
+
 		if (!$form->getIdform()) {
 			$form->setIdform("form-".($type ?? "type")."-".($idthing ?? 'new'));
 		}
 		$form->addMandatories('name');
 		// CONTENT
+
 		$form->content("<div class='form-thing-extract'>");
-		$form->content("<p class='form-thing-extract-type'>$type</p>");
-		// name
-		$form->fieldsetWithInput('name', $name, $nameOfName ?? _('Name'));
-		// alternateName
-		if (!in_array('alternateName', $excludes)) {
-			$form->fieldsetWithInput('alternateName', $alternateName, _('Alternate name'));
-		}
-		// disambiguatingDescription
-		if (!in_array('disambiguatingDescription', $excludes)) {
-			$form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Short description for disambiguating'),['class'=>'thing-disambiguatingDescription']);
-		}
-		// description
-		$form->content(
-			CmsFragment::box()->expandingBox(_('Description'),"<textarea name='description' class='thing-description' id='description$idthing' style='min-height: 300px;'>$description</textarea>", false,'width: 100%;')
-		);
-		$form->setEditor("description$idthing", "editor$case$idthing");
-		// url
-		$form->fieldsetWithInput('url', $url, _('url'));
-		// image url
-		$form->fieldsetWithInput('image',$image, _('Image url'));
-		// additionalType
-		$form->content("<div class='plinct-shell' data-property='additionalType' data-idhaspart='$this->idthing' data-apihost='$apihost'></div>");
-		// attachments
-		if (!$value) {
-			$accept = match ($this->type) {
-				"audioObject" => "audio/*",
-				"imageObject" => "image/*",
-				"videoObject" => "video/*",
-				default => null
-			};
-			$form->fieldsetWithInput('uploadfile[]', null, _('Attachment'), 'file', null, ['accept' => $accept]);
-		}
+			$form->content("<p class='form-thing-extract-type'>$type</p>");
+			// name
+			$form->fieldsetWithInput('name', $name, $nameOfName ?? _('Name'));
+			// alternateName
+			if (!in_array('alternateName', $excludes)) {
+				$form->fieldsetWithInput('alternateName', $alternateName, _('Alternate name'));
+			}
+			// disambiguatingDescription
+			if (!in_array('disambiguatingDescription', $excludes)) {
+				$form->fieldsetWithTextarea('disambiguatingDescription', $disambiguatingDescription, _('Short description for disambiguating'),['class'=>'thing-disambiguatingDescription']);
+			}
+			// description
+			$form->content(
+				CmsFragment::box()->expandingBox(_('Description'),"<textarea name='description' class='thing-description' id='description$idthing' style='min-height: 300px;'>$description</textarea>", false,'width: 100%;')
+			);
+			$form->setEditor("description$idthing", "editor$case$idthing");
+			// url
+			$form->fieldsetWithInput('url', $url, _('url'));
+			// image url
+			$form->fieldsetWithInput('image',$image, _('Image path'));
+			// additionalType
+			$form->content("<div class='plinct-shell' data-property='additionalType' data-idhaspart='$this->idthing' data-apihost='$apihost'></div>");
+			// attachments
+			if (!$value) {
+				$accept = match ($this->type) {
+					"audioObject" => "audio/*",
+					"imageObject" => "image/*",
+					"videoObject" => "video/*",
+					default => null
+				};
+				$form->fieldsetWithInput('uploadfile[]', null, _('Attachment'), 'file', null, ['accept' => $accept]);
+			} else {
+				// date registered
+				$form->fieldsetWithInput("dateRegistered", $dateRegistered, _("Date registered"), "datetime-local", null, ["disabled"]);
+				// last modified
+				$form->fieldsetWithInput("lastModified", $lastModified, _("Last modified"), "datetime-local", null, ["disabled"]);
+			}
+		// end form-thing-extract
+		$form->content("</div>");
+
+		// end expanding box
 		$form->content("</div>");
 		//
 		return $form;

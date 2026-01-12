@@ -1,6 +1,7 @@
 <?php
 namespace Plinct\Cms\Controller\Type\Intangible;
 
+use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\Type\TypeControllerInterface;
 
@@ -8,6 +9,7 @@ class ServiceController implements TypeControllerInterface
 {
 	/**
 	 * @inheritDoc
+	 * @throws Exception
 	 */
 	public function index(array $params): bool
 	{
@@ -24,6 +26,7 @@ class ServiceController implements TypeControllerInterface
 
 	/**
 	 * @inheritDoc
+	 * @throws Exception
 	 */
 	public function new(array $params): bool
 	{
@@ -36,6 +39,7 @@ class ServiceController implements TypeControllerInterface
 
 	/**
 	 * @inheritDoc
+	 * @throws Exception
 	 */
 	public function edit(array $params): bool
 	{
@@ -43,7 +47,7 @@ class ServiceController implements TypeControllerInterface
 		if ($idservice) {
 			$dataService = CmsFactory::model()->type('service')->get(['idservice' => $idservice,'properties'=>'provider,offer']);
 			if (isset($dataService[0]) && $dataService[0]) {
-				return CmsFactory::view()->webSite()->type('service')->setData($dataService[0])->setMethodName('edit')->ready();
+				return CmsFactory::view()->webSite()->type('service')->setData($dataService)->setMethodName('edit')->ready();
 			} else {
 				return CmsFactory::view()->fragment()->message()->noContent();
 			}

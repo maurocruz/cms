@@ -4,9 +4,8 @@ namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 use Exception;
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\View\WebSite\Type\TypeBuilder;
-use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 
-class ArticleView extends CreativeWorkView implements TypeViewInterface
+class ArticleView extends CreativeWorkView
 {
 	/**
 	 * @param string $type
@@ -62,7 +61,7 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
    */
   public function index(?array $data, array $queryParams = null): void
   {
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status")])->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('article')->setColumnsTable(['headline'=>_('Title'),'creativeWorkStatus'=>_("Creative work status"), 'datePublished'=> _('Date published')])->setOrderBy('datePublished')->ready());
   }
 
 	/**
@@ -86,13 +85,14 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
       $value = $data[0];
 			$typeBuilder = new TypeBuilder('article', $value);
 			$idarticle = $typeBuilder->getId();
-			$idthing = (int) $typeBuilder->getPropertyValue('idthing');
+			$this->idthing = (int) $typeBuilder->getPropertyValue('idthing');
+			$this->name = $typeBuilder->getValue('headline');
       if (empty($value)) {
         $content[] = CmsFactory::view()->fragment()->noContent();
       } else {
-        $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"));
+        $content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formArticle("edit", $value, $idarticle), _("Article"), $this->idthing, $this->name);
         // images
-	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready();
+	      $content[] = CmsFactory::view()->fragment()->reactShell('imageObject')->setProperty('hasPart')->setIdHasPart($this->idthing)->ready();
       }
     } else {
       $this->navbarArticle();
@@ -109,12 +109,8 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
    */
   private function formArticle(string $case = "new", $value = null, $ID = null): array
   {
-	  $headline = $value['headline'] ?? null;
-	  $alternativeHeadline = $value['alternativeHeadline'] ?? null;
-		$about = $value['about'] ?? null;
     $articleBody = isset($value['articleBody']) ? stripslashes($value['articleBody']) : null;
-		$author = $value['author'] ?? null;
-		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
+		$backStory = $value['backStory'] ?? null;
 		// FORM
     $form = CmsFactory::view()->fragment()->form("form-article",["class"=>"form-basic form-article"]);
     $form->action("/admin/article/$case")->method('post');
@@ -122,43 +118,17 @@ class ArticleView extends CreativeWorkView implements TypeViewInterface
 		$form->addMandatories('headline','articleBody');
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
-		// THING
-		$form = parent::formThingContent($form, $value, _('Article name'));
-	  // about
-		$form->relationshipOneToOne('thing',_("About"), 'about', $about);
-    // HEADLINE
-    $form->fieldsetWithInput("headline", $headline, _("Title"));
-	  // ALTERNATIVE HEADLINE
-	  $form->fieldsetWithInput('alternativeHeadline', $alternativeHeadline, _('Alternative headline'));
+		// creativeWorl form
+	  $form = parent::formCreativeWorkContent($form, $value);
     // article body
 	  $form->content(CmsFactory::view()->fragment()->box()->expandingBox(
 			_('Article body'),
 			"<textarea name='articleBody' class='article-articleBody' id='articleBody$ID'>$articleBody</textarea>", false, 'width: 100%;'));
     $form->setEditor("articleBody$ID", "editor$case$ID");
-    // section
+    // article section
     $form->fieldsetWithInput("articleSection", $value['articleSection'] ?? null, _("Article sections") );
-		// author
-		$form->relationshipOneToOne('person',_("Author"), 'author', $author);
-	  // creative work status
-		$form->fieldsetWithSelect('creativeWorkStatus', $creativeWorkStatus,[
-			"draft"=>_("Draft"),
-			"in production"=>_("In production"),
-			"suspended"=>_("Suspended"),
-			"Waiting for review"=>_("Waiting for review"),
-			"published"=>_("Published")
-		],_("Creative work status"), ['class'=>'form-article-creativeWorkStatus']);
-    // dates
-    if ($case == "edit" && is_array($value)) {
-	    $typeBuilder = new TypeBuilder('article', $value);
-	    $dateCreated = $typeBuilder->getPropertyValue('dateCreated');
-	    $dateModified = $typeBuilder->getPropertyValue('dateModified');
-      // date created
-      $form->fieldsetWithInput("dateCreated", $dateCreated, _("Date created"), 'datetime-local', ['class'=>'form-article-dateCreated' ], ['disabled']);
-      // date modified
-      $form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"),  "datetime-local", ['class'=>'form-article-dateModified'], ['disabled']);
-      // date published
-      $form->fieldsetWithInput("datePublished", $value['datePublished'] ?? null, _("Date published"), "datetime-local", ['class'=>'form-article-datePublished'], ['readonly']);
-    }
+		// back story
+	  $form->fieldsetWithTextarea("backStory", $backStory, _("Back story"));
     // submit
     $form->submitButtonSend();
     if ($case == "edit") $form->submitButtonDelete("/admin/article/erase");

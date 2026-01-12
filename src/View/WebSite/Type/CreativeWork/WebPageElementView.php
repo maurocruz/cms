@@ -141,11 +141,11 @@ class WebPageElementView extends WebPageView implements TypeViewInterface
 				});
 			}
 			// FORM
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPageElement('edit',$value), _("Web page element")));
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPageElement('edit', $value), _('Edit'), $this->idthing, $this->name));
 			// Properties
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPageElement", $this->idthing, $value['identifier'])));
-			// HAS PART REACT
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPageElement')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
+			// IMAGE
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
 		} else {
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->noContent(_("No items found!"))

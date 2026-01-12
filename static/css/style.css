@@ -849,35 +849,40 @@ form .mandatory-field {
 
 /** BOOK
 ====================================================== */
-.form-book fieldset:nth-of-type(2) {
-  flex-basis: 50%;
-}
-.form-book fieldset:nth-of-type(3) {
-  flex-basis: 50%;
+@media (min-width: 320px) {
+  .form-book fieldset.bookFormat {
+    flex-basis: fit-content;
+  }
+  .form-book fieldset.isbn {
+    flex-basis: calc(100% - 155px);
+  }
+  .form-book fieldset.bookEdition {
+    flex-basis: 50%;
+  }
+  .form-book fieldset.numberOfPages {
+    flex-basis: 50%;
+  }
 }
 @media (min-width: 480px) {
-  .form-book fieldset:nth-of-type(8) {
-    flex-basis: 50%;
+  .form-book fieldset.isbn {
+    flex-basis: calc(50% - 155px);
   }
-  .form-book fieldset:nth-of-type(9) {
-    flex-basis: 50%;
+  .form-book fieldset.bookEdition {
+    flex-basis: 25%;
+  }
+  .form-book fieldset.numberOfPages {
+    flex-basis: 25%;
   }
 }
-@media (min-width: 640px) {
-  .form-book fieldset:nth-of-type(4) {
-    flex-basis: 50%;
+@media (min-width: 720px) {
+  .form-book fieldset.isbn {
+    flex-basis: calc(33.3% - 77px);
   }
-  .form-book div:nth-of-type(2) {
-    flex-basis: 50%;
+  .form-book fieldset.bookEdition {
+    flex-basis: calc(33.3% - 77px);
   }
-  .form-book fieldset:nth-of-type(7) {
-    flex-basis: 33%;
-  }
-  .form-book fieldset:nth-of-type(8) {
-    flex-basis: 33%;
-  }
-  .form-book fieldset:nth-of-type(9) {
-    flex-basis: 33%;
+  .form-book fieldset.numberOfPages {
+    flex-basis: calc(33.3% - 77px);
   }
 }
 
@@ -992,6 +997,9 @@ COLLECTION
 }
 .form-creativeWork fieldset.position {
   flex-basis: 50px;
+}
+.form-creativeWork fieldset.creativeWorkStatus {
+  flex-basis: fit-content;
 }
 .form-creativeWork fieldset.datePublished {
   flex-basis: fit-content;
@@ -1274,19 +1282,12 @@ COLLECTION
 
 /* LOCALBUSINESS
 ====================================================== */
-.form-localBusiness {
-  display: flex;
-  flex-wrap: wrap;
-}
-.form-localBusiness fieldset:nth-of-type(n) {
-  width: 100%;
-}
-@media (min-width: 360px) {
-  .form-localBusiness fieldset:nth-of-type(6) {
-    width: 50%;
+@media (min-width: 576px) {
+  .form-localBusiness fieldset.openingHours {
+    flex-basis: 50%;
   }
-  .form-localBusiness fieldset:nth-of-type(7) {
-    width: 50%;
+  .form-localBusiness fieldset.paymentAccepted {
+    flex-basis: 50%;
   }
 }
 
@@ -1295,25 +1296,6 @@ COLLECTION
 .form-mediaObject {
   display: flex;
   flex-wrap: wrap;
-  /*@media (min-width: 576px) {
-    fieldset.bitrate { flex-basis: calc(25% - 18px); }
-    fieldset.duration { flex-basis: 56px; }
-    fieldset.contentSize { flex-basis: calc(25% - 18px); }
-    fieldset.height { flex-basis: calc(25% - 18px); }
-    fieldset.width { flex-basis: calc(25% - 18px); }
-  }
-  @media (min-width: 768px) {
-    fieldset.encodingFormat { flex-basis: 50%; }
-  }
-
-  @media (min-width: 992px) {
-    fieldset.bitrate { flex-basis: calc(25% - 70px); }
-    fieldset.duration { flex-basis: 56px; }
-    fieldset.contentSize { flex-basis: calc(25% - 70px); }
-    fieldset.height { flex-basis: calc(25% - 70px); }
-    fieldset.width { flex-basis: calc(25% - 70px); }
-    fieldset.uploadDate { flex-basis: 205px; }
-  }*/
 }
 .form-mediaObject fieldset.encodingFormat {
   flex-basis: 150px;
@@ -1336,6 +1318,7 @@ COLLECTION
 .form-mediaObject fieldset.uploadDate {
   flex-basis: fit-content;
 }
+
 /* OFFER
 ====================================================== */
 .form-offer {
@@ -1413,6 +1396,21 @@ COLLECTION
 .form-orderItem button svg {
   width: 20px;
   height: 20px;
+}
+
+/* ORGANIZATION
+=====================================================  */
+.form-organization {
+  display: flex;
+  flex-wrap: wrap;
+}
+@media (min-width: 576px) {
+  .form-organization fieldset.legalName {
+    flex-basis: 50%;
+  }
+  .form-organization fieldset.taxId {
+    flex-basis: 50%;
+  }
 }
 
 /* PERSON
@@ -1712,18 +1710,23 @@ COLLECTION
   padding-bottom: 3px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+}
+.form-thing-extract fieldset.dateRegistered {
+  flex-basis: fit-content;
+}
+.form-thing-extract fieldset.lastModified {
+  flex-basis: fit-content;
 }
 .form-thing-extract .form-thing-extract-type {
   margin: 3px;
   flex-basis: 100%;
 }
 @media (min-width: 768px) {
-  .form-thing-extract fieldset:nth-of-type(1) {
+  .form-thing-extract fieldset.name {
     flex-basis: 50%;
   }
-  .form-thing-extract fieldset:nth-of-type(2) {
+  .form-thing-extract fieldset.alternateName {
     flex-basis: 50%;
   }
 }

@@ -74,20 +74,21 @@ class EventView extends ThingView implements TypeViewInterface
       $value = $data[0];
 			$typeBuilder = CmsFactory::toolBox()::typeBuilder($value);
       $this->idevent = $typeBuilder->getId();
-			$idthing = $typeBuilder->getIdthing();
+			$this->name = $value['name'];
+			$this->idthing = $typeBuilder->getIdthing();
       // EVENT FORM
-      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")));
+      CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formEvent('edit', $value), _("Edit event")." ($this->idthing): <span style='color: #eecc77; font-weight: bold;'>$this->name</span>"));
 			// ADDITIONAL TYPES
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('event')->setProperty('additionalType')->setIdHasPart($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('event')->setProperty('additionalType')->setIdHasPart($this->idthing)->ready());
 			// SUB EVENTS
       CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(
 					_("Sub Events"),
-					CmsFactory::view()->fragment()->form("form-event")->relationshipOneToMany("event", $idthing, 'event', $value['subEvent'] ?? null, "startDate")
+					CmsFactory::view()->fragment()->form("form-event")->relationshipOneToMany("event", $this->idthing, 'event', $value['subEvent'] ?? null, "startDate")
 				)
       );
       // IMAGE
-	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($idthing)->ready());
+	    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
     }
   }
 

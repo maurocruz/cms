@@ -91,7 +91,7 @@ class ReactShell
 	public function setColumnsTable(array $columnsTable, bool $merge = true): ReactShell
 	{
 		if($merge) {
-			$this->columnsTable = array_merge(["edit"=>"Edit","id"=>"id","name"=>"Nome"], $columnsTable, ['dateModified'=>"Modificado"]);
+			$this->columnsTable = array_merge(["edit"=>"Edit","id"=>"id","name"=>"Nome"], $columnsTable, ['lastModified'=>"Modificado"]);
 		} else {
 			$this->columnsTable = $columnsTable;
 		}

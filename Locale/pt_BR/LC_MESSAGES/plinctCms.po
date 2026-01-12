@@ -11,6 +11,93 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Service Type"
+msgstr "Tipo de serviço"
+
+msgid "Service output"
+msgstr "Resultado do serviço"
+
+msgid "Opening hours"
+msgstr "Horário de funcionamento"
+
+msgid "Payment accepted"
+msgstr "Formas de pagamento"
+
+msgid "Illustrator"
+msgstr "Ilustrador"
+
+msgid "Number of pages"
+msgstr "Número de páginas"
+
+msgid "Book format"
+msgstr "Formato do livro"
+
+msgid "Book edition"
+msgstr "Edição do livro"
+
+msgid "Audiobook"
+msgstr "Audiolivro"
+
+msgid "Ebook"
+msgstr "E-book"
+
+msgid "Graphic novel"
+msgstr "Revista em quadrinhos"
+
+msgid "Hardcover"
+msgstr "Livro capa dura"
+
+msgid "Pamphlet"
+msgstr "Livro de bolso"
+
+msgid "Paperback"
+msgstr "Livro de capa fina"
+
+msgid "back story"
+msgstr "bastidores"
+
+msgid "Back story"
+msgstr "Bastidores da notícia"
+
+msgid "Review"
+msgstr "Avaliação"
+
+msgid "Image path"
+msgstr "Caminho da imagem"
+
+msgid "Attachment"
+msgstr "Anexo"
+
+msgid "Size"
+msgstr "Tamanho"
+
+msgid "Item reviewed"
+msgstr "Item avaliado"
+
+msgid "Review aspect"
+msgstr "Aspecto da avaliação"
+
+msgid "Review description"
+msgstr "Descrição da avaliação"
+
+msgid "Rating"
+msgstr "Clasificação"
+
+msgid "Poor"
+msgstr "Ruim"
+
+msgid "Fair"
+msgstr "Regular"
+
+msgid "Good"
+msgstr "Bom"
+
+msgid "Very good"
+msgstr "Muito bom"
+
+msgid "Excellent"
+msgstr "Excelente"
+
 msgid "You don't have privileges to access this page!"
 msgstr "Você não tem privilégio para acessar esta página!"
 
@@ -1067,10 +1154,10 @@ msgstr "Negócio local"
 msgid "local business"
 msgstr "negócio local"
 
-msgid "Locals business"
+msgid "Local businesses"
 msgstr "Negócios locais"
 
-msgid "locals business"
+msgid "local businesses"
 msgstr "negócios locais"
 
 msgid "LocalBusiness"

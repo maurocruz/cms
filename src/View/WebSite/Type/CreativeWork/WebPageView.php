@@ -110,11 +110,13 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 			});
 		}
     // FORM EDIT
-    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit")));
+    CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage($data), ("Edit"), $this->idthing, $this->name));
     // PROPERTIES;
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idthing, $data['identifier'])));
-		// HAS PART
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
+		// IMAGE
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty('hasPart')->setDataset('orderBy','position')->setDataset('ordering','asc')->ready());
+		// list of webPageElement
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPageElement')->setIdHasPart($this->idthing)->setProperty('hasPart')->setDataset('orderBy','position')->setDataset('ordering','asc')->ready());
   }
 
 	/**

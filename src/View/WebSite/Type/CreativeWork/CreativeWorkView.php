@@ -48,7 +48,7 @@ class CreativeWorkView extends ThingView
 			->setTitle(_('Creative work'))
 			->newTab('/admin/creativeWork',  CmsFactory::view()->fragment()->icon()->home())
 			->newTab('/admin/creativeWork/new',  CmsFactory::view()->fragment()->icon()->plus())
-			->setModulesAvailable(['Article','Book','Certification','Collection','MediaObject','WebPage','WebPageElement','WebSite'])
+			->setModulesAvailable(['Article','Book','Certification','Collection','MediaObject','Review','WebPage','WebPageElement','WebSite'])
 			->search()
 			->ready()
 		);
@@ -62,7 +62,7 @@ class CreativeWorkView extends ThingView
 	public function index(?array $data, array $queryParams = null): void
 	{
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('creativeWork')->setColumnsTable(['@type'=>_('Types')])->ready()
+			CmsFactory::view()->fragment()->reactShell('creativeWork')->ready()
 		);
 	}
 
@@ -130,15 +130,15 @@ class CreativeWorkView extends ThingView
 	public function formCreativeWorkContent(Form $form, array $value = null): Form
 	{
 		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
-		//$isPartOf = isset($value['isPartOf']) ? (string) $value['isPartOf'] : null;
 		$position = isset($value['position']) ? (string) $value['position'] : null;
 		$publisher = isset($value['publisher']) ? (string) $value['publisher'] : null;
 		$editor = isset($value['editor']) ? (string) $value['editor'] : null;
 		$datePublished = $value['datePublished'] ?? null;
+		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
 		// thing
 		$form = self::formThingContent($form, $value);
 		if ($this->type !== 'CreativeWork') {
-			$form->content(CmsFactory::view()->fragment()->box()->expandigBoxWithoutContent(_("Creative work"), "form-creativeWork"));
+			$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Creative work"), "form-creativeWork"));
 		}
 		// headline
 		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));
@@ -174,6 +174,16 @@ class CreativeWorkView extends ThingView
 
 		// publisher
 		if ($publisher) $form->fieldsetWithInput('publisher', $publisher, _('Publisher'));
+
+		// creative work status
+		$form->fieldsetWithSelect('creativeWorkStatus', $creativeWorkStatus,[
+			"draft"=>_("Draft"),
+			"in production"=>_("In production"),
+			"suspended"=>_("Suspended"),
+			"Waiting for review"=>_("Waiting for review"),
+			"published"=>_("Published")
+		],_("Creative work status"), ['class'=>'form-creativeWork-creativeWorkStatus']);
+
 		// datePublished
 		if ($datePublished) {
 			$form->fieldsetWithInput('datePublished', $datePublished, _('Date published'), 'datetime-local', null, ['disable']);

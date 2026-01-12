@@ -2,6 +2,7 @@
 namespace Plinct\Cms\View\WebSite\Type\CreativeWork;
 
 use Plinct\Cms\CmsFactory;
+use Plinct\Cms\View\WebSite\Type\Intangible\PropertyValueView;
 use Plinct\Cms\View\WebSite\Type\TypeViewInterface;
 use Plinct\Tool\ToolBox;
 
@@ -117,14 +118,14 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 			$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
 			// form
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->simpleBox(self::formWebSite($value), $value['name'])
+				CmsFactory::view()->fragment()->box()->simpleBox(self::formWebSite($value), _('Edit'), $this->idthing, $this->name)
 			);
-			// has part
-		  CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('webSite')->setProperty('hasPart')->setIdHasPart($this->idthing)->ready()
-		  );
+			// PROPERTY VALUES
+		  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Properties"), (new PropertyValueView())->getForm("webPage",(string) $this->idthing, $value['identifier'])));
+			// IMAGES
+		  CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty('hasPart')->ready());
 			// list of webPages
-			//CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIdIsPartOf($this->idcreativeWork)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setColumnsTable(['url'=>'Url'])->setIdHasPart($this->idthing)->ready());
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('Nothing found!'));
 		}

@@ -15,10 +15,10 @@ a { color: #979797; }
 .menu a { background-color: #222226; color: #97b7c7; border-color: #aaa; font-weight: 700; }
 .menu a:hover { color: #99ddff; }
 .menu2 { background-color: #4a4a4a; }
-.menu3 { background-color: #343434; }
-.menu4 { background-color: #2e2e2e; }
-.menu5 { background-color: #2a2a2a; }
-.menu6 { background-color: #2a2a2a; }
+.menu3 { background-color: #3e3e3e; }
+.menu4 { background-color: #373737; }
+.menu5 { background-color: #2e2e2e; }
+.menu6 { background-color: #272727; }
 
 form { }
 form input[type=text] { background-color: #ccc; }

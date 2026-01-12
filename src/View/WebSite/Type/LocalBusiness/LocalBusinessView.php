@@ -15,8 +15,9 @@ class LocalBusinessView extends OrganizationView
 
 	/**
 	 * @param string $type
+	 * @param string $sitemapFilename
 	 */
-	public function __construct(string $type = 'localBusiness')
+	public function __construct(string $type = 'localBusiness', string $sitemapFilename = 'sitemap-localBusiness.xml')
 	{
 		parent::__construct($type);
 	}
@@ -26,10 +27,13 @@ class LocalBusinessView extends OrganizationView
 	 */
 	public function __destruct()
 	{
+		parent::__destruct();
+
 		CmsFactory::view()->addHeader(
 			CmsFactory::view()->fragment()->navbar()
 			->type('localBusiness')
-			->title(_('Local business'))
+			->level(3)
+			->title(_('Local businesses'))
 			->newTab('/admin/localBusiness', CmsFactory::view()->fragment()->icon()->home())
 			->newTab('/admin/localBusiness/new', CmsFactory::view()->fragment()->icon()->plus())
 			->ready()
@@ -73,15 +77,26 @@ class LocalBusinessView extends OrganizationView
 			$this->idlocalBusiness = $tbLocalBusiness->getId();
 			$this->idthing = $tbLocalBusiness->getIdthing();
 			$this->name = $tbLocalBusiness->getValue('name');
+			$geo = $value['geo'] ?? null;
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->box()->simpleBox(self::formLocalBussiness($value), _("Localbusiness"))
+				CmsFactory::view()->fragment()->box()->simpleBox(self::formLocalBussiness($value), _("LocalBusiness"), $this->idthing, $this->name)
 			);
 			// CONTACT POINT
 			CmsFactory::view()->addMain(
 				CmsFactory::view()->fragment()->box()->expandingBox(_('Contact point'),ContactPointView::getForm('localBusiness', $this->idthing, $value['contactPoint'] ?? null))
 			);
-			// HAS PART
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('localBusiness')->setProperty('hasPart')->setIdHasPart((int) $this->idthing)->ready());
+			// GEO
+			CmsFactory::view()->addMain([
+				CmsFactory::view()->fragment()->reactShell('geoCoordinates')->setDataset('idgeocoordinates',$geo)->ready()
+			]);
+			// MEDIA OBJECT
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('mediaObject')->setProperty('hasPart')->setIdHasPart($this->idthing)->ready());
+			// REVIEW
+			if (CmsFactory::controller()->configuration()->hasModulesEnabled('Review')) {
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->reactShell('review')->setIdHasPart($this->idthing)->ready()
+				);
+			}
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent());
 		}
@@ -93,13 +108,17 @@ class LocalBusinessView extends OrganizationView
 	 */
   private function formLocalBussiness(array $value = null): array
   {
-    $form = CmsFactory::view()->fragment()->form('form-localBusiness',['class'=>'formPadrao form-localBusiness']);
+    $form = CmsFactory::view()->fragment()->form('form-localBusiness',['class'=>'form-basic form-localBusiness']);
     $form->action("/admin/localBusiness/new")->method('post');
 		if ($value) {
 			$form->input('idlocalBusiness', $this->idlocalBusiness, 'hidden');
 		}
 		// THING
-	  $form = parent::formThingContent($form, $value);
+	  $form = parent::formOrganizationContent($form, $value);
+		// opening hours
+	  $form->fieldsetWithInput('openingHours', $value['openingHours'] ?? null, _('Opening hours'));
+		// payment accepted
+	  $form->fieldsetWithInput('paymentAccepted', $value['paymentAccepted'] ?? null, _('Payment accepted'));
     // submit buttons
     $form->submitButtonSend();
     if ($value) $form->submitButtonDelete("/admin/localBusiness/erase");

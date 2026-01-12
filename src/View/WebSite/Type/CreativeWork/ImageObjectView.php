@@ -9,6 +9,11 @@ use Plinct\Tool\Image\Image;
 class ImageObjectView extends MediaObjectView implements TypeViewInterface
 {
 	/**
+	 * @var string|null
+	 */
+	private ?string $idimageObject = null;
+
+	/**
 	 * @param string $type
 	 * @param string $sitemapFilename
 	 */
@@ -67,7 +72,16 @@ class ImageObjectView extends MediaObjectView implements TypeViewInterface
 	{
 		if (isset($data[0])) {
 			$value = $data[0];
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formImageObjectEdit($value), _("Edit image")));
+			$tb = CmsFactory::toolBox()->typeBuilder($value);
+			$this->idimageObject = $tb->getId();
+			$this->name = $tb->getValue('name');
+			$this->idthing = $tb->getIdthing();
+			$this->idcreativeWork = $tb->getPropertyValue('idcreativeWork');
+			// FORM
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox([
+				self::formImageObjectEdit($value),
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setProperty('isPartOf')->setIdIsPartOf($this->idthing)->ready()
+			], _("Edit image")));
 		} else {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent('No image found!'));
 		}
@@ -80,68 +94,19 @@ class ImageObjectView extends MediaObjectView implements TypeViewInterface
 	{
 		$tb = CmsFactory::toolBox()->typeBuilder($value);
 		$idimageObject = $tb->getId();
-		$dateModified = $tb->getPropertyValue('dateModified');
 		$name = $value['name'];
 		$contentUrl = $value['contentUrl'];
-		$contentSize = $value['contentSize'] ?? null;
-		$imageWidth = $value['width'] ?? null;
-		$imageHeight = $value['height'] ?? null;
-		$imageType = $value['encodingFormat'] ?? null;
-		$isPartOf = $value['isPartOf'] ?? null;
-
-		if (!$contentSize || !$imageWidth || !$imageHeight || !$imageType) {
-			$image = new Image($contentUrl);
-			$contentSize = $value['contentSize'] ?? (string)$image->getFileSize();
-			$imageWidth = $value['width'] ?? (string)$image->getWidth();
-			$imageHeight = $value['height'] ?? (string)$image->getHeight();
-			$imageType = $value['encodingFormat'] ?? $image->getEncodingFormat();
-		}
-
 		$form = CmsFactory::view()->fragment()->form("form-imageObject",["class" => "form-basic form-imageObject"]);
 		$form->action("/admin/imageObject/edit")->method("post");
 		// figure
 		$form->content("<figure class='form-imageObject-image'><img src='$contentUrl' alt='$name'/></figure>");
-		// id
+		// id hidden
 		$form->input('idimageObject', $idimageObject, 'hidden');
-		$form->fieldsetWithInput("idimageObject", $idimageObject, "Id", "text", null, ['disabled']);
-		// url
-		$form->fieldsetWithInput('contentUrl', $contentUrl, "Url", 'text', null, ['disabled']);
-		//content size
-		$form->fieldsetWithInput('contentSize', $contentSize, _("Content size"), 'text', null, ['disabled']);
-		// width
-		$form->fieldsetWithInput("width", $imageWidth, _("Image width") . " (px)", 'text', null, ['disabled'] );
-		// height
-		$form->fieldsetWithInput('height', $imageHeight, _("Image height") . " (px)", "text", null, ["disabled"] );
-		// encodingFormat
-		$form->fieldsetWithInput("encodingFormat", $imageType,_("Encoding format"),  'text', null, ["disabled"] );
-		// author
-		$form->relationshipOneToOne('person',_("Author"), 'author', $value['author'] ?? null);
-		// license
-		$form->fieldsetWithInput("license", $value['license'] ?? null, _("License"));
-		// keywords
-		$form->fieldsetWithInput("keywords", $value['keywords'] ?? null, _("Keywords"));
-		// uploadDate
-		$form->fieldsetWithInput("uploadDate", $value['uploadDate'],_("Upload date"),  "datetime-local", null, ["disabled"]);
-		// date modified
-		$form->fieldsetWithInput("dateModified", $dateModified, _("Date modified"), "datetime-local", null, ["disabled"]);
+		// media object content
+		$form = parent::formMediaObjectContent($form, $value);
 		// submit buttons
 		$form->submitButtonSend();
 		$form->submitButtonDelete("/admin/imageObject/delete");
-		// is part of
-		if ($isPartOf) {
-			$isPartOfElements = "<div class='form-imageObject-isPartOf box'><h4>"._('Is part of')."</h4>";
-			foreach ($isPartOf as $mention) {
-				$type = $mention['@type'];
-				$name = $mention['name'];
-				$tbIsPartOf = CmsFactory::toolBox()->typeBuilder($mention);
-				$idIsPartOf = $tbIsPartOf->getId();
-				$isPartOfElements .= "<div class='form-imageObject-isPartOf-item'>";
-				$isPartOfElements .= "<p>Tipo: " . _($type) .". <a href='/admin/$type/edit/$idIsPartOf'>$name</a></p>";
-				$isPartOfElements .= "</div>";
-			}
-			$isPartOfElements .= "</div>";
-			$form->content($isPartOfElements);
-		}
 		// READY
 		return $form->ready();
 	}

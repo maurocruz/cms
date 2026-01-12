@@ -148,7 +148,7 @@ class MediaObjectView extends CreativeWorkView implements TypeViewInterface
 		$form = parent::formCreativeWorkContent($form, $value);
 		if ($value) {
 			if ($this->type !== 'MediaObject') {
-				$form->content(CmsFragment::box()->expandigBoxWithoutContent(_("Media object") . " " . _('properties'), "form-mediaObject"));
+				$form->content(CmsFragment::box()->expandingBoxWithoutContent(_("Media object") . " " . _('properties'), "form-mediaObject"));
 			}
 			// mediaObject properties
 			$bitrate = $value['bitrate'] ?? null;

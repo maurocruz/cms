@@ -134,17 +134,6 @@ window.onload = () => {
       }
     }
   }
-  /**   *    */
-  const buttonDropdown = document.getElementsByClassName('button-dropdown');
-  if (buttonDropdown) {
-    for (let i=0; i < buttonDropdown.length; i++) {
-      const element = buttonDropdown[i];
-      element.addEventListener('click', () => {
-        const top = element.getBoundingClientRect().top - 10;
-        window.scrollTo({ top: top, behavior: 'smooth' });
-      })
-    }
-  }
 }
 
 

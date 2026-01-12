@@ -32,6 +32,14 @@ class Configuration
 	}
 
 	/**
+	 * @param string $moduleName
+	 * @return bool
+	 */
+	public function hasModulesEnabled(string $moduleName): bool
+	{
+		return in_array($moduleName, self::$modulesEnabled);
+	}
+	/**
 	 * @return array
 	 */
 	public function getModulesEnabled(): array

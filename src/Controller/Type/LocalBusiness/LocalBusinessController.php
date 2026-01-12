@@ -33,7 +33,7 @@ class LocalBusinessController extends OrganizationController
 		$idlocalBusiness = $params['idlocalBusiness'] ?? null;
 		$data = [];
 		if ($idlocalBusiness) {
-			$data = CmsFactory::model()->type('localBusiness')->get(['idlocalBusiness' => $idlocalBusiness, 'properties'=>'organization,contactPoint']);
+			$data = CmsFactory::model()->type('localBusiness')->get(['idlocalBusiness' => $idlocalBusiness]);
 		}
 		return CmsFactory::view()->webSite()->type('localBusiness')->setData($data)->setMethodName('edit')->ready();
 	}

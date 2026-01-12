@@ -40,7 +40,7 @@ class OrganizationController extends ThingController
   public function edit(array $params): bool
   {
 		$propertiesParams = $params['properties'] ?? null;
-	  $params['properties'] = "contactPoint,location,image";
+	  $params['properties'] = "contactPoint";
 		if ($propertiesParams) $params['properties'] = $propertiesParams;
 	  $data = CmsFactory::model()->api()->get("organization",$params)->ready();
 	  return CmsFactory::view()->webSite()->type('organization')->setQueryParams($params)->setData($data)->setMethodName('edit')->ready();

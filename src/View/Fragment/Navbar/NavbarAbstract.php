@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace Plinct\Cms\View\Fragment\Navbar;
 
 abstract class NavbarAbstract

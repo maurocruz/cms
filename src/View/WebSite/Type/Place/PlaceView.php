@@ -12,7 +12,7 @@ class PlaceView extends ThingView implements TypeViewInterface
   /**
    * @var int
    */
-  protected int $placeId;
+  protected int $idplace;
 
 	public function __construct(string $type = 'place', string $sitemapFilename = 'sitemap-place.xml')
 	{
@@ -29,6 +29,7 @@ class PlaceView extends ThingView implements TypeViewInterface
 	    CmsFactory::View()->fragment()->navbar()
 		    ->type('place')
 		    ->title(_('Place'))
+		    ->level(2)
 		    ->newTab("/admin/place", CmsFactory::view()->fragment()->icon()->home())
 		    ->newTab("/admin/place/new", CmsFactory::view()->fragment()->icon()->plus())
 		    ->search()
@@ -74,17 +75,28 @@ class PlaceView extends ThingView implements TypeViewInterface
 			$value = $data[0];
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$idplace = $typeBuilder->getId();
+			$geo = $value['geo'] ?? null;
 			$this->idthing = $typeBuilder->getIdthing();
-			$this->placeId = isset($value) ? $idplace : null;
+			$this->idplace = isset($value) ? $idplace : null;
+			$this->name = $value['name'];
 			// form
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace('edit', $value), _("Edit")));
-			CmsFactory::view()->addMain([
-				CmsFactory::view()->fragment()->reactShell('place')->setId((string) $idplace)->ready()
-			]);
-			// IMAGEOBJECT
 			CmsFactory::view()->addMain(
-				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->ready()
+				CmsFactory::view()->fragment()->box()->simpleBox(self::formPlace('edit', $value), _("Place"), $this->idthing, $this->name)
 			);
+			// GEO
+			CmsFactory::view()->addMain([
+				CmsFactory::view()->fragment()->reactShell('geoCoordinates')->setDataset('idgeocoordinates',$geo)->ready()
+			]);
+			// IMAGE OBJECT
+			CmsFactory::view()->addMain(
+				CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty("hasPart")->ready()
+			);
+			// REVIEW
+			if (CmsFactory::controller()->configuration()->hasModulesEnabled('Review')) {
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->reactShell('review')->setIdHasPart($this->idthing)->ready()
+				);
+			}
 		}
   }
 

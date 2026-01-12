@@ -476,19 +476,21 @@ form {
 /** BOOK
 ====================================================== */
 .form-book {
-  fieldset:nth-of-type(2) { flex-basis: 50%; }
-  fieldset:nth-of-type(3) { flex-basis: 50%; }
-
-  @media (min-width: 480px) {
-    fieldset:nth-of-type(8) { flex-basis: 50%; }
-    fieldset:nth-of-type(9) { flex-basis: 50%; }
+  @media (min-width: 320px) {
+    fieldset.bookFormat { flex-basis: fit-content; }
+    fieldset.isbn { flex-basis: calc(100% - 155px); }
+    fieldset.bookEdition { flex-basis: 50%; }
+    fieldset.numberOfPages { flex-basis: 50%; }
   }
-  @media (min-width: 640px) {
-    fieldset:nth-of-type(4) { flex-basis: 50%; }
-    div:nth-of-type(2) { flex-basis: 50%; }
-    fieldset:nth-of-type(7) { flex-basis: 33%; }
-    fieldset:nth-of-type(8) { flex-basis: 33%; }
-    fieldset:nth-of-type(9) { flex-basis: 33%; }
+  @media (min-width: 480px) {
+    fieldset.isbn { flex-basis: calc(50% - 155px); }
+    fieldset.bookEdition { flex-basis: 25%; }
+    fieldset.numberOfPages { flex-basis: 25%; }
+  }
+  @media (min-width: 720px) {
+    fieldset.isbn { flex-basis: calc(33.3% - 77px); }
+    fieldset.bookEdition { flex-basis: calc(33.3% - 77px); }
+    fieldset.numberOfPages { flex-basis: calc(33.3% - 77px); }
   }
 }
 
@@ -573,6 +575,7 @@ COLLECTION
   flex-wrap: wrap;
 
   fieldset.position { flex-basis: 50px; }
+  fieldset.creativeWorkStatus { flex-basis: fit-content; }
   fieldset.datePublished { flex-basis: fit-content; }
 
   @media (min-width: 480px) {
@@ -734,13 +737,10 @@ COLLECTION
 /* LOCALBUSINESS
 ====================================================== */
 .form-localBusiness {
-  display: flex;
-  flex-wrap: wrap;
-  fieldset:nth-of-type(n) { width: 100%; }
 
-  @media (min-width: 360px) {
-    fieldset:nth-of-type(6) { width: 50%; }
-    fieldset:nth-of-type(7) { width: 50%; }
+  @media (min-width: 576px) {
+    fieldset.openingHours { flex-basis: 50%; }
+    fieldset.paymentAccepted { flex-basis: 50%; }
   }
 }
 
@@ -757,28 +757,6 @@ COLLECTION
   fieldset.height { flex-basis: 100px; }
   fieldset.width { flex-basis: 100px; }
   fieldset.uploadDate { flex-basis: fit-content; }
-
-  @media (min-width: 480px) {
-  }
-  /*@media (min-width: 576px) {
-    fieldset.bitrate { flex-basis: calc(25% - 18px); }
-    fieldset.duration { flex-basis: 56px; }
-    fieldset.contentSize { flex-basis: calc(25% - 18px); }
-    fieldset.height { flex-basis: calc(25% - 18px); }
-    fieldset.width { flex-basis: calc(25% - 18px); }
-  }
-  @media (min-width: 768px) {
-    fieldset.encodingFormat { flex-basis: 50%; }
-  }
-
-  @media (min-width: 992px) {
-    fieldset.bitrate { flex-basis: calc(25% - 70px); }
-    fieldset.duration { flex-basis: 56px; }
-    fieldset.contentSize { flex-basis: calc(25% - 70px); }
-    fieldset.height { flex-basis: calc(25% - 70px); }
-    fieldset.width { flex-basis: calc(25% - 70px); }
-    fieldset.uploadDate { flex-basis: 205px; }
-  }*/
 }
 
 /* OFFER
@@ -832,6 +810,18 @@ COLLECTION
       width: 20px;
       height: 20px;
     }
+  }
+}
+
+/* ORGANIZATION
+=====================================================  */
+.form-organization {
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (min-width: 576px) {
+    fieldset.legalName { flex-basis: 50%; }
+    fieldset.taxId { flex-basis: 50%; }
   }
 }
 
@@ -1014,8 +1004,10 @@ COLLECTION
   padding-bottom: 3px;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+
+  fieldset.dateRegistered { flex-basis: fit-content; }
+  fieldset.lastModified { flex-basis: fit-content; }
 
   .form-thing-extract-type {
     margin: 3px;
@@ -1023,8 +1015,8 @@ COLLECTION
   }
 
   @media (min-width: 768px) {
-    fieldset:nth-of-type(1) { flex-basis: 50%; }
-    fieldset:nth-of-type(2) { flex-basis: 50%; }
+    fieldset.name { flex-basis: 50%; }
+    fieldset.alternateName { flex-basis: 50%; }
   }
 }
 
