@@ -11,11 +11,8 @@ use Plinct\Tool\ToolBox;
 
 class OrganizationView extends ThingView implements TypeViewInterface
 {
-	protected ?string $provider = null;
-	/**
-	 * @var string|null
-	 */
 	protected ?string $idorganization = null;
+	protected ?string $organizationThing = null;
 
 	/**
 	 * @param string $type
@@ -44,10 +41,10 @@ class OrganizationView extends ThingView implements TypeViewInterface
 				->level(3)
 				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/localBusiness?organization=$this->idorganization",_("Local businesses"))
-				->newTab("/admin/service?provider=$this->provider", _("Services"))
-				->newTab("/admin/product?manufacturer=$this->idthing", _("Products"))
-				->newTab("/admin/order?seller=$this->idthing", _("Orders"))
-				->newTab("/admin/role?refererType=Organization&refererName=$this->name&refererId=$this->idorganization&refererIdthing=$this->idthing", _("Members"))
+				->newTab("/admin/service?provider=$this->organizationThing", _("Services"))
+				->newTab("/admin/product?manufacturer=$this->organizationThing", _("Products"))
+				->newTab("/admin/order?seller=$this->organizationThing", _("Orders"))
+				->newTab("/admin/role?refererType=Organization&refererName=$this->name&refererId=$this->idorganization&refererIdthing=$this->organizationThing", _("Members"))
 				->ready()
 		);
 	}
@@ -88,7 +85,7 @@ class OrganizationView extends ThingView implements TypeViewInterface
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$this->idorganization =  $typeBuilder->getId();
 			$this->idthing = $typeBuilder->getIdthing();
-			$this->provider = $this->idthing;
+			$this->organizationThing = $this->idthing;
 			$this->name = $value['name'];
 			$location = $value['location'] ?? null;
 			// ORGANIZATION

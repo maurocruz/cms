@@ -7,8 +7,10 @@ use Plinct\Tool\ToolBox;
 
 class OfferView extends ThingView
 {
-	private static ?string $offeredById = null;
-	private static ?string $itemOfferedId = null;
+	private ?string $idoffer = null;
+	private ?string $offeredBy = null;
+	private ?string $itemOffered = null;
+
 
 	public function __construct(string $type = 'thing', string $sitemapFilename = "sitemap-offer.xml")
 	{
@@ -23,10 +25,19 @@ class OfferView extends ThingView
 				->title(_("Offer"))
 				->type('offer')
 				->level(4)
-				->newTab('/admin/offer'.(self::$itemOfferedId ? "?offeredBy=".self::$itemOfferedId : ''), CmsFactory::view()->fragment()->icon()->home())
-				->newTab('/admin/offer/new'.(self::$itemOfferedId ? "?offeredBy=".self::$itemOfferedId : ''), CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/offer?itemOffered=$this->itemOffered", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/offer/new?itemOffered=$this->itemOffered", CmsFactory::view()->fragment()->icon()->plus())
 				->ready()
 		);
+
+		if ($this->idoffer) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()
+					->title($this->name)
+					->level(5)
+					->ready()
+			);
+		}
 	}
 
 	/**
@@ -35,8 +46,10 @@ class OfferView extends ThingView
 	 */
   public function index(?array $data, array $queryParams = null): void
   {
+		$itemOffered = $queryParams['itemOffered'] ?? '';
+		$offeredBy = $queryParams['offeredBy'] ?? '';
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('offer')->setIdHasPart(self::$offeredById)->ready()
+			CmsFactory::view()->fragment()->reactShell('offer')->setDataset('itemOffered', $itemOffered)->setDataset('offeredBy',$offeredBy)->ready()
 		);
   }
 
@@ -59,63 +72,40 @@ class OfferView extends ThingView
 	public function edit(?array $data, array $queryParams = null): void
 	{
 		$value = $data[0];
+		$tbOffer = ToolBox::typeBuilder($value);
+		$this->name = $value['name'];
+		$this->idthing = $tbOffer->getIdthing();
+		$this->idoffer = $tbOffer->getId();
+		$this->offeredBy = $value['offeredBy'];
+		// item offered
 		$itemOffered = $value['itemOffered'];
 		$tbItemOffered = ToolBox::typeBuilder($itemOffered);
 		$itemOfferedName = $itemOffered['name'];
 		$itemOfferedType = lcfirst($tbItemOffered->getType());
 		$itemOfferedId = $tbItemOffered->getId();
+		$this->itemOffered = $tbItemOffered->getIdthing();
 
 		CmsFactory::view()->addMain([
-			CmsFactory::view()->fragment()->box()->simpleBox(self::formOffer('edit',$value),_('Edit offer')),
+			CmsFactory::view()->fragment()->box()->simpleBox(self::formOffer('edit',$value),_('Offer'), $this->idthing, $this->name),
 			CmsFactory::view()->fragment()->box()->simpleBox("<p><a href='/admin/$itemOfferedType/edit/$itemOfferedId'>$itemOfferedName</a></p>",_('Item offered'))
 			]
 		);
 	}
 
 	/**
-	 * @param array $data
-	 * @return array
-	 */
-	public function editWithPartOf(array $data): array
-	{
-		// NEW OFFER
-		$content[] = CmsFactory::view()->fragment()->box()->expandingBox(sprintf(_("Add new %s"), _("offer")), self::formOffer());
-		if ($data['offers'] === null) {
-			$content[] = CmsFactory::view()->fragment()->miscellaneous()->message(_("No offers found"));
-		} else {
-			foreach ($data['offers'] as $key => $value) {
-				$number = $key + 1;
-				$content[] = CmsFactory::view()->fragment()->box()->simpleBox(self::formOffer('edit', $value), _("Offer")." #$number");
-			}
-		}
-		return $content;
-	}
-
-	/**
-	 * @param string $itemOffered
-	 * @param string $offeredBy
-	 * @return array
-	 */
-	public static function newOffer(string $itemOffered, string $offeredBy): array
-	{
-		self::$offeredById = $offeredBy;
-		self::$itemOfferedId = $itemOffered;
-		return self::formOffer();
-	}
-	/**
 	 * @param string $case
 	 * @param array|null $value
 	 * @return array
 	 */
-	protected static function formOffer(string $case = 'new', array $value = null): array
+	protected function formOffer(string $case = 'new', array $value = null): array
 	{
 		$form = CmsFactory::view()->fragment()->form("form-offer", ['class'=>'form-basic form-offer']);
 		$form->action("/admin/offer/$case")->method('post');
 		$form->addMandatories('itemOffered','price','eligibleQuantity','availability','validThrough');
-		$form->input('offeredBy', self::$offeredById, "hidden");
+		$form->input('offeredBy', $this->offeredBy, "hidden");
 		$currencies = CmsFactory::toolBox()::currencies();
-		if (self::$itemOfferedId ) {
-			$form->input('itemOffered', self::$itemOfferedId, "hidden");
+		if ($this->itemOffered ) {
+			$form->input('itemOffered', $this->itemOffered, "hidden");
 		}
 		if ($case == 'edit') {
 			$tbOffer = ToolBox::typeBuilder($value);
@@ -126,13 +116,11 @@ class OfferView extends ThingView
 			$form->setIdform('form-offer-new');
 		}
 		// THING
-		//$form = parent::formThingContent($form, $value);
+		$form = parent::formThingContent($form, $value);
 		// OFFERED BY
-		if (!self::$offeredById) {
-			$form->chooseType(_('Offered by'), 'offeredBy', "organization,person", self::$offeredById);
-		}
+		$form->relationshipOneToOne('Organization,Person',_('Offered by'),'offeredBy',$this->offeredBy);
 		// ITEM OFFERED
-		$form->chooseType(_('Item offered'), "itemOffered", "service,product", $value['itemOffered'] ?? self::$itemOfferedId ?? null);
+		$form->relationshipOneToOne('service,product',_('Item offered'),'itemOffered',$this->itemOffered);
 		// PRICE CURRENCY
 		$form->fieldsetWithSelect('priceCurrency', $value['priceCurrency'] ?? null, $currencies, _('Currency'));
 		// PRICE

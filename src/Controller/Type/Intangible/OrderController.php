@@ -15,7 +15,7 @@ class OrderController implements TypeControllerInterface
 		$seller = $params['seller'] ?? null;
 		$data = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
 		if (isset($data[0])) {
-			return CmsFactory::view()->webSite()->type('order')->setData($data[0])->setMethodName('index')->ready();
+			return CmsFactory::view()->webSite()->type('order')->setData($data[0])->setQueryParams($params)->setMethodName('index')->ready();
 		} else {
 			return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning("No seller found"));
 		}
@@ -43,23 +43,8 @@ class OrderController implements TypeControllerInterface
 	public function edit(array $params): bool
 	{
 		$idorder = $params['idorder'] ?? null;
-		$params['properties'] = "seller,customer,invoice,acceptedOffer,orderedItem,action,hasOfferCatalog,itemOffered";
+		$params['properties'] = "seller";
 		$data = $idorder ? CmsFactory::model()->api()->get('order',$params)->ready() : [];
 		return CmsFactory::view()->webSite()->type('order')->setData($data)->setMethodName('edit')->ready();
-	}
-
-	/**
-	 * @param array $params
-	 * @return bool
-	 */
-	public function expired(array $params): bool
-	{
-		$seller = $params['seller'] ?? null;
-		$thingData = CmsFactory::model()->api()->get('thing',['idthing'=>$seller,'hasPart'=>true])->ready();
-		$thingValue = $thingData[0] ?? null;
-
-		$params = ['properties'=>'customer,orderedItem','orderStatus'=>'orderProcessing','orderBy'=>'paymentDueDate asc'];
-		$dataOrder = CmsFactory::model()->api()->get('order',$params)->ready();
-		return CmsFactory::view()->webSite()->type('order')->setData(['seller'=>$thingValue,'orders'=>$dataOrder])->setMethodName('expired')->ready();
 	}
 }

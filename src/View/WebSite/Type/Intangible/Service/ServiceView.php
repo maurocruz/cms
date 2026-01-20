@@ -24,8 +24,8 @@ class ServiceView extends OrganizationView
 				->title(_("Services"))
 				->type('service')
 				->level(4)
-				->newTab("/admin/service?provider=$this->provider", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/service/new?provider=$this->provider", CmsFactory::view()->fragment()->icon()->plus())
+				->newTab("/admin/service?provider=$this->organizationThing", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/service/new?provider=$this->organizationThing", CmsFactory::view()->fragment()->icon()->plus())
 				->ready()
 		);
 		if ($this->nameService) CmsFactory::view()->addHeader(
@@ -44,14 +44,14 @@ class ServiceView extends OrganizationView
 	public function index(?array $data, array $queryParams = null): void
 	{
 		$tb = ToolBox::typeBuilder($data);
-		$this->provider = $tb->getPropertyValue('idthing');
-		$this->idthing = $tb->getPropertyValue('idthing');
+		$this->idthing = $tb->getIdthing();
+		$this->organizationThing = $this->idthing;
 		$this->name = $tb->getValue('name');
 		if ($tb->getType() == 'Organization') {
 			$this->idorganization = $tb->getId();
 		}
 		CmsFactory::view()->addMain(
-			CmsFactory::view()->fragment()->reactShell('service')->setIdHasPart($this->provider)->ready()
+			CmsFactory::view()->fragment()->reactShell('service')->setIdHasPart($this->organizationThing)->ready()
 		);
 	}
 
@@ -64,7 +64,7 @@ class ServiceView extends OrganizationView
 	{
 		if (!empty($data)) {
 			$tbProvider = ToolBox::typeBuilder($data);
-			$this->provider = $tbProvider->getPropertyValue('idthing');
+			$this->organizationThing = $tbProvider->getPropertyValue('idthing');
 		}
 		// FORM
 		CmsFactory::view()->addMain(self::serviceForm());
@@ -86,15 +86,15 @@ class ServiceView extends OrganizationView
 			$this->nameService = $value['name'];
 			$provider = $value['provider'];
 			$TBProvider = ToolBox::typeBuilder($provider);
-			$this->provider = $TBProvider->getIdthing();
 			if($provider['@type'] == 'Organization') {
 				$this->idorganization = $TBProvider->getId();
+				$this->organizationThing = $TBProvider->getIdthing();
 				$this->name = $provider['name'];
 			}
 			// EDIT SERVICE
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::serviceForm('edit', $value),_('Service'), $this->idthing, $this->nameService));
 			// OFFERS
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('offer')->setDataset('itemOffered',$this->idthing)->setDataset('offeredBy',$this->provider)->ready());
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('offer')->setDataset('itemOffered',$this->idthing)->setDataset('offeredBy',$this->organizationThing)->ready());
 			// REVIEW
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('review')->setIdHasPart($this->idthing)->ready());
 		}
@@ -121,7 +121,7 @@ class ServiceView extends OrganizationView
 		// THING
 		$form = ThingView::formThingContent($form, $value);
 		// PROVIDER
-		$form->chooseType(_('Provider'),'provider','Organization,Person', $this->provider);
+		$form->chooseType(_('Provider'),'provider','Organization,Person', $this->organizationThing);
 		// SERVICE OUTPUT
 		$form->chooseType(_('Service output'),'serviceOutput','CreativeWork,LocalBusiness',$value['serviceOutput'] ?? null);
 		// CATEGORY

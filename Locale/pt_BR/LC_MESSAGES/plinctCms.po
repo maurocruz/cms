@@ -1089,6 +1089,15 @@ msgstr "Data do pagamento"
 msgid "Total invoice amount"
 msgstr "Valor total da fatura"
 
+msgid "Invoices due"
+msgstr "Faturas a vencer"
+
+msgid "Invoices overdue"
+msgstr "Faturas em atraso"
+
+msgid "All invoices"
+msgstr "Todas as faturas"
+
 msgid "Balance"
 msgstr "Saldo"
 
@@ -1286,6 +1295,9 @@ msgstr "Pedidos"
 
 msgid "orders"
 msgstr "pedidos"
+
+msgid "Orders due"
+msgstr "Pedidos à vencer"
 
 msgid "Seller"
 msgstr "Vendedor"
