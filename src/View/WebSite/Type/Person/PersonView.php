@@ -3,7 +3,6 @@ namespace Plinct\Cms\View\WebSite\Type\Person;
 
 use Exception;
 use Plinct\Cms\CmsFactory;
-use Plinct\Cms\View\WebSite\Type\Intangible\ContactPointView;
 use Plinct\Cms\View\WebSite\Type\Intangible\PostalAddressView;
 use Plinct\Cms\View\WebSite\Type\Thing\ThingView;
 
@@ -29,17 +28,7 @@ class PersonView extends ThingView
 	public function __destruct()
 	{
 		parent::__destruct();
-		self::navbarIndex();
-		if ($this->idthing) {
-			self::navbarEdit($this->name, $this->idperson, $this->idthing);
-		}
-	}
 
-	/**
-	 * @return void
-	 */
-	public static function navbarIndex(): void
-	{
 		CmsFactory::View()->addHeader(
 			CmsFactory::View()->fragment()->navbar()
 				->type('person')
@@ -50,26 +39,26 @@ class PersonView extends ThingView
 				->search()
 				->ready()
 		);
-	}
 
-	/**
-	 * @param string $name
-	 * @param string $idperson
-	 * @param string $idthing
-	 * @return void
-	 */
-	public static function navbarEdit(string $name, string $idperson, string $idthing): void
-	{
-		CmsFactory::View()->addHeader(
-		CmsFactory::View()->fragment()->navbar()
-			->type('person')
-			->title($name)
-			->level(3)
-			->newTab("/admin/person/edit/$idperson", CmsFactory::View()->fragment()->icon()->home())
-			->newTab("/admin/role?refererType=Person&refererName=$name&refererId=$idperson&refererIdthing=$idthing", _('Roles'))
-			->newTab("/admin/certification?about=$idthing", _('Certifications'))
-			->ready()
-		);
+		if ($this->idthing && $this->name && $this->idperson) {
+			$navbar = CmsFactory::View()->fragment()->navbar()
+				->type('person')
+				->title($this->name)
+				->level(3)
+				->newTab("/admin/person/edit/$this->idperson", CmsFactory::View()->fragment()->icon()->home());
+			// ROLE
+			if (in_array("Role",CmsFactory::controller()->configuration()->getModulesEnabled())) {
+				$navbar->newTab("/admin/role?refererType=Person&refererName=$this->name&refererId=$this->idperson&refererIdthing=$this->idthing", _('Roles'));
+			}
+			// CERTIFICATION
+			if (in_array("Certification",CmsFactory::controller()->configuration()->getModulesEnabled())) {
+				$navbar->newTab("/admin/certification?about=$this->idthing", _('Certifications'));
+			}
+			// READY
+			CmsFactory::View()->addHeader(
+				$navbar->ready()
+			);
+		}
 	}
 
 	/**
@@ -111,14 +100,19 @@ class PersonView extends ThingView
 				$this->name = $value['name'];
 				$address = $value['address'] ?? null;
 				// FORM
-				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Edit person"), self::formPerson('edit', $value), true));
+				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formPerson('edit', $value), _("Edit person"), $this->idthing, $this->name));
 				// CONTACT POINT
-				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), ContactPointView::getForm('person', $this->idthing, $value['contactPoint'] ?? null)));
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->reactShell('contactPoint')->setIdHasPart($this->idthing)->ready()
+				);
+				//CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Contact point"), ContactPointView::getForm('person', $this->idthing, $value['contactPoint'] ?? null)));
 				// ADDRESS
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->expandingBox(_("Postal address"), PostalAddressView::formPostalAddress('person',$this->idperson, $address ? 'edit' : 'new', $address)));
-				// HAS PART
-				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('person')->setIdHasPart($this->idthing)->setProperty("hasPart")->ready());
-			} elseif (isset($data['status'])) {
+				// IMAGE OBJECT
+				CmsFactory::view()->addMain(
+					CmsFactory::view()->fragment()->reactShell('imageObject')->setIdHasPart($this->idthing)->setProperty("hasPart")->ready());
+			}
+			elseif (isset($data['status'])) {
 				CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['status'].": ".$data['message']));
 			}
     } else {

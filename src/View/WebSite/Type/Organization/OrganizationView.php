@@ -33,20 +33,23 @@ class OrganizationView extends ThingView implements TypeViewInterface
 				->newTab("/admin/organization", CmsFactory::view()->fragment()->icon()->home())
 				->newTab("/admin/organization/new", CmsFactory::view()->fragment()->icon()->plus())
 				->newTab("/admin/localBusiness",_("Local businesses"))
+				->search()
 				->ready()
 		);
-		if($this->name && $this->idorganization && $this->idthing) CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-				->title($this->name)
-				->level(3)
-				->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
-				->newTab("/admin/localBusiness?organization=$this->idorganization",_("Local businesses"))
-				->newTab("/admin/service?provider=$this->organizationThing", _("Services"))
-				->newTab("/admin/product?manufacturer=$this->organizationThing", _("Products"))
-				->newTab("/admin/order?seller=$this->organizationThing", _("Orders"))
-				->newTab("/admin/role?refererType=Organization&refererName=$this->name&refererId=$this->idorganization&refererIdthing=$this->organizationThing", _("Members"))
-				->ready()
-		);
+		if($this->name && $this->idorganization && $this->idthing) {
+			CmsFactory::view()->addHeader(
+				CmsFactory::view()->fragment()->navbar()
+					->title($this->name)
+					->level(3)
+					->newTab("/admin/organization/edit?idorganization=$this->idorganization", CmsFactory::view()->fragment()->icon()->home())
+					->newTab("/admin/localBusiness?organization=$this->idorganization",_("Local businesses"))
+					->newTab("/admin/service?provider=$this->organizationThing", _("Services"))
+					->newTab("/admin/product?manufacturer=$this->organizationThing", _("Products"))
+					->newTab("/admin/order?seller=$this->organizationThing", _("Orders"))
+					->newTab("/admin/role?refererType=Organization&refererName=$this->name&refererId=$this->idorganization&refererIdthing=$this->organizationThing", _("Members"))
+					->ready()
+			);
+		}
 	}
 
 	/**

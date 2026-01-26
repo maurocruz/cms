@@ -541,30 +541,45 @@ COLLECTION
 /* CONTACT POINT
 ======================================================= */
 .form-contactPoint {
-  border: 1px solid gray;
-  border-radius: 4px;
-  h4 { flex-basis: 100%; margin: 0; }
 
-  fieldset.position { flex-basis: 60px; }
-  fieldset.name { flex-basis: calc(100% - 60px); }
-  fieldset.contactType { flex-basis: 50%; }
-  fieldset.telephone { flex-basis: 50%; }
-
-  @media (min-width: 480px) {
-    fieldset.email { flex-basis: calc(100% - 60px); }
+  @media (min-width: 420px) {
+    fieldset.telephone { flex-basis: calc(50% - 3px); }
+    fieldset.contactType { flex-basis: calc(50% - 3px); }
   }
   @media (min-width: 576px) {
-    fieldset.name { flex-basis: calc(33.33% - 20px); }
-    fieldset.contactType { flex-basis: calc(33.33% - 20px); }
-    fieldset.telephone { flex-basis: calc(33.33% - 20px); }
-    fieldset.email { flex-basis: 350px; }
+    fieldset.name { flex-basis: calc(33.33% - 3px); }
+    fieldset.description { flex-basis: calc(66.66% - 3px); }
+    fieldset.telephone { flex-basis: calc(33.33% - 3px); }
+    fieldset.email { flex-basis: calc(66.66% - 3px); }
+    fieldset.contactType { flex-basis: calc(33.33% - 3px); }
+    fieldset.contactOption { flex-basis: calc(66.66% - 3px); }
   }
-  @media (min-width: 768px) {
-    fieldset.name { flex-basis: 180px; }
-    fieldset.contactType { flex-basis: 180px; }
-    fieldset.telephone { flex-basis: 180px; }
+  @media (min-width: 640px) {
+    fieldset.description { flex-basis: calc(33.33% - 3px); }
+    fieldset.email { flex-basis: calc(33.33% - 3px); }
+    fieldset.contactOption { flex-basis: calc(33.33% - 3px); }
   }
-  @media (min-width: 992px) {
+  @media (min-width: 900px) {
+    fieldset.name { flex-basis: calc(25% - 3px); }
+    fieldset.description { flex-basis: calc(25% - 3px); }
+    fieldset.telephone { flex-basis: calc(16.66% - 3px); }
+    fieldset.email { flex-basis: calc(33.33% - 3px); }
+  }
+  @media (min-width: 1030px) {
+    fieldset.name { flex-basis: calc(15% - 3px); }
+    fieldset.description { flex-basis: calc(15% - 3px); }
+    fieldset.telephone { flex-basis: calc(15% - 3px); }
+    fieldset.email { flex-basis: calc(25% - 3px); }
+    fieldset.contactType { flex-basis: calc(15% - 3px); }
+    fieldset.contactOption { flex-basis: calc(15% - 3px); }
+  }
+  @media (min-width: 1200px) {
+    fieldset.name { flex-basis: calc(15% - 13px); }
+    fieldset.description { flex-basis: calc(15% - 13px); }
+    fieldset.telephone { flex-basis: calc(15% - 13px); }
+    fieldset.email { flex-basis: calc(25% - 13px); }
+    fieldset.contactType { flex-basis: calc(15% - 13px); }
+    fieldset.contactOption { flex-basis: calc(15% - 13px); }
   }
 }
 
@@ -978,18 +993,22 @@ COLLECTION
 /* TAXON
 ====================================================== */
 .form-taxon {
-  textarea {
-    height: 150px;
-  }
+  fieldset.scientificNameAuthorship { flex-basis: 155px}
+  fieldset.taxonRank { flex-basis: fit-content; }
+  fieldset.parentTaxon { flex-basis: fit-content; }
+  fieldset.citations > textarea { min-height: 130px; }
 
-  @media (min-width: 576px) {
-    display: flex;
-    flex-wrap: wrap;
-    fieldset:nth-of-type(7) { width: 100%; }
-    fieldset:nth-of-type(16) { width: 100%; }
-    textarea {
-      height: 100px;
-    }
+  @media (min-width: 420px) {
+    fieldset.occurrence { flex-basis: 50%; }
+    fieldset.flowering { flex-basis: 50%; }
+    fieldset.fructification { flex-basis: 50%; }
+    fieldset.height { flex-basis: 50%; }
+  }
+  @media (min-width: 738px) {
+    fieldset.occurrence { flex-basis: calc(100% - 465px); }
+    fieldset.flowering { flex-basis: 33.33%; }
+    fieldset.fructification { flex-basis: 33.33%; }
+    fieldset.height { flex-basis: 33.33%; }
   }
 }
 

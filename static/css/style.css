@@ -939,56 +939,100 @@ COLLECTION
 
 /* CONTACT POINT
 ======================================================= */
-.form-contactPoint {
-  border: 1px solid gray;
-  border-radius: 4px;
-}
-.form-contactPoint h4 {
-  flex-basis: 100%;
-  margin: 0;
-}
-.form-contactPoint fieldset.position {
-  flex-basis: 60px;
-}
-.form-contactPoint fieldset.name {
-  flex-basis: calc(100% - 60px);
-}
-.form-contactPoint fieldset.contactType {
-  flex-basis: 50%;
-}
-.form-contactPoint fieldset.telephone {
-  flex-basis: 50%;
-}
-@media (min-width: 480px) {
-  .form-contactPoint fieldset.email {
-    flex-basis: calc(100% - 60px);
+@media (min-width: 420px) {
+  .form-contactPoint fieldset.telephone {
+    flex-basis: calc(50% - 3px);
+  }
+  .form-contactPoint fieldset.contactType {
+    flex-basis: calc(50% - 3px);
   }
 }
 @media (min-width: 576px) {
   .form-contactPoint fieldset.name {
-    flex-basis: calc(33.33% - 20px);
+    flex-basis: calc(33.33% - 3px);
   }
-  .form-contactPoint fieldset.contactType {
-    flex-basis: calc(33.33% - 20px);
+  .form-contactPoint fieldset.description {
+    flex-basis: calc(66.66% - 3px);
   }
   .form-contactPoint fieldset.telephone {
-    flex-basis: calc(33.33% - 20px);
+    flex-basis: calc(33.33% - 3px);
   }
   .form-contactPoint fieldset.email {
-    flex-basis: 350px;
-  }
-}
-@media (min-width: 768px) {
-  .form-contactPoint fieldset.name {
-    flex-basis: 180px;
+    flex-basis: calc(66.66% - 3px);
   }
   .form-contactPoint fieldset.contactType {
-    flex-basis: 180px;
+    flex-basis: calc(33.33% - 3px);
   }
-  .form-contactPoint fieldset.telephone {
-    flex-basis: 180px;
+  .form-contactPoint fieldset.contactOption {
+    flex-basis: calc(66.66% - 3px);
   }
 }
+@media (min-width: 640px) {
+  .form-contactPoint fieldset.description {
+    flex-basis: calc(33.33% - 3px);
+  }
+  .form-contactPoint fieldset.email {
+    flex-basis: calc(33.33% - 3px);
+  }
+  .form-contactPoint fieldset.contactOption {
+    flex-basis: calc(33.33% - 3px);
+  }
+}
+@media (min-width: 900px) {
+  .form-contactPoint fieldset.name {
+    flex-basis: calc(25% - 3px);
+  }
+  .form-contactPoint fieldset.description {
+    flex-basis: calc(25% - 3px);
+  }
+  .form-contactPoint fieldset.telephone {
+    flex-basis: calc(16.66% - 3px);
+  }
+  .form-contactPoint fieldset.email {
+    flex-basis: calc(33.33% - 3px);
+  }
+}
+@media (min-width: 1030px) {
+  .form-contactPoint fieldset.name {
+    flex-basis: calc(15% - 3px);
+  }
+  .form-contactPoint fieldset.description {
+    flex-basis: calc(15% - 3px);
+  }
+  .form-contactPoint fieldset.telephone {
+    flex-basis: calc(15% - 3px);
+  }
+  .form-contactPoint fieldset.email {
+    flex-basis: calc(25% - 3px);
+  }
+  .form-contactPoint fieldset.contactType {
+    flex-basis: calc(15% - 3px);
+  }
+  .form-contactPoint fieldset.contactOption {
+    flex-basis: calc(15% - 3px);
+  }
+}
+@media (min-width: 1200px) {
+  .form-contactPoint fieldset.name {
+    flex-basis: calc(15% - 13px);
+  }
+  .form-contactPoint fieldset.description {
+    flex-basis: calc(15% - 13px);
+  }
+  .form-contactPoint fieldset.telephone {
+    flex-basis: calc(15% - 13px);
+  }
+  .form-contactPoint fieldset.email {
+    flex-basis: calc(25% - 13px);
+  }
+  .form-contactPoint fieldset.contactType {
+    flex-basis: calc(15% - 13px);
+  }
+  .form-contactPoint fieldset.contactOption {
+    flex-basis: calc(15% - 13px);
+  }
+}
+
 /* CREATIVE WORK
 ======================================================= */
 .form-creativeWork {
@@ -1677,22 +1721,44 @@ COLLECTION
 
 /* TAXON
 ====================================================== */
-.form-taxon textarea {
-  height: 150px;
+.form-taxon fieldset.scientificNameAuthorship {
+  flex-basis: 155px;
 }
-@media (min-width: 576px) {
-  .form-taxon {
-    display: flex;
-    flex-wrap: wrap;
+.form-taxon fieldset.taxonRank {
+  flex-basis: fit-content;
+}
+.form-taxon fieldset.parentTaxon {
+  flex-basis: fit-content;
+}
+.form-taxon fieldset.citations > textarea {
+  min-height: 130px;
+}
+@media (min-width: 420px) {
+  .form-taxon fieldset.occurrence {
+    flex-basis: 50%;
   }
-  .form-taxon fieldset:nth-of-type(7) {
-    width: 100%;
+  .form-taxon fieldset.flowering {
+    flex-basis: 50%;
   }
-  .form-taxon fieldset:nth-of-type(16) {
-    width: 100%;
+  .form-taxon fieldset.fructification {
+    flex-basis: 50%;
   }
-  .form-taxon textarea {
-    height: 100px;
+  .form-taxon fieldset.height {
+    flex-basis: 50%;
+  }
+}
+@media (min-width: 738px) {
+  .form-taxon fieldset.occurrence {
+    flex-basis: calc(100% - 465px);
+  }
+  .form-taxon fieldset.flowering {
+    flex-basis: 33.33%;
+  }
+  .form-taxon fieldset.fructification {
+    flex-basis: 33.33%;
+  }
+  .form-taxon fieldset.height {
+    flex-basis: 33.33%;
   }
 }
 

@@ -20,6 +20,9 @@ class RoleController implements TypeControllerInterface
 			$organization = $params['organization'] ?? null;
 			$dataRole = CmsFactory::model()->api()->get('role', ['organization' => $organization, 'properties' => 'memberOf,member'])->ready();
 		}
+		if (isset($dataRole['status']) && $dataRole['status'] == 'fail') {
+			return CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_($dataRole['message'])));
+		}
 		return CmsFactory::view()->webSite()->type('role')->setData($dataRole)->setQueryParams($params)->setMethodName('index')->ready();
 	}
 

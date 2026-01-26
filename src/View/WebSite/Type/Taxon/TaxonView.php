@@ -36,7 +36,6 @@ class TaxonView extends ThingView implements TypeViewInterface
 		}
 	}
 
-
   /**
    *
    * @param array|null $data
@@ -60,11 +59,12 @@ class TaxonView extends ThingView implements TypeViewInterface
 			$idthing = $tb->getIdthing();
       $idtaxon = $tb->getId();
 			$this->idtaxon = $idtaxon;
+			$this->name = $value['name'];
 			$this->title = $value['name'] . " (" . $value['taxonRank'] . ")";
       // form taxon
       CmsFactory::view()->addMain([
 				self::formTaxon('edit', $value, $data['parentTaxonList'] ?? null),
-	      CmsFactory::view()->fragment()->reactShell('taxon')->setProperty('hasPart')->setIdHasPart($idthing)->ready()
+	      CmsFactory::view()->fragment()->reactShell('imageObject')->setProperty("hasPart")->setIdHasPart($idthing)->ready()
       ]);
     } else {
       CmsFactory::view()->addMain(CmsFactory::view()->fragment()->noContent(_("No item found!")));
@@ -94,10 +94,10 @@ class TaxonView extends ThingView implements TypeViewInterface
     if ($this->idtaxon) $form->input('idtaxon', $this->idtaxon, 'hidden');
 		// THING
 	  $form = parent::formThingContent($form, $value);
-    // scientificNameAuthorship
-    $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // vernacularName
     $form->fieldsetWithInput("vernacularName", $value['vernacularName'] ?? null, _('Vernacular name'));
+	  // scientificNameAuthorship
+	  $form->fieldsetWithInput("scientificNameAuthorship", $value['scientificNameAuthorship'] ?? null, _("Scientific name authorship") );
     // taxonRank
     $selectTaxonRank = isset($value['taxonRank']) ? [ $value['taxonRank'] => _($value['taxonRank']) ] : null;
     $form->fieldsetWithSelect("taxonRank", $selectTaxonRank, ["family"=>_("Family"), "genus" => _("Genus"), "species"=>_("Species")], _("Taxon rank"));
