@@ -309,11 +309,10 @@ class App
 		  $packages = json_decode(file_get_contents($installedFile));
 		  foreach ($packages->packages as $package) {
 			  if ($package->name == "plinct/cms") {
-				  $version = $package->version;
+				  $version =  _('Version').": <b>$package->version</b>.";
 			  }
 		  }
 	  }
-
 	  self::$VERSION = $version;
   }
 
