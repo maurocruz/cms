@@ -479,7 +479,7 @@ class App
 		self::$isRemoteApi = App::getApiHost() != App::getURL().'/api/';
 		$configurationItems = CmsFactory::model()->api()->get('config')->ready();
 		// CONFIGURATION ITEMS
-		$itemListElement = is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
+		$itemListElement = isset($configurationItems['itemListElement']) && is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
 		foreach ($itemListElement as $value) {
 			$item = $value['item'];
 			if ($item['name'] == 'Modules Available') {
