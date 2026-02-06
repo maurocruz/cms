@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 use Firebase\JWT\JWT;
 use Plinct\Cms\Controller\App;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -30,19 +28,23 @@ return function (Route $route)
 	 */
 	$route->post('/login', function (Request $request, Response $response) {
 		$parseBody = $request->getParsedBody();
+		$location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
 		$authentication = CmsFactory::model()->auth()->login($parseBody['email'], $parseBody['password']);
 		// AUTHORIZED
 		if ($authentication && $authentication['status'] == "success") {
 			$token = $authentication['data']['token'] ?? null;
 			if ($token) {
-				$tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
+				try {
+					$tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
+				} catch (Throwable) {
+					return $response->withHeader("Location", $location)->withStatus(401);
+				}
 				// cookie
 				setcookie('API_TOKEN', $token, $tokenDecode->exp,'/');
 				// session
 				$_SESSION['userLogin']['name'] = $tokenDecode->name;
 				$_SESSION['userLogin']['uid'] = $tokenDecode->uid;
 				// RETURN
-				$location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
 				return $response->withHeader("Location", $location)->withStatus(302);
 			}
 		}

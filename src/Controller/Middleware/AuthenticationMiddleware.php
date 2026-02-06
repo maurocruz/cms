@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 class AuthenticationMiddleware implements MiddlewareInterface
 {
@@ -24,18 +25,22 @@ class AuthenticationMiddleware implements MiddlewareInterface
     }
     $token = $_COOKIE['API_TOKEN'] ?? null;
     if (App::getApiSecretKey()) {
-			// TODO Package tuupola/slim-jwt-auth is abandoned, you should avoid using it. Use jimtools/jwt-auth instead.
-      $tokenDecode = $token ? JWT::decode($token, App::getApiSecretKey(), ["HS256"]) : null;
       if ($token) {
-	      $name = $tokenDecode->name;
-	      $uid = $tokenDecode->uid;
-	      $_SESSION['userLogin']['name'] = $name ;
-	      $_SESSION['userLogin']['uid'] = $uid;
-				$authAttr['name'] = $name;
-				$authAttr['uid'] = $uid;
-        CmsFactory::controller()->user()->userLogged()->setName($name);
-	      CmsFactory::controller()->user()->userLogged()->setIduser($uid);
-				CmsFactory::controller()->user()->userLogged()->setToken($token);
+				try {
+					$tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
+		      $name = $tokenDecode->name;
+		      $uid = $tokenDecode->uid;
+		      $_SESSION['userLogin']['name'] = $name ;
+		      $_SESSION['userLogin']['uid'] = $uid;
+					$authAttr['name'] = $name;
+					$authAttr['uid'] = $uid;
+	        CmsFactory::controller()->user()->userLogged()->setName($name);
+		      CmsFactory::controller()->user()->userLogged()->setIduser($uid);
+					CmsFactory::controller()->user()->userLogged()->setToken($token);
+				} catch (Throwable) {
+					unset($_SESSION['userLogin']);
+					$request = $request->withAttribute("ApiSecretKey", false);
+	      }
       } else {
         unset($_SESSION['userLogin']);
       }
