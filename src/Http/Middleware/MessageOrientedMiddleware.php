@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\Controller\Middleware;
+namespace Plinct\Cms\Http\Middleware;
 
 use Plinct\Cms\CmsFactory;
 use Psr\Http\Message\ResponseInterface;
@@ -16,14 +16,26 @@ class MessageOrientedMiddleware implements MiddlewareInterface
 	 */
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 	{
-		$RPC_Attr = $request->getAttribute('RPC');
-		$authAttr = $request->getAttribute('auth');
-		if (!$RPC_Attr['apiHostName']) {
+		$RPC_Attr = $request->getAttribute('RPC',[]);
+		if (!is_array($RPC_Attr)) {
+			$RPC_Attr = [];
+		}
+
+		$authAttr = $request->getAttribute('auth', []);
+		if (!is_array($authAttr)) {
+			$authAttr = [];
+		}
+
+		$apiHostName = $RPC_Attr['apiHostName'] ?? '';
+		$schemaOk = (bool)($RPC_Attr['schema'] ?? false);
+		$tablesOk = (bool)($RPC_Attr['tables'] ?? false);
+
+		if ($apiHostName === '') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_("You need to set the API server on index.php. Insert cms->setApi(apiUrl, apiSecretKey)")));
-		} else if($RPC_Attr['database'] === 'no') {
-			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('You need to create the database before starting the application.')));
-		} else if ($RPC_Attr['schema'] === 'no') {
-			CmsFactory::View()->addMain("<div class='warning'><p>"._('Tables do not exist!')."</p><button class='button'><a href='/admin/config/initApplication'>"._('Launch application?')."</a></button> </div>");
+		} else if($schemaOk === false) {
+			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning(_('Não foi possível conectar com a base de dados! Verifique sua existência e conexão.')));
+		} else if ($tablesOk === false) {
+			$request = $request->withAttribute('EntryPoint', 'initApplication');
 		} else if (!$authAttr['uid'] && $request->getUri()->getPath() !== '/admin/auth/change_password') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login());
 		}

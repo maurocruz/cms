@@ -2,24 +2,45 @@
 declare(strict_types=1);
 namespace Plinct\Cms;
 
-use Plinct\Cms\Controller\App;
+use DI\Bridge\Slim\Bridge;
+use DI\ContainerBuilder;
+use Exception;
 use Plinct\Cms\Controller\Controller;
 use Plinct\Cms\Helpers\Helpers;
 use Plinct\Cms\Model\Model;
 use Plinct\Cms\View\View;
-
 use Plinct\Tool\ToolBox;
-use Slim\App as Slim;
+use Slim\App;
 
 class CmsFactory
 {
-  /**
-   * @param Slim $slim
-   * @return App
-   */
-  public static function create(Slim $slim): App {
-		return new App($slim);
+	/**
+	 * @throws Exception
+	 */
+  public static function create(array $settings = []): App
+  {
+		// CONTAINER
+		$builder = new ContainerBuilder();
+		$builder->addDefinitions(__DIR__.'/Container/container.php');
+		// BASEDIR
+	  $settings['basedir'] = realpath(__DIR__.'/../');
+		// ADD SETTINGS
+		$builder->addDefinitions(['settings' => $settings]);
+		// BUILD CONTAINER
+		$container = $builder->build();
+
+		// SLIM APP
+		$slimApp = Bridge::create($container);
+		if (isset($settings['debug']) && $settings['debug']) {
+			error_reporting(E_ALL);
+			$slimApp->addErrorMiddleware(true, true, true);
+		}
+		// ROUTES
+	  (require __DIR__ . '/Http/routes.php')($slimApp);
+		//
+		return $slimApp;
   }
+
 	/**
 	 * @return Controller
 	 */

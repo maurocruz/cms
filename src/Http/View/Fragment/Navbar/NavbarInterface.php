@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Fragment\Navbar;
+namespace Plinct\Cms\Http\View\Fragment\Navbar;
 
 interface NavbarInterface
 {

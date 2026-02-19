@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Fragment\Navbar;
+namespace Plinct\Cms\Http\View\Fragment\Navbar;
 
 use Plinct\Cms\CmsFactory;
 use Plinct\Cms\Controller\App;
