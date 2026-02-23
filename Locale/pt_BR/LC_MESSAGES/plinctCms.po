@@ -11,6 +11,9 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "Forbidden access"
+msgstr "Acesso proibido"
+
 msgid "Service Type"
 msgstr "Tipo de serviço"
 

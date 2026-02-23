@@ -3,16 +3,21 @@
 use GuzzleHttp\Client;
 use Plinct\Api\ApiFactory;
 use Plinct\Api\Request\Server\ConnectBd\PDOConnect;
-use Plinct\Cms\Application\Auth\AuthenticatedUser;
+use Plinct\Cms\Application\Authentication\AuthenticatedUser;
+use Plinct\Cms\Application\Context\GetRepo;
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Http\View\Fragment\FragmentFactory;
+use Plinct\Cms\Domain\Cache\CacheInterface;
+use Plinct\Cms\Infrastructure\Auth\JwtDecoderHttp;
+use Plinct\Cms\Http\ExceptionHandlers\HttpForbiddenHandler;
+use Plinct\Cms\Http\ExceptionHandlers\HttpNotFoundHandler;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
-use Plinct\Cms\Http\View\ViewFactory;
-use Plinct\Cms\Infrastructure\Auth\ApiPrivilegeProvider;
+use Plinct\Cms\Infrastructure\Cache\FileCache;
 use Plinct\Cms\Infrastructure\Http\ApiClient;
 use Psr\Container\ContainerInterface;
 
 return [
+
 	ApiFactory::class => DI\autowire(ApiFactory::class),
 
 	PDOConnect::class => DI\autowire(PDOConnect::class),
@@ -28,18 +33,29 @@ return [
 
 	ApiClient::class => DI\autowire(ApiClient::class),
 
-	ApiPrivilegeProvider::class => DI\autowire(ApiPrivilegeProvider::class),
-
 	AuthenticatedUser::class => DI\autowire(AuthenticatedUser::class),
-
-	ViewFactory::class => DI\autowire(ViewFactory::class),
 
 	Template::class => DI\autowire(Template::class),
 
 	\Plinct\Tool\Locale::class => DI\autowire(\Plinct\Tool\Locale::class),
 
-	FragmentFactory::class => DI\autowire(FragmentFactory::class),
+	ComponentFactory::class => DI\autowire(ComponentFactory::class),
 
 	RequestContext::class => DI\autowire(RequestContext::class),
 
+	JwtDecoderHttp::class => DI\autowire(JwtDecoderHttp::class),
+
+	HttpNotFoundHandler::class => DI\autowire(HttpNotFoundHandler::class),
+
+	HttpForbiddenHandler::class => DI\autowire(HttpForbiddenHandler::class),
+
+	CacheInterface::class => DI\factory(function (ContainerInterface $container) {
+		$settings = $container->get('settings');
+		$basedir = isset($settings['basedir']) && is_string($settings['basedir']) ? $settings['basedir'] : null;
+
+		$dir = $basedir ? ($basedir . '/var/cache') : null;
+		return new FileCache($dir);
+	}),
+
+	GetRepo::class => DI\autowire(GetRepo::class),
 ];

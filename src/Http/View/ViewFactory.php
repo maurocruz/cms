@@ -1,13 +1,20 @@
 <?php
 namespace Plinct\Cms\Http\View;
 
+use Plinct\Cms\Http\View\Auth\AuthView;
 use Plinct\Cms\Http\View\Template\Template;
 use Psr\Http\Message\ResponseInterface;
 
 class ViewFactory
 {
-	public function dashboardView(ResponseInterface $response, Template $template): DashboardView
+
+	/**
+	 * @param ResponseInterface $response
+	 * @param Template $template
+	 * @return AuthView
+	 */
+	public function authView(ResponseInterface $response, Template $template): AuthView
 	{
-		return new DashboardView($response, $template);
+		return new AuthView($template);
 	}
 }

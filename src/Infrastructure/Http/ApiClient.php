@@ -12,6 +12,10 @@ class ApiClient
 	private $client;
 	private string $apiHost;
 	private array $options = [];
+	private string $uri = '';
+	private ?string $url = null;
+	private $response;
+	private string $method;
 
 	/**
 	 * @throws ContainerExceptionInterface
@@ -40,6 +44,11 @@ class ApiClient
 		$this->options['query'] = $queries;
 	}
 
+	public function setFormParams(array $params): void
+	{
+		$this->options['form_params'] = $params;
+	}
+
 	/**
 	 * @return array
 	 */
@@ -49,11 +58,54 @@ class ApiClient
 	}
 
 	/**
+	 * @param string $uri
+	 */
+	public function setUri(string $uri): void
+	{
+		$this->uri = $uri;
+	}
+
+	/**
 	 * @throws GuzzleException
 	 */
 	public function get(string $uri = null)
 	{
-		$response = $this->client->get($this->apiHost.$uri, $this->options);
-		return json_decode($response->getBody()->getContents(), true);
+		$this->method = 'GET';
+		// URL
+		$this->url = $this->url ?? $uri ? $this->apiHost.$uri : $this->apiHost.$this->uri;
+		// REQUEST
+		$this->response = $this->client->get($this->url, $this->options);
+		return $this->render();
 	}
+
+	/**
+	 * @throws GuzzleException
+	 */
+	public function post(string $uri = null, array $formParams = null)
+	{
+		$this->method = 'POST';
+		// URL
+		$this->url = $this->url ?? $uri ? $this->apiHost.$uri : $this->apiHost.$this->uri;
+		// FORM PARAMS
+		if ($formParams !== null) {
+			$this->options['form_params'] = isset($this->options['form_params']) ? array_merge($this->options['form_params'], $formParams) : $formParams;
+		}
+		// REQUEST
+		$this->response = $this->client->post($this->url, $this->options);
+		return $this->render();
+	}
+
+	/**
+	 * @return array|mixed
+	 */
+	private function render(): mixed
+	{
+		if ($this->response->getStatusCode() == 200) {
+			return json_decode($this->response->getBody()->getContents(), true);
+		} else {
+			return ["status" => $this->response->getStatusCode(), "reasonPhrase" => $this->response->getReasonPhrase(), "method"=>$this->method, "url"=>$this->url, "options" => $this->options];
+		}
+	}
+
+
 }

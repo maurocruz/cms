@@ -31,11 +31,12 @@ abstract class TemplateAbstract
 
 	/**
 	 * @param $content
-	 * @return void
+	 * @return TemplateAbstract
 	 */
-	public function addHeader($content): void
+	public function addHeader($content): static
 	{
 		$this->HEADER['content'][] = $content;
+		return $this;
 	}
 
 	/**

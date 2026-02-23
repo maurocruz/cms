@@ -1,9 +1,10 @@
 <?php
 namespace Plinct\Cms\Application\Context;
 
+use Plinct\Cms\Application\Contracts\RequestContextInterface;
 use Plinct\Cms\Domain\Auth\User;
 
-class RequestContext
+class RequestContext implements RequestContextInterface
 {
 	private ?User $user = null;
 	private array $modulesAvailable = [];
@@ -16,6 +17,23 @@ class RequestContext
 	private string $version = '';
 	private string $basedirectory = '';
 	private string $commit = '';
+	private string $query = '';
+
+	/**
+	 * @param string $query
+	 */
+	public function setQuery(string $query): void
+	{
+		$this->query = $query;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getQuery(): string
+	{
+		return $this->query;
+	}
 
 	/**
 	 * @param string $commit

@@ -3,24 +3,24 @@ namespace Plinct\Cms\Http\View\Template;
 
 use Plinct\Cms\Application\Context\RequestContext;
 use Plinct\Cms\Domain\Auth\User;
-use Plinct\Cms\Http\View\Fragment\FragmentFactory;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 
 class Header
 {
 	private ?User $user;
 	private string $version;
 	private string $commit;
-	private FragmentFactory $fragmentFactory;
+	private ComponentFactory $componentFactory;
 	private RequestContext $context;
 
 	/**
 	 */
-	public function __construct(FragmentFactory $fragmentFactory, RequestContext $context)
+	public function __construct(ComponentFactory $componentFactory, RequestContext $context)
 	{
 		$this->user = $context->getUser();
 		$this->version = $context->getVersion();
 		$this->commit = $context->getCommit();
-		$this->fragmentFactory = $fragmentFactory;
+		$this->componentFactory = $componentFactory;
 		$this->context = $context;
 	}
 
@@ -29,11 +29,12 @@ class Header
 	 */
 	public function userBar(): string
 	{
+		if (!$this->user) return '';
 		$helloText = sprintf(_("Hello, %s."), $this->user->getUsername());
 		return "<div class='admin admin-bar-top'>
-      <p>$helloText</p>
-      <button class='button-link' onclick='navigator.clipboard.writeText(\"". $this->user->getToken()."\")'>Copy token</button>
-      <p><a href='/admin/logout'>" . _("Log out") . "</a></p>
+    <p>$helloText</p>
+    <button class='button-link' onclick='navigator.clipboard.writeText(\"" . $this->user->getToken() . "\")'>Copy token</button>
+    <p><a href='/admin/auth/logout'>" . _("Log out") . "</a></p>
     </div>";
 	}
 
@@ -52,13 +53,15 @@ class Header
 	}
 
 	/**
-	 * @return array
+	 * @return ?array
 	 */
-	public function mainMenu(): array
+	public function mainMenu(): ?array
 	{
-		$navbar = $this->fragmentFactory->navbar()
-			->newTab("/admin", $this->fragmentFactory->icon()->home())
-			->newTab("/admin/config", $this->fragmentFactory->icon()->config())
+		if (!$this->user) return null;
+
+		$navbar = $this->componentFactory->navbar()
+			->newTab("/admin", $this->componentFactory->icon()->home())
+			->newTab("/admin/config", $this->componentFactory->icon()->config())
 			->newTab("/admin/user",_("Users"))
 			->level(1);
 		$tabs = [];

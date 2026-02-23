@@ -2,22 +2,45 @@
 namespace Plinct\Cms\Http\View\Template;
 
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Http\View\Fragment\FragmentFactory;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Tool\Locale;
 use Plinct\Web\Render;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class Template extends TemplateAbstract
 {
-	private FragmentFactory $fragment;
+	private ComponentFactory $component;
 	private RequestContext $context;
 
 	/**
 	 */
-	public function __construct(FragmentFactory $fragment)
+	public function __construct(ContainerInterface $container, ComponentFactory $component)
 	{
-		$this->fragment = $fragment;
+		$settings = '';
+		try {
+			$settings = $container->get('settings');
+		} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+			error_log($e->getMessage());
+		}
+
+		$basedirectory = $settings['basedirectory'] ?? __DIR__ . "/../../../../";
+		// LANGUAGE
+		$locale = Locale::getServerLanguage();
+		$this->HTML['attributes'] = ["lang" => $locale];
+		// TRANSLATE BY GETTEXT
+		Locale::translateByGettext($locale, "plinctCms", $basedirectory."/Locale");
+
+		$this->component = $component;
+	}
+
+	/**
+	 * @return ComponentFactory
+	 */
+	public function getComponent(): ComponentFactory
+	{
+		return $this->component;
 	}
 
 	/**
@@ -29,25 +52,15 @@ class Template extends TemplateAbstract
 	}
 
 	/**
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
 	 */
-	public function render($response): void
+	public function render(): string
 	{
-		// LANGUAGE
-		$locale = $this->context->getLocale();
-		$basedirectory = $this->context->getBasedirectory();
-		$this->HTML['attributes'] = ["lang" => $locale];
-
-		// TRANSLATE BY GETTEXT
-		Locale::translateByGettext($locale, "plinctCms", $basedirectory."/Locale");
-
 		// HEAD
 		$head = new Head($this->context);
 		$this->addHead($head->get());
 
 		// HEADER
-		$header = new Header($this->fragment, $this->context);
+		$header = new Header($this->component, $this->context);
 		$this->addHeader([
 			$header->userBar(),
 			$header->header(),
@@ -60,6 +73,6 @@ class Template extends TemplateAbstract
 			$this->getBODY()
 		]);
 		// WRITE
-		$response->getBody()->write("<!DOCTYPE html>" . Render::arrayToString(parent::getHTML()));
+		return "<!DOCTYPE html>" . Render::arrayToString(parent::getHTML());
 	}
 }

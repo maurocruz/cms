@@ -19,60 +19,47 @@ class CmsFactory
 	 */
   public static function create(array $settings = []): App
   {
+		$debug = $settings['debug'] ?? false;
 		// CONTAINER
 		$builder = new ContainerBuilder();
 		$builder->addDefinitions(__DIR__.'/Container/container.php');
 		// BASEDIR
 	  $settings['basedir'] = realpath(__DIR__.'/../');
+		if ($_ENV['MAIL_HOST']) $settings['mailHost'] = $_ENV['MAIL_HOST'];
+		if ($_ENV['MAIL_USERNAME']) $settings['mailUsername'] = $_ENV['MAIL_USERNAME'];
+		if ($_ENV['MAIL_PASSWORD']) $settings['mailPassword'] = $_ENV['MAIL_PASSWORD'];
 		// ADD SETTINGS
 		$builder->addDefinitions(['settings' => $settings]);
 		// BUILD CONTAINER
 		$container = $builder->build();
 
-		// SLIM APP
+		// SLIM APP (middlewares and routes)
 		$slimApp = Bridge::create($container);
-		if (isset($settings['debug']) && $settings['debug']) {
-			error_reporting(E_ALL);
-			$slimApp->addErrorMiddleware(true, true, true);
-		}
+		// MIDDLEWARES
+	  (require __DIR__ . '/Http/Middleware/middlewares.php')($slimApp, $debug);
 		// ROUTES
 	  (require __DIR__ . '/Http/routes.php')($slimApp);
-		//
+		// RETURN
 		return $slimApp;
   }
 
-	/**
-	 * @return Controller
-	 */
 	public static function controller(): Controller {
 		return new Controller();
 	}
 
-	/**
-	 * @return Helpers
-	 */
 	public static function helpers(): Helpers
 	{
 		return new Helpers();
 	}
 
-	/**
-	 * @return Model
-	 */
 	public static function model(): Model {
 		return new Model();
 	}
 
-	/**
-	 * @return ToolBox
-	 */
 	public static function toolBox(): ToolBox
 	{
 		return new ToolBox();
 	}
-	/**
-	 * @return View
-	 */
 	public static function view(): View {
 		return new View();
 	}
