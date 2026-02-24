@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Application\Contracts;
 
-use Plinct\Cms\Domain\Auth\User;
+use Plinct\Cms\Domain\Auth\Userlogged;
 
 interface RequestContextInterface
 {
-	public function getUser(): ?User;
+	public function getUser(): ?Userlogged;
 }

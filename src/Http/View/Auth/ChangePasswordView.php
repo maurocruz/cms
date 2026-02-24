@@ -1,17 +1,17 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\ViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
 
-class ChangePasswordView extends ViewAbstract
+class ChangePasswordView extends TemplateAbstract
 {
 
-	public function build(array $params = null): void
+	public function build(array $data = null): void
 	{
 		$selector =	$this->getQuerystring('selector');
 		$validator = $this->getQuerystring('validator');
 		// FORM
-		$form = $this->component()->form('changePassword',['class'=>'form formPadrao form-changePassword']);
+		$form = $this->form('changePassword',['class'=>'form formPadrao form-changePassword']);
 		$form->action('/admin/auth/change-password')->method('post');
 		$form->content("<h3>"._('Change your password')."</h3>");
 		// HIDDEN

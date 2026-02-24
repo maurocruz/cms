@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\Domain\Auth;
 
-class User
+class Userlogged
 {
 	private int $iduser;
 	private string $username;

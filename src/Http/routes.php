@@ -47,7 +47,9 @@ return function (RouteCollectorProxy $route)
 		//  HOME
 		$route->get('/', [HomeController::class, 'home'])->setName('home');
 		// USER
-		$route->get('/user',[UserController::class, 'index'])->setName('user');
+		$route->get('/user',[UserController::class, 'list'])->setName('user.list.read');
+		$route->get('/user/edit/{id}',[UserController::class, 'show'])->setName('user.show.read');
+		$route->get('/user/new', RegisterFormController::class)->setName('user.new.read');
 		// CONFIG
 		$route->group('/config', function (RouteCollectorProxy $route) {
 			//

@@ -1,18 +1,18 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\ViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
 
-class LoginView extends ViewAbstract
+class LoginView extends TemplateAbstract
 {
 	/**
-	 * @param array|null $params
+	 * @param array|null $data
 	 * @return void
 	 */
-	public function build(array $params = null): void
+	public function build(array $data = null): void
 	{
-		$email = $params['email'] ?? null;
-		$form = $this->component()->form('form-login', ['class'=>'form formPadrao form-login']);
+		$email = $data['email'] ?? null;
+		$form = $this->form('form-login', ['class'=>'form formPadrao form-login']);
 		$form->action('/admin/auth/login')->method('post');
 		$form->addMandatories(['email','password']);
 		$form->content("<h3>"._('Log in')."</h3>");

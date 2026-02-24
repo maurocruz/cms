@@ -2,25 +2,18 @@
 namespace Plinct\Cms\Http\View\Abstracts;
 
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Http\View\Component\ComponentFactory;
-use Plinct\Cms\Http\View\Contracts\ViewInterface;
+use Plinct\Cms\Domain\Auth\Userlogged;
+use Plinct\Cms\Http\View\Contracts\TemplateInterface;
 use Plinct\Cms\Http\View\Template\Template;
 
-abstract class ViewAbstract implements ViewInterface
+abstract class TemplateAbstract extends ComponentAbstract implements TemplateInterface
 {
-
 	private array $querystring = [];
+	private RequestContext $context;
 
-	public function __construct(private readonly Template $template)
+	public function __construct(protected readonly Template $template)
 	{
-	}
-
-	/**
-	 * @return ComponentFactory
-	 */
-	public function component(): ComponentFactory
-	{
-		return $this->template->getComponent();
+		parent::__construct($template->getComponent());
 	}
 
 	/**
@@ -29,6 +22,7 @@ abstract class ViewAbstract implements ViewInterface
 	 */
 	public function setContext(RequestContext $context): void
 	{
+		$this->context = $context;
 		$this->template->setContext($context);
 		// PARSE QUERYSTRINGS
 		parse_str($context->getQuery(),$queryArray);
@@ -44,6 +38,12 @@ abstract class ViewAbstract implements ViewInterface
 			$this->warning($queryArray['wrn']);
 		}
 	}
+
+	public function getContext(): RequestContext
+	{
+		return $this->context;
+	}
+
 
 	/**
 	 * @param string $key
@@ -62,6 +62,10 @@ abstract class ViewAbstract implements ViewInterface
 		return $this->querystring;
 	}
 
+	public function getUser(): Userlogged
+	{
+		return $this->context->getUser();
+	}
 	/**
 	 * @param $content
 	 * @return void

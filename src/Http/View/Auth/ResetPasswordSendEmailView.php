@@ -1,13 +1,13 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\ViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
 
-class ResetPasswordSendEmailView extends ViewAbstract
+class ResetPasswordSendEmailView extends TemplateAbstract
 {
-	public function build(array $params = null): void
+	public function build(array $data = null): void
 	{
-		$form = $this->component()->form('resetPassword',['class'=>'form formPadrao form-resetPassword']);
+		$form = $this->form('resetPassword',['class'=>'form formPadrao form-resetPassword']);
 		$form->action('/admin/auth/reset-password')->method('post');
 		$form->addMandatories(['email']);
 		// TITLE

@@ -166,3 +166,21 @@ a.white { color: white; }
     background-color: rgba(30,22,22,0.6) !important;
   }
 }
+
+.warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  padding: 5px;
+  background-color: #FE3;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  border: 1px red dashed;
+  border-radius: 5px;
+  font-size: 1.3em;
+  max-width: 520px;
+  min-height: 30px;
+}
+

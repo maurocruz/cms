@@ -1,39 +1,57 @@
 <?php
 namespace Plinct\Cms\Http\Controllers\Auth;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Http\View\Template\Template;
-use Plinct\Cms\Http\View\ViewFactory;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Plinct\Cms\Application\User\UserUseCase;
+use Plinct\Cms\Http\View\User\UserlistView;
+use Plinct\Cms\Http\View\User\UserShowView;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class UserController
+readonly class UserController
 {
-	private ViewFactory $view;
-	private Template $template;
 
-	public function __construct(ViewFactory $view, Template $template)
+	public function __construct(private UserUseCase $userUseCase, private UserlistView $list, private UserShowView $show)
 	{
-		$this->view = $view;
-		$this->template = $template;
 	}
 
 	/**
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
+	 * @throws GuzzleException
 	 */
-	public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+	public function list(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
 	{
+		// CONTEXT
 		$context = $request->getAttribute(RequestContext::class);
-		$user = $context->getUser();
-		$this->template->setContext($context);
-
-		$this->template->addMain("<h1>User page</h1>");
-		$this->template->render($response);
-
+		// PARSE QUERYSTRINGS
+		$defaultQueryParams = ['orderBy'=>'dateModified','ordering'=>'DESC'];
+		$queryParams = array_merge($defaultQueryParams, $request->getQueryParams());
+		// GET USE CASE (Application)
+		$apiData = $this->userUseCase->list($queryParams);
+		// SEND VIEW (Http)
+		$this->list->setContext($context);
+		$this->list->build($apiData);
+		// WRITE RESPONSE
+		$response->getBody()->write($this->list->render());
 		return $response;
 	}
 
+	/**
+	 * @throws GuzzleException
+	 */
+	public function show(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+	{
+		$id = $request->getAttribute('id');
+		$queryParams = $request->getQueryParams();
+		// CONTEXT
+		$context = $request->getAttribute(RequestContext::class);
+		// GET USE CASE (Application)
+		$apiData = $this->userUseCase->show($id);
+		// SEND VIEW (Http)
+		$this->show->setContext($context);
+		$this->show->build($apiData);
+		// WRITE RESPONSE
+		$response->getBody()->write($this->show->render());
+		return $response;
+	}
 }

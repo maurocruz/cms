@@ -115,9 +115,6 @@ class AuthenticationMiddleware implements MiddlewareInterface
 	    }
     }	else {
       unset($_SESSION['userLogin']);
-			/*if (!in_array($route->getName(), ['loginPost','registerPost','registerGet'])) {
-				throw new HttpUnauthorizedException($request);
-			}*/
     }
 		session_write_close();
 	  // save context

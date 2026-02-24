@@ -351,6 +351,23 @@ a.white {
   background-color: rgba(30, 22, 22, 0.6) !important;
 }
 
+.warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  padding: 5px;
+  background-color: #FE3;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  border: 1px red dashed;
+  border-radius: 5px;
+  font-size: 1.3em;
+  max-width: 520px;
+  min-height: 30px;
+}
+
 form button {
   display: inline-grid;
   cursor: pointer;
@@ -766,6 +783,9 @@ form .mandatory-field {
   padding: 5px;
   margin-bottom: 5px;
 }
+.form-basic h3 {
+  width: 100%;
+}
 .form-basic fieldset {
   margin: 5px 0;
   padding: 0;
@@ -923,6 +943,12 @@ form .mandatory-field {
   .form-certification fieldset.issuedBy {
     flex-basis: 50%;
   }
+}
+
+/* CHANGE PASSWORD
+======================================================= */
+.form-changePassword fieldset {
+  width: 100%;
 }
 
 /**
@@ -1335,6 +1361,24 @@ COLLECTION
   }
 }
 
+/* LOGIN
+====================================================== */
+.form-login fieldset.email {
+  flex-basis: 100%;
+}
+.form-login fieldset.password {
+  flex-basis: 100%;
+}
+.form-login input[type=submit] {
+  text-align: center;
+}
+.form-login .form-login-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
 /* MEDIA OBJECT
 ====================================================== */
 .form-mediaObject {
@@ -1690,10 +1734,22 @@ COLLECTION
   flex-basis: calc(50% - 30px);
 }
 
+/* REGISTER USER
+====================================================== */
+.form-register fieldset {
+  width: 100%;
+}
+
 /* RELATIONSHIP
 ====================================================== */
 .form-relationship fieldset {
   flex-basis: calc(100% - 35px);
+}
+
+/* RESET PASSWORD
+====================================================== */
+.form-resetPassword fieldset {
+  width: 100%;
 }
 
 /* SERVICE

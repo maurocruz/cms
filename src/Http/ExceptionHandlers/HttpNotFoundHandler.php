@@ -3,8 +3,6 @@ namespace Plinct\Cms\Http\ExceptionHandlers;
 
 use Plinct\Cms\Application\Context\RequestContext;
 use Plinct\Cms\Http\View\Auth\LoginView;
-use Plinct\Cms\Http\View\Template\Template;
-use Plinct\Cms\Http\View\ViewFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;

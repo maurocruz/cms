@@ -2,12 +2,12 @@
 namespace Plinct\Cms\Application\Authentication;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Plinct\Cms\Domain\Auth\User;
+use Plinct\Cms\Domain\Auth\Userlogged;
 use Plinct\Cms\Infrastructure\Auth\ApiAuthProvider;
 
 class AuthenticatedUser
 {
-	private User $user;
+	private Userlogged $user;
 	private ApiAuthProvider $apiAuthProvider;
 
 	public function __construct(ApiAuthProvider $apiAuthProvider)
@@ -22,7 +22,7 @@ class AuthenticatedUser
 	{
 		$privileges = $this->apiAuthProvider->getPrivileges($iduser, $token);
 
-		$this->user = new User(
+		$this->user = new Userlogged(
 			$iduser,
 			$name,
 			$token,
@@ -30,7 +30,7 @@ class AuthenticatedUser
 		);
 	}
 
-	public function getUser(): ?User
+	public function getUser(): ?Userlogged
 	{
 		return $this->user;
 	}

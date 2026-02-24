@@ -10,7 +10,6 @@
 .form fieldset { position: relative; overflow: hidden; }
 .form input { border-radius: 2px; padding: 3px 1%; }
 .aviso { margin: 25px 20%; padding: 15px; background-color: yellow; color: black; font-weight: bold; text-align: center; border: 3px red dashed; border-radius: 5px; font-size: 160%;}
-.warning { margin: 5px; padding: 5px; background-color: #FE3; color: black; font-weight: bold; text-align: left; border: 1px red dashed; border-radius: 5px; font-size: 1em;}
 .admin-bar-top { display: flex; justify-content: space-around;}
 
 /* COMPONENT _ searchForm

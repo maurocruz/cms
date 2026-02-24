@@ -1,16 +1,16 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\ViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
 
-class RegisterFormView extends ViewAbstract
+class RegisterFormView extends TemplateAbstract
 {
 
-	public function build(array $params = null): void
+	public function build(array $data = null): void
 	{
-		$name = $params['name'] ?? null;
-		$email = $params['email'] ?? null;
-		$form = $this->component()->form('form-register',['class'=>'form formPadrao form-register']);
+		$name = $data['name'] ?? null;
+		$email = $data['email'] ?? null;
+		$form = $this->form('form-register',['class'=>'form formPadrao form-register']);
 		$form->action('/admin/auth/register')->method('post');
 		$form->addMandatories(['name','email','password','passwordRepeat']);
 		$form->content("<h3>"._('Sign on')."</h3>");

@@ -12,7 +12,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class Template extends TemplateAbstract
 {
 	private ComponentFactory $component;
-	private RequestContext $context;
 
 	/**
 	 */
@@ -48,25 +47,23 @@ class Template extends TemplateAbstract
 	 */
 	public function setContext(RequestContext $context): void
 	{
-		$this->context = $context;
+		$context1 = $context;
+		// HEAD
+		$head = new Head($context1);
+		$this->addHead($head->get());
+		// HEADER
+		$header = new Header($this->component, $context1);
+		$this->addHeader([
+			$header->userBar(),
+			$header->header(),
+			$header->mainMenu()
+		], 'start');
 	}
 
 	/**
 	 */
 	public function render(): string
 	{
-		// HEAD
-		$head = new Head($this->context);
-		$this->addHead($head->get());
-
-		// HEADER
-		$header = new Header($this->component, $this->context);
-		$this->addHeader([
-			$header->userBar(),
-			$header->header(),
-			$header->mainMenu()
-		]);
-
 		// BODY
 		$this->addHTML([
 			$this->getHEAD(),

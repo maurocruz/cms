@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Fragment\Table;
+namespace Plinct\Cms\Http\View\Component\Table;
 
 use Plinct\Web\Element\Table;
 

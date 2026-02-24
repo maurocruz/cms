@@ -31,11 +31,19 @@ abstract class TemplateAbstract
 
 	/**
 	 * @param $content
+	 * @param string $position
 	 * @return TemplateAbstract
 	 */
-	public function addHeader($content): static
+	public function addHeader($content, string $position = 'end'): static
 	{
-		$this->HEADER['content'][] = $content;
+		if (!$content) return $this;
+
+		if ($position == 'start' && isset($this->HEADER['content'])) {
+			array_unshift($this->HEADER['content'], $content);
+		} else {
+			$this->HEADER['content'][] = $content;
+		}
+
 		return $this;
 	}
 

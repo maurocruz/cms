@@ -374,6 +374,10 @@ form {
   padding: 5px;
   margin-bottom: 5px;
 
+  h3 {
+    width: 100%;
+  }
+
   fieldset {
     margin: 5px 0;
     padding: 0;
@@ -525,6 +529,12 @@ form {
     fieldset.about { flex-basis: 50%; }
     fieldset.issuedBy { flex-basis: 50%; }
   }
+}
+
+/* CHANGE PASSWORD
+======================================================= */
+.form-changePassword {
+  fieldset { width: 100%; }
 }
 
 /**
@@ -759,6 +769,21 @@ COLLECTION
   }
 }
 
+/* LOGIN
+====================================================== */
+.form-login {
+  fieldset.email { flex-basis: 100%; }
+  fieldset.password { flex-basis: 100%; }
+  input[type="submit"] { text-align: center; }
+  .form-login-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+  }
+}
+
+
 /* MEDIA OBJECT
 ====================================================== */
 .form-mediaObject {
@@ -959,12 +984,24 @@ COLLECTION
   fieldset.value { flex-basis: calc(50% - 30px); }
 }
 
+/* REGISTER USER
+====================================================== */
+.form-register {
+  fieldset { width: 100% }
+}
+
 /* RELATIONSHIP
 ====================================================== */
 .form-relationship {
   fieldset {
     flex-basis: calc(100% - 35px);
   }
+}
+
+/* RESET PASSWORD
+====================================================== */
+.form-resetPassword {
+  fieldset { width: 100% }
 }
 
 /* SERVICE

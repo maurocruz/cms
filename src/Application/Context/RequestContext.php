@@ -2,11 +2,11 @@
 namespace Plinct\Cms\Application\Context;
 
 use Plinct\Cms\Application\Contracts\RequestContextInterface;
-use Plinct\Cms\Domain\Auth\User;
+use Plinct\Cms\Domain\Auth\Userlogged;
 
 class RequestContext implements RequestContextInterface
 {
-	private ?User $user = null;
+	private ?Userlogged $user = null;
 	private array $modulesAvailable = [];
 	private array $modulesEnabled = [];
 	private string $theme = 'default';
@@ -116,18 +116,18 @@ class RequestContext implements RequestContextInterface
 	}
 
 	/**
-	 * @param User $user
+	 * @param Userlogged $user
 	 * @return void
 	 */
-	public function setUser(User $user): void
+	public function setUser(Userlogged $user): void
 	{
 		$this->user = $user;
 	}
 
 	/**
-	 * @return User|null
+	 * @return Userlogged|null
 	 */
-	public function getUser(): ?User
+	public function getUser(): ?Userlogged
 	{
 		return $this->user;
 	}

@@ -2,15 +2,15 @@
 namespace Plinct\Cms\Http\View\Contracts;
 
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Http\View\Component\ComponentFactory;
+use Plinct\Cms\Domain\Auth\Userlogged;
 
-interface ViewInterface
+interface TemplateInterface
 {
 	public function addMain($content): void;
-	public function build(array $params = null): void;
-	public function component(): ComponentFactory;
+	public function build(array $data = null): void;
 	public function getQueryStrings(): array;
 	public function getQuerystring(string $key): string;
+	public function getUser(): ?Userlogged;
 	public function warning(string $message);
 	public function setContext(RequestContext $context);
 	public function render(): string;

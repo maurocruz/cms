@@ -2,12 +2,12 @@
 namespace Plinct\Cms\Http\View\Template;
 
 use Plinct\Cms\Application\Context\RequestContext;
-use Plinct\Cms\Domain\Auth\User;
+use Plinct\Cms\Domain\Auth\Userlogged;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 
 class Header
 {
-	private ?User $user;
+	private ?Userlogged $user;
 	private string $version;
 	private string $commit;
 	private ComponentFactory $componentFactory;
