@@ -6,6 +6,7 @@ use Gitonomy\Git\Repository;
 use Plinct\Api\Request\Server\ConnectBd\PDOConnect;
 use Plinct\Cms\CmsFactory;
 use Plinct\Tool\Locale;
+use Random\RandomException;
 use Slim\App as Slim;
 
 /**
@@ -183,15 +184,18 @@ class App
     return self::$URL;
   }
 
-  /**
-   * @param string $apiUrl
-   * @param string|null $apiSecretKey
-   * @return $this
-   */
-  public function setApi(string $apiUrl, ?string $apiSecretKey = null): App
+	/**
+	 * @param string $apiUrl
+	 * @return $this
+	 * @throws RandomException
+	 */
+  public function setApi(string $apiUrl): App
   {
     self::$API_HOST = $apiUrl == "localhost" ? self::$URL . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR : $apiUrl;
-    self::$API_SECRET_KEY = $apiSecretKey;
+
+
+	  $key = base64_encode(random_bytes(32));
+    self::$API_SECRET_KEY = $key;
     return $this;
   }
 
@@ -477,18 +481,23 @@ class App
 	private function setConfig(): void
 	{
 		self::$isRemoteApi = App::getApiHost() != App::getURL().'/api/';
-		$configurationItems = CmsFactory::model()->api()->get('config')->ready();
-		// CONFIGURATION ITEMS
-		$itemListElement = isset($configurationItems['itemListElement']) && is_array($configurationItems['itemListElement']) ? $configurationItems['itemListElement'] : [];
-		foreach ($itemListElement as $value) {
-			$item = $value['item'];
-			if ($item['name'] == 'Modules Available') {
-				CmsFactory::controller()->configuration()->setModulesAvailable($item['itemListElement']);
-			}
-			if ($item['name'] == 'Modules Enabled') {
-				CmsFactory::controller()->configuration()->setModulesEnabled($item['itemListElement']);
+		$configurationItems = CmsFactory::model()->api()->get('')->ready();
+		$modulesAvailabled = [];
+		$modulesEnabled = [];
+		if (isset($configurationItems['@graph'])) {
+			$graph = $configurationItems['@graph'];
+			foreach ($graph as $value) {
+				if ($value['@type'] == 'Service') {
+					if ($value['offers'] == 'OutOfStock') {
+						$modulesAvailabled[] = $value['name'];
+					} elseif ($value['offers'] == 'InStock') {
+						$modulesEnabled[] = $value['name'];
+					}
+				}
 			}
 		}
+		CmsFactory::controller()->configuration()->setModulesAvailabled($modulesAvailabled);
+		CmsFactory::controller()->configuration()->setModulesEnabled($modulesEnabled);
 	}
 
 	/**
@@ -497,8 +506,7 @@ class App
 	 */
   final public function run(): mixed
   {
-		$this->setConfig();
-
-		return CmsFactory::controller()->Routes()->home($this->slim);
+	  //self::$isRemoteApi = App::getApiHost() != App::getURL().'/api/';
+		//return CmsFactory::controller()->Routes()->home($this->slim);
   }
 }

@@ -116,7 +116,7 @@ class OrderView extends OrganizationView
 		$form = CmsFactory::view()->fragment()->form("form-order", ['class'=>'form-basic form-order']);
 		$form->action("/admin/order/$case")->method('post');
 		$form->setIdform("form-order-".($this->idorder ?? "new"));
-		$form->addMandatories('seller','customer','orderDate','orderStatus','paymentDueDate');
+		$form->addMandatories(['seller','customer','orderDate','orderStatus','paymentDueDate']);
 		// hiddens
 		if ($case == "edit") $form->input("idorder", $this->idorder, "hidden");
 		// SELLER

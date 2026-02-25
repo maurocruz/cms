@@ -19,8 +19,8 @@ class WebPageController extends CreativeWorkController implements TypeController
 	 */
 	public function index(?array $params = []): bool
 	{
-		$idwebSite = $params['idwebSite'] ?? null;
-		$data = $idwebSite ? CmsFactory::model()->api()->get('webSite', ['idwebSite' => $idwebSite])->ready() : null;
+		$webSiteThing = $params['webSite'] ?? null;
+		$data = $webSiteThing ? CmsFactory::model()->api()->get('webSite', ['thing' => $webSiteThing])->ready() : null;
 		$value = $data[0] ?? null;
 		return CmsFactory::view()->webSite()->type('webPage')->setMethodName('index')->setData($value)->ready();
 	}
@@ -31,8 +31,8 @@ class WebPageController extends CreativeWorkController implements TypeController
 	 */
 	public function new(?array $params = []): bool
 	{
-		$idwebSite = $params['idwebSite'] ?? null;
-		$data = $idwebSite ? CmsFactory::model()->api()->get('webSite', ['idwebSite' => $idwebSite])->ready() : null;
+		$webSiteThing = $params['webSite'] ?? null;
+		$data = $webSiteThing ? CmsFactory::model()->api()->get('webSite', ['thing' => $webSiteThing])->ready() : null;
 		$value = $data[0] ?? null;
 		return CmsFactory::view()->webSite()->type('webPage')->setMethodName('new')->setData($value)->ready();
 	}
@@ -43,7 +43,7 @@ class WebPageController extends CreativeWorkController implements TypeController
 	 */
 	public function edit(array $params): bool
 	{
-		$params2 = array_merge($params, ["properties" => "hasPart,isPartOf,propertyValue"]);
+		$params2 = array_merge($params, ["properties" => "isPartOf,propertyValue", "typeHasPart" => "webSite"]);
 		$data = CmsFactory::model()->api()->get("webPage", $params2)->ready();
 		if (isset($data['status']) && $data['status'] === 'fail') {
 			CmsFactory::view()->addMain(CmsFactory::view()->fragment()->message()->warning($data['message']));

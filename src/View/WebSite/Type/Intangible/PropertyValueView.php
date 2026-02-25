@@ -35,7 +35,6 @@ class PropertyValueView
 	  $form = CmsFactory::view()->fragment()->form("form-propertyValue", ["class" => "form-basic form-propertyValue"]);
 		$form->action("/admin/propertyValue/$case")->method('post');
 		$form->setIdform("form-propertyValue-".($value['idpropertyValue'] ?? "new"));
-		$form->addMandatories('name');
 	  // HIDDENS
 	  $form->input('typeHasPart', $typeHasPart, 'hidden');
 		$idpropertyValue = null;

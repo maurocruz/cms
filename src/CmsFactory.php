@@ -38,7 +38,7 @@ class CmsFactory
 		// MIDDLEWARES
 	  (require __DIR__ . '/Http/Middleware/middlewares.php')($slimApp, $debug);
 		// ROUTES
-	  (require __DIR__ . '/Http/routes.php')($slimApp);
+	  (require __DIR__ . '/../routes/routes.php')($slimApp);
 		// RETURN
 		return $slimApp;
   }

@@ -16,6 +16,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 * @var string|null
 	 */
 	protected ?string $webSiteName = null;
+	protected ?string $webSiteThing = null;
 
 	/**
 	 * @param string $type
@@ -40,46 +41,19 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 			->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
 			->search()
 			->ready();
-		if ($this->idwebSite) {
+		if ($this->webSiteThing) {
 			$navbarItem = CmsFactory::view()->fragment()->navbar()
 				->title(_($this->webSiteName ?? $this->name))
 				->level(4)
-				->newTab("/admin/webSite/edit/$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webSite/edit?thing=$this->webSiteThing", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webPage?webSite=$this->webSiteThing", _("Pages"))
+				->newTab("/admin/webPage/new?webSite=$this->webSiteThing", _("Add new page"))
 				->ready();
 		}
 		$navbarRow = CmsFactory::view()->fragment()->navbarRow();
 		$navbarRow->setItems($navbar,$navbarItem ?? null);
 		CmsFactory::view()->addHeader($navbarRow->render());
 
-	}
-
-	/**
-	 * @param string|null $webSiteName
-	 * @param string|null $idwebSite
-	 * @return void
-	 */
-	public static function navbarWebSite(string $webSiteName = null, string $idwebSite = null): void
-	{
-		CmsFactory::view()->addHeader(
-			CmsFactory::view()->fragment()->navbar()
-				->type('webSite')
-				->title("WebSite")
-				->level(3)
-				->newTab('/admin/webSite', CmsFactory::view()->fragment()->icon()->home())
-				->newTab('/admin/webSite/new', CmsFactory::view()->fragment()->icon()->plus())
-				->search()
-				->ready()
-		);
-		if ($webSiteName) {
-			CmsFactory::view()->addHeader(
-				CmsFactory::view()->fragment()->navbar()
-					->title(_($webSiteName))
-					->level(4)
-					->newTab("/admin/webSite/edit/$idwebSite", CmsFactory::view()->fragment()->icon()->home())
-					->newTab("/admin/webPage?idwebSite=$idwebSite", _("Pages"))
-					->ready()
-			);
-		}
 	}
 
 	/**
@@ -113,6 +87,7 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	  if ($value) {
 			$typeBuilder = ToolBox::typeBuilder($value);
 			$this->idthing = $typeBuilder->getIdthing();
+			$this->webSiteThing = $this->idthing;
 			$this->idwebSite = $typeBuilder->getId();
 			$this->name = $value['name'];
 			$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
@@ -137,15 +112,21 @@ class WebSiteView extends CreativeWorkView implements TypeViewInterface
 	 */
 	protected function formWebSite(array $value = null): array
 	{
-		//vars
-		$id = $value['idwebSite'] ?? null;
-		$case = $id ? 'edit' : 'new';
-
+		$case = 'new';
+		$idthing = null;
+		$idwebSite = null;
+		if ($value) {
+			$tbWebSite = ToolBox::typeBuilder($value);
+			$idwebSite = $tbWebSite->getId();
+			$idthing = $tbWebSite->getIdthing();
+			$case = 'edit';
+		}
 		// form
 		$form = CmsFactory::view()->fragment()->form("form-webSite",['class'=>'form-basic form-webSite']);
 		$form->action("/admin/webSite/$case")->method('post');
 		// hidden
-		if ($id) $form->input('idwebSite',(string) $id,'hidden');
+		if ($idwebSite) $form->input('idwebSite',(string) $idwebSite,'hidden');
+		if ($idthing) $form->input('thing', $idthing,'hidden');
 		// CREATIVE WORK
 		$form = parent::formCreativeWorkContent($form, $value);
 		// submit

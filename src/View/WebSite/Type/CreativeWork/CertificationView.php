@@ -91,7 +91,7 @@ class CertificationView extends CreativeWorkView
 		// FORM
 		$form = CmsFactory::view()->fragment()->form("form-certification",['class'=>'form-basic form-certification']);
 		$form->action("/admin/certification/$case")->method('post');
-		$form->addMandatories('issuedBy');
+		$form->addMandatories(['issuedBy']);
 		if ($case == 'edit') {
 			$typeBuilder = new TypeBuilder('certification', $value);
 			$idcertification = $typeBuilder->getId();

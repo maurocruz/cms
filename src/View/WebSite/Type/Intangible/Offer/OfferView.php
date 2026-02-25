@@ -101,7 +101,7 @@ class OfferView extends ThingView
 	{
 		$form = CmsFactory::view()->fragment()->form("form-offer", ['class'=>'form-basic form-offer']);
 		$form->action("/admin/offer/$case")->method('post');
-		$form->addMandatories('itemOffered','price','eligibleQuantity','availability','validThrough');
+		$form->addMandatories(['itemOffered','price','eligibleQuantity','availability','validThrough']);
 		$form->input('offeredBy', $this->offeredBy, "hidden");
 		$currencies = CmsFactory::toolBox()::currencies();
 		if ($this->itemOffered ) {

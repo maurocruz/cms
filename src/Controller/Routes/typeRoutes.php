@@ -12,6 +12,7 @@ return function (Route $route)
 	$route->get('/favicon.ico', function () {
 		return null;
 	});
+
 	/**
 	 * GET
 	 */
@@ -29,6 +30,8 @@ return function (Route $route)
 					CmsFactory::controller()->typeController($request)->ready();
 				}
 			}
+		} elseif ($request->getAttribute('EntryPoint') == 'initApplication') {
+			CmsFactory::view()->webSite()->authenticationView()->installDatabase();
 		}
 		return CmsFactory::view()->writeBody($response);
 	});

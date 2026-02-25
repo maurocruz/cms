@@ -11,6 +11,36 @@ msgstr ""
 
 #. use fot update -> msgfmt plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.po --output-file=plinct/cms/Locale/pt_BR/LC_MESSAGES/plinctCms.mo
 
+msgid "AudioObject"
+msgstr "Áudio"
+
+msgid "MediaObject"
+msgstr "Mídia"
+
+msgid "VideoObject"
+msgstr "Vídeos"
+
+msgid "Installation status"
+msgstr "Status da instalação"
+
+msgid "Install module"
+msgstr "Instalar módulo"
+
+msgid "Module was installed"
+msgstr "Módulo instalado"
+
+msgid "Configuration"
+msgstr "Configuração"
+
+msgid "Modules enabled"
+msgstr "Módulos ativos"
+
+msgid "Modules available"
+msgstr "Módulos disponíveis"
+
+msgid "Login failed"
+msgstr "Falha na autenticação"
+
 msgid "Forbidden access"
 msgstr "Acesso proibido"
 

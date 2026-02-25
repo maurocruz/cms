@@ -21,7 +21,7 @@ class WebSiteController implements TypeControllerInterface
 	 */
 	public function new(array $params): bool
 	{
-		return false;
+		return CmsFactory::view()->webSite()->type('webSite')->setMethodName('new')->ready();
 	}
 
 	/**

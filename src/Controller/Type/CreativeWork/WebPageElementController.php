@@ -30,7 +30,7 @@ class WebPageElementController implements TypeControllerInterface
 	public function new(array $params): bool
 	{
 		$idHasPart = $params['idHasPart'] ?? null;
-		$typeHasPart = $params['typeHasPart'] ?? null;
+		$typeHasPart = $params['typeHasPart'] ?? 'WebPage';
 		if ($idHasPart && $typeHasPart) {
 			$data = CmsFactory::model()->type($typeHasPart)->get(['creativeWork'=>$idHasPart,'properties'=>'isPartOf']);
 			return CmsFactory::view()->webSite()->type('webPageElement')->setData($data)->setMethodName('new')->ready();
@@ -44,7 +44,7 @@ class WebPageElementController implements TypeControllerInterface
 	 */
 	public function edit(array $params): bool
 	{
-		$data = CmsFactory::model()->type('webPageElement')->get(['properties'=>'hasPart,isPartOf'] + $params);
+		$data = CmsFactory::model()->type('webPageElement')->get(['properties'=>'isPartOf'] + $params);
 		return CmsFactory::view()->webSite()->type('webPageElement')->setData($data)->setMethodName('edit')->ready();
 	}
 }

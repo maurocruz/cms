@@ -125,10 +125,12 @@ class CreativeWorkView extends ThingView
 	/**
 	 * @param Form $form
 	 * @param array|null $value
+	 * @param mixed|null $mandatories
 	 * @return Form
 	 */
-	public function formCreativeWorkContent(Form $form, array $value = null): Form
+	public function formCreativeWorkContent(Form $form, array $value = null, array $mandatories = []): Form
 	{
+		$isPartOf = $this->idIsPartOf ?? null;
 		$alternativeHeadline = $value['alternativeHeadline'] ?? null;
 		$position = isset($value['position']) ? (string) $value['position'] : null;
 		$publisher = isset($value['publisher']) ? (string) $value['publisher'] : null;
@@ -136,9 +138,13 @@ class CreativeWorkView extends ThingView
 		$datePublished = $value['datePublished'] ?? null;
 		$creativeWorkStatus = $value['creativeWorkStatus'] ?? null;
 		// thing
-		$form = self::formThingContent($form, $value);
+		$form = self::formThingContent($form, $value, $mandatories);
 		if ($this->type !== 'CreativeWork') {
-			$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Creative work"), "form-creativeWork"));
+			$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Creative work"), "form-creativeWork", !$value));
+		}
+		// isPartOf
+		if($isPartOf) {
+			$form->input('idIsPartOf', $isPartOf,'hidden');
 		}
 		// headline
 		$form->fieldsetWithInput('headline', $value['headline'] ?? null, _('Headline'));

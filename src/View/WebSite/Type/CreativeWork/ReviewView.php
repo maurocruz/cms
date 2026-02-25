@@ -85,7 +85,7 @@ class ReviewView extends CreativeWorkView
 		$itemReviewed = $value['itemReviewed'] ?? null;
 		$form = CmsFactory::view()->fragment()->form('form-review',['class'=>'form-basic form-review']);
 		$form->action("/admin/review/$case")->method('post');
-		$form->addMandatories('itemReviewed','reviewAspect','reviewBody','reviewRating');
+		$form->addMandatories(['itemReviewed','reviewAspect','reviewBody','reviewRating']);
 		// PARENT TYPE
 		$form = parent::formCreativeWorkContent($form, $value);
 		// ITEM REVIEWED

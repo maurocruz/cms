@@ -1,7 +1,8 @@
 <?php
-use Plinct\Cms\Controller\Middleware\AuthenticationMiddleware;
-use Plinct\Cms\Controller\Middleware\MessageOrientedMiddleware;
-use Plinct\Cms\Controller\Middleware\RemoteProcedureCallMiddleware;
+
+use Plinct\Cms\Http\Middleware\AuthenticationMiddleware;
+use Plinct\Cms\Http\Middleware\MessageOrientedMiddleware;
+use Plinct\Cms\Http\Middleware\RemoteProcedureCallMiddleware;
 use Slim\Routing\RouteCollectorProxy as Route;
 
 use Plinct\Cms\CmsFactory;
@@ -42,7 +43,7 @@ return function (Route $route)
      */
 		CmsFactory::controller()->routes()->type($route);
 
-  })->addMiddleware(new MessageOrientedMiddleware())
+  })->add(new MessageOrientedMiddleware())
 	  ->addMiddleware(new AuthenticationMiddleware())
 	  ->addMiddleware(new RemoteProcedureCallMiddleware());
 };

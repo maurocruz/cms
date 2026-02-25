@@ -2,16 +2,17 @@
 namespace Plinct\Cms\Model;
 
 use Plinct\Cms\Model\Api\WithCurl;
+use Plinct\Cms\Model\Api\WithDatabase;
 use Plinct\Cms\Model\Authentication\Auth;
 use Plinct\Cms\Model\Type\Type;
 
 class Model
 {
 	/**
-	 * @return WithCurl
 	 */
-	public function api(): WithCurl
+	public function api()
 	{
+		//return new WithDatabase();
 		return new WithCurl();
 	}
 

@@ -3,7 +3,7 @@ namespace Plinct\Cms\View\WebSite\Configuration;
 
 use Plinct\Cms\CmsFactory;
 
-class Configuration
+class ConfigurationView
 {
 	/**
 	 * @return void
@@ -81,9 +81,5 @@ class Configuration
 		<input type='submit' value='"._("Do you want to install it?")."' style='padding: 3px 8px;' >	
 	</form>
 </div>");
-	}
-
-	public function sitemap()
-	{
 	}
 }

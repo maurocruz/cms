@@ -56,9 +56,13 @@ class Type
 		}
 		// SUCCESS
 		else if (array_key_exists('status', $data) && $data['status'] == "success" ) {
-			$value = $data['data'][0];
-			$idvalue = is_array($value) ? ($value["id".lcfirst($this->type)] ?? null) : null;
-			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"type"=>$this->type, "params"=>$params]);
+			$value = $data['data'][0] ?? null;
+			$idvalue = null;
+			if ($value) {
+				$tb = CmsFactory::helpers()->typeBuilder($value);
+				$idvalue = $tb->getId();
+			}
+			CmsFactory::view()->Logger('type')->info("NEW DATA: $this->type",['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),"idvalue"=>$idvalue,"data"=>$value]);
 			// REDIRECT
 			$redirectedPage = ['orderItem','programMembership','webPageElement','invoice','contactPoint','propertyValue','postalAddress'];
 			if (in_array($this->type, $redirectedPage)) {
@@ -109,9 +113,14 @@ class Type
 	 */
 	public function erase(array $params): mixed
 	{
-		$data = CmsFactory::model()->api()->delete($this->type, $params)->ready();
+		$idthing = $params['idthing'] ?? $params['thing'] ?? null;
+		if ($idthing) {
+			$data = CmsFactory::model()->api()->delete('thing', ['idthing'=>$idthing])->ready();
+		} else {
+			$data = CmsFactory::model()->api()->delete($this->type, $params)->ready();
+		}
 		// logger
-		CmsFactory::view()->Logger('type')->info("DELETE ".$data['status'], ['uid'=>CmsFactory::controller()->user()->userLogged()->getIduser(),'type'=>$this->type]);
+		CmsFactory::view()->Logger('type')->info("DELETE ".$data['status'], ['data'=>$data,'type'=>$this->type]);
 		// Relationship
 		if ($data['status'] === 'success' && $data['message'] == 'Relationships deleted') {
 			return filter_input(INPUT_SERVER, 'HTTP_REFERER');

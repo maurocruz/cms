@@ -114,7 +114,7 @@ class ServiceView extends OrganizationView
 		$form = CmsFactory::view()->fragment()->form("form-service", ['class'=>'form-basic form-service']);
 		$form->action("/admin/service/$case")->method("post");
 		$form->setIdform(isset($idservice) ? "form-service-$idservice" : "form-service-new");
-		$form->addMandatories('provider');
+		$form->addMandatories(['provider']);
 
 		// HIDDENS
 		if ($case == 'edit') $form->input('idservice', $idservice,'hidden');

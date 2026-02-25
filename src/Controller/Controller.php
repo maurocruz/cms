@@ -2,7 +2,7 @@
 namespace Plinct\Cms\Controller;
 
 use Plinct\Cms\Controller\Authentication\Authentication;
-use Plinct\Cms\Controller\Configuration\Configuration;
+use Plinct\Cms\Controller\Configuration\ConfigurationController;
 use Plinct\Cms\Controller\Routes\Routes;
 use Plinct\Cms\Controller\User\User;
 use Plinct\Cms\Controller\Type\TypeController;
@@ -57,11 +57,11 @@ class Controller
 	}
 
 	/**
-	 * @return Configuration
+	 * @return ConfigurationController
 	 */
-	public function configuration(): Configuration
+	public function configuration(): ConfigurationController
 	{
-		return new Configuration();
+		return new ConfigurationController();
 	}
 
 	/**

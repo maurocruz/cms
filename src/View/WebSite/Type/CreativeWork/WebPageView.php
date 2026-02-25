@@ -17,6 +17,8 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 	 */
 	protected ?string $webPageName = null;
 
+	protected ?string $webPageThing = null;
+
 	/**
 	 * @param string $type
 	 * @param string $sitemapFilename
@@ -36,17 +38,17 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 			->type('webPage')
 			->level(5)
 			->title(_("Pages"))
-			->newTab("/admin/webPage?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->home())
-			->newTab("/admin/webPage/new?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->plus())
-			->newTab("/admin/webPage/sitemap?idwebSite=$this->idwebSite", CmsFactory::view()->fragment()->icon()->sitemap())
+			->newTab("/admin/webPage?webSite=$this->webSiteThing", CmsFactory::view()->fragment()->icon()->home())
+			->newTab("/admin/webPage/new?webSite=$this->webSiteThing", CmsFactory::view()->fragment()->icon()->plus())
+			->newTab("/admin/webPage/sitemap?webSite=$this->webSiteThing", CmsFactory::view()->fragment()->icon()->sitemap())
 			->search()
 			->ready();
-		if($this->idwebPage) {
+		if($this->webPageThing) {
 			$navbarItem = CmsFactory::view()->fragment()->navbar()
 				->level(6)
 				->title($this->webPageName)
 				->type('webPage')
-				->newTab("/admin/webPage/edit/$this->idwebPage", CmsFactory::view()->fragment()->icon()->home())
+				->newTab("/admin/webPage/edit?thing=$this->webPageThing", CmsFactory::view()->fragment()->icon()->home())
 				->ready();
 		}
 		$navbarRow = CmsFactory::view()->fragment()->navbarRow()->setItems($navbar,$navbarItem ?? null)->setLevel(2);
@@ -60,13 +62,15 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 	 */
   public function index(?array $data, array $queryParams = null): void
   {
+		if (is_array($data)) {
 		$tbIsPartOf = CmsFactory::toolBox()->typeBuilder($data);
 	  $this->name = $tbIsPartOf->getValue('name');
 		$this->idthing = $tbIsPartOf->getIdthing();
 		$this->idwebSite = $tbIsPartOf->getId();
 		$this->idcreativeWork = $tbIsPartOf->getPropertyValue('idcreativeWork');
+		}
 		// list
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart($this->idthing)->setColumnsTable(['url'=>'Url'])->ready());
+		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->reactShell('webPage')->setIdHasPart($this->idthing ?? 0)->setColumnsTable(['url'=>'Url'])->ready());
   }
 
   /**
@@ -79,6 +83,9 @@ class WebPageView extends WebSiteView implements TypeViewInterface
     // NAVBAR
 	  $tbWebSite = CmsFactory::toolBox()::typeBuilder($data);
 		$this->idwebSite = $tbWebSite->getId();
+		$this->webPageName = $tbWebSite->getValue('name');
+		$this->name = $tbWebSite->getValue('name');
+		$this->idIsPartOf = $this->idwebSite;
     // FORM
     CmsFactory::view()->addMain(CmsFactory::view()->fragment()->box()->simpleBox(self::formWebPage(), _("Add new webpage")));
   }
@@ -93,19 +100,22 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 	{
 		// webPage
 		$typeBuilder = CmsFactory::toolBox()::typeBuilder($data);
+		$this->webPageThing = $typeBuilder->getIdthing();
 		$this->idwebPage = $typeBuilder->getId();
 		$this->webPageName = $typeBuilder->getValue('name');
 		$this->name = $typeBuilder->getValue('name');
 		$this->idthing = $typeBuilder->getPropertyValue('idthing');
 		$this->idcreativeWork = $typeBuilder->getPropertyValue('idcreativeWork');
-		// is part of
+		// WEB SITE
 		$isPartOf = $data['isPartOf'] ?? null;
-		if ($isPartOf) {
+		if (is_array($isPartOf)) {
 			array_walk($isPartOf, function($item) {
 				if ($item['@type'] === 'WebSite') {
 					$typeBuilderWebSite = CmsFactory::toolBox()::typeBuilder($item);
+					$this->webSiteThing = $typeBuilderWebSite->getIdthing();
 					$this->idwebSite = $typeBuilderWebSite->getId();
 					$this->webSiteName = $typeBuilderWebSite->getValue('name');
+					$this->idIsPartOf = $typeBuilderWebSite->getIdthing();
 				}
 			});
 		}
@@ -137,7 +147,7 @@ class WebPageView extends WebSiteView implements TypeViewInterface
 			$form->input('idwebPage', (string) $this->idwebPage,'hidden');
 		}
 		// CreativeWork
-		$form = parent::formCreativeWorkContent($form, $value);
+		$form = parent::formCreativeWorkContent($form, $value, ['alternateName','url','isPartOf']);
 		// submit
 		$form->submitButtonSend();
 		if ($value) $form->submitButtonDelete('/admin/webPage/erase');

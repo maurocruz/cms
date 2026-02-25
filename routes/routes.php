@@ -13,11 +13,11 @@ return function (RouteCollectorProxy $route)
 	 */
 	$route->group('/admin', function (RouteCollectorProxy $route) {
 		// AUTHENTICATION
-		(require __DIR__.'/auth.php')($route);
+		(require __DIR__.'/authRoute.php')($route);
 		//  HOME
 		$route->get('/', [HomeController::class, 'home'])->setName('home');
 		// USER
-		(require __DIR__.'/user.php')($route);
+		(require __DIR__.'/userRoute.php')($route);
 		// CONFIG
 		(require __DIR__.'/configRoute.php')($route);
 

@@ -131,7 +131,7 @@ class ActionView extends ThingView implements TypeViewInterface
 		$targetCollection = $value['targetCollection'] ?? null;
 		$form = CmsFactory::view()->fragment()->form("form-action",['class'=>'form-basic form-action']);
 		$form->action("/admin/action/$case")->method('post');
-		$form->addMandatories('agent','object');
+		$form->addMandatories(['agent','object']);
 		if ($case == 'edit') {
 			$typeBuilder = new TypeBuilder('action', $value);
 			$idaction = $typeBuilder->getId();

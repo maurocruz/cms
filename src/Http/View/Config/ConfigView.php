@@ -41,7 +41,7 @@ class ConfigView extends ModuleViewAbstract
 
 		$this->addMain("<table>");
 		$this->addMain("<caption>"._('Modules Available')."</caption>");
-		$this->addMain("<thead><tr><th>Module</th><th>Is instaled?</th></tr></thead>");
+		$this->addMain("<thead><tr><th>Module</th><th>"._('Installation status')."</th></tr></thead>");
 		$this->addMain("<tbody>");
 		foreach ($modulesAvailable as $item) {
 			$isInstalled = in_array($item, $modulesEnabled);
@@ -49,7 +49,7 @@ class ConfigView extends ModuleViewAbstract
 			$this->addMain("<td>");
 			$this->addMain("<form action='/admin/config/installModule' method='post' class='form-config-installModule'>");
 			$this->addMain("<input type='hidden' name='moduleName' value='$item'/>");
-			$this->addMain(!$isInstalled ? " <button class='button'>"._('Install module')."</button>" : _('Module was installed!'));
+			$this->addMain(!$isInstalled ? " <button class='button'>"._('Install module')."</button>" : _('Module installed'));
 			$this->addMain("</form>");
 			$this->addMain("</td></tr>");
 		}

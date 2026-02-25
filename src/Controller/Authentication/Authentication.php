@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Authentication
 {
-	public function register( ServerRequestInterface $request): array
+	public function register(ServerRequestInterface $request): array
 	{
 		$params = $request->getParsedBody();
 		unset($params['submit']);

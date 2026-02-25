@@ -115,7 +115,7 @@ class ArticleView extends CreativeWorkView
     $form = CmsFactory::view()->fragment()->form("form-article",["class"=>"form-basic form-article"]);
     $form->action("/admin/article/$case")->method('post');
 		$form->setIdform($case == 'new' ? "form-article-new" : "form-article-".$ID);
-		$form->addMandatories('headline','articleBody');
+		$form->addMandatories(['headline','articleBody']);
     // id
     if ($case == "edit") $form->input('idarticle', (string) $ID, 'hidden');
 		// creativeWorl form

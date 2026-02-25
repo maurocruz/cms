@@ -130,11 +130,11 @@ class ThingView implements TypeViewInterface
 	/**
 	 * @param Form $form
 	 * @param array|null $value
-	 * @param string|null $nameOfName
+	 * @param mixed|null $mandatories
 	 * @param array $excludes
 	 * @return Form
 	 */
-	protected function formThingContent(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
+	protected function formThingContent(Form $form, array $value = null, array $mandatories = [], array $excludes = []): Form
 	{
 		$case = 'new';
 		$idthing = null;
@@ -154,14 +154,13 @@ class ThingView implements TypeViewInterface
 			$case = 'edit';
 		}
 		// Expandig box
-		$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Thing"), "form-thing"));
-
+		$form->content(CmsFactory::view()->fragment()->box()->expandingBoxWithoutContent(_("Thing"), "form-thing", !$value));
 		if (!$form->getIdform()) {
 			$form->setIdform("form-".($type ?? "type")."-".($idthing ?? 'new'));
 		}
-		$form->addMandatories('name');
+		array_unshift($mandatories,'name');
+		$form->addMandatories(!$mandatories ? 'name' : $mandatories);
 		// CONTENT
-
 		$form->content("<div class='form-thing-extract'>");
 			$form->content("<p class='form-thing-extract-type'>$type</p>");
 			// name

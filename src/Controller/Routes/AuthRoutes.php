@@ -1,6 +1,7 @@
 <?php
-use Firebase\JWT\JWT;
+
 use Plinct\Cms\Controller\App;
+use Plinct\Cms\Controller\HomeController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteCollectorProxy as Route;
@@ -26,34 +27,7 @@ return function (Route $route)
 	/**
 	 * LOGIN
 	 */
-	$route->post('/login', function (Request $request, Response $response) {
-		$parseBody = $request->getParsedBody();
-		$location = pathinfo($_SERVER['HTTP_REFERER'])['basename'] == "register" ? "/admin" : $_SERVER['HTTP_REFERER'];
-		$authentication = CmsFactory::model()->auth()->login($parseBody['email'], $parseBody['password']);
-		// AUTHORIZED
-		if ($authentication && $authentication['status'] == "success") {
-			$token = $authentication['data']['token'] ?? null;
-			if ($token) {
-				try {
-					$tokenDecode = JWT::decode($token, App::getApiSecretKey(), ["HS256"]);
-				} catch (Throwable) {
-					return $response->withHeader("Location", $location)->withStatus(401);
-				}
-				// cookie
-				setcookie('API_TOKEN', $token, $tokenDecode->exp,'/');
-				// session
-				$_SESSION['userLogin']['name'] = $tokenDecode->name;
-				$_SESSION['userLogin']['uid'] = $tokenDecode->uid;
-				// RETURN
-				return $response->withHeader("Location", $location)->withStatus(302);
-			}
-		}
-		// UNAUTHORIZED
-		CmsFactory::view()->clearMain();
-		CmsFactory::view()->addMain(CmsFactory::view()->fragment()->auth()->login($authentication));
-		// RESPONSE
-		return CmsFactory::view()->writeBody($response);
-	});
+	$route->post('/login', [HomeController::AuthenticationController(), 'login']);
   /**
    *  GROUP AUTH
    */

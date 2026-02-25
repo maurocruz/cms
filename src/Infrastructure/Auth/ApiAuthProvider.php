@@ -43,6 +43,7 @@ class ApiAuthProvider
 	 */
 	public function login(string $email, string $password): array
 	{
+		$this->client->setQueries([]);
 		$response = $this->client->post('auth/login', ['email'=>$email,'password'=>$password]);
 		return $this->returnResponse($response);
 	}

@@ -3,9 +3,8 @@ namespace Plinct\Cms\Controller\Configuration;
 
 use Plinct\Cms\CmsFactory;
 
-class Configuration
+class ConfigurationController
 {
-
 	/**
 	 * @var array
 	 */
@@ -13,7 +12,7 @@ class Configuration
 	/**
 	 * @var array
 	 */
-	private static array $modulesAvailable = [];
+	private static array $modulesAvailabled = [];
 
 	/**
 	 * @param array $types
@@ -24,11 +23,11 @@ class Configuration
 	}
 
 	/**
-	 * @param array $modulesAvailable
+	 * @param array $modulesAvailabled
 	 */
-	public function setModulesAvailable(array $modulesAvailable): void
+	public function setModulesAvailabled(array $modulesAvailabled): void
 	{
-		self::$modulesAvailable = $modulesAvailable;
+		self::$modulesAvailabled = $modulesAvailabled;
 	}
 
 	/**
@@ -53,7 +52,7 @@ class Configuration
 	 */
 	public function hasModulesAvailable(string $moduleName): bool
 	{
-		return in_array($moduleName, self::$modulesAvailable);
+		return in_array($moduleName, self::$modulesAvailabled);
 	}
 
 	/**
@@ -61,7 +60,7 @@ class Configuration
 	 */
 	public function getModulesAvailable(): array
 	{
-		return self::$modulesAvailable;
+		return self::$modulesAvailabled;
 	}
 
 	/**
@@ -69,7 +68,7 @@ class Configuration
 	 */
 	public function index(): void
 	{
-		CmsFactory::view()->webSite()->configuration()->index(self::$modulesAvailable, self::$modulesEnabled);
+		CmsFactory::view()->webSite()->configuration()->index(self::$modulesAvailabled, self::$modulesEnabled);
 	}
 
 	/**
@@ -87,6 +86,7 @@ class Configuration
 	public function installModule(string $module): array
 	{
 		$data = CmsFactory::model()->api()->post('config/installModule',['module'=>$module])->ready();
+
 		if ($data['status'] === 'success') {
 			CmsFactory::view()->Logger('config')->info("SUCCESS: Module $module created", $data);
 			return ['status'=>'success', 'message'=>"Module $module created" ];
@@ -96,4 +96,5 @@ class Configuration
 			return ['status'=>'fail', 'message'=>'Module was not builded'];
 		}
 	}
+
 }

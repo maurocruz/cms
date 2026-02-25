@@ -111,7 +111,7 @@ class EventView extends ThingView implements TypeViewInterface
 		$form = CmsFactory::view()->fragment()->form("form-event",["class"=>"form-basic form-event"]);
 		$form->action("/admin/event/$case")->method("post");
 		$form->setIdform("form-event-".($this->idevent ?? "new"));
-		$form->addMandatories('startDate','endDate','location');
+		$form->addMandatories(['startDate','endDate','location']);
 		// HIDDENS
 		if ($case == "edit") {
 			$form->input('idevent', (string)$this->idevent, 'hidden');

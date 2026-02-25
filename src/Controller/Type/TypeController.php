@@ -52,7 +52,7 @@ class TypeController
 			if (isset($data['message']) && $data['message'] === "table not exists" && in_array(strtolower($this->type), array_map('strtolower', CmsFactory::controller()->configuration()->getModulesEnabled()))) {
 				CmsFactory::view()->webSite()->configuration()->installSqlTable($this->type);
 			} else {
-				// if module has controller class
+				// if the module has a controller class
 				$classController = [
 					__NAMESPACE__ . "\\" . ucfirst($this->type) . "\\" . ucfirst($this->type).'Controller',
 					__NAMESPACE__ . "\\CreativeWork\\" . ucfirst($this->type).'Controller',
