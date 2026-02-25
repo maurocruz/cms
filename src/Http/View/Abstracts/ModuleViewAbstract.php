@@ -3,7 +3,7 @@ namespace Plinct\Cms\Http\View\Abstracts;
 
 use Plinct\Cms\Http\View\Contracts\ModulesViewInterface;
 
-abstract class ModuleViewAbstract extends TemplateAbstract implements ModulesViewInterface
+abstract class ModuleViewAbstract extends TemplateViewAbstract implements ModulesViewInterface
 {
 	/**
 	 * @param string $title

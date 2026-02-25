@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateViewAbstract;
 
-class LoginView extends TemplateAbstract
+class LoginView extends TemplateViewAbstract
 {
 	/**
 	 * @param array|null $data

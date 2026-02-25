@@ -18,7 +18,6 @@ readonly class RemoteProcedureCallMiddleware implements MiddlewareInterface
 {
 	private const string RPC_ATTRIBUTE = 'RPC';
 	private const string TYPE_SERVICE = 'Service';
-	private const string OFFER_OUT_OF_STOCK = 'OutOfStock';
 	private const string OFFER_IN_STOCK = 'InStock';
 
 	private const int CACHE_TTL_CONFIG_OK_SECONDS = 86400;     // 24 h
@@ -80,9 +79,8 @@ readonly class RemoteProcedureCallMiddleware implements MiddlewareInterface
 							continue;
 						}
 						$offers = $value['offers'] ?? null;
-						if ($offers === self::OFFER_OUT_OF_STOCK) {
-							$modulesAvailable[] = $name;
-						} elseif ($offers === self::OFFER_IN_STOCK) {
+						$modulesAvailable[] = $name;
+						if ($offers === self::OFFER_IN_STOCK) {
 							$modulesEnabled[] = $name;
 						}
 					}

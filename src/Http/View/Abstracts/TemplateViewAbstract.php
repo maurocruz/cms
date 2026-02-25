@@ -6,7 +6,7 @@ use Plinct\Cms\Domain\Auth\Userlogged;
 use Plinct\Cms\Http\View\Contracts\TemplateInterface;
 use Plinct\Cms\Http\View\Template\Template;
 
-abstract class TemplateAbstract extends ComponentAbstract implements TemplateInterface
+abstract class TemplateViewAbstract extends ComponentAbstract implements TemplateInterface
 {
 	private array $querystring = [];
 	private RequestContext $context;
@@ -36,6 +36,10 @@ abstract class TemplateAbstract extends ComponentAbstract implements TemplateInt
 		// warning
 		if (array_key_exists('wrn',$queryArray)) {
 			$this->warning($queryArray['wrn']);
+		}
+		// notice
+		if (array_key_exists('ntc',$queryArray)) {
+			$this->notice($queryArray['ntc']);
 		}
 	}
 
@@ -85,6 +89,11 @@ abstract class TemplateAbstract extends ComponentAbstract implements TemplateInt
 
 	public function warning(string $message): void
 	{
-		$this->addMain("<p class='warning'>"._($message)."</p>");
+		$this->addMain("<div class='warning'><p>"._($message)."</p></div>");
+	}
+
+	public function notice(string $message): void
+	{
+		$this->addMain("<div class='notice'><p>"._($message)."</p></div>");
 	}
 }

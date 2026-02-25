@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* ELEMENTS
 ============================================================================= */
 html, body {
@@ -360,12 +361,37 @@ a.white {
   background-color: #FE3;
   color: black;
   font-weight: bold;
-  text-align: center;
   border: 1px red dashed;
   border-radius: 5px;
   font-size: 1.3em;
   max-width: 520px;
   min-height: 30px;
+}
+.warning ::before {
+  content: "⚠️";
+  font-size: 1.5em;
+  margin-right: 5px;
+}
+.warning p {
+  margin: 0;
+}
+
+.notice {
+  color: #000;
+  background-color: #ccf7ff;
+  padding: 3px 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.notice ::before {
+  content: "👍";
+  font-size: 1.2em;
+  margin-right: 5px;
+}
+.notice p {
+  margin: 0;
 }
 
 form button {

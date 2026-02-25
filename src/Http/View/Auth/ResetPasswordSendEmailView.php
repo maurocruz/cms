@@ -1,9 +1,9 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\TemplateAbstract;
+use Plinct\Cms\Http\View\Abstracts\TemplateViewAbstract;
 
-class ResetPasswordSendEmailView extends TemplateAbstract
+class ResetPasswordSendEmailView extends TemplateViewAbstract
 {
 	public function build(array $data = null): void
 	{
@@ -17,10 +17,5 @@ class ResetPasswordSendEmailView extends TemplateAbstract
 		// SUBMIT
 		$form->input('submit', _('Send'),'submit');
 		$this->addMain($form->ready());
-	}
-
-	public function display(string $message = null): void
-	{
-		$this->warning($message);
 	}
 }
