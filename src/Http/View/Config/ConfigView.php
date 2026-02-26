@@ -2,13 +2,14 @@
 namespace Plinct\Cms\Http\View\Config;
 
 use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 
 class ConfigView extends ModuleViewAbstract
 {
-	public function __construct(Template $template)
+	public function __construct(ComponentFactory $componentFactory, Template $template)
 	{
-		parent::__construct($template);
+		parent::__construct($componentFactory, $template);
 	}
 
 	public function build(array $data = null): void

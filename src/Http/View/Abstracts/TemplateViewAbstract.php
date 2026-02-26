@@ -6,14 +6,13 @@ use Plinct\Cms\Domain\Auth\Userlogged;
 use Plinct\Cms\Http\View\Contracts\TemplateInterface;
 use Plinct\Cms\Http\View\Template\Template;
 
-abstract class TemplateViewAbstract extends ComponentAbstract implements TemplateInterface
+abstract class TemplateViewAbstract implements TemplateInterface
 {
 	private array $querystring = [];
 	private RequestContext $context;
 
 	public function __construct(protected readonly Template $template)
 	{
-		parent::__construct($template->getComponent());
 	}
 
 	/**

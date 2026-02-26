@@ -1,6 +1,5 @@
 <?php
-declare(strict_types=1);
-namespace Plinct\Cms\View\Fragment;
+namespace Plinct\Cms\Http\View\Component;
 
 use Plinct\Web\Element\ElementInterface;
 

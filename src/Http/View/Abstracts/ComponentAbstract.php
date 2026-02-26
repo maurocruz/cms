@@ -5,14 +5,17 @@ use Plinct\Cms\Http\View\Component\Box\Box;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Component\Form\Form;
 use Plinct\Cms\Http\View\Component\Navbar\Navbar;
+use Plinct\Cms\Http\View\Component\ReactShell\ReactShell;
 use Plinct\Cms\Http\View\Component\Table\Table;
 use Plinct\Cms\Http\View\Contracts\ComponentInterface;
+use Plinct\Cms\Http\View\Template\Template;
 use Plinct\Web\Fragment\Icons\IconsFragment;
 
-abstract class ComponentAbstract implements ComponentInterface
+abstract class ComponentAbstract extends TemplateViewAbstract implements ComponentInterface
 {
-	public function __construct(private readonly ComponentFactory $componentFactory)
+	public function __construct(private readonly ComponentFactory $componentFactory, Template $template)
 	{
+		parent::__construct($template);
 	}
 
 	public function box(): Box
@@ -38,4 +41,11 @@ abstract class ComponentAbstract implements ComponentInterface
 	{
 		return $this->componentFactory->table($attributes);
 	}
+
+	// REACT
+	public function reactShell(string $type, array $attributes = []): ReactShell
+	{
+		return $this->componentFactory->reactShell($type, $attributes)->setApiHost($this->getContext()->getApiHost());
+	}
+
 }

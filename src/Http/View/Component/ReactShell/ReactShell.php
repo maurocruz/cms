@@ -1,7 +1,5 @@
 <?php
-namespace Plinct\Cms\View\Fragment\ReactShell;
-
-use Plinct\Cms\Controller\App;
+namespace Plinct\Cms\Http\View\Component\ReactShell;
 
 class ReactShell
 {
@@ -23,6 +21,11 @@ class ReactShell
 		$this->attributes = array_merge($this->attributes, $attributes);
 	}
 
+	public function setApiHost(string $apiHost): ReactShell
+	{
+		$this->setAttribute('data-apihost', $apiHost);
+		return $this;
+	}
 
 	public function setAction(string $name): ReactShell
 	{
@@ -160,7 +163,6 @@ class ReactShell
 	 * @return string
 	 */
 	public final function ready(): string {
-		$this->setAttribute('data-apihost', App::getApiHost());
 		$div = "<div";
 		foreach ($this->attributes as $key => $value) {
 			$div .= " $key='$value'";

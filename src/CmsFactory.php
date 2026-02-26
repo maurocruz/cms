@@ -6,6 +6,7 @@ use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Exception;
 use Plinct\Cms\Controller\Controller;
+use Plinct\Cms\Domain\Config\ConfigDomain;
 use Plinct\Cms\Helpers\Helpers;
 use Plinct\Cms\Model\Model;
 use Plinct\Cms\View\View;
@@ -20,6 +21,8 @@ class CmsFactory
   public static function create(array $settings = []): App
   {
 		$debug = $settings['debug'] ?? false;
+		$apiHost = $settings['apiHost'] ?? 'localhost/api';
+		ConfigDomain::setApiHost($apiHost);
 		// CONTAINER
 		$builder = new ContainerBuilder();
 		$builder->addDefinitions(__DIR__.'/Container/container.php');

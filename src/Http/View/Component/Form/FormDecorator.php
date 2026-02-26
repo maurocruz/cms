@@ -1,10 +1,9 @@
 <?php
 namespace Plinct\Cms\Http\View\Component\Form;
 
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\App;
-use Plinct\Cms\Controller\Request\Server\ServerFactory;
-use Plinct\Cms\View\Fragment\ElementDecorator;
+use Plinct\Cms\Domain\Config\ConfigDomain;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
+use Plinct\Cms\Http\View\Component\ElementDecorator;
 use Plinct\Web\Element\ElementFactory;
 use Plinct\Web\Element\Form\FormInterface;
 
@@ -25,17 +24,39 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 */
 	protected array $mandatories = array();
 
-  /**
-   * @param array|null $attributes
-   */
-  public function __construct(string $formName, array $attributes = null)
+	private ComponentFactory $componentFactory;
+
+	/**
+	 */
+  public function __construct()
   {
-		$this->formName = $formName;
-    $this->form = ElementFactory::form($attributes);
+    $this->form = ElementFactory::form();
     $this->element = $this->form;
   }
 
-  /**
+	/**
+	 * @param string $formName
+	 */
+	public function setFormName(string $formName): void
+	{
+		$this->formName = $formName;
+	}
+
+	public function setAttributes(array $attributes = null): FormInterface
+	{
+		$this->form->attributes($attributes);
+		return $this;
+	}
+
+	/**
+	 * @param ComponentFactory $componentFactory
+	 */
+	public function setComponentFactory(ComponentFactory $componentFactory): void
+	{
+		$this->componentFactory = $componentFactory;
+	}
+
+	/**
    * @param string $url
    * @return FormInterface
    */
@@ -161,11 +182,11 @@ class FormDecorator extends ElementDecorator implements FormInterface
    * @param array $params
    * @return mixed
    */
-  protected static function getData(array $params): mixed
+  /*protected static function getData(array $params): mixed
   {
     $params = array_merge(['subClass'=>'true','format'=>'hierarchyText'], $params);
     return json_decode((ServerFactory::soloine())->get($params), true);
-  }
+  }*/
 
 	/**
 	 * @param string $type
@@ -178,7 +199,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	{
 		$this->content([
 			"<fieldset class='$propertyName'><legend>". self::writeLegend($propertyName, $legend) ."</legend>",
-			CmsFactory::view()->fragment()->reactShell($type)->getItemType($propertyName, $value)->ready(),
+			$this->componentFactory->reactShell($type)->setApiHost(ConfigDomain::getApiHost())->getItemType($propertyName, $value)->ready(),
 			"</fieldset>"
 		]);
 		return $this;
@@ -222,9 +243,9 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	 */
   public function setEditor(string $id, string $editorName = 'editor'): void
   {
-    if(App::getRichTextEditor()) {
-			$this->form->content("<script>const $editorName = new RichTextEditor('#$id', config );</script>");
-    }
+   // if(App::getRichTextEditor()) {
+			$this->form->content(/** @lang javascript */ "<script>const $editorName = new RichTextEditor('#$id', config );</script>");
+    //}
   }
 
 	/**
@@ -249,7 +270,7 @@ class FormDecorator extends ElementDecorator implements FormInterface
 	{
 		$mandat = json_encode($this->mandatories);
 		$formId = $this->idform;
-		$this->content("<script>
+		$this->content(/** @lang javascript */ "<script>
 document.getElementById('$formId').addEventListener('submit', function(e) {
   const mandatories = JSON.parse('$mandat');
   const elements = e.target.elements;

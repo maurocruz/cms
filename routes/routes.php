@@ -20,6 +20,8 @@ return function (RouteCollectorProxy $route)
 		(require __DIR__.'/userRoute.php')($route);
 		// CONFIG
 		(require __DIR__.'/configRoute.php')($route);
+		// MODULES
+		(require __DIR__.'/modulesRoute.php')($route);
 
 	})->add(HttpExceptionHandlerMiddleware::class)
 		->addMiddleware(new MessageOrientedMiddleware());

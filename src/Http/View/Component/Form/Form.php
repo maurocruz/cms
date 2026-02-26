@@ -70,10 +70,10 @@ class Form extends FormDecorator implements RelationshipInterface
    * @param string|null $value
    * @return array
    */
-  public function selectAdditionalType(string $class = "thing", string $value = null): array
+ /* public function selectAdditionalType(string $class = "thing", string $value = null): array
   {
       return parent::selectReady('additionalType', parent::getData(['class'=>$class]), $value);
-  }
+  }*/
 
 	/**
 	 * WRITE <SELECT> AN ELEMENT TO CHOOSE THE 'CATEGORY' OF A 'TYPE'
@@ -82,11 +82,11 @@ class Form extends FormDecorator implements RelationshipInterface
 	 * @param string|null $value
 	 * @return WebForm|FormInterface
 	 */
-  public function selectCategory(string $class = "thing", string $value = null): WebForm|FormInterface
+ /* public function selectCategory(string $class = "thing", string $value = null): WebForm|FormInterface
   {
       $this->form->fieldset(self::selectReady('category', self::getData(['class'=>$class,'source'=>'category']), $value), _("Category"));
 			return $this->form;
-  }
+  }*/
 
   /**
    * WRITE <FORM> WITH SEARCH <INPUT> ELEMENT

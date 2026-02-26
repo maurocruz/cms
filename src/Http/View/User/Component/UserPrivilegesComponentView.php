@@ -1,10 +1,10 @@
 <?php
 namespace Plinct\Cms\Http\View\User\Component;
 
-use Plinct\Cms\Application\Context\RequestContext;
 use Plinct\Cms\Application\User\UserCommand;
 use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
+use Plinct\Cms\Http\View\Template\Template;
 
 class UserPrivilegesComponentView extends ComponentAbstract
 {
@@ -17,12 +17,17 @@ class UserPrivilegesComponentView extends ComponentAbstract
 	];
 	private $modulesAvailable;
 
-	public function __construct(ComponentFactory $componentFactory, private readonly UserCommand $userCommand)
+	public function __construct(ComponentFactory $componentFactory, Template $template, private readonly UserCommand $userCommand)
 	{
-		parent::__construct($componentFactory);
+		parent::__construct($componentFactory, $template);
 	}
 
-	public function build(RequestContext $context, array $data = null): array
+	public function build(array $data = null): void
+	{
+		$this->privileges($data);
+	}
+
+	public function privileges($context, array $data = null): array
 	{
 		$user = $context->getUser();
 		$this->modulesAvailable = $context->getModulesAvailable();
@@ -44,7 +49,6 @@ class UserPrivilegesComponentView extends ComponentAbstract
 		if ($this->userCommand->comparePrivileges($data,5,'crud','all')) {
 			$content[] = $this->box()->simpleBox($this->privilegesForm('new', ['iduser'=>$user->getIduser()]), _('Add new'));
 		}
-
 		return $this->box()->expandingBox(_('Privileges'),$content);
 	}
 

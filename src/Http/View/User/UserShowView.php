@@ -2,18 +2,20 @@
 namespace Plinct\Cms\Http\View\User;
 
 use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 use Plinct\Cms\Http\View\User\Component\UserPrivilegesComponentView;
 
 class UserShowView extends ModuleViewAbstract
 {
-	public function __construct(Template $template, private readonly UserPrivilegesComponentView $usePrivilegesComponentView)
+	public function __construct(ComponentFactory $componentFactory, Template $template, private readonly UserPrivilegesComponentView $usePrivilegesComponentView)
 	{
-		parent::__construct($template);
+		parent::__construct($componentFactory, $template);
 	}
 
 	public function build(array $data = null): void
 	{
+		$context = $this->getContext();
 		$item = $data['data'];
 		if (empty($item)) {
 			$this->warning(_('User not found'));
@@ -25,7 +27,7 @@ class UserShowView extends ModuleViewAbstract
 			$this->formUser($item);
 			// PRIVILEGES
 			$this->addMain(
-				$this->usePrivilegesComponentView->build($this->getContext(), $item['privileges'])
+				$this->usePrivilegesComponentView->privileges($context,$item['privileges'])
 			);
 		}
 	}

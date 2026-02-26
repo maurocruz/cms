@@ -2,13 +2,14 @@
 namespace Plinct\Cms\Http\View\User;
 
 use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 
 class UserlistView extends ModuleViewAbstract
 {
-	public function __construct(Template $template)
+	public function __construct(ComponentFactory $componentFactory, Template $template)
 	{
-		parent::__construct($template);
+		parent::__construct($componentFactory,  $template);
 
 		// NAVBAR
 		$navbar = $this->navbar()
