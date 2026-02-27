@@ -69,6 +69,15 @@ abstract class TemplateViewAbstract implements TemplateInterface
 	{
 		return $this->context->getUser();
 	}
+
+	/**
+	 * @param $content
+	 * @return void
+	 */
+	public function addHeader($content): void {
+		$this->template->addHeader($content);
+	}
+
 	/**
 	 * @param $content
 	 * @return void

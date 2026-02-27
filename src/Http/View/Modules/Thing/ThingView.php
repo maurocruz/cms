@@ -1,19 +1,15 @@
 <?php
 namespace Plinct\Cms\Http\View\Modules\Thing;
 
-use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 use Plinct\Cms\Http\View\Component\Form\Form;
 use Plinct\Cms\Support\Support;
 
-class ThingView extends ModuleViewAbstract
+class ThingView extends ComponentAbstract
 {
 	protected string $type;
 	protected ?string $idthing = null;
 
-	public function build(array $data = null): void
-	{
-		// TODO: Implement build() method.
-	}
 
 	/**
 	 * @param string $idthing
@@ -30,6 +26,22 @@ class ThingView extends ModuleViewAbstract
 	{
 		$this->type = $type;
 	}
+
+	public function index(array $data = null): void
+	{
+		// TODO: Implement index() method.
+	}
+
+	public function new(array $data = null): void
+	{
+		// TODO: Implement new() method.
+	}
+
+	public function edit(array $data = null): void
+	{
+		// TODO: Implement edit() method.
+	}
+
 
 	protected function formThing(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
 	{

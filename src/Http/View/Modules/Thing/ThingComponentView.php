@@ -4,11 +4,32 @@ namespace Plinct\Cms\Http\View\Modules\Thing;
 use Plinct\Cms\Domain\Config\ConfigDomain;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Component\Form\Form;
+use Plinct\Cms\Http\View\Contracts\ModuleComponentViewInterface;
 use Plinct\Cms\Support\Support;
 
-class ThingComponentView
+class ThingComponentView implements ModuleComponentViewInterface
 {
-	public static function formThing(Form $form, array $value = null, string $nameOfName = null, array $excludes = []): Form
+	public static function navbar(array $querystrings = null): array
+	{
+		return [];
+	}
+
+	public static function navbarItem(string $name, string $id, array $querystrings = null): array
+	{
+		return [];
+	}
+
+	public static function navbarParent(string $name, string $id, string $nameParent, string $idparent, array $queryStrings = null): array
+	{
+		return [];
+	}
+
+	public static function form(Form $form, string $case = 'new', array $value = null): array
+	{
+		return $form->ready();
+	}
+
+	public static function formFragment(Form $form, array $value = null, array $excludes = []): Form
 	{
 		$case = 'new';
 		$idthing = null;

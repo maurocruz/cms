@@ -4,6 +4,7 @@ namespace Plinct\Cms\Http\Middleware;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Plinct\Cms\Domain\Cache\CacheInterface;
+use Plinct\Cms\Domain\Config\ConfigDomain;
 use Plinct\Cms\Infrastructure\Http\ApiClient;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -55,7 +56,7 @@ readonly class RemoteProcedureCallMiddleware implements MiddlewareInterface
 		$modulesEnabled = [];
 
 		try {
-			// CAPTURA ESTADOS DOS MODULOS NA API
+			// CAPTURA ESTADOS DOS MODULOS NA API (MODULES AVAILABLE AND ENABLED)
 			$cacheKey = $this->cache->setKey('RPC','api_home',['apihost'=>$this->apiHost]);
 			if ($this->cache->has($cacheKey)) {
 				$apiHome = $this->cache->get($cacheKey);
@@ -115,6 +116,8 @@ readonly class RemoteProcedureCallMiddleware implements MiddlewareInterface
 			'schema' => $schemaOk,
 			'tables' => $tablesOk,
 		];
+		ConfigDomain::setModulesAvailable($modulesAvailable);
+		ConfigDomain::setModulesEnabled($modulesEnabled);
 		$request = $request->withAttribute('MODULES_AVAILABLE', $modulesAvailable);
 		$request = $request->withAttribute('MODULES_ENABLED', $modulesEnabled);
 		$request = $request->withAttribute(self::RPC_ATTRIBUTE, $RPC_Attr);

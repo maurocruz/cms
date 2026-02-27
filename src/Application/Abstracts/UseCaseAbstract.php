@@ -2,6 +2,7 @@
 namespace Plinct\Cms\Application\Abstracts;
 
 use Plinct\Cms\Application\Contracts\UseCaseInterface;
+use Plinct\Cms\Application\Support\SupportApplication;
 
 class UseCaseAbstract implements UseCaseInterface
 {
@@ -12,5 +13,10 @@ class UseCaseAbstract implements UseCaseInterface
 			return true;
 		}
 		return false;
+	}
+
+	public function returnData(string $moduleName, array $dataApi): array
+	{
+		return SupportApplication::returnsModules($moduleName, $dataApi);
 	}
 }

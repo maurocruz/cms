@@ -1,8 +1,8 @@
 <?php
 namespace Plinct\Cms\Http\View\Component\Navbar;
 
-use Plinct\Cms\CmsFactory;
-use Plinct\Cms\Controller\App;
+use Plinct\Cms\Domain\Config\ConfigDomain;
+use Plinct\Cms\Http\Support\SupportHttp;
 
 class Navbar extends NavbarAbstract implements NavbarInterface
 {
@@ -48,12 +48,12 @@ class Navbar extends NavbarAbstract implements NavbarInterface
 	 */
 	public function setModulesAvailable(array $modulesAvailable): NavbarInterface
 	{
-		$modulesEnabled = CmsFactory::controller()->configuration()->getModulesEnabled();
+		$modulesEnabled = ConfigDomain::getModulesEnabled();
 		if ($modulesEnabled) {
 			foreach ($modulesEnabled as $key => $type) {
 				if (in_array($type, $modulesAvailable)) {
 					$title = is_array($type) ? $key : $type;
-					$nameTitle = CmsFactory::helpers()->camelCaseToSentence($title);
+					$nameTitle = SupportHttp::camelCaseToSentence($title);
 					$this->newTab("/admin/" . lcfirst($title), _($nameTitle));
 				}
 			}
@@ -101,7 +101,7 @@ class Navbar extends NavbarAbstract implements NavbarInterface
    */
   public function ready(): array
   {
-		$apiHost = App::getApiHost();
+		$apiHost = ConfigDomain::getApiHost();
 		// TITULO
 		if ($this->title) {
 			$this->content("<h1>$this->title</h1>");

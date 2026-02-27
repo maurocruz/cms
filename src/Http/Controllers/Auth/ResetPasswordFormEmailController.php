@@ -18,7 +18,7 @@ readonly class ResetPasswordFormEmailController
 	{
 		$context = $request->getAttribute(RequestContext::class);
 		$this->view->setContext($context);
-		$this->view->build();
+		$this->view->index();
 		$response->getBody()->write($this->view->render());
 		return $response;
 

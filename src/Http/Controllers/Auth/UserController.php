@@ -30,7 +30,7 @@ readonly class UserController
 		$apiData = $this->userUseCase->list($queryParams);
 		// SEND VIEW (Http)
 		$this->list->setContext($context);
-		$this->list->build($apiData);
+		$this->list->index($apiData);
 		// WRITE RESPONSE
 		$response->getBody()->write($this->list->render());
 		return $response;
@@ -49,7 +49,7 @@ readonly class UserController
 		$apiData = $this->userUseCase->show($id);
 		// SEND VIEW (Http)
 		$this->show->setContext($context);
-		$this->show->build($apiData);
+		$this->show->index($apiData);
 		// WRITE RESPONSE
 		$response->getBody()->write($this->show->render());
 		return $response;

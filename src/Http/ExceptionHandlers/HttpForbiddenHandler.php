@@ -27,7 +27,7 @@ readonly class HttpForbiddenHandler
 		$response = new Response();
 		$response->withStatus(403);
 		if (!$context->getUser()) {
-			$this->loginView->build();
+			$this->loginView->index();
 		} else {
 			$this->loginView->warning('Forbidden access');
 		}

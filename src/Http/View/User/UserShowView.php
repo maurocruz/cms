@@ -1,19 +1,19 @@
 <?php
 namespace Plinct\Cms\Http\View\User;
 
-use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 use Plinct\Cms\Http\View\User\Component\UserPrivilegesComponentView;
 
-class UserShowView extends ModuleViewAbstract
+class UserShowView extends ComponentAbstract
 {
 	public function __construct(ComponentFactory $componentFactory, Template $template, private readonly UserPrivilegesComponentView $usePrivilegesComponentView)
 	{
 		parent::__construct($componentFactory, $template);
 	}
 
-	public function build(array $data = null): void
+	public function index(array $data = null): void
 	{
 		$context = $this->getContext();
 		$item = $data['data'];

@@ -1,15 +1,15 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\TemplateViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 
-class LoginView extends TemplateViewAbstract
+class LoginView extends ComponentAbstract
 {
 	/**
 	 * @param array|null $data
 	 * @return void
 	 */
-	public function build(array $data = null): void
+	public function index(array $data = null): void
 	{
 		$email = $data['email'] ?? null;
 		$form = $this->form('form-login', ['class'=>'form formPadrao form-login']);

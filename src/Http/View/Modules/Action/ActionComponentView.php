@@ -1,16 +1,16 @@
 <?php
-
 namespace Plinct\Cms\Http\View\Modules\Action;
 
 use Plinct\Cms\Http\Support\SupportHttp;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Component\Form\Form;
 use Plinct\Cms\Http\View\Component\Navbar\Navbar;
+use Plinct\Cms\Http\View\Contracts\ModuleComponentViewInterface;
 use Plinct\Cms\Http\View\Modules\Product\ProductComponentView;
 use Plinct\Cms\Http\View\Modules\Thing\ThingComponentView;
 use Plinct\Cms\Support\Support;
 
-class ActionComponentView
+class ActionComponentView implements ModuleComponentViewInterface
 {
 	public static function navbarObject(array $objectData): array
 	{
@@ -20,33 +20,38 @@ class ActionComponentView
 		$idobject = $object->getId();
 		$idthingObject = $object->getIdthing();
 		if ($type == 'Product') {
-			return ProductComponentView::navbarItem($name, $idobject, $idthingObject);
+			return ProductComponentView::navbarItem($name, $idobject, ['object'=>$idthingObject]);
 		}
 		return [];
 	}
 
-	public static function navbar(string $idobject = null):array
+	public static function navbar(array $querystrings = null):array
 	{
-		$queryObject = $idobject ? "?object=$idobject" : "";
+		$string = http_build_query($querystrings);
 		$navbar = new Navbar();
 		$navbar->title(_('Action'));
-		$navbar->newTab("/admin/action".$queryObject, ComponentFactory::icon()->home());
-		$navbar->newTab("/admin/action/new".$queryObject, ComponentFactory::icon()->plus());
+		$navbar->newTab("/admin/action". ($string ? "?".$string : ''), ComponentFactory::icon()->home());
+		$navbar->newTab("/admin/action/new". ($string ? "?".$string : ''), ComponentFactory::icon()->plus());
 		return $navbar->ready();
 	}
 
-	public static function navbarItem($name, $idaction, $idobject): array
+	public static function navbarItem(string $name, string $id, array $querystrings = null): array
 	{
 		$navbar = new Navbar();
 		$navbar->title(_($name));
 		$navbar->level(3);
-		$navbar->newTab("/admin/action/edit/$idaction", ComponentFactory::icon()->home());
+		$navbar->newTab("/admin/action/edit/$id", ComponentFactory::icon()->home());
 		return [
-			self::navbar($idobject),
+			self::navbar($querystrings),
 			$navbar->ready()
 		];
 	}
 
+	public static function navbarParent(string $name, string $id, string $nameParent, string $idparent, array $queryStrings = null): array
+	{
+		$navbar = new Navbar();
+		return $navbar->ready();
+	}
 
 	/**
 	 * @param Form $form
@@ -54,7 +59,7 @@ class ActionComponentView
 	 * @param array|null $value
 	 * @return array
 	 */
-	public static function formAction(Form $form, string $case = 'new', array $value = null): array
+	public static function form(Form $form, string $case = 'new', array $value = null): array
 	{
 		$actionProcess = $value['actionProcess'] ?? null;
 		$actionStatus = $value['actionStatus'] ?? null;
@@ -78,7 +83,7 @@ class ActionComponentView
 			$form->input('idaction', (string) $idaction, 'hidden');
 		}
 		// THING
-		$form = ThingComponentView::formThing($form, $value);
+		$form = ThingComponentView::formFragment($form, $value);
 		// OBJECT
 		$form->relationshipOneToOne('thing', _('Object'), 'object', (int) $object);
 		// ACTION PROCESS
@@ -112,5 +117,10 @@ class ActionComponentView
 		$form->submitButtonSend();
 		// READY
 		return ComponentFactory::box()->expandingBox(_('Edit action'), $form->ready(), true);
+	}
+
+	public static function formFragment(Form $form, array $value = null): Form
+	{
+		return $form;
 	}
 }

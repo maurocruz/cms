@@ -19,7 +19,7 @@ readonly class LoginFormController
 			return $response->withHeader("Location", "/admin")->withStatus(302);
 		}
 		$this->view->setContext($context);
-		$this->view->build();
+		$this->view->index();
 		$response->getBody()->write($this->view->render());
 		return $response;
 	}

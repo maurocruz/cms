@@ -1,11 +1,11 @@
 <?php
 namespace Plinct\Cms\Http\View\User;
 
-use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 
-class UserlistView extends ModuleViewAbstract
+class UserlistView extends ComponentAbstract
 {
 	public function __construct(ComponentFactory $componentFactory, Template $template)
 	{
@@ -21,9 +21,8 @@ class UserlistView extends ModuleViewAbstract
 
 	}
 
-	public function build(array $data = null): void
+	public function index(array $data = null): void
 	{
-		//
 		$items = $data['data'];
 		$orderBy = $data['queryParams']['orderBy'];
 		$ordering = $data['queryParams']['ordering'];

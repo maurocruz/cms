@@ -7,7 +7,6 @@ use Plinct\Cms\Domain\Auth\Userlogged;
 interface TemplateInterface
 {
 	public function addMain($content): void;
-	public function build(array $data = null): void;
 	public function getQueryStrings(): array;
 	public function getQuerystring(string $key): string;
 	public function getUser(): ?Userlogged;

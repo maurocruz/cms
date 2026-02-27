@@ -22,7 +22,7 @@ class UserPrivilegesComponentView extends ComponentAbstract
 		parent::__construct($componentFactory, $template);
 	}
 
-	public function build(array $data = null): void
+	public function list(array $data = null): void
 	{
 		$this->privileges($data);
 	}

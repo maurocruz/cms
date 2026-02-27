@@ -32,4 +32,13 @@ class SupportHttp
 	{
 		return ToolBox::typeBuilder($value);
 	}
+
+	/**
+	 * @param string $input
+	 * @return string
+	 */
+	public static function camelCaseToSentence(string $input): string
+	{
+		return ToolBox::camelCaseToSentence($input);
+	}
 }

@@ -28,7 +28,7 @@ readonly class HttpNotFoundHandler
 		$response = new Response();
 		$response->withStatus(404);
 		if (!$context->getUser()) {
-			$this->loginView->build();
+			$this->loginView->index();
 		} else {
 			$this->loginView->warning('Page not found!');
 		}

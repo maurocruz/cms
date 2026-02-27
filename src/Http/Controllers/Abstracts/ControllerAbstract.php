@@ -1,11 +1,17 @@
 <?php
 namespace Plinct\Cms\Http\Controllers\Abstracts;
 
-use Plinct\Cms\Http\View\Template\Template;
+use Plinct\Cms\Http\Controllers\Contracts\ModuleControllerInterface;
+use Plinct\Cms\Http\View\Contracts\ModulesViewInterface;
 
-abstract class ControllerAbstract
+abstract class ControllerAbstract implements ModuleControllerInterface
 {
-	public function __construct(protected Template $template)
+	public function returnEditClause(ModulesViewInterface $view, array $data): void
 	{
+		if ($data['status'] === true) {
+			$view->edit($data['data'][0]);
+		} else {
+			$view->warning($data['message']);
+		}
 	}
 }

@@ -23,7 +23,7 @@ readonly class HomeController
 		$context = $request->getAttribute(RequestContext::class);
 		$view = $this->view;
 		$view->setContext($context);
-		$view->build();
+		$view->index();
 		$response->getBody()->write($view->render());
 		return $response;
 	}

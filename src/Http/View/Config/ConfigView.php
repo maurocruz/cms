@@ -1,23 +1,25 @@
 <?php
 namespace Plinct\Cms\Http\View\Config;
 
-use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 use Plinct\Cms\Http\View\Component\ComponentFactory;
 use Plinct\Cms\Http\View\Template\Template;
 
-class ConfigView extends ModuleViewAbstract
+class ConfigView extends ComponentAbstract
 {
 	public function __construct(ComponentFactory $componentFactory, Template $template)
 	{
 		parent::__construct($componentFactory, $template);
 	}
 
-	public function build(array $data = null): void
+	public function index(array $data = null): void
 	{
-		$this->addNavbar(_('Configuration'),2,[
-			'/admin/configuration' => $this->icon()->home(),
-			'/admin/thing' => _('Thing')
-		]);
+		$this->addHeader(
+			$this->navbar(_('Configuration'),2,[
+				'/admin/configuration' => $this->icon()->home(),
+				'/admin/thing' => _('Thing')
+				])->ready()
+		);
 		// MODULES ENABLED
 		$modulesEnabled = $this->getContext()->getModulesEnabled();
 		$this->addMain([

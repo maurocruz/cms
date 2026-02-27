@@ -1,12 +1,12 @@
 <?php
 namespace Plinct\Cms\Http\View\Auth;
 
-use Plinct\Cms\Http\View\Abstracts\TemplateViewAbstract;
+use Plinct\Cms\Http\View\Abstracts\ComponentAbstract;
 
-class RegisterFormView extends TemplateViewAbstract
+class RegisterFormView extends ComponentAbstract
 {
 
-	public function build(array $data = null): void
+	public function index(array $data = null): void
 	{
 		$name = $data['name'] ?? null;
 		$email = $data['email'] ?? null;

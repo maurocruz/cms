@@ -28,7 +28,7 @@ readonly class HttpUnauthorizedHandler
 		if ($pattern != '/admin/') {
 			$view->warning('Unauthorized access');
 		}
-		$view->build();
+		$view->index();
 		$response->getBody()->write($view->render());
 		return $response;
 	}

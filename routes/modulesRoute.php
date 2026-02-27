@@ -1,6 +1,7 @@
 <?php
 
 use Plinct\Cms\Http\Controllers\Modules\ActionController;
+use Plinct\Cms\Http\Controllers\Modules\CreativeWorkController;
 use Plinct\Cms\Http\Controllers\Modules\ModuleCreateController;
 use Plinct\Cms\Http\Controllers\Modules\ModuleUpdateController;
 use Plinct\Cms\Http\Controllers\Modules\ProductController;
@@ -12,6 +13,10 @@ return function (RouteCollectorProxy $route)
 	$route->get('/action', [ActionController::class,'index'])->setName('action.modules.index');
 	$route->get('/action/edit/{id}', [ActionController::class,'edit'])->setName('action.modules.edit');
 	$route->get('/action/new', [ActionController::class,'new'])->setName('action.modules.new');
+	// CREATIVEWORK
+	$route->get('/creativeWork', [CreativeWorkController::class,'index'])->setName('creativeWork.modules.index');
+	$route->get('/creativeWork/edit/{id}', [CreativeWorkController::class,'edit'])->setName('creativeWork.modules.edit');
+	$route->get('/creativeWork/new', [CreativeWorkController::class,'new'])->setName('creativeWork.modules.new');
 	// PRODUCT
 	$route->get('/product', [ProductController::class,'index'])->setName('product.modules.index');
 	$route->get('/product/edit/{id}', [ProductController::class,'edit'])->setName('product.modules.edit');
