@@ -1,5 +1,5 @@
 <?php
-namespace Plinct\Cms\Http\View\Modules;
+namespace Plinct\Cms\Http\View\Modules\Thing;
 
 use Plinct\Cms\Http\View\Abstracts\ModuleViewAbstract;
 use Plinct\Cms\Http\View\Component\Form\Form;

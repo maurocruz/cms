@@ -1,7 +1,7 @@
 <?php
 namespace Plinct\Cms\Http\View\Modules\Product;
 
-use Plinct\Cms\Http\View\Modules\ThingView;
+use Plinct\Cms\Http\View\Modules\Thing\ThingView;
 use Plinct\Cms\Support\Support;
 
 class ProductShowView extends ThingView
@@ -15,7 +15,8 @@ class ProductShowView extends ThingView
 		$idproduct = $typeValue->getId();
 
 		$this->addNavbar(_($name),3,[
-			('/admin/product/edit/'.$idproduct) => $this->icon()->home()
+			('/admin/product/edit/'.$idproduct) => $this->icon()->home(),
+			('/admin/action?object='.$this->idthing) => $this->icon()->action()
 		]);
 		$this->addMain([
 			$this->box()->simpleBox($this->formProduct($data),_('Product')),

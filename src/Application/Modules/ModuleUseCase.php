@@ -17,6 +17,6 @@ readonly class ModuleUseCase
 	public function show(string $type, array $params = [] ): array
 	{
 		$dataApi = $this->moduleApi->read($type, $params);
-		return SupportApplication::returnsModules($dataApi);
+		return SupportApplication::returnsModules($type, $dataApi);
 	}
 }

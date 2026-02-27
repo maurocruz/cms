@@ -2,7 +2,7 @@
 namespace Plinct\Cms\Http\View\Modules\Product;
 
 use Plinct\Cms\Http\View\Component\ComponentFactory;
-use Plinct\Cms\Http\View\Modules\ThingView;
+use Plinct\Cms\Http\View\Modules\Thing\ThingView;
 use Plinct\Cms\Http\View\Template\Template;
 
 class ProductListView extends ThingView

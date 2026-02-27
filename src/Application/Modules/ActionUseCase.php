@@ -2,12 +2,28 @@
 namespace Plinct\Cms\Application\Modules;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Plinct\Cms\Infrastructure\Modules\ActionApiProvider;
+use Plinct\Cms\Application\Support\SupportApplication;
+use Plinct\Cms\Infrastructure\Modules\ModuleApiProvider;
 
 readonly class ActionUseCase
 {
-	public function __construct(private ActionApiProvider $actionApi)
+	public function __construct(private ModuleApiProvider $moduleApi)
 	{
+	}
+
+	/**
+	 * @throws GuzzleException
+	 */
+	public function withObject(array $queryParams): array
+	{
+		$object = $queryParams['object'] ?? null;
+		// OBJECT
+		if ($object) {
+			$dataApi = $this->moduleApi->read('thing',['idthing'=>$object, 'hasPart'=>true]);
+			$dataUseCase = SupportApplication::returnsModules('Thing', $dataApi);
+			return $dataUseCase['status'] === true ? ['object' => $dataUseCase['data'][0] ?? []] : [];
+		}
+		return ['status'=>true, 'message'=>'No object found', 'data'=>[]];
 	}
 
 	/**
@@ -15,14 +31,9 @@ readonly class ActionUseCase
 	 */
 	public function show(string $id, array $queryParams = []): array
 	{
-		$params = array_merge(['idaction' => $id], $queryParams);
-		$dataApi = $this->actionApi->show($params);
-		if (isset($dataApi[0])) {
-			return ['status'=>true, 'data'=>$dataApi[0]];
-		} elseif (empty($dataApi)) {
-			return ['status' => false, 'message' => 'Action not found', 'data' => $dataApi];
-		} else {
-			return ['status' => false, 'message' => 'Error', 'data' => $dataApi];
-		}
+		$params = array_merge(['idaction' => $id, 'properties' => 'object'], $queryParams);
+		$dataApi = $this->moduleApi->read('action', $params);
+		return SupportApplication::returnsModules('Action', $dataApi);
 	}
+
 }

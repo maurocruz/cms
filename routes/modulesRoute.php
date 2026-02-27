@@ -9,8 +9,9 @@ use Slim\Routing\RouteCollectorProxy;
 return function (RouteCollectorProxy $route)
 {
 	// ACTION
-	$route->get('/action', [ActionController::class,'list'])->setName('action.modules.list');
-	$route->get('/action/edit/{id}', [ActionController::class,'show'])->setName('action.modules.show');
+	$route->get('/action', [ActionController::class,'index'])->setName('action.modules.index');
+	$route->get('/action/edit/{id}', [ActionController::class,'edit'])->setName('action.modules.edit');
+	$route->get('/action/new', [ActionController::class,'new'])->setName('action.modules.new');
 	// PRODUCT
 	$route->get('/product', [ProductController::class,'index'])->setName('product.modules.index');
 	$route->get('/product/edit/{id}', [ProductController::class,'edit'])->setName('product.modules.edit');

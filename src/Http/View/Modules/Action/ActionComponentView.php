@@ -1,34 +1,60 @@
 <?php
+
 namespace Plinct\Cms\Http\View\Modules\Action;
 
-use Plinct\Cms\Http\View\Modules\ThingView;
+use Plinct\Cms\Http\Support\SupportHttp;
+use Plinct\Cms\Http\View\Component\ComponentFactory;
+use Plinct\Cms\Http\View\Component\Form\Form;
+use Plinct\Cms\Http\View\Component\Navbar\Navbar;
+use Plinct\Cms\Http\View\Modules\Product\ProductComponentView;
+use Plinct\Cms\Http\View\Modules\Thing\ThingComponentView;
 use Plinct\Cms\Support\Support;
 
-class ActionShowView extends ThingView
+class ActionComponentView
 {
-
-	public function build(array $data = null): void
+	public static function navbarObject(array $objectData): array
 	{
-		$typeValue = Support::typeBuilder($data);
-		$this->setIdthing($typeValue->getIdthing());
-		$this->setType($typeValue->getType());
-		$name = $typeValue->getValue('name');
-		$idaction = $typeValue->getId();
-		// NAVBAR
-		$this->addNavbar(_($name),3,[
-			'/admin/action/edit/'.$idaction => $this->icon()->home(),
-		]);
-		$this->addMain(
-			$this->box()->expandingBox(_('Edit action'),$this->formAction('edit', $data), true)
-		);
+		$object = SupportHttp::typeBuilder($objectData);
+		$type = $object->getType();
+		$name = $object->getValue('name');
+		$idobject = $object->getId();
+		$idthingObject = $object->getIdthing();
+		if ($type == 'Product') {
+			return ProductComponentView::navbarItem($name, $idobject, $idthingObject);
+		}
+		return [];
 	}
 
+	public static function navbar(string $idobject = null):array
+	{
+		$queryObject = $idobject ? "?object=$idobject" : "";
+		$navbar = new Navbar();
+		$navbar->title(_('Action'));
+		$navbar->newTab("/admin/action".$queryObject, ComponentFactory::icon()->home());
+		$navbar->newTab("/admin/action/new".$queryObject, ComponentFactory::icon()->plus());
+		return $navbar->ready();
+	}
+
+	public static function navbarItem($name, $idaction, $idobject): array
+	{
+		$navbar = new Navbar();
+		$navbar->title(_($name));
+		$navbar->level(3);
+		$navbar->newTab("/admin/action/edit/$idaction", ComponentFactory::icon()->home());
+		return [
+			self::navbar($idobject),
+			$navbar->ready()
+		];
+	}
+
+
 	/**
+	 * @param Form $form
 	 * @param string $case
 	 * @param array|null $value
 	 * @return array
 	 */
-	private function formAction(string $case = 'new', array $value = null): array
+	public static function formAction(Form $form, string $case = 'new', array $value = null): array
 	{
 		$actionProcess = $value['actionProcess'] ?? null;
 		$actionStatus = $value['actionStatus'] ?? null;
@@ -43,18 +69,16 @@ class ActionShowView extends ThingView
 		$result = $value['result'] ?? null;
 		$startTime = $value['startTime'] ?? null;
 		$targetCollection = $value['targetCollection'] ?? null;
-		$form = $this->form("form-action",['class'=>'form-basic form-action']);
+
 		$form->action("/admin/action/$case")->method('post');
 		$form->addMandatories(['agent','object']);
 		if ($case == 'edit') {
 			$typeBuilder = Support::typeBuilder($value);
 			$idaction = $typeBuilder->getId();
 			$form->input('idaction', (string) $idaction, 'hidden');
-		} else {
-			$form->content("<h3>".sprintf(_('Add new %s'),_('Action'))."</h3>");
 		}
 		// THING
-		$form = $this->formThing($form, $value);
+		$form = ThingComponentView::formThing($form, $value);
 		// OBJECT
 		$form->relationshipOneToOne('thing', _('Object'), 'object', (int) $object);
 		// ACTION PROCESS
@@ -87,6 +111,6 @@ class ActionShowView extends ThingView
 		}
 		$form->submitButtonSend();
 		// READY
-		return $form->ready();
+		return ComponentFactory::box()->expandingBox(_('Edit action'), $form->ready(), true);
 	}
 }

@@ -3,7 +3,7 @@ namespace Plinct\Cms\Http\View\Abstracts;
 
 use Plinct\Cms\Application\Context\RequestContext;
 use Plinct\Cms\Domain\Auth\Userlogged;
-use Plinct\Cms\Http\SupportHttp\HttpSupport;
+use Plinct\Cms\Http\Support\SupportHttp;
 use Plinct\Cms\Http\View\Contracts\TemplateInterface;
 use Plinct\Cms\Http\View\Template\Template;
 
@@ -30,7 +30,7 @@ abstract class TemplateViewAbstract implements TemplateInterface
 		// warning cript
 		if (array_key_exists('warnc',$queryArray) || array_key_exists('wrnc',$queryArray)) {
 			$message = $queryArray['wrnc'] ?? $queryArray['warnc'];
-			$this->warning(HttpSupport::decodeCript($message));
+			$this->warning(SupportHttp::decodeCript($message));
 		}
 		// warning
 		if (array_key_exists('wrn',$queryArray)) {

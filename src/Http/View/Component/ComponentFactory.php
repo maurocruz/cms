@@ -14,13 +14,13 @@ class ComponentFactory
 	/**
 	 * @return Box
 	 */
-	public function box(): Box
+	public static function box(): Box
 	{
 		return new Box();
 	}
 
 
-	public function icon(): IconsFragment {
+	public static function icon(): IconsFragment {
 		return Fragment::icons();
 	}
 
@@ -35,7 +35,7 @@ class ComponentFactory
 	}
 
 	// NAVBAR
-	public function navbar(string $title = null, array $tabs = null, int $level = 2, array $searchInput = null): Navbar
+	public static function navbar(string $title = null, array $tabs = null, int $level = 2, array $searchInput = null): Navbar
 	{
 		return new Navbar($title, $tabs, $level, $searchInput);
 	}
