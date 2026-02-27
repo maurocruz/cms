@@ -53,10 +53,10 @@ class ProductShowView extends ThingView
 		if ($value) {
 			$typeBuilder = Support::typeBuilder($value);
 			$idproduct = $typeBuilder->getId();
-			$form->action('/admin/product/edit');
+			$form->action('/admin/product/update');
 			$form->input('idproduct', (string) $idproduct, 'hidden');
 		} else {
-			$form->action('/admin/product/new');
+			$form->action('/admin/product/create');
 		}
 		// THING FORM
 		$form = $this->formThing($form, $value);

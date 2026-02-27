@@ -2,20 +2,10 @@
 namespace Plinct\Cms\Http\View\Modules\Action;
 
 use Plinct\Cms\Http\View\Modules\ThingView;
-use Plinct\Cms\Http\View\Template\Template;
 use Plinct\Cms\Support\Support;
 
 class ActionShowView extends ThingView
 {
-	public function __construct(Template $template)
-	{
-		parent::__construct($template);
-
-		$this->addNavbar(_('Action'),2,[
-			'/admin/action' => $this->icon()->home(),
-			'/admin/action/new' => $this->icon()->plus()
-		]);
-	}
 
 	public function build(array $data = null): void
 	{

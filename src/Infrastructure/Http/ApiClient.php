@@ -96,6 +96,23 @@ class ApiClient
 	}
 
 	/**
+	 * @throws GuzzleException
+	 */
+	public function put(string $uri, array $formParams = null)
+	{
+		$this->method = 'PUT';
+		// URL
+		$this->url = $this->url ?? $uri ? $this->apiHost.$uri : $this->apiHost.$this->uri;
+		// FORM PARAMS
+		if ($formParams !== null) {
+			$this->options['form_params'] = isset($this->options['form_params']) ? array_merge($this->options['form_params'], $formParams) : $formParams;
+		}
+		// REQUEST
+		$this->response = $this->client->put($this->url, $this->options);
+		return $this->render();
+	}
+
+	/**
 	 * @return array|mixed
 	 */
 	private function render(): mixed

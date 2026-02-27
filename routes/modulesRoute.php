@@ -2,6 +2,7 @@
 
 use Plinct\Cms\Http\Controllers\Modules\ActionController;
 use Plinct\Cms\Http\Controllers\Modules\ModuleCreateController;
+use Plinct\Cms\Http\Controllers\Modules\ModuleUpdateController;
 use Plinct\Cms\Http\Controllers\Modules\ProductController;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -15,6 +16,6 @@ return function (RouteCollectorProxy $route)
 	$route->get('/product/edit/{id}', [ProductController::class,'edit'])->setName('product.modules.edit');
 	$route->get('/product/new', [ProductController::class,'new'])->setName('product.modules.new');
 	// MODULES
-	$route->post('/{type}/new', ModuleCreateController::class)->setName('module.create');
-
+	$route->post('/{type}/create', ModuleCreateController::class)->setName('module.create');
+	$route->post('/{type}/update', ModuleUpdateController::class)->setName('module.update');
 };

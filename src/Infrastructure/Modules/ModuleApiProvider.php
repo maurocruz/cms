@@ -26,4 +26,12 @@ readonly class ModuleApiProvider
 		return $this->client->post($moduleName, $params);
 	}
 
+	/**
+	 * @throws GuzzleException
+	 */
+	public function update(string $moduleName, $params = [])
+	{
+		return $this->client->put($moduleName, $params);
+	}
+
 }
